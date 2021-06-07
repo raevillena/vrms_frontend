@@ -1,17 +1,14 @@
 import React, {useState, useEffect} from 'react';
+
+import { BrowserRouter, Link, Route } from "react-router-dom";  
 import LoginPage from './pages/Login'
 import Userdash from './pages/Userdash';
-import { BrowserRouter, Link, Route } from "react-router-dom";  
-
 function App() {
-  
   return (
-    <div className="App">
     <BrowserRouter>
-     
-    <Route path="/user" component={Userdash} />
+      <Route path="/" exact component={LoginPage} />
+      <Route path="/user" exact component={Userdash} />
     </BrowserRouter>
-    </div>
   );
 }
 
