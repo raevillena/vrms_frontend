@@ -1,129 +1,35 @@
 @import '~antd/dist/antd.css';
 
-.background{
-    position: absolute;
-    width: 60%;
-    height: 100%;
-    left: 0px;
-    top: 0px;
+
+.form-col {
+    padding: 18px 18px;
   }
 
-.form {
-    position: absolute;
-    width: 40%;
-    height: 100%;
-    right: 0px;
-    top: 0px;
+.login-title {
+    font-family: Montserrat;
+    text-align: center;
+    font-weight: bold;
+}
 
-background: #FFFFFF;
-  }
+.login-logo{
+  height: 30%;
+  width: 30%;
+}
 
-  @media screen and (max-width: 1440px){
-    .logo{
-      position: absolute;
-      width: 96px;
-      height: 96px;
-      right: 10px;
-      top: 126px;
-    }
-    .h1{
-      position: absolute;
-      width: auto;
-      height: auto;
-      right: 15%;
-      top: -3%;
-      
-      font-family: Montserrat;
-      font-style: normal;
-      font-weight: bold;
-      font-size: 22px;
-      line-height: 167px;
-      /* or 555% */
-      
-      display: flex;
-      align-items: center;
-      text-align: center;
-      
-      color: #000000;
-    }
-    .LoginBtn {
-      position: absolute;
-      width: 20%;
-      height: 10%;
-      right: 37%;
-      top: 850%;
+.LoginBtn{
+  background: #A0BF85;
+  border-radius: 5px;
+}
 
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      padding: 20px 32px;
+.form{
+  background: F9F9F9;
+}
 
-      font-size: 18px;
-      line-height: 30px;
-      
-      
-      background: #A0BF85;
-      border-radius: 5px;
-    }
-
-    .forgot {
-      position: absolute;
-      width: 328px;
-      height:28px ;
-      right: 18%;
-      top: 40%;
-      
-      font-family: Inter;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 10px;
-      line-height: 19px;
-      text-align: center;
-      letter-spacing: 0.1em;
-      
-      color: #000000;
-      
-    }
-
-    .h2{
-      position: absolute;
-      width: auto;
-      height: auto;
-      right: 15%;
-      top: 0%;
-  
-      font-family: Montserrat;
-      font-style: normal;
-      font-weight: 600%;
-      font-size: 18px;
-      line-height: 167px;
-  
-  
-      display: flex;
-      align-items: center;
-      text-align: center;
-  
-      color: #000000;
-    }
-
-    
-  .EmailInput{
-    position: absolute;
-    width: 50%;
-    height: 10%;
-    right: 20%;
-    top: 20%;
-    }
-
-  .PasswordInput{
-    position: absolute;
-    width: 50%;
-    height: 8%;
-    right:20%;
-    top: 27%;
-
-  }
-  }
+.forgot{
+  font-family: Inter;
+font-style: normal;
+font-weight: normal;
+color: #000000;
+}
 
 
