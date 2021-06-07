@@ -1,0 +1,76 @@
+@import '~antd/dist/antd.css';
+
+
+
+.sidebar {
+    position: absolute;
+    width: 240px;
+    height: 1024px;
+    left: 0px;
+    top: 0px;
+
+    background: #FFFFFF;
+}
+
+.header{
+    position: absolute;
+    width: 1200px;
+    height: 66px;
+    right: 0px;
+    top: 0px;
+
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 32px;
+    /* identical to box height, or 133% */
+
+    display: flex;
+    align-items: center;
+
+    background: #FAFAFA;
+}
+
+.logo{
+    position: absolute;
+    width: 96px;
+    height: 96px;
+    left: 62px;
+    top: 29px;
+}
+
+.menu1{
+    position: static;
+    width: 192px;
+    height: 48px;
+    left: 3px;
+    top: 135px;
+    
+    background: #A0BF85;
+    border-radius: 16px;
+
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+}
+.logout{
+    position: absolute;
+    width: 96px;
+    height: 48px;
+    right: 0px;
+    top: 0px;
+}
+
+.content{
+    position: relative;
+    width: 1400px;
+    height: 1024px;
+    left: 200px;
+    top: 67px;
+
+    background: #FFFFFF;
+}
