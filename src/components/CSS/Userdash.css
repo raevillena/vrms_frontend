@@ -3,31 +3,20 @@
 
 
 .sidebar {
-    position: absolute;
-    width: 240px;
-    height: 1024px;
-    left: 0px;
-    top: 0px;
-
+    height: 100%;
+    width: fit-content;
     background: #FFFFFF;
 }
 
 .header{
-    position: absolute;
-    width: 1200px;
-    height: 66px;
-    right: 0px;
-    top: 0px;
-
+    display: inline-block;
     font-family: Montserrat;
     font-style: normal;
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 32px;
-    /* identical to box height, or 133% */
+    font-weight: 600px;
+    font-size: 18px;
 
-    display: flex;
-    align-items: center;
+    line-height: 32px;
+
 
     background: #FAFAFA;
 }
@@ -73,4 +62,8 @@
     top: 67px;
 
     background: #FFFFFF;
+}
+
+.userdash-logout{
+    float: right;
 }

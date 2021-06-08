@@ -1,15 +1,20 @@
-import { Layout, Menu, Button, Table, Row, Col } from 'antd'
+import { Layout, Menu, Button, Table, Row, Col,Progress, Tag } from 'antd'
 import logo from '../components/images/logo.png'
 import '../styles/CSS/Userdash.css'
 import { BookOutlined, UserOutlined } from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 
 const { Header, Content, Footer, Sider } = Layout;
 
 
 const Userdash = () => {
+  let history= useHistory();
+  const Logout = () =>{
+    history.push('/')
+  }
+
   const dataSource = [
     {
       key: '1',
@@ -17,7 +22,7 @@ const Userdash = () => {
       studyno: 32,
       date: 'May 31,2021 10:00 AM',
       updated: 'May 31,2021 10:00 AM',
-      progress: '30%',
+      progress: 30,
       status: 'Completed',
       action: 'Manage'
     },
@@ -27,7 +32,7 @@ const Userdash = () => {
       studyno: 31,
       date: 'May 31,2021 10:00 AM',
       updated: 'May 31,2021 10:00 AM',
-      progress: '30%',
+      progress: 30,
       status: 'Ongoing',
       action: 'Manage'
     },
@@ -104,12 +109,12 @@ const Userdash = () => {
     </Col>
     </Row>
     <Col span={18}>
-        <Header className="header">Studies<Button type="link">Logout</Button></Header>
-        
-        </Col>
-    <Content className="content">
-      <Table dataSource={dataSource} columns={columns}></Table>
+        <Header className="header">Studies<Button type="link" onClick={Logout}>Logout</Button></Header>
+        <Content className="content">
+      <Table size="small" dataSource={dataSource} columns={columns}></Table>
     </Content>
+        </Col>
+    
     
 </Layout>
     )

@@ -2,26 +2,44 @@
 import '../styles/CSS/Login.css';
 import logo from '../components/images/logo.png'
 import { MailOutlined } from '@ant-design/icons';
-import { Input, Button, Form } from 'antd';
+import { Input, Button, Form, Row, Col } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
+import { useHistory } from 'react-router-dom';
+import Userdash from './Userdash'
 
-import { Row, Col } from 'antd';
-function Login({Login, error}) {
-  const onFinish = (e) => {
-    console.log(e);
-   
-  };
-    
+function Login() {
+  let history = useHistory();
+  const adminUser = {
+    email : "test@test.com",
+    password: "1234",
+  }
+
+  const [user, setUser] = useState({email:"", password:""});
+
+  const onSubmit = e => {
+    console.log(user.email)
+    console.log(user.password)
+    console.log(adminUser.email)
+    console.log(adminUser.password)
+    if (user.email === adminUser.email && user.password === adminUser.password) {
+      history.push('/user')
+    } else {
+      alert("Deatils do not match")
+     
+    }
+  }
+
+ 
    const onFinishFailed = (errorInfo) => {
      console.log('Failed:', errorInfo);
    };      
-
+  
 
   return (
     <Row justify="center">
     <Col  className="form-col">
-    <Form className="form"name="basic"initialValues={{remember: true,}} onFinish={onFinish} onFinishFailed={onFinishFailed}>
+    <Form className="form"name="basic"initialValues={{remember: true,}} onFinish={onSubmit} onFinishFailed={onFinishFailed}>
             
     <div className="login-title">
       <img src={logo} className="login-logo"></img>
@@ -38,7 +56,7 @@ function Login({Login, error}) {
                 },
                   ]}
        >
-          <Input  placeholder="Enter Email" prefix={<MailOutlined />} />
+          <Input  placeholder="Enter Email" prefix={<MailOutlined />} onChange={e => setUser({...user, email: e.target.value})} value={user.email}/>
       </Form.Item>
 
       <Form.Item name="password"
@@ -49,7 +67,7 @@ function Login({Login, error}) {
                 },
               ]}
         >
-          <Input.Password placeholder="Enter password"iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} />
+          <Input.Password placeholder="Enter password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={e => setUser({...user, password: e.target.value})} value={user.password}/>
        </Form.Item>
     </div>   
     </Col> 
