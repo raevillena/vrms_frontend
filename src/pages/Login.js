@@ -7,9 +7,12 @@ import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
 import Userdash from './Userdash'
+import axios from 'axios'
 
 function Login() {
-  let history = useHistory();
+  const  history = useHistory();
+
+
   const adminUser = {
     email : "test@test.com",
     password: "1234",
@@ -17,19 +20,19 @@ function Login() {
 
   const [user, setUser] = useState({email:"", password:""});
 
-  const onSubmit = e => {
-    console.log(user.email)
-    console.log(user.password)
-    console.log(adminUser.email)
-    console.log(adminUser.password)
-    if (user.email === adminUser.email && user.password === adminUser.password) {
-      history.push('/user')
-    } else {
-      alert("Deatils do not match")
-     
+  function onSubmit(){
+  
+    const getUser = {
+          email: user.email,
+          password: user.password
     }
+    axios
+      .get('/user/', getUser)
+      .then(res => {
+        console.log(res.data)
+      })
+      .catch(err => console.log(err))
   }
-
  
    const onFinishFailed = (errorInfo) => {
      console.log('Failed:', errorInfo);
@@ -48,7 +51,7 @@ function Login() {
     </div>
     <Col sm={24}  md={24} lg={24}>
     <div className="login-input">
-      <Form.Item name="username"
+      <Form.Item name="email"
             rules={[
                 {
                     required: true,

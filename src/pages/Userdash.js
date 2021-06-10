@@ -90,6 +90,14 @@ const Userdash = () => {
     },
   ];
 
+  const [user, setUser] = useState([{name: "", title: "" }])
+  useEffect(() => {
+    fetch("/user").then(res => {
+      if(res.ok){
+        return res.json()
+      }
+    }).then(jsonRes => setUser(jsonRes));
+  })
     return (
     <Layout >
       <Row>
@@ -109,8 +117,10 @@ const Userdash = () => {
     </Col>
     </Row>
     <Col span={18}>
-        <Header className="header">Studies<Button type="link" onClick={Logout}>Logout</Button></Header>
+        <Header className="header">Studies<Button classname="logoutBtn" type="link" onClick={Logout}>Logout</Button></Header>
         <Content className="content">
+
+          <div>{user.name}</div>
       <Table size="small" dataSource={dataSource} columns={columns}></Table>
     </Content>
         </Col>

@@ -9,7 +9,7 @@ import {
   
   export default function DataGrid() {
     const [ data, setData ] = useState([
-        { active: true, firstName: <div><input type="date"/></div>, lastName: 'Musk' },
+        { active: true, firstName: 'Ellon', lastName: 'Musk' },
         { active: false, firstName: 'Jeff', lastName: 'Bezos'},
       ])
     const [columns, setColumns] = useState([
@@ -19,6 +19,7 @@ import {
     ])
 
     const [newColumn, setNewColumn] = useState()
+    
     useEffect(() => {
         console.log(data, columns)
     }, [data, columns])
@@ -27,10 +28,8 @@ import {
         if (!newColumn) {
             return
         }
-        setColumns([...columns, textColumn({title: <div>Title of {newColumn}<button>Button of {newColumn}</button></div>, key: newColumn})])
+        setColumns([...columns, textColumn({title: <div>{newColumn}</div>, key: newColumn})])
     }
-
-    
       return (
         <div>
             <DataSheetGrid
@@ -43,6 +42,7 @@ import {
         <button onClick={addNewColumn}>
             CLICK ME
         </button>
+        
         </div>
       )
 }
