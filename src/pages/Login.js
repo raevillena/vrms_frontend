@@ -7,6 +7,7 @@ import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios'
+import {onUserLogin } from '@services/authAPI';
 
 
 function Login() {
@@ -19,22 +20,24 @@ function Login() {
           email: user.email,
           password: user.password
     }
-    axios
-      .post('/v1/auth/login', getUser, {
-          headers: {
-            'Content-Type': 'application/json',
-        } 
-      })
-      .then(res => {
-        let {accessToken, refreshToken} = res.data
+    let result = await onUserLogin(getUser)
+    console.log(result)
+    // axios
+    //   .post('/v1/auth/login', getUser, {
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //     } 
+    //   })
+    //   .then(res => {
+    //     let {accessToken, refreshToken} = res.data
         
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
-        history.push('/dash')
-      })
-      .catch(error =>{
-        console.log(error)
-      })
+    //     localStorage.setItem("accessToken", accessToken);
+    //     localStorage.setItem("refreshToken", refreshToken);
+    //     history.push('/dash')
+    //   })
+    //   .catch(error =>{
+    //     console.log(error)
+    //   })
   }
  
    const onFinishFailed = (errorInfo) => {
