@@ -4,16 +4,50 @@ import '../styles/CSS/Userdash.css'
 import { BookOutlined, UserOutlined } from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
+import axios from 'axios'
 
 
-const { Header, Content, Footer, Sider } = Layout;
+
+const { Header, Content, Sider } = Layout;
 
 
 const Userdash = () => {
   let history= useHistory();
-  const Logout = () =>{
-    history.push('/')
-  }
+  const accessToken = localStorage.getItem("accessToken")
+  const refreshToken = localStorage.getItem("rereshToken")
+  console.log(accessToken)
+
+  axios
+  .post('/v1/auth/dash', {
+      headers: {
+        Authorization : accessToken,
+        'Content-Type': 'application/json',
+    } 
+  })
+  .then(res => {
+    if(!accessToken){
+      console.log("mali")
+      history.push('/login')
+    } else{
+      console.log("hays")
+    }
+  })
+  .catch(error =>{
+    console.log(error)
+  })
+
+
+  const handleLogout = async () => {
+    try {
+      let refreshToken = localStorage.getItem("refreshToken");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      window.location.reload();
+    } catch (error) {
+      console.error(error)
+      alert(error.response.data.error);
+    }
+  };
 
   const dataSource = [
     {
@@ -23,7 +57,7 @@ const Userdash = () => {
       date: 'May 31,2021 10:00 AM',
       updated: 'May 31,2021 10:00 AM',
       progress: 30,
-      status: 'Completed',
+      status: ['Completed'],
       action: 'Manage'
     },
     {
@@ -32,8 +66,8 @@ const Userdash = () => {
       studyno: 31,
       date: 'May 31,2021 10:00 AM',
       updated: 'May 31,2021 10:00 AM',
-      progress: 30,
-      status: 'Ongoing',
+      progress: 80,
+      status: ['Ongoing'],
       action: 'Manage'
     },
   ];
@@ -71,6 +105,8 @@ const Userdash = () => {
       dataIndex: 'progress',
       key: 'progress',
       width: '10%',
+      render: () =>
+       <Progress percent={80} size="small" />,
     },
     {
       title: 'Status',
@@ -81,23 +117,30 @@ const Userdash = () => {
         { text: 'Ongoing', value: 'Ongoing' },
       ],
       width: '10%',
+      render: stat => (
+        <span>
+          {stat.map(status => {
+            let color = status === 'Ongoing' ? 'geekblue' : 'green';
+            return (
+              <Tag color={color} key={status}>
+                {status.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </span>
+      ),
+  
+
     },
     {
       title: 'Action',
       dataIndex: 'action',
       key: 'action',
       width: '15%',
+      render: () => <Button className="manageBtn">MANAGE</Button>
     },
   ];
-
-  const [user, setUser] = useState([{name: "", title: "" }])
-  useEffect(() => {
-    fetch("/user").then(res => {
-      if(res.ok){
-        return res.json()
-      }
-    }).then(jsonRes => setUser(jsonRes));
-  })
+  
     return (
     <Layout >
       <Row>
@@ -117,10 +160,14 @@ const Userdash = () => {
     </Col>
     </Row>
     <Col span={18}>
-        <Header className="header">Studies<Button classname="logoutBtn" type="link" onClick={Logout}>Logout</Button></Header>
+        <Header className="header">
+          <span></span>
+          <a>Studies</a>
+          <a href="/" onClick={handleLogout} className="loginBtn">Logout</a>
+        </Header>
         <Content className="content">
 
-          <div>{user.name}</div>
+          
       <Table size="small" dataSource={dataSource} columns={columns}></Table>
     </Content>
         </Col>

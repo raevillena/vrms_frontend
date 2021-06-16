@@ -46,7 +46,8 @@
     text-align: center;
 }
 
-.logoutBtn{
-
+.manageBtn{
+    background: #A0BF85;
+    border-radius: 5px;
 }
 

@@ -28,7 +28,7 @@ import {
         if (!newColumn) {
             return
         }
-        setColumns([...columns, textColumn({title: <div>{newColumn}</div>, key: newColumn})])
+        setColumns([...columns, textColumn({title: <div>{newColumn}<button>camera</button></div>, key: newColumn})])
     }
       return (
         <div>

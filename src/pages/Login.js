@@ -2,36 +2,39 @@
 import '../styles/CSS/Login.css';
 import logo from '../components/images/logo.png'
 import { MailOutlined } from '@ant-design/icons';
-import { Input, Button, Form, Row, Col } from 'antd';
+import { Input, Button, Form, Row, Col, Modal } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
-import Userdash from './Userdash'
 import axios from 'axios'
+
 
 function Login() {
   const  history = useHistory();
 
-
-  const adminUser = {
-    email : "test@test.com",
-    password: "1234",
-  }
-
   const [user, setUser] = useState({email:"", password:""});
 
   function onSubmit(){
-  
     const getUser = {
           email: user.email,
           password: user.password
     }
     axios
-      .get('/user/', getUser)
-      .then(res => {
-        console.log(res.data)
+      .post('/v1/auth/login', getUser, {
+          headers: {
+            'Content-Type': 'application/json',
+        } 
       })
-      .catch(err => console.log(err))
+      .then(res => {
+        let {accessToken, refreshToken} = res.data
+        
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        history.push('/dash')
+      })
+      .catch(error =>{
+        console.log(error)
+      })
   }
  
    const onFinishFailed = (errorInfo) => {
@@ -40,9 +43,10 @@ function Login() {
   
 
   return (
+    <div className="login">
     <Row justify="center">
     <Col  className="form-col">
-    <Form className="form"name="basic"initialValues={{remember: true,}} onFinish={onSubmit} onFinishFailed={onFinishFailed}>
+    <Form className="form" name="basic"initialValues={{remember: true,}} onFinish={onSubmit} onFinishFailed={onFinishFailed}>
             
     <div className="login-title">
       <img src={logo} className="login-logo"></img>
@@ -89,7 +93,9 @@ function Login() {
 </Form>
     </Col>
   </Row>
+  </div>
   )
 }
+
 
 export default Login;
