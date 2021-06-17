@@ -4,21 +4,30 @@ import '../styles/CSS/Userdash.css'
 import { BookOutlined, UserOutlined } from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
+import { verifyToken } from '../services/authAPI';
 import axios from 'axios'
-
-
-
+import {verifyAuth } from '@services/authAPI';
 
 const { Header, Content, Sider } = Layout;
 
 
 const Userdash = () => {
+
+
   let history= useHistory();
-  const accessToken = localStorage.getItem("accessToken")
-  const refreshToken = localStorage.getItem("refreshToken")
-  console.log(accessToken)
+
+ 
 
 
+  // axios
+  // .post('/v1/auth/dash', 'secretKey', {
+  //   headers:{
+  //     Authorization : `Bearer ${accessToken}`,
+  //     'Content-Type': 'application/json',
+  // }})
+  // .then(res => {
+  //   console.log()
+  // })
   const handleLogout = async () => {
     try {
       let refreshToken = localStorage.getItem("refreshToken");

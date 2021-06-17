@@ -20,8 +20,9 @@ function Login() {
     }
     try {
       let result = await onUserLogin(getUser)
-      
-      localStorage.setItem("accessToken", result.data.token.accessToken);
+
+     
+      localStorage.setItem("accessToken", result.data.accessToken);
       localStorage.setItem("refreshToken", result.data.token.refreshToken);
       history.push('/dash')
 

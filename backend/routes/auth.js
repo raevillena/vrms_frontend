@@ -35,36 +35,40 @@ router.post('/login', async (req, res) => {
     }
 })
 
-router.post('/dash', async (req, res) =>{
-    const token = req.header('Authorization')
-    
-
-    if(!token){
-        return res.status(401).json({ message: "Auth Error" })
+router.post('/verify', auth, async (req, res) =>{
+    try {
+        res.status(200).json({status: true})
+    } catch (error) {
+        res.status(500).json({message: err.message})
     }
- 
-    try{
-         const decoded = jwt.verify(token, 'secretKey')
-         req.user = decoded.user;
-         const user = User.findById(decoded.user.id);
-         console.log(user)
-        
- 
-    }catch(error){
-     if (error.name === "TokenExpiredError") {
-         return res
-           .status(401)
-           .json({ error: "Session timed out,please login again" });
-       } else if (error.name === "JsonWebTokenError") {
-         return res
-           .status(401)
-           .json({ error: "Invalid token,please login again!" });
-       } else {
-         console.error(error);
-         return res.status(400).json({ error });
-       }
- }
+})
+
+//middleware
+
+async function auth(req, res, next){
+   try {
+    let token = req.header('Authorization')
+    token = token.split(" ")[1]
+
+    jwt.verify(token,  process.env.ACCESS_TOKEN_SECRET , async(err, user) => {
+        if (user){
+            req.user = user
+            next()
+        } else if(err.message == "jwt expired"){
+            return res.json ({
+                success: false,
+                message: "Access Token Expired"
+            })
+        } else{
+            return res
+            .status(403)
+            .json({err, message: "User not Authenticated"})
+        }
+    })
+   } catch(error) {
+        next(error)
+   } 
 }
-)
+
 
 module.exports = router
