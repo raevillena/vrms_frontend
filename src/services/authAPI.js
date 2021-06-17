@@ -1,9 +1,10 @@
 import api from '@services/apiConfig'
-
+// use api in production
+import axios from 'axios'
 
 function onUserLogin(body) {
     try {
-        return client.post("/user", body, {
+        return axios.post("/v1/auth/login", body, {
             headers: {
                         'Content-Type': 'application/json',
                     } 
@@ -15,7 +16,6 @@ function onUserLogin(body) {
         }
     }
 }
-
 
 
 export { onUserLogin };

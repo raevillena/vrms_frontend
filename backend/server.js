@@ -7,11 +7,11 @@ const user = require('./models/user')
 const router = require('./routes/user')
 const bodyparser = require("body-parser")
 
-mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true})
+
+mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true, useUnifiedTopology: true}).catch(err => console.log(err));
 const db = mongoose.connection
 db.on('error', (error) => console.error(error))
 db.once('open', () => console.log('connected to database'))
-
 
 app.use(express.json())
 app.use(express.urlencoded())

@@ -20,11 +20,6 @@ router.get('/', async (req, res) => {
 })
 
 //login
-
-
-
-
-
 //create user
 router.route('/').post(async (req, res) => {
     const users = new User({

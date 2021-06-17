@@ -1,23 +1,21 @@
 const express = require('express')
+const Token = require('../models/token')
 const User = require('../models/user')
 const router = express.Router()
-
-const Token = require('../models/token')
+const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 
-
-
-
-//login
+//LOGIN
 router.post('/login', async (req, res) => {
     try{
+
         if (!req.body.email || !req.body.password) {
-            res.status(403).json({message: "Mali ka"}) 
+            res.status(403).json({message: "Maling ka"})
         }
 
         const user = await User.findOne({email: req.body.email , password:req.body.password })
         if (user === null) {
-            res.status(403).json({message: "No User"})  
+            res.status(403).json({message: "Mali ka again"})
         }
         const accessDuration = '1300';
         const refreshDuration = '3600'
@@ -27,23 +25,19 @@ router.post('/login', async (req, res) => {
         const token = new Token({
             id: user.id,
             refreshToken: refreshToken,
-            refreshDuration: refreshDuration,
+            refreshTokenDuration: refreshDuration,
             isActive: true
-        });
-        const newToken =  await token.save()
-
-         res.status(201).json({accessToken, refreshToken}) 
+        })
+        token.save()
+        res.status(200).json({data: user, token: token, accessToken})
     }catch(err){
         res.status(500).json({message: err.message})
     }
 })
 
-
-
-//get dashboard
 router.post('/dash', async (req, res) =>{
     const token = req.header('Authorization')
-    console.log(token)
+    
 
     if(!token){
         return res.status(401).json({ message: "Auth Error" })
@@ -72,15 +66,5 @@ router.post('/dash', async (req, res) =>{
  }
 }
 )
-
-//middleware(verify token)
-
-
-
-
-
-
-
-
 
 module.exports = router

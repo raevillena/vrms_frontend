@@ -11,7 +11,7 @@ const TokenSchema = new mongoose.Schema({
         required: true,
     },
     refreshTokenDuration:{
-        type: String,
+        type: Number,
         required: true,
     },
     isActive:{

@@ -1,4 +1,3 @@
-
 import '../styles/CSS/Login.css';
 import logo from '../components/images/logo.png'
 import { MailOutlined } from '@ant-design/icons';
@@ -6,7 +5,6 @@ import { Input, Button, Form, Row, Col, Modal } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
-import axios from 'axios'
 import {onUserLogin } from '@services/authAPI';
 
 
@@ -15,29 +13,22 @@ function Login() {
 
   const [user, setUser] = useState({email:"", password:""});
 
-  function onSubmit(){
+  async function onSubmit(){
     const getUser = {
           email: user.email,
           password: user.password
     }
-    let result = await onUserLogin(getUser)
-    console.log(result)
-    // axios
-    //   .post('/v1/auth/login', getUser, {
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //     } 
-    //   })
-    //   .then(res => {
-    //     let {accessToken, refreshToken} = res.data
-        
-    //     localStorage.setItem("accessToken", accessToken);
-    //     localStorage.setItem("refreshToken", refreshToken);
-    //     history.push('/dash')
-    //   })
-    //   .catch(error =>{
-    //     console.log(error)
-    //   })
+    try {
+      let result = await onUserLogin(getUser)
+      
+      localStorage.setItem("accessToken", result.data.token.accessToken);
+      localStorage.setItem("refreshToken", result.data.token.refreshToken);
+      history.push('/dash')
+
+    } catch (error) {
+      console.log('error incoming from frontend')
+      console.log('error', error)
+    }
   }
  
    const onFinishFailed = (errorInfo) => {

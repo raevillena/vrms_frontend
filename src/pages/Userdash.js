@@ -8,33 +8,15 @@ import axios from 'axios'
 
 
 
+
 const { Header, Content, Sider } = Layout;
 
 
 const Userdash = () => {
   let history= useHistory();
   const accessToken = localStorage.getItem("accessToken")
-  const refreshToken = localStorage.getItem("rereshToken")
+  const refreshToken = localStorage.getItem("refreshToken")
   console.log(accessToken)
-
-  axios
-  .post('/v1/auth/dash', {
-      headers: {
-        Authorization : accessToken,
-        'Content-Type': 'application/json',
-    } 
-  })
-  .then(res => {
-    if(!accessToken){
-      console.log("mali")
-      history.push('/login')
-    } else{
-      console.log("hays")
-    }
-  })
-  .catch(error =>{
-    console.log(error)
-  })
 
 
   const handleLogout = async () => {
