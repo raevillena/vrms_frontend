@@ -17,8 +17,8 @@ router.post('/login', async (req, res) => {
         if (user === null) {
             res.status(403).json({message: "Mali ka again"})
         }
-        const accessDuration = '1300';
-        const refreshDuration = '3600'
+        const accessDuration = '3600';
+        const refreshDuration = '7200'
         let accessToken = await jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: accessDuration})
         let refreshToken = await jwt.sign({user}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: refreshDuration})        
         
@@ -49,6 +49,10 @@ async function auth(req, res, next){
    try {
     let token = req.header('Authorization')
     token = token.split(" ")[1]
+
+    if(token == null){
+        return res.sendStatus(401)
+    }
 
     jwt.verify(token,  process.env.ACCESS_TOKEN_SECRET , async(err, user) => {
         if (user){

@@ -7,7 +7,10 @@ import reportWebVitals from './reportWebVitals';
 import {Provider} from 'react-redux'
 import { createStore } from 'redux';
 import appReducer from './reducers/index'
+import Login from './pages/Login';
 const store = createStore(appReducer)
+
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
@@ -16,6 +19,9 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+
+
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

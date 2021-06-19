@@ -7,12 +7,7 @@ const auth = (state = initialState, action) => {
         case "VERIFIED_AUTHENTICATION":
             return {
                 ...state,
-                AUTHENTICATED: true
-            }
-        case "UNVERIFIED_AUTHENTICATION":
-            return {
-                ...state,
-                AUTHENTICATED: false
+                AUTHENTICATED: action.value
             }
         default:
             return state

@@ -6,10 +6,12 @@ import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
 import {onUserLogin } from '@services/authAPI';
+import { useSelector, useDispatch } from 'react-redux';
 
 
 function Login() {
   const  history = useHistory();
+  const dispatch = useDispatch();
 
   const [user, setUser] = useState({email:"", password:""});
 
@@ -21,10 +23,14 @@ function Login() {
     try {
       let result = await onUserLogin(getUser)
 
-     
       localStorage.setItem("accessToken", result.data.accessToken);
       localStorage.setItem("refreshToken", result.data.token.refreshToken);
-      history.push('/dash')
+      
+      dispatch({
+        type: "VERIFIED_AUTHENTICATION",
+        value: true
+     })
+      history.push('/datagrid')
 
     } catch (error) {
       console.log('error incoming from frontend')

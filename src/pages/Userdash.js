@@ -1,12 +1,11 @@
+import React, {useState, useEffect} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Layout, Menu, Button, Table, Row, Col,Progress, Tag } from 'antd'
 import logo from '../components/images/logo.png'
 import '../styles/CSS/Userdash.css'
 import { BookOutlined, UserOutlined } from '@ant-design/icons';
-import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
-import { verifyToken } from '../services/authAPI';
-import axios from 'axios'
-import {verifyAuth } from '@services/authAPI';
+
 
 const { Header, Content, Sider } = Layout;
 
@@ -15,25 +14,19 @@ const Userdash = () => {
 
 
   let history= useHistory();
+  const dispatch = useDispatch();
 
- 
 
-
-  // axios
-  // .post('/v1/auth/dash', 'secretKey', {
-  //   headers:{
-  //     Authorization : `Bearer ${accessToken}`,
-  //     'Content-Type': 'application/json',
-  // }})
-  // .then(res => {
-  //   console.log()
-  // })
   const handleLogout = async () => {
     try {
-      let refreshToken = localStorage.getItem("refreshToken");
+
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
-      window.location.reload();
+      dispatch({
+        type: "VERIFIED_AUTHENTICATION",
+        value: false
+     })
+      history.push('/')
     } catch (error) {
       console.error(error)
       alert(error.response.data.error);
@@ -133,38 +126,37 @@ const Userdash = () => {
   ];
   
     return (
-    <Layout >
-      <Row>
-        
-    <Col span={6}>
-    <Sider className="sidebar">
-        <img src={logo} className="logo"></img>
-        <Menu defaultSelectedKeys={['1']}>
-        <Menu.Item key="1" icon={<BookOutlined />} className="menu1">
-          Research
-        </Menu.Item>
-        <Menu.Item key="2" icon={<UserOutlined />} className="menu1">
-          Account
-        </Menu.Item>
-        </Menu>
-    </Sider>
-    </Col>
-    </Row>
-    <Col span={18}>
-        <Header className="header">
-          <span></span>
-          <a>Studies</a>
-          <a href="/" onClick={handleLogout} className="loginBtn">Logout</a>
-        </Header>
-        <Content className="content">
-
-          
-      <Table size="small" dataSource={dataSource} columns={columns}></Table>
-    </Content>
-        </Col>
-    
-    
+      
+    <Layout  > 
+      <Sider  style={{
+        overflow: 'auto',
+        height: '100vh',
+        position: 'fixed',
+        left: 0,
+        backgroud: 'white'
+      }} >
+          <img src={logo} className="logo"></img>
+          <Menu defaultSelectedKeys={['1']}>
+          <Menu.Item key="1" icon={<BookOutlined />} className="menu1">
+            Research
+          </Menu.Item>
+          <Menu.Item key="2" icon={<UserOutlined />} className="menu1">
+            Account
+          </Menu.Item>
+          </Menu>
+      </Sider>
+    <Layout style={{ marginLeft: 200 }}>
+      <Header style={{ padding: 0, background:'#f2f2f2' }} >
+      <a href="/dash" style={{padding: '25px', fontSize: '24px', color: 'black', fontFamily: 'Montserrat'}}>Studies</a>
+        <a  onClick={handleLogout}  tyle={{float: 'right', color:'black', fontFamily: 'Montserrat'}}>Logout</a>
+      </Header>
+      <Content style={{ margin: '24px 16px 0', overflow: 'initial' }} >          
+        <Table size="small" dataSource={dataSource} columns={columns}></Table>
+      </Content>
+      
+    </Layout>      
 </Layout>
+
     )
 }
 

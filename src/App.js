@@ -18,17 +18,19 @@ function App() {
 
   useEffect(() => {
     async function verify() {
-      await verifyAuth()
-      .then(res => {
+      let result = await verifyAuth()
+      if (result.error) {
         dispatch({
           type: "VERIFIED_AUTHENTICATION",
+          value: false
        })
-      })
-      .catch(err => {
+      } else {
         dispatch({
-          type: "UNVERIFIED_AUTHENTICATION",
+          type: "VERIFIED_AUTHENTICATION",
+          value: true
        })
-      })
+      }
+     
     }
 
     verify()
