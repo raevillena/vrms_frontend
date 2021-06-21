@@ -29,12 +29,12 @@ export async function verifyAuth() {
             }
         }
 
-        return axios.post("/v1/auth/verify", {refreshToken: refreshToken }, {
+        return axios.post("/v1/auth/verify", {
             headers: {
                          Authorization : `Bearer ${accessToken}`,
                         'Content-Type': 'application/json',
                     } 
-        });
+        })
     } catch (error) {
         return {
             status: error,
@@ -42,5 +42,7 @@ export async function verifyAuth() {
         }
     }
 }
+
+
 
 

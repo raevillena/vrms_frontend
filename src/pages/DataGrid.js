@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Layout, Menu, Button} from 'antd'
 import logo from '../components/images/logo.png'
-import '../styles/CSS/Userdash.css'
 import { BookOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import {
@@ -11,6 +10,8 @@ import {
   textColumn,
 } from 'react-datasheet-grid'
 import 'react-datasheet-grid/dist/index.css'
+import Sidebar from '../components/components/Sidebar'
+
 
 const { Header, Content, Sider } = Layout;
 
@@ -57,6 +58,14 @@ const addNewColumn = () => {
     }
   };
 
+  const account = async () => {
+    try {
+      history.push("/account")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 
   return (
     <div>
@@ -68,15 +77,7 @@ const addNewColumn = () => {
         left: 0,
         background:'white'
       }} >
-          <img src={logo} className="logo"></img>
-          <Menu defaultSelectedKeys={['1']}>
-          <Menu.Item key="1" icon={<BookOutlined />} className="menu1">
-            Data Gathering
-          </Menu.Item>
-          <Menu.Item key="2" icon={<UserOutlined />} className="menu1">
-            Account
-          </Menu.Item>
-          </Menu>
+          <Sidebar></Sidebar>
       </Sider>
     <Layout style={{ marginLeft: 200 }}>
       <Header style={{ padding: 0, background:'#f2f2f2' }} >

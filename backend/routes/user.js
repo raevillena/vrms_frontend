@@ -19,7 +19,6 @@ router.get('/', async (req, res) => {
     }
 })
 
-//login
 //create user
 router.route('/').post(async (req, res) => {
     const users = new User({
@@ -38,7 +37,7 @@ router.route('/').post(async (req, res) => {
  })
 
  //getone specific user
- router.get('/:id',getUser, (req, res) =>{
+ router.get('/account',getUser, (req, res) =>{
     res.json(User)
 })
 
@@ -46,7 +45,8 @@ router.route('/').post(async (req, res) => {
 async function getUser(req, res, next){
     let users
     try{
-        let id = mongoose.Types.ObjectId(req.params.id)
+        console.log(req.body)
+        let id = (req.body.id)
         users = await User.findById(id)
         if(users === null){
             res.status(404).json({message: 'Cannot find user'})

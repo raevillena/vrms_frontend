@@ -6,6 +6,7 @@ import '../styles/CSS/Userdash.css'
 import { BookOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 
+import Sidebar from '../components/components/Sidebar'
 
 const { Header, Content, Sider } = Layout;
 
@@ -135,15 +136,7 @@ const Userdash = () => {
         left: 0,
         backgroud: 'white'
       }} >
-          <img src={logo} className="logo"></img>
-          <Menu defaultSelectedKeys={['1']}>
-          <Menu.Item key="1" icon={<BookOutlined />} className="menu1">
-            Research
-          </Menu.Item>
-          <Menu.Item key="2" icon={<UserOutlined />} className="menu1">
-            Account
-          </Menu.Item>
-          </Menu>
+         <Sidebar></Sidebar>
       </Sider>
     <Layout style={{ marginLeft: 200 }}>
       <Header style={{ padding: 0, background:'#f2f2f2' }} >

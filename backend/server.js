@@ -22,4 +22,4 @@ app.use('/v1/user', userRouter)
 app.use('/v1/auth', authRouter)
 
 
-app.listen(3001, () => console.log('server started'))
+app.listen(3001, () => console.log('server started at port 3001'))

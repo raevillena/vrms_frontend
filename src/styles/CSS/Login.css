@@ -7,13 +7,13 @@
 
 .login-title {
     font-family: Montserrat;
-    text-align: center;
     font-weight: bold;
 }
 
 .login-logo{
-  height: 30%;
-  width: 30%;
+  height: 20%;
+  width: 20%;
+  border-radius: 50%;
 }
 
 .LoginBtn{

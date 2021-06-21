@@ -15,12 +15,12 @@ router.post('/login', async (req, res) => {
 
         const user = await User.findOne({email: req.body.email , password:req.body.password })
         if (user === null) {
-            res.status(403).json({message: "Mali ka again"})
+            res.status(403).json({message: "Error"})
         }
-        const accessDuration = '3600';
-        const refreshDuration = '7200'
-        let accessToken = await jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: accessDuration})
-        let refreshToken = await jwt.sign({user}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: refreshDuration})        
+        const refreshDuration = '18000'
+        const accessToken = await generateAccessToken(user);
+        const refreshToken = await jwt.sign({user}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: refreshDuration})
+           
         
         const token = new Token({
             id: user.id,
@@ -28,14 +28,15 @@ router.post('/login', async (req, res) => {
             refreshTokenDuration: refreshDuration,
             isActive: true
         })
-        token.save()
+       const newToken = await token.save()
+        
         res.status(200).json({data: user, token: token, accessToken})
     }catch(err){
         res.status(500).json({message: err.message})
     }
 })
 
-router.post('/verify', auth, async (req, res) =>{
+router.post('/verify',auth, async (req, res) =>{
     try {
         res.status(200).json({status: true})
     } catch (error) {
@@ -43,36 +44,69 @@ router.post('/verify', auth, async (req, res) =>{
     }
 })
 
+
+router.post('/renewToken', async (req, res, next) =>{
+    try {
+        const token = Token.findOne({refreshToken: req.body.refreshToken})
+        const refreshToken = token.refreshToken
+        console.log(refreshToken)
+    
+        if (refreshToken == null){
+            console.log('error1')
+            return res.sendStatus(401)
+        }
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async(err, user) =>{
+            if(err){
+                console.log(err)
+                Token.updateOne({refreshToken: refreshToken}, {isActive: false}, (err, res) =>{
+                    if (err) throw err
+                    console.log("Updated")
+                })
+                return res.sendStatus(401).json({err})
+            }
+            const accessToken = generateAccessToken(user)
+            res.status(200).json({accessToken})
+        })
+    } catch (error) {
+        next(error)
+    }
+    
+})
+
+router.post('/logout', (req,res) =>{
+    const refreshToken = req.body.refreshToken
+    Token.updateOne({refreshToken: refreshToken}, {isActive: false}, (err, res) =>{
+        if (err) throw err
+        console.log("Updated")
+    })
+})
 //middleware
 
 async function auth(req, res, next){
    try {
     let token = req.header('Authorization')
     token = token.split(" ")[1]
-
+    
     if(token == null){
         return res.sendStatus(401)
     }
-
-    jwt.verify(token,  process.env.ACCESS_TOKEN_SECRET , async(err, user) => {
-        if (user){
-            req.user = user
-            next()
-        } else if(err.message == "jwt expired"){
-            return res.json ({
-                success: false,
-                message: "Access Token Expired"
-            })
-        } else{
-            return res
-            .status(403)
-            .json({err, message: "User not Authenticated"})
-        }
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async(err, payload) => {
+      if(err){
+          console.log(err)
+        return res.sendStatus(401).json({err})
+      }
+      req.payload =payload
+      next()
     })
    } catch(error) {
         next(error)
    } 
 }
 
+
+
+function generateAccessToken(user){
+    return jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '7200'})
+}
 
 module.exports = router
