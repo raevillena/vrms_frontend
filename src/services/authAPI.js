@@ -44,5 +44,18 @@ export async function verifyAuth() {
 }
 
 
-
+export async function onUserCreate(body) {
+    try {
+        return axios.post("/v1/user/secretcreateuser", body, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}
 

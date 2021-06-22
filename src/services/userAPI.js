@@ -2,9 +2,9 @@ import api from '@services/apiConfig'
 // use api in production
 import axios from 'axios'
 
-export async function getUserdata(body) {
+export async function onChangePassword(body) {
     try {
-        return axios.get("/v1/user/account", body, {
+        return axios.post("/v1/user/updatepassword", body, {
             headers: {
                         'Content-Type': 'application/json',
                     } 

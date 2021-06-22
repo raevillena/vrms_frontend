@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import logo from '../components/images/logo.png'
 import { BookOutlined, UserOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import Sidebar from '../components/components/Sidebar'
+import { onChangePassword } from '../services/userAPI';
 
 
 
@@ -14,8 +15,22 @@ const Account = () => {
     let history= useHistory();
     const dispatch = useDispatch();
     const userObj = useSelector(state => state.userReducer)
-    
-   
+    console.log(userObj.USER._id)
+    const [password, setPassword] = useState({oldPassword: "", newPassword: "", confrimPassword: ""})
+
+    async function onSubmit(){
+       try {
+           if(password.newPassword != password.confrimPassword){
+            alert("Password does not match!")
+           }
+           if(password.oldPassword == userObj.USER.password){
+            await onChangePassword(password)
+            alert("Successfully Updated Password")
+           }alert("Invalid Password")
+       } catch (error) {
+           console.log(error)
+       }
+    }
     
     const handleLogout = async () => {
         try {
@@ -32,14 +47,6 @@ const Account = () => {
           alert(error.response.data.error);
         }
       };
-
-    const dataGathering = async () => {
-        try {
-          history.push("/datagrid")
-        } catch (error) {
-          console.log(error)
-        }
-      }
 
     return (
         <div>
@@ -59,16 +66,16 @@ const Account = () => {
         <a  onClick={handleLogout}  style={{float: 'right', color:'black', fontFamily: 'Montserrat'}}>Logout</a>
       </Header>
       <Content style={{ margin: '24px 16px 0', overflow: 'initial' }} >        
-      <Form style={{borderRadius: "10px", background:"white"}}>
+      <Form style={{borderRadius: "10px", background:"white",maxWidth: "50%"}}>
           <Form.Item>picture</Form.Item>
           <Form.Item><label>Name:</label>{userObj.USER.name}</Form.Item>
           <Form.Item><label>Title:</label>{userObj.USER.title}</Form.Item>
           <Form.Item><label>Project:</label>{userObj.USER.project}</Form.Item>
           <Form.Item><label>Email:</label>{userObj.USER.email}</Form.Item>
       </Form>
-      <Form>
+      <Form style={{borderRadius: "10px", background:"white", maxWidth:"50%"}}>
           <h1>CHANGE PASSWORD</h1>
-      <Form.Item 
+      <Form.Item style={{maxWidth:"50%"}}
               rules={[
                 {
                   required: true,
@@ -77,9 +84,11 @@ const Account = () => {
               ]}
         >
             <label>Current Password</label>
-          <Input.Password placeholder="Current Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} />
+          <Input.Password placeholder="Current Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
+          onChange={e => setPassword({...password, oldPassword: e.target.value})} value={password.oldPassword}
+          />
        </Form.Item>
-       <Form.Item 
+       <Form.Item style={{maxWidth:"50%"}}
               rules={[
                 {
                   required: true,
@@ -88,10 +97,10 @@ const Account = () => {
               ]}
         >
             <label>New Password</label>
-          <Input.Password placeholder="New Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} />
+          <Input.Password placeholder="New Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
+          onChange={e => setPassword({...password, newPassword: e.target.value})} value={password.newPassword}/>
        </Form.Item>
-      </Form>
-      <Form.Item 
+      <Form.Item style={{maxWidth:"50%"}}
               rules={[
                 {
                   required: true,
@@ -100,11 +109,14 @@ const Account = () => {
               ]}
         >
             <label>Confirm Password</label>
-          <Input.Password placeholder="Confirm New Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} />
+          <Input.Password placeholder="Confirm New Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
+          onChange={e => setPassword({...password, confrimPassword: e.target.value})} value={password.confrimPassword}
+          />
         <Form.Item>
-            <Button htmlType="submit">SUBMIT</Button>
+            <Button htmlType="submit" onClick={onSubmit}>SUBMIT</Button>
         </Form.Item>
        </Form.Item>
+       </Form>
       </Content>
       
     </Layout>      
