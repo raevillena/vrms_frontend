@@ -59,3 +59,15 @@ export async function onUserCreate(body) {
     }
 }
 
+export async function onUserLogout(body) {
+    try {
+        return axios.post("/v1/auth/logout", body
+        );
+    } catch (error) {
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}
+

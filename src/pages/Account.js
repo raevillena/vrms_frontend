@@ -6,6 +6,7 @@ import logo from '../components/images/logo.png'
 import { BookOutlined, UserOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import Sidebar from '../components/components/Sidebar'
 import { onChangePassword } from '../services/userAPI';
+import { onUserLogout } from '../services/authAPI';
 
 
 
@@ -20,33 +21,45 @@ const Account = () => {
 
     async function onSubmit(){
        try {
+         console.log(userObj.USER._id)
+          const data = {
+            id : userObj.USER._id,
+            newPass: password.newPassword,
+            oldPass: password.oldPassword
+          }
            if(password.newPassword != password.confrimPassword){
             alert("Password does not match!")
-           }
-           if(password.oldPassword == userObj.USER.password){
-            await onChangePassword(password)
-            alert("Successfully Updated Password")
-           }alert("Invalid Password")
+           }else{
+                await onChangePassword(data)
+                alert("Successfully Updated Password")
+          }
        } catch (error) {
            console.log(error)
        }
     }
     
     const handleLogout = async () => {
-        try {
-    
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          dispatch({
-            type: "VERIFIED_AUTHENTICATION",
-            value: false
-         })
-          history.push('/')
-        } catch (error) {
-          console.error(error)
-          alert(error.response.data.error);
+   
+      try {
+        const tokens = {
+          refreshToken: localStorage.getItem("refreshToken"),
+          accessToken: localStorage.getItem("accessToken")
         }
-      };
+        
+        onUserLogout(tokens)
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        dispatch({
+          type: "VERIFIED_AUTHENTICATION",
+          value: false
+       })
+        history.push('/')
+      } catch (error) {
+        console.error(error)
+        alert(error.response.data.error);
+      }
+    };
+
 
     return (
         <div>

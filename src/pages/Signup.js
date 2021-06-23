@@ -13,7 +13,6 @@ const Signup = () => {
     async function onSubmit(){
         try {
             await onUserCreate(user)  
-            alert("user created")
         } catch (error) {
             console.log(error)
         }

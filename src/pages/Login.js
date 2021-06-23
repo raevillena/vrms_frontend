@@ -38,7 +38,7 @@ function Login() {
       history.push('/datagrid')
 
     } catch (error) {
-      console.log('error incoming from frontend')
+      alert("Invalid email or Pasword")
       console.log('error', error)
     }
   }
@@ -49,62 +49,54 @@ function Login() {
   
 
   return (
-    <div className="login"  >
-    <Row justify="center">
-    <Col  className="form-col">
-    <Form className="form" name="basic"initialValues={{remember: true,}} onFinish={onSubmit} onFinishFailed={onFinishFailed}
     
-    >
-            
-    <div className="login-title">
-      <img src={logo} className="login-logo"></img>
-      <span>
-        <h1 style={{display: 'inline'}}>Mariano Marcos State University
-        </h1>
-        <h2 style={{display: 'inline'}}>Virtual Research Management System</h2>
-        </span>
-    </div>
+    <Row justify="center">
+    <Col  >
+      <Form style={{marginTop: "50%"}} name="basic"initialValues={{remember: true,}} onFinish={onSubmit} onFinishFailed={onFinishFailed}>
+            <h1 style={{fontFamily: "Montserrat", fontWeight: "bolder"}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</h1>
     <Col sm={24}>
-    <div className="login-input">
-      <Form.Item name="email"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your email!',
-          },
-        ]}
-       >
-          <Input  placeholder="Enter Email" prefix={<MailOutlined />} onChange={e => setUser({...user, email: e.target.value})} value={user.email}/>
-      </Form.Item>
-
-      <Form.Item name="password"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your password!',
-          },
-        ]}
+    <Row justify="center">
+      <div >
+        <Form.Item name="email"  
+            rules={[
+            {
+              required: true,
+              message: 'Please input your email!',
+            },
+            ]}
         >
-          <Input.Password placeholder="Enter password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={e => setUser({...user, password: e.target.value})} value={user.password}/>
-       </Form.Item>
-    </div>   
+          <Input  placeholder="Enter Email" prefix={<MailOutlined />} onChange={e => setUser({...user, email: e.target.value})} value={user.email}/>
+        </Form.Item>
+
+        <Form.Item name="password" 
+          rules={[
+            {
+              required: true,
+              message: 'Please input your password!',
+            },
+          ]}
+          >
+            <Input.Password placeholder="Enter password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={e => setUser({...user, password: e.target.value})} value={user.password}/>
+        </Form.Item>
+      </div> 
+      </Row>  
     </Col> 
+    
     <Col>  
       <Row justify="center">
         <Form.Item >
-        <Button className="LoginBtn" htmlType="submit" >LOGIN</Button>
+        <Button style={{background: "#389E0D", borderRadius: "10px"}} htmlType="submit" >LOGIN</Button>
         </Form.Item>   
       </Row>    
     </Col>    
      <Col>
         <Row justify="center">
-        <Button type= "link" className="forgot"> Forgot your Password?</Button>
+        <Button type= "link" style={{fontFamily: "Montserrat",color: "#000000"}}> Forgot your Password?</Button>
         </Row>
     </Col>   
-</Form>
+    </Form>
     </Col>
-  </Row>
-  </div>
+    </Row>
   )
 }
 

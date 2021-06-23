@@ -12,6 +12,8 @@ import {
 } from 'react-datasheet-grid'
 import 'react-datasheet-grid/dist/index.css'
 import Sidebar from '../components/components/Sidebar'
+import { onUserLogout } from '../services/authAPI';
+
 
 
 const { Header, Content, Sider } = Layout;
@@ -44,31 +46,27 @@ const addNewColumn = () => {
     setColumns([...columns, textColumn({title: <div>{newColumn}</div>, key: newColumn})])
 }
 
-  const handleLogout = async () => {
-    try {
-
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      dispatch({
-        type: "VERIFIED_AUTHENTICATION",
-        value: false
-     })
-      history.push('/')
-    } catch (error) {
-      console.error(error)
-      alert(error.response.data.error);
+const handleLogout = async () => {
+   
+  try {
+    const tokens = {
+      refreshToken: localStorage.getItem("refreshToken"),
+      accessToken: localStorage.getItem("accessToken")
     }
-  };
-
-  const account = async () => {
-    try {
-      history.push("/account")
-    } catch (error) {
-      console.log(error)
-    }
+    
+    onUserLogout(tokens)
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    dispatch({
+      type: "VERIFIED_AUTHENTICATION",
+      value: false
+   })
+    history.push('/')
+  } catch (error) {
+    console.error(error)
+    alert(error.response.data.error);
   }
-
-
+};
   return (
     <div>
       <Layout  > 
@@ -83,7 +81,7 @@ const addNewColumn = () => {
       </Sider>
     <Layout style={{ marginLeft: 200 }}>
       <Header style={{ padding: 0, background:'#f2f2f2' }} >
-      <a href="/dash"style={{padding: '25px', fontSize: '32px', color: 'black', fontFamily: 'Montserrat'}} >Studies</a>
+      <a style={{padding: '25px', fontSize: '32px', color: 'black', fontFamily: 'Montserrat'}} >Studies</a>
         <a  onClick={handleLogout}  style={{float: 'right', color:'black', fontFamily: 'Montserrat'}}>Logout</a>
       </Header>
       <Content style={{ margin: '24px 16px 0', overflow: 'initial' }} >          

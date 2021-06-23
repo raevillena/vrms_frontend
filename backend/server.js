@@ -14,7 +14,7 @@ db.on('error', (error) => console.error(error))
 db.once('open', () => console.log('connected to database'))
 
 app.use(express.json())
-app.use(express.urlencoded())
+app.use(express.urlencoded({extended: true}))
 const userRouter =  require('./routes/user')
 const authRouter =  require('./routes/auth')
 

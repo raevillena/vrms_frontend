@@ -10,8 +10,8 @@ export async function onChangePassword(body) {
                     } 
         });
     } catch (error) {
-        return {
-            error: error
-        }
+        return 
+            alert(error)
+        
     }
 }

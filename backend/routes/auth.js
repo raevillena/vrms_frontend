@@ -4,35 +4,41 @@ const User = require('../models/user')
 const router = express.Router()
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
+const bcrypt = require ('bcrypt');
 
 //LOGIN
 router.post('/login', async (req, res) => {
     try{
 
         if (!req.body.email || !req.body.password) {
-            res.status(403).json({message: "Maling ka"})
+            res.status(403).json({message: "Mali"})
         }
 
-        const user = await User.findOne({email: req.body.email , password:req.body.password })
-        if (user === null) {
-            res.status(403).json({message: "Error"})
+        const user = await User.findOne({email: req.body.email})
+        if (!user) {
+            res.status(403).json({message: "User not found"})
         }
-        const refreshDuration = '18000'
-        const accessToken = await generateAccessToken(user);
-        const refreshToken = await jwt.sign({user}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: refreshDuration})
-           
+            let valid = await bcrypt.compare(req.body.password, user.password);
+                if(valid){
+                    const refreshDuration = '18000'
+                    const accessToken = await generateAccessToken(user);
+                    const refreshToken = await jwt.sign({user}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: refreshDuration})
+
+                const token = new Token({
+                    id: user.id,
+                    refreshToken: refreshToken,
+                    refreshTokenDuration: refreshDuration,
+                    isActive: true
+                })
+                const newToken = await token.save()
         
-        const token = new Token({
-            id: user.id,
-            refreshToken: refreshToken,
-            refreshTokenDuration: refreshDuration,
-            isActive: true
-        })
-       const newToken = await token.save()
-        
-        res.status(200).json({data: user, token: token, accessToken})
+                res.status(200).json({data: user, token: token, accessToken})
+                }else{
+                    return res.status(401).json({ error: "Invalid password!" });
+                }
     }catch(err){
-        res.status(500).json({message: err.message})
+        return res.status(500).json({ error: "Internal Server Error!" })
+        console.log(err)
     }
 })
 
@@ -75,9 +81,13 @@ router.post('/renewToken', async (req, res, next) =>{
 
 router.post('/logout', (req,res) =>{
     const refreshToken = req.body.refreshToken
+    console.log(refreshToken)
     Token.updateOne({refreshToken: refreshToken}, {isActive: false}, (err, res) =>{
-        if (err) throw err
-        console.log("Updated")
+        if (err) {
+            throw err
+        }else{
+            console.log("Updated DB")
+        }
     })
 })
 //middleware
@@ -106,7 +116,7 @@ async function auth(req, res, next){
 
 
 function generateAccessToken(user){
-    return jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '7200'})
+    return jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '36000'})
 }
 
 module.exports = router
