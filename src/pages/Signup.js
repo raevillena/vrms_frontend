@@ -57,15 +57,6 @@ const Signup = () => {
                             ]}>
                         <Input placeholder="Enter Title" onChange={e => setUser({...user, title: e.target.value})} value={user.title}></Input>
                     </Form.Item>
-                    <Form.Item name="Password" 
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please input your password!',
-                            },
-                            ]}>
-                        <Input placeholder="Auto Generated Password" onChange={e => setUser({...user, password: e.target.value})} value={user.password}></Input>
-                    </Form.Item>
                     <Button onClick={onSubmit}>CREATE USER</Button>
                 </Form>
             </Row>

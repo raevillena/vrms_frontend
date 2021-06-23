@@ -4,28 +4,54 @@ const User = require('../models/user')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 const bcrypt = require ('bcrypt');
+var generator = require('generate-password');
+var nodemailer = require('nodemailer');
 
 //create user
 router.route('/secretcreateuser').post(async (req, res) => {
+    var password = generator.generate({
+        length: 10,
+        numbers: true
+    });
+    console.log(password)
     const users = new User({
         name: req.body.name,
         email: req.body.email,
         project: req.body.project,
         title: req.body.title,
-        password: req.body.password
+        password: password
     })
     try{   
     const doesExist = await User.findOne({email: users.email})
     if (doesExist){
         console.log("email taken")
-        res.send("Email already taken")
+        res.status(400).json("Email already taken")
     }else{
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: 'mmsuvrms@gmail.com',
+              pass: 'lalalililolo98765!'
+            }
+          });
+          var mailOptions = {
+            from: 'mmsuvrms@gmail.com',
+            to: users.email,
+            subject: 'VRMS ACCOUNT',
+            text: 'You can login in Mariano Marcos State University Virtual Research Management System with your email and with this password:' + users.password
+          };
+          console.log
+          transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Email sent: ' + info.response);
+            }
+          });
         const newUser =  await users.save()
         console.log(newUser)
          res.status(201).json(newUser)
         } 
-        
-    
     } catch(err){
          res.status(400).json({message: err.message})
     }
