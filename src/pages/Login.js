@@ -1,5 +1,3 @@
-import '../styles/CSS/Login.css';
-import logo from '../components/images/logo.png'
 import { MailOutlined } from '@ant-design/icons';
 import { Input, Button, Form, Row, Col, Modal } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
@@ -49,7 +47,7 @@ function Login() {
   
 
   return (
-    
+    <body style={{background: '#f2f2f2', minHeight: "100vh"}}>
     <Row justify="center">
     <Col  >
       <Form style={{marginTop: "50%"}} name="basic"initialValues={{remember: true,}} onFinish={onSubmit} onFinishFailed={onFinishFailed}>
@@ -78,25 +76,22 @@ function Login() {
           >
             <Input.Password placeholder="Enter password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={e => setUser({...user, password: e.target.value})} value={user.password}/>
         </Form.Item>
+        <Button type= "link" style={{fontFamily: "Montserrat",color: "#000000", float: 'right'}}> Forgot your Password?</Button>
       </div> 
       </Row>  
     </Col> 
-    
+     
     <Col>  
       <Row justify="center">
         <Form.Item >
-        <Button style={{background: "#389E0D", borderRadius: "10px"}} htmlType="submit" >LOGIN</Button>
+        <Button style={{background: "#A0BF85", borderRadius: "5px"}} htmlType="submit" >LOGIN</Button>
         </Form.Item>   
       </Row>    
-    </Col>    
-     <Col>
-        <Row justify="center">
-        <Button type= "link" style={{fontFamily: "Montserrat",color: "#000000"}}> Forgot your Password?</Button>
-        </Row>
-    </Col>   
+    </Col>     
     </Form>
     </Col>
     </Row>
+    </body>
   )
 }
 

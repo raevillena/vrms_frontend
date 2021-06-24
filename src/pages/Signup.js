@@ -1,4 +1,4 @@
-import '../styles/CSS/Login.css';
+
 import { Input, Button, Form, Row, Col, Modal } from 'antd';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
@@ -57,6 +57,7 @@ const Signup = () => {
                             ]}>
                         <Input placeholder="Enter Title" onChange={e => setUser({...user, title: e.target.value})} value={user.title}></Input>
                     </Form.Item>
+
                     <Button onClick={onSubmit}>CREATE USER</Button>
                 </Form>
             </Row>

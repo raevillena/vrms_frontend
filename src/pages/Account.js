@@ -16,7 +16,6 @@ const Account = () => {
     let history= useHistory();
     const dispatch = useDispatch();
     const userObj = useSelector(state => state.userReducer)
-    console.log(userObj.USER._id)
     const [password, setPassword] = useState({oldPassword: "", newPassword: "", confrimPassword: ""})
 
     async function onSubmit(){
@@ -30,8 +29,8 @@ const Account = () => {
            if(password.newPassword != password.confrimPassword){
             alert("Password does not match!")
            }else{
-                await onChangePassword(data)
-                alert("Successfully Updated Password")
+              await onChangePassword(data)
+              alert("Successfully Updated Password")
           }
        } catch (error) {
            console.log(error)
@@ -71,22 +70,22 @@ const Account = () => {
         left: 0,
         background:'white'
       }} >
-        <Sidebar></Sidebar>
+        <Sidebar/>
       </Sider>
     <Layout style={{ marginLeft: 200 }}>
       <Header style={{ padding: 0, background:'#f2f2f2' }} >
       <a href="/dash"style={{padding: '25px', fontSize: '32px', color: 'black', fontFamily: 'Montserrat'}} >Account</a>
-        <a  onClick={handleLogout}  style={{float: 'right', color:'black', fontFamily: 'Montserrat'}}>Logout</a>
+        <a  onClick={handleLogout}  style={{float: 'right', color:'black', fontFamily: 'Montserrat', margin: '0px 16px 0'}}>Logout</a>
       </Header>
-      <Content style={{ margin: '24px 16px 0', overflow: 'initial' }} >        
-      <Form style={{borderRadius: "10px", background:"white",maxWidth: "50%"}}>
+      <Content style={{ margin: '24px 16px 0', overflow: 'initial', minHeight: "100vh" }} >        
+      <Form style={{borderRadius: "10px", background:"white",maxWidth: "40%", fontFamily: "Montserrat"}}>
           <Form.Item>picture</Form.Item>
-          <Form.Item><label>Name:</label>{userObj.USER.name}</Form.Item>
-          <Form.Item><label>Title:</label>{userObj.USER.title}</Form.Item>
-          <Form.Item><label>Project:</label>{userObj.USER.project}</Form.Item>
-          <Form.Item><label>Email:</label>{userObj.USER.email}</Form.Item>
+          <Form.Item>{userObj.USER.name}</Form.Item>
+          <Form.Item>{userObj.USER.title}</Form.Item>
+          <Form.Item>{userObj.USER.project}</Form.Item>
+          <Form.Item>{userObj.USER.email}</Form.Item>
       </Form>
-      <Form style={{borderRadius: "10px", background:"white", maxWidth:"50%"}}>
+      <Form style={{borderRadius: "10px", background:"white", maxWidth:"40%", fontFamily: "Montserrat"}}>
           <h1>CHANGE PASSWORD</h1>
       <Form.Item style={{maxWidth:"50%"}}
               rules={[
@@ -125,10 +124,10 @@ const Account = () => {
           <Input.Password placeholder="Confirm New Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
           onChange={e => setPassword({...password, confrimPassword: e.target.value})} value={password.confrimPassword}
           />
-        <Form.Item>
-            <Button htmlType="submit" onClick={onSubmit}>SUBMIT</Button>
-        </Form.Item>
        </Form.Item>
+       <Form.Item>
+            <Button htmlType="submit" style={{background: "#A0BF85", borderRadius: "5px"}}onClick={onSubmit}>SUBMIT</Button>
+        </Form.Item>
        </Form>
       </Content>
       

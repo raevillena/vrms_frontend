@@ -17,6 +17,7 @@ export async function onUserLogin(body) {
     }
 }
 
+//for authentication
 export async function verifyAuth() {
     try {
         const accessToken = localStorage.getItem("accessToken")
@@ -35,6 +36,7 @@ export async function verifyAuth() {
                         'Content-Type': 'application/json',
                     } 
         })
+
     } catch (error) {
         return {
             status: error,
@@ -61,8 +63,7 @@ export async function onUserCreate(body) {
 
 export async function onUserLogout(body) {
     try {
-        return axios.post("/v1/auth/logout", body
-        );
+        return axios.post("/v1/auth/logout", body);
     } catch (error) {
         return {
             status: 'false',

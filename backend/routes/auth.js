@@ -42,6 +42,7 @@ router.post('/login', async (req, res) => {
     }
 })
 
+//Verify authentiction
 router.post('/verify',auth, async (req, res) =>{
     try {
         res.status(200).json({status: true})
@@ -50,9 +51,10 @@ router.post('/verify',auth, async (req, res) =>{
     }
 })
 
-
+//Renewal of Access Token
 router.post('/renewToken', async (req, res, next) =>{
     try {
+        console.log(req.body.refreshToken)
         const token = Token.findOne({refreshToken: req.body.refreshToken})
         const refreshToken = token.refreshToken
         console.log(refreshToken)
@@ -79,6 +81,7 @@ router.post('/renewToken', async (req, res, next) =>{
     
 })
 
+//Logout
 router.post('/logout', (req,res) =>{
     const refreshToken = req.body.refreshToken
     console.log(refreshToken)
@@ -90,8 +93,11 @@ router.post('/logout', (req,res) =>{
         }
     })
 })
+
+
 //middleware
 
+//for user authentication
 async function auth(req, res, next){
    try {
     let token = req.header('Authorization')
@@ -114,7 +120,7 @@ async function auth(req, res, next){
 }
 
 
-
+//generating access token
 function generateAccessToken(user){
     return jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '36000'})
 }

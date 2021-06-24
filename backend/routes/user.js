@@ -31,14 +31,14 @@ router.route('/secretcreateuser').post(async (req, res) => {
             service: 'gmail',
             auth: {
               user: 'mmsuvrms@gmail.com',
-              pass: 'lalalililolo98765!'
+              pass: 'lalalililolo98765'
             }
           });
           var mailOptions = {
             from: 'mmsuvrms@gmail.com',
             to: users.email,
             subject: 'VRMS ACCOUNT',
-            text: 'You can login in Mariano Marcos State University Virtual Research Management System with your email and with this password:' + users.password
+            text: 'You can login in Mariano Marcos State University Virtual Research Management System with your email using this password:' + users.password
           };
           console.log
           transporter.sendMail(mailOptions, function(error, info){
@@ -67,11 +67,9 @@ router.route('/secretcreateuser').post(async (req, res) => {
         if(!user){
             res.status(403).json({message: "User not found"})
         }else{
-            console.log(req.body.oldPass)
             let valid = await bcrypt.compare(req.body.oldPass, user.password)
             if(valid)
             {
-                console.log("herename")
                 let salt = await bcrypt.genSalt(10)
                 let hashedPassword = await bcrypt.hash(req.body.newPass, salt)
                 User.updateOne({_id: user.id}, {password: hashedPassword}, (err, res) =>{
@@ -89,8 +87,6 @@ router.route('/secretcreateuser').post(async (req, res) => {
         res.status(500).json({message: error.message})
      }
  })
-
-
 
 
  //getone specific user

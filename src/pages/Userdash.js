@@ -1,9 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Layout, Menu, Button, Table, Row, Col,Progress, Tag } from 'antd'
-import logo from '../components/images/logo.png'
 import '../styles/CSS/Userdash.css'
-import { BookOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 
 import Sidebar from '../components/components/Sidebar'
@@ -141,9 +139,9 @@ const Userdash = () => {
     <Layout style={{ marginLeft: 200 }}>
       <Header style={{ padding: 0, background:'#f2f2f2' }} >
       <a href="/dash" style={{padding: '25px', fontSize: '24px', color: 'black', fontFamily: 'Montserrat'}}>Studies</a>
-        <a  onClick={handleLogout}  tyle={{float: 'right', color:'black', fontFamily: 'Montserrat'}}>Logout</a>
+        <a  onClick={handleLogout}  tyle={{float: 'right', color:'black', fontFamily: 'Montserrat', margin: '0px 16px 0'}}>Logout</a>
       </Header>
-      <Content style={{ margin: '24px 16px 0', overflow: 'initial' }} >          
+      <Content style={{ margin: '24px 16px 0', overflow: 'initial', minHeight:'100vh' }} >          
         <Table size="small" dataSource={dataSource} columns={columns}></Table>
       </Content>
       
