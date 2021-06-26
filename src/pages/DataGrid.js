@@ -1,9 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector} from 'react-redux';
 import { Layout, Menu, Button} from 'antd'
-import logo from '../components/images/logo.png'
-import { BookOutlined, UserOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router-dom';
 import {
   DataSheetGrid,
   checkboxColumn,
@@ -12,8 +9,7 @@ import {
 } from 'react-datasheet-grid'
 import 'react-datasheet-grid/dist/index.css'
 import Sidebar from '../components/components/Sidebar'
-import { onUserLogout } from '../services/authAPI'
-import  Camera  from '../components/components/Camera';
+import Headers from '../components/components/Header'
 
 
 const { Header, Content, Sider } = Layout;
@@ -21,8 +17,7 @@ const { Header, Content, Sider } = Layout;
 
 
 const DataGrid = () => {
-  let history= useHistory();
-  const dispatch = useDispatch();
+ 
 
   const [ data, setData ] = useState([
     { active: true, firstName: 'Ellon', lastName: 'Musk' },
@@ -50,27 +45,6 @@ const addNewColumn = () => {
 }
 
 
-
-const handleLogout = async () => { 
-  try {
-    const tokens = {
-      refreshToken: localStorage.getItem("refreshToken"),
-      accessToken: localStorage.getItem("accessToken")
-    }
-    
-    onUserLogout(tokens)
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    dispatch({
-      type: "VERIFIED_AUTHENTICATION",
-      value: false
-   })
-    history.push('/')
-  } catch (error) {
-    console.error(error)
-    alert(error.response.data.error);
-  }
-};
   return (
     <div>
       <Layout  > 
@@ -81,12 +55,11 @@ const handleLogout = async () => {
         left: 0,
         background:'white'
       }} >
-          <Sidebar></Sidebar>
+          <Sidebar/>
       </Sider>
     <Layout style={{ marginLeft: 200 }}>
       <Header style={{ padding: 0, background:'#f2f2f2' }} >
-      <a style={{padding: '25px', fontSize: '32px', color: 'black', fontFamily: 'Montserrat'}} >Studies</a>
-        <a  onClick={handleLogout}  style={{float: 'right', color:'black', fontFamily: 'Montserrat', margin: '0px 16px 0'}}>Logout</a>
+      <Headers/>
       </Header>
       <Content style={{ margin: '24px 16px 0', overflow: 'initial' , minHeight: "100vh"}} >          
       <DataSheetGrid

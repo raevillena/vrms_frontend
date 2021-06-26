@@ -10,6 +10,7 @@ import {verifyAuth} from '@services/authAPI'
 import { useHistory } from 'react-router-dom';
 import Account from '@pages/Account'
 import Signup from '@pages/Signup';
+import { onRenewToken } from './services/authAPI';
 
 function App() {
   let history= useHistory();
@@ -17,7 +18,7 @@ function App() {
   const authObj = useSelector(state => state.auth)
   
   const {AUTHENTICATED}  = authObj
- 
+ //authentication for public and private route
   useEffect(() => {
     async function verify() {
       let result = await verifyAuth()
@@ -37,11 +38,31 @@ function App() {
     verify()
 }, [])
 
+// updating access token
+useEffect(() => {
+  let token = {refreshToken : localStorage.getItem("refreshToken")}
+  
+  async function renew(){
+    console.log('updating access token')
+   let result = await onRenewToken(token)
+   console.log(result.request.status)
+   
+    if (result) {
+      localStorage.setItem("accessToken", result.data.accessToken);
+      let x = localStorage.getItem("accessToken")
+      console.log("access token updated")
+      console.log(x)
+   }else {
+      console.log("refresh token expired")
+      localStorage.removeItem("accessToken")
+      localStorage.removeItem("refreshToken")
+  }
+}
+  renew()
+})
 
   return (
-
     <BrowserRouter>
-    
     <Switch>
       <PublicRoute path="/" exact component={LoginPage} isAuthenticated={AUTHENTICATED}  />
       <PublicRoute path="/secretcreateuser" exact component={Signup} isAuthenticated={AUTHENTICATED}  />
@@ -50,9 +71,7 @@ function App() {
       <PrivateRoute path="/account" exact component={Account} isAuthenticated={AUTHENTICATED}/>
       <Redirect to={AUTHENTICATED ? '/dash' : '/'} />
     </Switch>
- 
     </BrowserRouter>
-
   );
 }
 

@@ -17,10 +17,12 @@ const Signup = () => {
             console.log(error)
         }
     }
+
     return (
         <div>
-            <Row>
-                <Form>
+            <Row justify="center" style={{minHeight: '100vh', background: '#f2f2f2'}}>
+                <Form style={{marginTop: '25%'}}>
+                <h1 style={{fontFamily: "Montserrat", fontWeight: "bolder"}}>SIGN UP</h1>
                     <Form.Item name="Name" 
                     rules={[
                         {
@@ -48,6 +50,7 @@ const Signup = () => {
                                 ]}>
                         <Input placeholder="Enter Project" onChange={e => setUser({...user, project: e.target.value})} value={user.project}></Input>
                     </Form.Item>
+                    
                     <Form.Item name="Title" 
                             rules={[
                             {
@@ -57,8 +60,9 @@ const Signup = () => {
                             ]}>
                         <Input placeholder="Enter Title" onChange={e => setUser({...user, title: e.target.value})} value={user.title}></Input>
                     </Form.Item>
-
-                    <Button onClick={onSubmit}>CREATE USER</Button>
+                    <Row justify="center">
+                    <Button onClick={onSubmit} style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE USER</Button>
+                    </Row>
                 </Form>
             </Row>
         </div>

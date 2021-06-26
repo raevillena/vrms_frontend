@@ -8,9 +8,9 @@ import { useHistory } from 'react-router-dom';
 const Sidebar = () => {
     let history= useHistory();
 
-    const dataGathering = async () => {
+    const research = async () => {
         try {
-          history.push("/datagrid")
+          history.push("/dash")
         } catch (error) {
           console.log(error)
         }
@@ -27,8 +27,8 @@ const Sidebar = () => {
         <div>
              <img src={logo} className="logo"></img>
           <Menu>
-          <Menu.Item key="1" icon={<BookOutlined />} className="menu1" onClick={dataGathering}>
-            Data Gathering
+          <Menu.Item key="1" icon={<BookOutlined />} className="menu1" onClick={research}>
+           Research
           </Menu.Item>
           <Menu.Item key="2" icon={<UserOutlined />} className="menu1" onClick={account}>
             Account

@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Layout, Menu, Button, Table, Row, Col,Progress, Tag } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
-
 import Sidebar from '../components/components/Sidebar'
+import Headers from '../components/components/Header'
 
 const { Header, Content, Sider } = Layout;
 
@@ -16,21 +16,14 @@ const Userdash = () => {
   const dispatch = useDispatch();
 
 
-  const handleLogout = async () => {
+  // manage study
+  const manage = async ()=>{
     try {
-
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      dispatch({
-        type: "VERIFIED_AUTHENTICATION",
-        value: false
-     })
-      history.push('/')
+      history.push('/datagrid')
     } catch (error) {
-      console.error(error)
-      alert(error.response.data.error);
+      console.log(error)
     }
-  };
+  }
 
   const dataSource = [
     {
@@ -47,7 +40,7 @@ const Userdash = () => {
       key: '2',
       title: 'ATry lang title 1',
       studyno: 31,
-      date: 'May 31,2021 10:00 AM',
+      date: 'June 24,2021 10:00 AM',
       updated: 'May 31,2021 10:00 AM',
       progress: 80,
       status: ['Ongoing'],
@@ -61,26 +54,27 @@ const Userdash = () => {
       dataIndex: 'studyno',
       key: 'study no',
       width: '10%',
+      sorter: true,
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.studyno - b.studyno,
     },
     {
       title: 'Date Created',
       dataIndex: 'date',
       key: 'date',
-      sorter: true,
       width: '15%',
+      
     },
     {
       title: 'Updated',
       dataIndex: 'updated',
       key: 'updated',
-      sorter: true,
       width: '15%',
     },
     {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      sorter: true,
       width: '25%',
     },
     {
@@ -99,6 +93,7 @@ const Userdash = () => {
         { text: 'Completed', value: 'Completed' },
         { text: 'Ongoing', value: 'Ongoing' },
       ],
+      onFilter: (value, record) => record.status.indexOf(value) === 0,
       width: '10%',
       render: stat => (
         <span>
@@ -120,7 +115,7 @@ const Userdash = () => {
       dataIndex: 'action',
       key: 'action',
       width: '15%',
-      render: () => <Button className="manageBtn">MANAGE</Button>
+      render: () => <Button onClick={manage} className="manageBtn">MANAGE</Button>
     },
   ];
   
@@ -128,23 +123,21 @@ const Userdash = () => {
       
     <Layout  > 
       <Sider  style={{
-        overflow: 'auto',
-        height: '100vh',
-        position: 'fixed',
-        left: 0,
-        backgroud: 'white'
-      }} >
-         <Sidebar></Sidebar>
+          overflow: 'auto',
+          height: '100vh',
+          position: 'fixed',
+          left: 0,
+          background:'white'
+        }} >
+          <Sidebar/>
       </Sider>
     <Layout style={{ marginLeft: 200 }}>
       <Header style={{ padding: 0, background:'#f2f2f2' }} >
-      <a href="/dash" style={{padding: '25px', fontSize: '24px', color: 'black', fontFamily: 'Montserrat'}}>Studies</a>
-        <a  onClick={handleLogout}  tyle={{float: 'right', color:'black', fontFamily: 'Montserrat', margin: '0px 16px 0'}}>Logout</a>
+        <Headers/>
       </Header>
       <Content style={{ margin: '24px 16px 0', overflow: 'initial', minHeight:'100vh' }} >          
-        <Table size="small" dataSource={dataSource} columns={columns}></Table>
+        <Table size="small" dataSource={dataSource} columns={columns} style={{minWidth:'100%'}}></Table>
       </Content>
-      
     </Layout>      
 </Layout>
 

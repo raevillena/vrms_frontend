@@ -15,12 +15,13 @@ router.post('/login', async (req, res) => {
         }
 
         const user = await User.findOne({email: req.body.email})
+       // console.log(user)
         if (!user) {
             res.status(403).json({message: "User not found"})
         }
             let valid = await bcrypt.compare(req.body.password, user.password);
                 if(valid){
-                    const refreshDuration = '18000'
+                    const refreshDuration = '300000'
                     const accessToken = await generateAccessToken(user);
                     const refreshToken = await jwt.sign({user}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: refreshDuration})
 
@@ -43,37 +44,39 @@ router.post('/login', async (req, res) => {
 })
 
 //Verify authentiction
-router.post('/verify',auth, async (req, res) =>{
+router.get('/verify',auth, async (req, res) =>{
     try {
         res.status(200).json({status: true})
     } catch (error) {
-        res.status(500).json({message: err.message})
+        res.status(500).json(error)
     }
 })
 
 //Renewal of Access Token
 router.post('/renewToken', async (req, res, next) =>{
     try {
-        console.log(req.body.refreshToken)
-        const token = Token.findOne({refreshToken: req.body.refreshToken})
-        const refreshToken = token.refreshToken
+        const refreshToken = req.body.refreshToken
         console.log(refreshToken)
     
         if (refreshToken == null){
             console.log('error1')
-            return res.sendStatus(401)
+            return res.status(401).json('Unauthorized')
         }
         jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async(err, user) =>{
             if(err){
                 console.log(err)
                 Token.updateOne({refreshToken: refreshToken}, {isActive: false}, (err, res) =>{
-                    if (err) throw err
-                    console.log("Updated")
+                    if (err) {
+                    console.log(err)  
+                    }else{
+                    console.log("Database updated, expired token")
+                    }
                 })
-                return res.sendStatus(401).json({err})
-            }
-            const accessToken = generateAccessToken(user)
-            res.status(200).json({accessToken})
+            }else{
+                const accessToken = generateAccessToken(user)
+                res.status(200).json({accessToken})
+            } 
+            return res.status(401).json('Unauthorized')
         })
     } catch (error) {
         next(error)
@@ -97,7 +100,7 @@ router.post('/logout', (req,res) =>{
 
 //middleware
 
-//for user authentication
+//for user authentication using access token
 async function auth(req, res, next){
    try {
     let token = req.header('Authorization')
@@ -108,7 +111,6 @@ async function auth(req, res, next){
     }
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async(err, payload) => {
       if(err){
-          console.log(err)
         return res.sendStatus(401).json({err})
       }
       req.payload =payload
@@ -122,7 +124,7 @@ async function auth(req, res, next){
 
 //generating access token
 function generateAccessToken(user){
-    return jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '36000'})
+    return jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '60000'})
 }
 
 module.exports = router

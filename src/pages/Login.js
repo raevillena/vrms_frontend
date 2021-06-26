@@ -20,6 +20,7 @@ function Login() {
     }
     try {
       let result = await onUserLogin(getUser)
+      console.log(result)
       localStorage.setItem("accessToken", result.data.accessToken);
       localStorage.setItem("refreshToken", result.data.token.refreshToken);
 
@@ -33,7 +34,7 @@ function Login() {
         value: true
      })
     
-      history.push('/datagrid')
+      history.push('/dash ')
 
     } catch (error) {
       alert("Invalid email or Pasword")
@@ -51,8 +52,9 @@ function Login() {
     <Row justify="center">
     <Col  >
       <Form style={{marginTop: "50%"}} name="basic"initialValues={{remember: true,}} onFinish={onSubmit} onFinishFailed={onFinishFailed}>
-            <h1 style={{fontFamily: "Montserrat", fontWeight: "bolder"}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</h1>
+      
     <Col sm={24}>
+    <h1 style={{fontFamily: "Montserrat", fontWeight: "bolder"}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</h1>
     <Row justify="center">
       <div >
         <Form.Item name="email"  

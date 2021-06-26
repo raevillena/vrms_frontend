@@ -29,10 +29,10 @@ export async function verifyAuth() {
                 error: 'Access Token / Refresh Token is missing'
             }
         }
-
-        return axios.post("/v1/auth/verify", {
+        
+        return axios.get("/v1/auth/verify", {
             headers: {
-                         Authorization : `Bearer ${accessToken}`,
+                         'Authorization' : `Bearer ${accessToken}`,
                         'Content-Type': 'application/json',
                     } 
         })
@@ -69,6 +69,14 @@ export async function onUserLogout(body) {
             status: 'false',
             error: error
         }
+    }
+}
+
+export async function onRenewToken(body) {
+    try {
+        return axios.post("/v1/auth/renewToken", body);
+    } catch (error) {
+      console.log(error)
     }
 }
 
