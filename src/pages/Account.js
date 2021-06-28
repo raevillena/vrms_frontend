@@ -54,21 +54,20 @@ const Account = () => {
 
     const handleChange = info => {
       if (info.file.status === 'uploading') {
-        this.setState({ loading: true });
+        setLoading(true)
         return;
       }
       if (info.file.status === 'done') {
         // Get this url from response in real world.
         getBase64(info.file.originFileObj, imageUrl =>
-          this.setState({
-            imageUrl,
-            loading: false,
-          }),
+          setLoading(false),
+          setImageUrl(imageUrl)
         );
       }
     }
 
-    const { loading, imageUrl } = this.state;
+    const [loading, setLoading] =useState({loading: false})
+    const [imageUrl, setImageUrl] = useState()
     const uploadButton = (
       <div>
         {loading ? <LoadingOutlined /> : <PlusOutlined />}

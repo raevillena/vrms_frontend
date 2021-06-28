@@ -65,7 +65,7 @@ router.route('/secretcreateuser').post(async (req, res) => {
         const user = await User.findOne({_id: req.body.id}) 
         console.log(user)
         if(!user){
-            res.status(403).json({message: "User not found"})
+            res.status(401).json({message: "User not found"})
         }else{
             let valid = await bcrypt.compare(req.body.oldPass, user.password)
             if(valid)
@@ -80,6 +80,7 @@ router.route('/secretcreateuser').post(async (req, res) => {
                     }
                 })
             }else{
+                res.status(401).json({message: "Invalid password"})
                 console.log("invalid password")
             }
         }
@@ -89,39 +90,30 @@ router.route('/secretcreateuser').post(async (req, res) => {
  })
 
 
- //getone specific user
- router.get('/',getUser, (req, res) =>{
-    res.json(User)
+ router.post('/forgotPassword', async(req, res) => {
+  try {
+    console.log(req.body.email)
+    const user = await User.findOne({email: req.body.email})  
+    if(!user){
+        res.status(403).json({message: "User not found"})
+    }else{
+            let salt = await bcrypt.genSalt(10)
+            let hashedPassword = await bcrypt.hash(req.body.newPass, salt)
+            User.updateOne({_id: user.id}, {password: hashedPassword}, (err, res) =>{
+                if (err) {
+                    console.log(err)
+                }else{
+                console.log("Updated")
+                }
+            })
+    }
+  } catch (error) {
+    res.status(500).json({message: error.message})  
+  }
 })
 
-//Getting all
-router.get('/', async (req, res) => {
-    try{
-        const user = await User.find()
-        res.status(200).json(user)
-    }catch(err){
-        res.status(500).json({message: err.message})
-    }
-})
 
-//middleware
-async function getUser(req, res, next){
-    let users
-    try{
-        console.log(req.body)
-        let id = (req.body.id)
-        users = await User.findById(id)
-        if(users === null){
-            res.status(404).json({message: 'Cannot find user'})
-        }
-        res.status(200).json(users)
-    } catch(err){
-        return res.status(500).json({message: err.message})
-    }
 
-   res.users = users
-   next()
-}
 
 
 module.exports = router

@@ -7,15 +7,15 @@ import DataGrid from '@pages/DataGrid';
 import PrivateRoute from '@routes/privateRoute';
 import PublicRoute from '@routes/publicRoute';
 import {verifyAuth} from '@services/authAPI'
-import { useHistory } from 'react-router-dom';
 import Account from '@pages/Account'
 import Signup from '@pages/Signup';
 import { onRenewToken } from './services/authAPI';
 
 function App() {
-  let history= useHistory();
   const dispatch = useDispatch();
   const authObj = useSelector(state => state.auth)
+  const errorObj = useSelector(state => state.errorReducer)
+  console.log(errorObj)
   
   const {AUTHENTICATED}  = authObj
  //authentication for public and private route
@@ -38,28 +38,32 @@ function App() {
     verify()
 }, [])
 
-// updating access token
-useEffect(() => {
-  let token = {refreshToken : localStorage.getItem("refreshToken")}
-  
+
+//to renew acesstoken
+useEffect(()=>{
   async function renew(){
-    console.log('updating access token')
-   let result = await onRenewToken(token)
-   console.log(result.request.status)
-   
-    if (result) {
-      localStorage.setItem("accessToken", result.data.accessToken);
-      let x = localStorage.getItem("accessToken")
-      console.log("access token updated")
-      console.log(x)
-   }else {
-      console.log("refresh token expired")
-      localStorage.removeItem("accessToken")
-      localStorage.removeItem("refreshToken")
-  }
+  let token = {refreshToken : localStorage.getItem("refreshToken")}
+   console.log('updating access token')
+  let result = await onRenewToken(token)
+  console.log(result.status)
+
+   if (result.status == 200) {
+     localStorage.setItem("accessToken", result.data.accessToken);
+     console.log("access token updated")
+     console.log(result.data.user.user)
+     dispatch({
+       type: "SET_USER",
+       value: result.data.user.user
+     })
+  }else {
+    console.log('auth')
+     dispatch({
+       type: "AUTH_ERROR"
+     })
+ }
 }
-  renew()
-})
+renew()
+}, [errorObj])
 
   return (
     <BrowserRouter>

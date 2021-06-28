@@ -12,7 +12,7 @@ function Login() {
   const dispatch = useDispatch();
   
   const [user, setUser] = useState({email:"", password:""});
-
+  
   async function onSubmit(){
     const getUser = {
       email: user.email,
@@ -20,7 +20,7 @@ function Login() {
     }
     try {
       let result = await onUserLogin(getUser)
-      console.log(result)
+      
       localStorage.setItem("accessToken", result.data.accessToken);
       localStorage.setItem("refreshToken", result.data.token.refreshToken);
 
@@ -33,25 +33,48 @@ function Login() {
         type: "VERIFIED_AUTHENTICATION",
         value: true
      })
+
+     dispatch({
+      type: "LOGIN_SUCCESS"
+   })
     
       history.push('/dash ')
 
     } catch (error) {
-      alert("Invalid email or Pasword")
-      console.log('error', error)
+      alert(error.response.data.message)
+      dispatch({
+        type: "GET_ERRORS",
+        message: error.response.data.message,
+        status: error.response.status
+      })
+      dispatch({
+        type: "LOGIN_FAIL",
+      })
     }
   }
  
-   const onFinishFailed = (errorInfo) => {
-     console.log('Failed:', errorInfo);
-   };      
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };   
+   
+   
   
 
   return (
     <body style={{background: '#f2f2f2', minHeight: "100vh"}}>
     <Row justify="center">
     <Col  >
-      <Form style={{marginTop: "50%"}} name="basic"initialValues={{remember: true,}} onFinish={onSubmit} onFinishFailed={onFinishFailed}>
+      <Form style={{marginTop: "50%"}} name="basic"initialValues={{remember: true,}} onFinish={onSubmit}>
       
     <Col sm={24}>
     <h1 style={{fontFamily: "Montserrat", fontWeight: "bolder"}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</h1>
@@ -78,7 +101,10 @@ function Login() {
           >
             <Input.Password placeholder="Enter password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={e => setUser({...user, password: e.target.value})} value={user.password}/>
         </Form.Item>
-        <Button type= "link" style={{fontFamily: "Montserrat",color: "#000000", float: 'right'}}> Forgot your Password?</Button>
+        <Button type= "link" style={{fontFamily: "Montserrat",color: "#000000", float: 'right'}} onClick={showModal}> Forgot your Password?</Button>
+        <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <Input placeholder="Enter Email" prefix={<MailOutlined />}></Input>
+      </Modal>
       </div> 
       </Row>  
     </Col> 

@@ -11,13 +11,13 @@ router.post('/login', async (req, res) => {
     try{
 
         if (!req.body.email || !req.body.password) {
-            res.status(403).json({message: "Mali"})
+            res.status(401).json({message: "Please enter all required fields"})
         }
 
         const user = await User.findOne({email: req.body.email})
        // console.log(user)
         if (!user) {
-            res.status(403).json({message: "User not found"})
+            res.status(401).json({message: "User not found"})
         }
             let valid = await bcrypt.compare(req.body.password, user.password);
                 if(valid){
@@ -35,15 +35,14 @@ router.post('/login', async (req, res) => {
         
                 res.status(200).json({data: user, token: token, accessToken})
                 }else{
-                    return res.status(401).json({ error: "Invalid password!" });
+                    return res.status(401).json({ message: "Invalid password!" });
                 }
     }catch(err){
         return res.status(500).json({ error: "Internal Server Error!" })
-        console.log(err)
     }
 })
 
-//Verify authentiction
+//Verify authentication
 router.get('/verify',auth, async (req, res) =>{
     try {
         res.status(200).json({status: true})
@@ -55,12 +54,14 @@ router.get('/verify',auth, async (req, res) =>{
 //Renewal of Access Token
 router.post('/renewToken', async (req, res, next) =>{
     try {
-        const refreshToken = req.body.refreshToken
-        console.log(refreshToken)
-    
-        if (refreshToken == null){
+        const refToken = req.body.refreshToken //refresh token from localstorage
+        const refreshTokens = await Token.findOne({refreshToken: refToken}) //find refreshtoken if available in db
+        const refreshToken = refreshTokens.refreshToken
+        const user = await User.findOne({_id: refreshTokens.id})
+        console.log(user)
+        if (refToken == null){
             console.log('error1')
-            return res.status(401).json('Unauthorized')
+            return res.status(401).json('Unauthorized/Missing token')
         }
         jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async(err, user) =>{
             if(err){
@@ -74,7 +75,7 @@ router.post('/renewToken', async (req, res, next) =>{
                 })
             }else{
                 const accessToken = generateAccessToken(user)
-                res.status(200).json({accessToken})
+                res.status(200).json({accessToken, user})
             } 
             return res.status(401).json('Unauthorized')
         })
@@ -107,7 +108,7 @@ async function auth(req, res, next){
     token = token.split(" ")[1]
     
     if(token == null){
-        return res.sendStatus(401)
+        return res.sendStatus(401).json({message: "Unauthorized, missing token"})
     }
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async(err, payload) => {
       if(err){

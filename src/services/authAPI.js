@@ -2,7 +2,8 @@ import api from '@services/apiConfig'
 // use api in production
 import axios from 'axios'
 
-export async function onUserLogin(body) {
+
+export async function onUserLogin(body, dispatch) {
     try {
         return axios.post("/v1/auth/login", body, {
             headers: {
@@ -10,6 +11,11 @@ export async function onUserLogin(body) {
                     } 
         });
     } catch (error) {
+        dispatch({
+            type: "GET_ERRORS",
+            message: error.response.data.message,
+            status: error.response.status 
+        })
         return {
             status: 'false',
             error: error
@@ -18,7 +24,7 @@ export async function onUserLogin(body) {
 }
 
 //for authentication
-export async function verifyAuth() {
+export async function verifyAuth(dispatch) {
     try {
         const accessToken = localStorage.getItem("accessToken")
         const refreshToken = localStorage.getItem("refreshToken")
@@ -36,8 +42,15 @@ export async function verifyAuth() {
                         'Content-Type': 'application/json',
                     } 
         })
-
     } catch (error) {
+        dispatch({
+            type: "GET_ERRORS",
+            message: error.response.data.message,
+            status: error.response.status 
+        })
+        dispatch({
+            type: "AUTH_ERROR",
+        })
         return {
             status: error,
             error: error
@@ -46,7 +59,7 @@ export async function verifyAuth() {
 }
 
 
-export async function onUserCreate(body) {
+export async function onUserCreate(body, dispatch) {
     try {
         return axios.post("/v1/user/secretcreateuser", body, {
             headers: {
@@ -54,6 +67,11 @@ export async function onUserCreate(body) {
                     } 
         });
     } catch (error) {
+        dispatch({
+            type: "GET_ERRORS",
+            message: error.response.data.message,
+            status: error.response.status 
+        })
         return {
             status: 'false',
             error: error
@@ -61,10 +79,15 @@ export async function onUserCreate(body) {
     }
 }
 
-export async function onUserLogout(body) {
+export async function onUserLogout(body, dispatch) {
     try {
         return axios.post("/v1/auth/logout", body);
     } catch (error) {
+        dispatch({
+            type: "GET_ERRORS",
+            message: error.response.data.message,
+            status: error.response.status 
+        })
         return {
             status: 'false',
             error: error
@@ -72,11 +95,15 @@ export async function onUserLogout(body) {
     }
 }
 
-export async function onRenewToken(body) {
+export async function onRenewToken(body, dispatch) {
     try {
         return axios.post("/v1/auth/renewToken", body);
     } catch (error) {
-      console.log(error)
+        dispatch({
+            type: "GET_ERRORS",
+            message: error.response.data.message,
+            status: error.response.status 
+        })
     }
 }
 
