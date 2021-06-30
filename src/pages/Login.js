@@ -1,17 +1,20 @@
-import { MailOutlined } from '@ant-design/icons';
-import { Input, Button, Form, Row, Col, Modal } from 'antd';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+
+import { Input, Button, Form, Row, Col, Modal, Typography} from 'antd';
+import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined} from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
 import {onUserLogin } from '@services/authAPI';
 import { useSelector, useDispatch } from 'react-redux';
 
 
+
 function Login() {
   const  history = useHistory();
   const dispatch = useDispatch();
+
+  const { Title } = Typography;
   
-  const [user, setUser] = useState({email:"", password:""});
+  const [user, setUser] = useState({email:"", password:""}); //for login state
   
   async function onSubmit(){
     const getUser = {
@@ -53,33 +56,18 @@ function Login() {
     }
   }
  
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleOk = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };   
-   
-   
+  const forgotPassword = () => {
+    history.push('/forgotpassword')
+  }
+ 
   
-
+  
   return (
     <body style={{background: '#f2f2f2', minHeight: "100vh"}}>
     <Row justify="center">
     <Col  >
       <Form style={{marginTop: "50%"}} name="basic"initialValues={{remember: true,}} onFinish={onSubmit}>
-      
-    <Col sm={24}>
-    <h1 style={{fontFamily: "Montserrat", fontWeight: "bolder"}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</h1>
-    <Row justify="center">
-      <div >
+      <Title level={4} style={{fontFamily: "Bangla MN", fontWeight: "bolder"}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</Title>
         <Form.Item name="email"  
             rules={[
             {
@@ -101,21 +89,9 @@ function Login() {
           >
             <Input.Password placeholder="Enter password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={e => setUser({...user, password: e.target.value})} value={user.password}/>
         </Form.Item>
-        <Button type= "link" style={{fontFamily: "Montserrat",color: "#000000", float: 'right'}} onClick={showModal}> Forgot your Password?</Button>
-        <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-        <Input placeholder="Enter Email" prefix={<MailOutlined />}></Input>
-      </Modal>
-      </div> 
-      </Row>  
-    </Col> 
-     
-    <Col>  
-      <Row justify="center">
-        <Form.Item >
-        <Button style={{background: "#A0BF85", borderRadius: "5px"}} htmlType="submit" >LOGIN</Button>
-        </Form.Item>   
-      </Row>    
-    </Col>     
+        <Form.Item><Button type= "link" style={{fontFamily: "Montserrat",color: "#000000", float: 'right'}} onClick={forgotPassword}> Forgot your password?</Button></Form.Item>
+        <Form.Item><Button block style={{background: "#A0BF85", borderRadius: "5px"}} htmlType="submit" >LOGIN</Button></Form.Item>
+        
     </Form>
     </Col>
     </Row>

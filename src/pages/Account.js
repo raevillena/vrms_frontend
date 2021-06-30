@@ -1,4 +1,4 @@
-import { Row, Col, Layout, Button, Form, Input, Typography, Upload, message } from 'antd'
+import { Row, Col, Layout, Button, Form, Input, Typography, Upload, Modal } from 'antd'
 import React, {useState} from 'react';
 import { useSelector} from 'react-redux';
 import {EyeInvisibleOutlined, EyeTwoTone, LoadingOutlined, PlusOutlined} from '@ant-design/icons';
@@ -27,54 +27,47 @@ const Account = () => {
             alert("Password does not match!")
            }else{
               await onChangePassword(data)
-              alert("Successfully Updated Password")
+              alert("Password Updated")
           }
        } catch (error) {
-           console.log(error)
+          console.log(error)
+          alert("Invalid password")
        }
     }
 
-    function getBase64(img, callback) {
-      const reader = new FileReader();
-      reader.addEventListener('load', () => callback(reader.result));
-      reader.readAsDataURL(img);
+    function getBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
     }
+
+    const[state, setState] = useState({previewVisible: false,previewImage: '',previewTitle: ''})
+
+    const handleCancel = () => setState({ previewVisible: false });
+
+    const handlePreview = async file => {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+  
+      setState({
+        previewImage: file.url || file.preview,
+        previewVisible: true,
+        previewTitle: file.name || file.url.substring(file.url.lastIndexOf('/')+1),
+      });
+    };
     
-    function beforeUpload(file) {
-      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-      if (!isJpgOrPng) {
-        message.error('You can only upload JPG/PNG file!');
-      }
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isLt2M) {
-        message.error('Image must smaller than 2MB!');
-      }
-      return isJpgOrPng && isLt2M;
-    }
-
-    const handleChange = info => {
-      if (info.file.status === 'uploading') {
-        setLoading(true)
-        return;
-      }
-      if (info.file.status === 'done') {
-        // Get this url from response in real world.
-        getBase64(info.file.originFileObj, imageUrl =>
-          setLoading(false),
-          setImageUrl(imageUrl)
-        );
-      }
-    }
-
-    const [loading, setLoading] =useState({loading: false})
-    const [imageUrl, setImageUrl] = useState()
+    const { previewVisible, previewImage, previewTitle } = state;
     const uploadButton = (
       <div>
-        {loading ? <LoadingOutlined /> : <PlusOutlined />}
-        <div style={{ marginTop: 8 }}>Upload</div>
+        <PlusOutlined />
+        <div style={{ marginTop: 8}}>Upload</div>
       </div>
     );
- 
+
     return (
     <div>
       <Layout  > 
@@ -91,36 +84,38 @@ const Account = () => {
           <Header style={{ padding: 0, background:'#f2f2f2' }} >
             <Headers/>
           </Header>
-          <Content style={{ margin: '24px 16px 0', overflow: 'initial', minHeight: "100vh" }} > 
-            <Row gutter={48}> 
-            <Col xs={{span: 8}}>
-            <Form style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat", maxHeight:'100%'}}>
-              <Row gutter={8}>
+          <Content style={{ margin: '24px 16px 0', minHeight: "100vh" }} > 
+          <div style={{display: 'flex', flexDirection: 'row'}}>
+            <Row >
+            <Form style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat", maxWidth: '100%'}}>
+              <Row >
                 <Col xs={{span: 12}}>
                 <Upload
-                    name="avatar"
-                    listType="picture-card"
-                    className="avatar-uploader"
-                    showUploadList={false}
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                    beforeUpload={beforeUpload}
-                    onChange={handleChange}
-                  >
-                    {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                  listType="picture-card"
+                  onPreview={handlePreview}
+                >{uploadButton}
                 </Upload>
+                <Modal
+                  visible={previewVisible}
+                  title={previewTitle}
+                  footer={null}
+                  onCancel={handleCancel}
+                >
+                  <img alt="example" style={{ width: '100%' }} src={previewImage} />
+                </Modal>
                 </Col>
                 <Col xs={{span: 12}}>
                 <Title level={3}>{userObj.USER.name}</Title>
-                <Title level={5}>{userObj.USER.title}</Title>
-                <Title level={5}>{userObj.USER.project}</Title>
-                <Title level={5}>{userObj.USER.email}</Title>
+                <p>{userObj.USER.title}</p>
+                <p >{userObj.USER.project}</p>
+                <p>{userObj.USER.email}</p>
               </Col>
               </Row>
             </Form>
-            </Col> 
-            <Col xs={{span: 8}}>
+            <Col span={12}>
             <Form style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat", display: 'grid', justifyItems: 'center'}}>
-            <Title>Change Password</Title>
+            <Title level={2}>Change Password</Title>
             <Form.Item style={{maxWidth:"50%"}}
                 rules={[
                   {
@@ -162,10 +157,10 @@ const Account = () => {
             <Form.Item>
               <Button htmlType="submit" style={{background: "#A0BF85", borderRadius: "5px"}}onClick={onSubmit}>SUBMIT</Button>
             </Form.Item>
-          
         </Form>
         </Col>
-        </Row>  
+        </Row>
+      </div>
         </Content>
         
       </Layout>      

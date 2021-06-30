@@ -44,7 +44,6 @@ const addNewColumn = () => {
     setColumns([...columns, textColumn({title: <div>{newColumn}</div>, key: newColumn})])
 }
 
-
   return (
     <div>
       <Layout  > 

@@ -9,6 +9,8 @@ import PublicRoute from '@routes/publicRoute';
 import {verifyAuth} from '@services/authAPI'
 import Account from '@pages/Account'
 import Signup from '@pages/Signup';
+import ForgotPassword from '@pages/Forgotpassword';
+import ResetPassword from '@pages/NewPassword'
 import { onRenewToken } from './services/authAPI';
 
 function App() {
@@ -45,16 +47,18 @@ useEffect(()=>{
   let token = {refreshToken : localStorage.getItem("refreshToken")}
    console.log('updating access token')
   let result = await onRenewToken(token)
-  console.log(result.status)
 
-   if (result.status == 200) {
+   if (result.status== 200) {
      localStorage.setItem("accessToken", result.data.accessToken);
      console.log("access token updated")
-     console.log(result.data.user.user)
      dispatch({
        type: "SET_USER",
        value: result.data.user.user
      })
+     dispatch({
+      type: "VERIFIED_AUTHENTICATION",
+      value: true
+   })
   }else {
     console.log('auth')
      dispatch({
@@ -69,6 +73,8 @@ renew()
     <BrowserRouter>
     <Switch>
       <PublicRoute path="/" exact component={LoginPage} isAuthenticated={AUTHENTICATED}  />
+      <PublicRoute path="/forgotpassword" exact component={ForgotPassword} isAuthenticated={AUTHENTICATED}/>
+      <PublicRoute path="/reset-password/" exact component={ResetPassword} isAuthenticated={AUTHENTICATED}/>
       <PublicRoute path="/secretcreateuser" exact component={Signup} isAuthenticated={AUTHENTICATED}  />
       <PrivateRoute path="/dash" exact component={Userdash} isAuthenticated={AUTHENTICATED} />
       <PrivateRoute path="/datagrid" exact component={DataGrid} isAuthenticated={AUTHENTICATED}/>
