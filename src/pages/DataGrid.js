@@ -65,7 +65,6 @@ const addNewColumn = () => {
           data={data}
           onChange={setData}
           columns={columns}
-
         />
         <input onChange={(e)=> {setNewColumn(e.target.value)}}/>
         <button onClick={addNewColumn}>

@@ -60,13 +60,62 @@ function Login() {
     history.push('/forgotpassword')
   }
  
+  function useWindowSize(){
+    const [size, setSize] = useState([window.innerHeight, window.innerWidth]);
+    useEffect(() => {
+      const handleResize = () => {
+        setSize([window.innerHeight, window.innerWidth])
+      }
+      window.addEventListener("resize", handleResize)
+      return() => {
+        window.removeEventListener("resize", handleResize)
+      }
+    }, [])
+    return size;
+  }
   
+  const [height, width] = useWindowSize();
+  if(height <= 760 && width <= 768){
+    return(
+      <div style={{background: '#f2f2f2', minHeight: "100vh"}}>
+      <Row justify="center">
+      <Col  >
+        <Form style={{marginTop: "40%", width: '400px'}} name="basic"initialValues={{remember: true,}} onFinish={onSubmit}>
+        <Title level={5} style={{fontFamily: "Bangla MN", fontWeight: "bolder"}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</Title>
+          <Form.Item name="email"  
+              rules={[
+              {
+                required: true,
+                message: 'Please input your email!',
+              },
+              ]}
+          >
+            <Input  placeholder="Enter Email" prefix={<MailOutlined />} onChange={e => setUser({...user, email: e.target.value})} value={user.email}/>
+          </Form.Item>
   
+          <Form.Item name="password" 
+            rules={[
+              {
+                required: true,
+                message: 'Please input your password!',
+              },
+            ]}
+            >
+              <Input.Password placeholder="Enter password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={e => setUser({...user, password: e.target.value})} value={user.password}/>
+          </Form.Item>
+          <Form.Item><Button type= "link" style={{fontFamily: "Montserrat",color: "#000000", float: 'right'}} onClick={forgotPassword}> Forgot your password?</Button></Form.Item>
+          <Form.Item><Button block style={{background: "#A0BF85", borderRadius: "5px"}} htmlType="submit" >LOGIN</Button></Form.Item>
+          
+      </Form>
+      </Col>
+      </Row>
+      </div>
+    )}
   return (
-    <body style={{background: '#f2f2f2', minHeight: "100vh"}}>
+    <div style={{background: '#f2f2f2', minHeight: "100vh"}}>
     <Row justify="center">
     <Col  >
-      <Form style={{marginTop: "50%"}} name="basic"initialValues={{remember: true,}} onFinish={onSubmit}>
+      <Form style={{marginTop: "40%"}} name="basic"initialValues={{remember: true,}} onFinish={onSubmit}>
       <Title level={4} style={{fontFamily: "Bangla MN", fontWeight: "bolder"}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</Title>
         <Form.Item name="email"  
             rules={[
@@ -95,7 +144,7 @@ function Login() {
     </Form>
     </Col>
     </Row>
-    </body>
+    </div>
   )
 }
 

@@ -24,3 +24,6 @@ export const handleLogout = async () => {
       alert(error.response.data.error);
     }
   };
+
+
+  

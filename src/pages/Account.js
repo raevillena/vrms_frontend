@@ -12,7 +12,7 @@ const { Header, Content, Sider } = Layout;
 
 const Account = () => {
     const userObj = useSelector(state => state.userReducer) //reducer for user data
-    const [password, setPassword] = useState({oldPassword: "", newPassword: "", confrimPassword: ""})
+    const [password, setPassword] = useState({oldPassword: "", newPassword: "", confrimPassword: ""}) //for changepassword
     const { Title } = Typography;
     //for change password
     async function onSubmit(){
