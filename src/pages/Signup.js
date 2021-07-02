@@ -3,7 +3,7 @@ import { Input, Button, Form, Row, Col, Modal } from 'antd';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios'
-import { onUserCreate } from '../services/authAPI';
+import { onUserCreate } from '../services/userAPI';
 
 
 const Signup = () => {

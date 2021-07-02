@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require ('bcrypt');
 var generator = require('generate-password');
 var nodemailer = require('nodemailer');
-const { message } = require('antd')
 
 //create user
 router.route('/secretcreateuser').post(async (req, res) => {

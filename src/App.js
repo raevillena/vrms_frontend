@@ -11,6 +11,7 @@ import Account from '@pages/Account'
 import Signup from '@pages/Signup';
 import ForgotPassword from '@pages/Forgotpassword';
 import ResetPassword from '@pages/NewPassword'
+import CreateStudy from '@pages/Study'
 import { onRenewToken } from './services/authAPI';
 
 function App() {
@@ -74,6 +75,7 @@ renew()
     <Switch>
       <PublicRoute path="/" exact component={LoginPage} isAuthenticated={AUTHENTICATED}  />
       <PublicRoute path="/forgotpassword" exact component={ForgotPassword} isAuthenticated={AUTHENTICATED}/>
+      <PublicRoute path="/createstudy" exact component={CreateStudy} isAuthenticated={AUTHENTICATED}/>
       <PublicRoute path="/reset-password/" exact component={ResetPassword} isAuthenticated={AUTHENTICATED}/>
       <PublicRoute path="/secretcreateuser" exact component={Signup} isAuthenticated={AUTHENTICATED}  />
       <PrivateRoute path="/dash" exact component={Userdash} isAuthenticated={AUTHENTICATED} />

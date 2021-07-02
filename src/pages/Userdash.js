@@ -1,17 +1,19 @@
 import React, {useState, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Layout, Menu, Button, Table, Row, Col,Progress, Tag } from 'antd'
+import { Layout, Menu, Button, Table,Progress, Tag } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import Sidebar from '../components/components/Sidebar'
 import Headers from '../components/components/Header'
+import logo from '../components/images/logo.png'
+import Account from '../pages/Account'
+import { Tabs} from 'antd-mobile';
+import 'antd-mobile/dist/antd-mobile.css';
 
-const { Header, Content, Sider } = Layout;
+const { Header, Content, Sider, Footer } = Layout;
 
 
 const Userdash = () => {
-
-
   let history= useHistory();
   const dispatch = useDispatch();
 
@@ -119,6 +121,48 @@ const Userdash = () => {
     },
   ];
   
+  function useWindowSize(){
+    const [size, setSize] = useState([window.innerHeight, window.innerWidth]);
+    useEffect(() => {
+      const handleResize = () => {
+        setSize([window.innerHeight, window.innerWidth])
+      }
+      window.addEventListener("resize", handleResize)
+      return() => {
+        window.removeEventListener("resize", handleResize)
+      }
+    }, [])
+    return size;
+  }
+
+  const tabs = [
+    { title: 'Research', sub: '1' },
+    { title: 'Account', sub: '2' },
+  ];
+
+  const [height, width] = useWindowSize();
+  if(height <= 768 && width <= 768){
+    return(
+      <div>
+        <Layout>
+          <Header style={{background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            <img src={logo} className="logo" style={{left:'0px', top:'2.5px', height:'60px', width:'60px'}}></img>
+            <h1 style={{fontFamily: "Bangla MN", fontWeight: "bolder", fontSize:'22px'}}>Virtual Research Management System</h1>
+          </Header>
+          <Content>
+            <Tabs tabs={tabs} initialPage={1} tabBarPosition="bottom" renderTab={tab => <span>{tab.title}</span>}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', backgroundColor: '#f2f2f2' }} >
+              Research
+            </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#f2f2f2' }} >
+               Account
+              </div>
+            </Tabs>
+          </Content>
+        </Layout>
+      </div>
+    )}
+
     return (
       
     <Layout  > 

@@ -31,7 +31,7 @@ const StudiesSchema = new mongoose.Schema({
         required: true
     },
     progress:{
-        type: String,
+        type: Number,
         required: true
     },
     deadline:{

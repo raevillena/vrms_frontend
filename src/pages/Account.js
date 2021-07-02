@@ -1,5 +1,5 @@
 import { Row, Col, Layout, Button, Form, Input, Typography, Upload, Modal } from 'antd'
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useSelector} from 'react-redux';
 import {EyeInvisibleOutlined, EyeTwoTone, LoadingOutlined, PlusOutlined} from '@ant-design/icons';
 import Sidebar from '../components/components/Sidebar'
@@ -44,29 +44,56 @@ const Account = () => {
       });
     }
 
-    const[state, setState] = useState({previewVisible: false,previewImage: '',previewTitle: ''})
+    const[state, setState] = useState({previewVisible: false,previewImage: '',previewTitle: '', fileList: {uid: '', name: '', status: 'done', url:''}})
 
-    const handleCancel = () => setState({ previewVisible: false });
+    const handleCancel = () => setState({ 
+        ...state,
+        previewVisible: false,
+     });
 
     const handlePreview = async file => {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj);
       }
-  
+      console.log("preview props",fileList)
       setState({
         previewImage: file.url || file.preview,
         previewVisible: true,
-        previewTitle: file.name || file.url.substring(file.url.lastIndexOf('/')+1),
+        previewTitle: previewTitle,
+        fileList: fileList
       });
     };
     
-    const { previewVisible, previewImage, previewTitle } = state;
+    const { previewVisible, previewImage, previewTitle, fileList } = state;
     const uploadButton = (
       <div>
         <PlusOutlined />
         <div style={{ marginTop: 8}}>Upload</div>
       </div>
     );
+    function handleChange(fileList){
+      setState({ fileList: [{...fileList.fileList}]})
+    }
+    
+  function useWindowSize(){
+    const [size, setSize] = useState([window.innerHeight, window.innerWidth]);
+    useEffect(() => {
+      const handleResize = () => {
+        setSize([window.innerHeight, window.innerWidth])
+      }
+      window.addEventListener("resize", handleResize)
+      return() => {
+        window.removeEventListener("resize", handleResize)
+      }
+    }, [])
+    return size;
+  }
+
+  const [height, width] = useWindowSize();
+  if(height <= 768 && width <= 768){
+    return(
+      <div>mobile</div>
+    )}
 
     return (
     <div>
@@ -90,11 +117,13 @@ const Account = () => {
             <Form style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat", maxWidth: '100%'}}>
               <Row >
                 <Col xs={{span: 12}}>
+                {console.log(state)}
                 <Upload
                   action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                   listType="picture-card"
                   onPreview={handlePreview}
-                >{uploadButton}
+                  onChange={handleChange}
+                >{fileList.length >= 1 ? null : uploadButton}
                 </Upload>
                 <Modal
                   visible={previewVisible}

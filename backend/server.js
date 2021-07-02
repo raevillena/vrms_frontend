@@ -17,9 +17,11 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 const userRouter =  require('./routes/user')
 const authRouter =  require('./routes/auth')
+//const studiesRouter =  require('./routes/studies')
 
 app.use('/v1/user', userRouter)
 app.use('/v1/auth', authRouter)
+//app.use('/v1/studies',studiesRouter)
 
 
 app.listen(3001, () => console.log('server started at port 3001'))
