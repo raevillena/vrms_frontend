@@ -1,10 +1,10 @@
 
-import { Input, Button, Form, Row, Col, Modal, Typography} from 'antd';
+import { Input, Button, Form, Row, Col, Typography} from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined} from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
 import {onUserLogin } from '@services/authAPI';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 
 
@@ -80,7 +80,7 @@ function Login() {
       <div style={{background: '#f2f2f2', minHeight: "100vh"}}>
       <Row justify="center">
       <Col  >
-        <Form style={{marginTop: "40%", width: '400px'}} name="basic"initialValues={{remember: true,}} onFinish={onSubmit}>
+        <Form style={{marginTop: "40%", width: '400px'}} name="basic"initialValues={{remember: true}} onFinish={onSubmit}>
         <Title level={5} style={{fontFamily: "Bangla MN", fontWeight: "bolder"}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</Title>
           <Form.Item name="email"  
               rules={[
@@ -115,13 +115,13 @@ function Login() {
     <div style={{background: '#f2f2f2', minHeight: "100vh"}}>
     <Row justify="center">
     <Col  >
-      <Form style={{marginTop: "40%"}} name="basic"initialValues={{remember: true,}} onFinish={onSubmit}>
+      <Form style={{marginTop: "40%"}} name="basic" initialValues={{remember: true,}} onFinish={onSubmit}>
       <Title level={4} style={{fontFamily: "Bangla MN", fontWeight: "bolder"}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</Title>
         <Form.Item name="email"  
             rules={[
             {
+              type: 'email',
               required: true,
-              message: 'Please input your email!',
             },
             ]}
         >

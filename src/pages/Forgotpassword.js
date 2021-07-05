@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import { Input, Button, Form, Row, Col, Typography} from 'antd';
+import { Input, Button, Form, Row, Typography} from 'antd';
 import {MailOutlined } from '@ant-design/icons';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { onForgotPassword } from '../services/userAPI';
 
@@ -29,7 +29,7 @@ const Forgotpassword = () => {
 
     async function handleOk()  {  
         try {
-          let result = await onForgotPassword(email) //checking email
+          await onForgotPassword(email) //checking email
           alert("password reset link already sent to your email")
         } catch (error) {
           alert(error.response.data.message)

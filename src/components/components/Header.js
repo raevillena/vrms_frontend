@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button } from 'antd'
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { onUserLogout } from '../../services/authAPI';
@@ -39,8 +40,8 @@ const Header = () => {
 
     return (
         <div>
-             <a onClick={studies} style={{padding: '25px', fontSize: '32px', color: 'black', fontFamily: 'Montserrat'}} >Studies</a>
-            <a  onClick={handleLogout}  style={{float: 'right', color:'black', fontFamily: 'Montserrat', margin: '0px 16px 0'}}>Logout</a>
+             <Button type='link' onClick={studies} style={{padding: '25px', fontSize: '32px', color: 'black', fontFamily: 'Montserrat'}} >Studies</Button>
+            <Button type='link' onClick={handleLogout}  style={{float: 'right', color:'black', fontFamily: 'Montserrat', margin: '35px 16px 0'}}>Logout</Button>
         </div>
     )
 }

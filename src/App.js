@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import { BrowserRouter, Switch, Redirect } from "react-router-dom";  
 import { useSelector, useDispatch } from 'react-redux';
 import LoginPage from '@pages/Login';
@@ -49,7 +49,7 @@ useEffect(()=>{
    console.log('updating access token')
   let result = await onRenewToken(token)
 
-   if (result.status== 200) {
+   if (result.status === 200) {
      localStorage.setItem("accessToken", result.data.accessToken);
      console.log("access token updated")
      dispatch({

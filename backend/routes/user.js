@@ -61,11 +61,9 @@ router.route('/secretcreateuser').post(async (req, res) => {
  //account update password
  router.post('/updatepassword', async(req, res) => {
      try {
-        console.log(req.body.id)
         const user = await User.findOne({_id: req.body.id}) 
-        console.log(user)
-        if(!user){
-            res.status(401).json({message: "User not found"})
+        if(req.body.newPass === null||req.body.oldPass === null){
+            res.status(406).json({message: "Please Complete all details!"})
         }else{
             let valid = await bcrypt.compare(req.body.oldPass, user.password)
             if(valid)

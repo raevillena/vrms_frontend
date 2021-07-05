@@ -125,7 +125,7 @@ async function auth(req, res, next){
 
 //generating access token
 function generateAccessToken(user){
-    return jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '600000000'})
+    return jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '300000'})
 }
 
 module.exports = router

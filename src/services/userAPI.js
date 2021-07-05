@@ -1,5 +1,3 @@
-import api from '@services/apiConfig'
-// use api in production
 import axios from 'axios'
 
 export async function onUserCreate(body, dispatch) {

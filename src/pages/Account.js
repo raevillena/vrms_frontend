@@ -1,11 +1,11 @@
 import { Row, Col, Layout, Button, Form, Input, Typography, Upload, Modal } from 'antd'
 import React, {useState, useEffect} from 'react';
 import { useSelector} from 'react-redux';
-import {EyeInvisibleOutlined, EyeTwoTone, LoadingOutlined, PlusOutlined} from '@ant-design/icons';
+import {EyeInvisibleOutlined, EyeTwoTone, PlusOutlined} from '@ant-design/icons';
 import Sidebar from '../components/components/Sidebar'
 import { onChangePassword } from '../services/userAPI';
 import Headers from '../components/components/Header'
-
+import Mobile from '../pages/mobile/Userdash'
 
 
 const { Header, Content, Sider } = Layout;
@@ -23,7 +23,7 @@ const Account = () => {
             newPass: password.newPassword,
             oldPass: password.oldPassword
           }
-           if(password.newPassword != password.confrimPassword){
+           if(password.newPassword !== password.confrimPassword){
             alert("Password does not match!")
            }else{
               await onChangePassword(data)
@@ -91,9 +91,7 @@ const Account = () => {
 
   const [height, width] = useWindowSize();
   if(height <= 768 && width <= 768){
-    return(
-      <div>mobile</div>
-    )}
+    return <Mobile/>}
 
     return (
     <div>
@@ -113,25 +111,24 @@ const Account = () => {
           </Header>
           <Content style={{ margin: '24px 16px 0', minHeight: "100vh" }} > 
           <div style={{display: 'flex', flexDirection: 'row'}}>
-            <Row >
-            <Form style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat", maxWidth: '100%'}}>
-              <Row >
-                <Col xs={{span: 12}}>
-                {console.log(state)}
-                <Upload
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+            <Row style={{gap:'10px'}} >
+            <div style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat"}}>
+              <Row style={{marginTop:'20px', marginLeft: '20px'}}>
+                <Col xs={{span: 12}}  >
+                <Upload 
+                  //action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                   listType="picture-card"
                   onPreview={handlePreview}
                   onChange={handleChange}
-                >{fileList.length >= 1 ? null : uploadButton}
+                >{fileList.length === 1 ? null : uploadButton}
                 </Upload>
-                <Modal
+                <Modal 
                   visible={previewVisible}
                   title={previewTitle}
                   footer={null}
                   onCancel={handleCancel}
                 >
-                  <img alt="example" style={{ width: '100%' }} src={previewImage} />
+                  <img alt="example" style={{ width: '100%'}} src={previewImage} />
                 </Modal>
                 </Col>
                 <Col xs={{span: 12}}>
@@ -141,51 +138,50 @@ const Account = () => {
                 <p>{userObj.USER.email}</p>
               </Col>
               </Row>
-            </Form>
+            </div>
             <Col span={12}>
-            <Form style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat", display: 'grid', justifyItems: 'center'}}>
-            <Title level={2}>Change Password</Title>
-            <Form.Item style={{maxWidth:"50%"}}
-                rules={[
+            <Form style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat", display: 'grid', justifyItems: 'center'}} onFinish={onSubmit}>
+                <Title level={3}>Change Password</Title>
+                <Form.Item name="currentPassword" style={{maxWidth:"50%"}}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter your current password!',
+                      },
+                    ]}
+                >
+                  <label>Current Password</label>
+                  <Input.Password placeholder="Current Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
+                  onChange={e => setPassword({...password, oldPassword: e.target.value})} value={password.oldPassword}/>
+                </Form.Item>
+                <Form.Item name="newPassword" style={{maxWidth:"50%"}}
+                  rules={[
                   {
                     required: true,
-                    message: 'Please current your password!',
+                    message: 'Please input your new password!',
                   },
                 ]}
-            >
-              <label>Current Password</label>
-              <Input.Password placeholder="Current Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
-              onChange={e => setPassword({...password, oldPassword: e.target.value})} value={password.oldPassword}
-            />
-            </Form.Item>
-            <Form.Item style={{maxWidth:"50%"}}
-              rules={[
-              {
-                required: true,
-                message: 'Please input your new password!',
-              },
-            ]}
-            >
-            <label>New Password</label>
-            <Input.Password placeholder="New Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
-              onChange={e => setPassword({...password, newPassword: e.target.value})} value={password.newPassword}/>
-            </Form.Item>
-            <Form.Item style={{maxWidth:"50%"}}
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please confirm your new password!',
-                  },
-                ]}
-            >
-              <label>Confirm Password</label>
-              <Input.Password placeholder="Confirm New Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
-              onChange={e => setPassword({...password, confrimPassword: e.target.value})} value={password.confrimPassword}
-            />
-            </Form.Item>
-            <Form.Item>
-              <Button htmlType="submit" style={{background: "#A0BF85", borderRadius: "5px"}}onClick={onSubmit}>SUBMIT</Button>
-            </Form.Item>
+                >
+                <label>New Password</label>
+                <Input.Password placeholder="New Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
+                  onChange={e => setPassword({...password, newPassword: e.target.value})} value={password.newPassword}/>
+                </Form.Item>
+                <Form.Item  name="confirmPassword" style={{maxWidth:"50%"}}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please confirm your new password!',
+                      },
+                    ]}
+                >
+                  <label>Confirm Password</label>
+                  <Input.Password placeholder="Confirm New Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
+                  onChange={e => setPassword({...password, confrimPassword: e.target.value})} value={password.confrimPassword}
+                />
+                </Form.Item>
+                <Form.Item>
+                  <Button htmlType="submit" style={{background: "#A0BF85", borderRadius: "5px"}}>SUBMIT</Button>
+                </Form.Item>
         </Form>
         </Col>
         </Row>

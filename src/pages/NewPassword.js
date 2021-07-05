@@ -1,14 +1,12 @@
-import React, {useState, useEffect, useQuery} from 'react';
-import { Input, Button, Form, Row, Col, Typography} from 'antd';
+import React, {useState, useEffect} from 'react';
+import { Input, Button, Form, Row,Typography} from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import {onVerifyResetPasswordToken, onResetPassword } from '../services/userAPI';
 import * as QueryString from "query-string"
 
 const NewPassword = () => {
     const  history = useHistory();
-    const dispatch = useDispatch();
     const { Title } = Typography;
     const [newPassword, setNewPassword] = useState({newPassword: "", confirmPassword: ""});
     const queryParams = QueryString.parse(window.location.search);
@@ -30,7 +28,7 @@ const NewPassword = () => {
       const newPass = newPassword.newPassword
       const confirmPass = newPassword.confirmPassword
     try {
-      if(newPass != confirmPass){
+      if(newPass !== confirmPass){
         alert("Password does not match!")
       }else{
         await onResetPassword(token,newPassword) 
