@@ -33,6 +33,7 @@ const Signup = () => {
                     <Form.Item name="Email"
                             rules={[
                                 {
+                                    type:'email',
                                 required: true,
                                 message: 'Please input your email!',
                                 },

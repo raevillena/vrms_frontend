@@ -1,19 +1,22 @@
-import { Row, Col, Layout, Button, Form, Input, Typography, Upload, Modal } from 'antd'
+import { Row, Layout, Button, Form, Input, Typography, Upload, Modal, Avatar, Col } from 'antd'
 import React, {useState, useEffect} from 'react';
 import { useSelector} from 'react-redux';
-import {EyeInvisibleOutlined, EyeTwoTone, PlusOutlined} from '@ant-design/icons';
+import {EyeInvisibleOutlined, EyeTwoTone, PlusOutlined, UserOutlined} from '@ant-design/icons';
 import Sidebar from '../components/components/Sidebar'
 import { onChangePassword } from '../services/userAPI';
 import Headers from '../components/components/Header'
 import Mobile from '../pages/mobile/Userdash'
-
+import { onUploadAvatar } from '../services/uploadAPI';
+import '../styles/CSS/Account.css'
 
 const { Header, Content, Sider } = Layout;
 
 const Account = () => {
     const userObj = useSelector(state => state.userReducer) //reducer for user data
     const [password, setPassword] = useState({oldPassword: "", newPassword: "", confrimPassword: ""}) //for changepassword
+    const[file, setFile] = useState(); //for uploading avatar
     const { Title } = Typography;
+    console.log(userObj)
     //for change password
     async function onSubmit(){
        try {
@@ -34,47 +37,8 @@ const Account = () => {
           alert("Invalid password")
        }
     }
-
-    function getBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-      });
-    }
-
-    const[state, setState] = useState({previewVisible: false,previewImage: '',previewTitle: '', fileList: {uid: '', name: '', status: 'done', url:''}})
-
-    const handleCancel = () => setState({ 
-        ...state,
-        previewVisible: false,
-     });
-
-    const handlePreview = async file => {
-      if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
-      }
-      console.log("preview props",fileList)
-      setState({
-        previewImage: file.url || file.preview,
-        previewVisible: true,
-        previewTitle: previewTitle,
-        fileList: fileList
-      });
-    };
     
-    const { previewVisible, previewImage, previewTitle, fileList } = state;
-    const uploadButton = (
-      <div>
-        <PlusOutlined />
-        <div style={{ marginTop: 8}}>Upload</div>
-      </div>
-    );
-    function handleChange(fileList){
-      setState({ fileList: [{...fileList.fileList}]})
-    }
-    
+   //for mobile UI 
   function useWindowSize(){
     const [size, setSize] = useState([window.innerHeight, window.innerWidth]);
     useEffect(() => {
@@ -89,9 +53,11 @@ const Account = () => {
     return size;
   }
 
+  //for mobile ui
   const [height, width] = useWindowSize();
   if(height <= 768 && width <= 768){
     return <Mobile/>}
+
 
     return (
     <div>
@@ -111,38 +77,40 @@ const Account = () => {
           </Header>
           <Content style={{ margin: '24px 16px 0', minHeight: "100vh" }} > 
           <div style={{display: 'flex', flexDirection: 'row'}}>
-            <Row style={{gap:'10px'}} >
+            <Row style={{rowGap:'0px', gap: '10px'}} >
             <div style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat"}}>
-              <Row style={{marginTop:'20px', marginLeft: '20px'}}>
-                <Col xs={{span: 12}}  >
-                <Upload 
-                  //action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  listType="picture-card"
-                  onPreview={handlePreview}
-                  onChange={handleChange}
-                >{fileList.length === 1 ? null : uploadButton}
-                </Upload>
-                <Modal 
-                  visible={previewVisible}
-                  title={previewTitle}
-                  footer={null}
-                  onCancel={handleCancel}
-                >
-                  <img alt="example" style={{ width: '100%'}} src={previewImage} />
-                </Modal>
-                </Col>
-                <Col xs={{span: 12}}>
-                <Title level={3}>{userObj.USER.name}</Title>
-                <p>{userObj.USER.title}</p>
-                <p >{userObj.USER.project}</p>
-                <p>{userObj.USER.email}</p>
+              <Row style={{marginTop:'10px', marginLeft: '10px', justifyContent:'center', alignItems:'center', margintTop: '20px'}}>
+                <Col span={10} >
+              <div style={{marginLeft:'10px', marginTop:'15px'}} >
+              <Avatar src={userObj.USER.avatar}  size={128} icon={<UserOutlined />} />
+              <label for="file_input_id">Upload Photo</label>
+              <input type="file" id="file_input_id" accept=".png" onChange={e => {
+                const file = e.target.files[0]
+                console.log(file)
+                setFile(file)
+                const data = new FormData()
+                data.append("user", userObj.USER._id )
+                data.append("file", file)
+                onUploadAvatar(data)
+              }
+            }
+              ></input>
+              </div>
               </Col>
+              <Col span={14}>
+                <div style={{justifyContent:'center', display:'grid', alignItems:'center'}}>
+                <Title style={{margin: '0px'}} level={3}>{userObj.USER.name}</Title>
+                <p style={{margin: '0px'}}>{userObj.USER.title}</p>
+                <p style={{margin: '0px'}}>{userObj.USER.project}</p>
+                <p style={{margin: '0px'}}>{userObj.USER.email}</p>
+                </div>
+                </Col>
               </Row>
             </div>
-            <Col span={12}>
+            
             <Form style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat", display: 'grid', justifyItems: 'center'}} onFinish={onSubmit}>
                 <Title level={3}>Change Password</Title>
-                <Form.Item name="currentPassword" style={{maxWidth:"50%"}}
+                <Form.Item  style={{maxWidth:"50%", margin:'0px'}}
                     rules={[
                       {
                         required: true,
@@ -154,7 +122,7 @@ const Account = () => {
                   <Input.Password placeholder="Current Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
                   onChange={e => setPassword({...password, oldPassword: e.target.value})} value={password.oldPassword}/>
                 </Form.Item>
-                <Form.Item name="newPassword" style={{maxWidth:"50%"}}
+                <Form.Item  style={{maxWidth:"50%", margin:'0px'}}
                   rules={[
                   {
                     required: true,
@@ -166,7 +134,7 @@ const Account = () => {
                 <Input.Password placeholder="New Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
                   onChange={e => setPassword({...password, newPassword: e.target.value})} value={password.newPassword}/>
                 </Form.Item>
-                <Form.Item  name="confirmPassword" style={{maxWidth:"50%"}}
+                <Form.Item   style={{maxWidth:"50%", marginTop:'0px'}}
                     rules={[
                       {
                         required: true,
@@ -183,7 +151,6 @@ const Account = () => {
                   <Button htmlType="submit" style={{background: "#A0BF85", borderRadius: "5px"}}>SUBMIT</Button>
                 </Form.Item>
         </Form>
-        </Col>
         </Row>
       </div>
         </Content>

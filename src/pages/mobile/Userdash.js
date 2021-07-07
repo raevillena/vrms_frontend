@@ -1,14 +1,16 @@
 import logo from '/Users/user/vrms/vrms_frontend/src/components/images/logo.png'
 import { Tabs} from 'antd-mobile';
 import 'antd-mobile/dist/antd-mobile.css';
-import {EyeInvisibleOutlined, EyeTwoTone, PlusOutlined, BookFilled} from '@ant-design/icons';
-import { Layout, Form, Button, Input, Modal, Upload, Row, Col, Typography, Progress} from 'antd'
+import '/Users/user/vrms/vrms_frontend/src/styles/CSS/Account.css'
+import {EyeInvisibleOutlined, EyeTwoTone, BookFilled, UserOutlined} from '@ant-design/icons';
+import { Layout, Form, Button, Input, Row, Col, Typography, Progress, Avatar} from 'antd'
 import { useSelector} from 'react-redux';
 import { onChangePassword } from '/Users/user/vrms/vrms_frontend/src/services/userAPI';
 import React, {useState} from 'react';
 import { onUserLogout } from '../../services/authAPI';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { onUploadAvatar } from '/Users/user/vrms/vrms_frontend/src/services/uploadAPI';
 
 const { Header, Content} = Layout;
 
@@ -24,6 +26,7 @@ const Userdash = () => {
       ];
 
       const [password, setPassword] = useState({oldPassword: "", newPassword: "", confrimPassword: ""}) //for changepassword
+      const[file, setFile] = useState(); // for uploading avatar
     //for change password
     const handleLogout = async () => { 
         try {
@@ -76,45 +79,7 @@ const Userdash = () => {
         }
       }
 
-    function getBase64(file) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = error => reject(error);
-        });
-      }
-  
-      const[state, setState] = useState({previewVisible: false,previewImage: '',previewTitle: '', fileList: {uid: '', name: '', status: 'done', url:''}}) //for image upload
-  
-      const handleCancel = () => setState({ 
-          ...state,
-          previewVisible: false,
-       });
-  
-      const handlePreview = async file => {
-        if (!file.url && !file.preview) {
-          file.preview = await getBase64(file.originFileObj);
-        }
-        console.log("preview props",fileList)
-        setState({
-          previewImage: file.url || file.preview,
-          previewVisible: true,
-          previewTitle: previewTitle,
-          fileList: fileList
-        });
-      };
-      
-      const { previewVisible, previewImage, previewTitle, fileList } = state;
-      const uploadButton = (
-        <div >
-          <PlusOutlined  />
-          <div style={{ marginTop: 8}}>Upload</div>
-        </div>
-      );
-      function handleChange(fileList){
-        setState({ fileList: [{...fileList.fileList}]})
-      }
+    
 
     return (
         <div>
@@ -162,28 +127,28 @@ const Userdash = () => {
               <div style={{ display: 'grid', alignItems: 'center',  minHeight: '100vh', backgroundColor: '#f2f2f2', padding:'20px', fontFamily: "Montserrat"}} >
                <Form style={{background:'#FFFFFF', borderRadius: '5px'}}>
                 <Row>
-                <Col xs={{span: 12}} style={{padding:'25px'}}>
-               <Upload 
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  listType="picture-card"
-                  onPreview={handlePreview}
-                  onChange={handleChange}
-                >{fileList.length >= 1 ? null : uploadButton}
-                </Upload>
-                <Modal 
-                  visible={previewVisible}
-                  title={previewTitle}
-                  footer={null}
-                  onCancel={handleCancel}
-                >
-                  <img alt="example" style={{ width: '100%' }} src={previewImage} />
-                </Modal>
+                <Col xs={{span: 10}} style={{padding:'25px'}}>
+                <div style={{marginTop:'15px'}} >
+              <Avatar size={90} style={{marginLeft:'12px'}} icon={<UserOutlined />} />
+              <label for="file_input_id">Upload Photo</label>
+              <input type="file" id="file_input_id" accept=".png" onChange={e => {
+                const file = e.target.files[0]
+                setFile(file)
+                const data = new FormData()
+                data.append("file", file)
+                onUploadAvatar(data)
+              }
+            }
+              ></input>
+              </div>
                 </Col>
-                <Col xs={{span: 12}}>
-               <Title level={3}>{userObj.USER.name}</Title>
-                <p>{userObj.USER.title}</p>
-                <p >{userObj.USER.project}</p>
-                <p>{userObj.USER.email}</p>
+                <Col xs={{span: 14}}>
+                <div style={{justifyContent:'center', display:'grid', alignItems:'center', padding:'25px'}}>
+               <Title style={{margin: '0px'}} level={3}>{userObj.USER.name}</Title>
+                <p style={{margin: '0px'}}>{userObj.USER.title}</p>
+                <p style={{margin: '0px'}}>{userObj.USER.project}</p>
+                <p style={{margin: '0px'}}>{userObj.USER.email}</p>
+                </div>
                 </Col>
                 </Row>
                 </Form>

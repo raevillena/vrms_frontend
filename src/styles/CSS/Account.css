@@ -1,0 +1,13 @@
+label{
+    cursor: pointer;
+    margin-left: 20px;
+  }
+  
+  label:hover{
+   
+    text-decoration: underline;
+  }
+  
+  #file_input_id{
+    display:none;
+  }

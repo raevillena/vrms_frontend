@@ -116,6 +116,8 @@ const Userdash = () => {
     },
   ];
   
+
+  //for mobile Ui
   function useWindowSize(){
     const [size, setSize] = useState([window.innerHeight, window.innerWidth]);
     useEffect(() => {
