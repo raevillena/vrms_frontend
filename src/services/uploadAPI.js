@@ -6,6 +6,8 @@ export async function onUploadAvatar(file) {
         return axios.post("/v1/upload/avatar", file, {headers:{
             "Content-Type": "multipart/form-data",
         }});
+
+
     } catch (error) {
         return {
             status: 'false',

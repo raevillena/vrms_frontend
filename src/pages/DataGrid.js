@@ -4,11 +4,12 @@ import {
   DataSheetGrid,
   checkboxColumn,
   textColumn,
-  buttonColumn,
+  cameraColumn,
 } from 'react-datasheet-grid'
 import 'react-datasheet-grid/dist/index.css'
 import Sidebar from '../components/components/Sidebar'
 import Headers from '../components/components/Header'
+
 
 
 const { Header, Content, Sider } = Layout;
@@ -26,7 +27,7 @@ const [columns, setColumns] = useState([
     checkboxColumn({ title: 'Active', key: 'active' }),
     textColumn({ title: 'First Name', key: 'firstName' }),
     textColumn({ title: 'Last name', key: 'lastName' }),
-    buttonColumn({title:'Camera', key:'camera'}),
+    cameraColumn({title:'camera', key: 'camera'}),
     textColumn({ title: 'Photo', key: 'Photo' }),
 ])
 

@@ -23,7 +23,7 @@ function Login() {
     }
     try {
       let result = await onUserLogin(getUser)
-      
+      console.log(result, "result")
       localStorage.setItem("accessToken", result.data.accessToken);
       localStorage.setItem("refreshToken", result.data.token.refreshToken);
 

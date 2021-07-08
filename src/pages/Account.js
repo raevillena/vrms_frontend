@@ -1,42 +1,22 @@
-import { Row, Layout, Button, Form, Input, Typography, Upload, Modal, Avatar, Col } from 'antd'
+import { Row, Layout, Typography,Avatar, Col } from 'antd'
 import React, {useState, useEffect} from 'react';
-import { useSelector} from 'react-redux';
-import {EyeInvisibleOutlined, EyeTwoTone, PlusOutlined, UserOutlined} from '@ant-design/icons';
+import { useSelector, useDispatch} from 'react-redux';
+import {UserOutlined} from '@ant-design/icons';
 import Sidebar from '../components/components/Sidebar'
-import { onChangePassword } from '../services/userAPI';
 import Headers from '../components/components/Header'
 import Mobile from '../pages/mobile/Userdash'
-import { onUploadAvatar } from '../services/uploadAPI';
+import { onGetAvatar, onUploadAvatar } from '../services/uploadAPI';
 import '../styles/CSS/Account.css'
+import ChangePassword from './ChangePassword';
 
 const { Header, Content, Sider } = Layout;
 
 const Account = () => {
     const userObj = useSelector(state => state.userReducer) //reducer for user data
-    const [password, setPassword] = useState({oldPassword: "", newPassword: "", confrimPassword: ""}) //for changepassword
     const[file, setFile] = useState(); //for uploading avatar
+    const [imgData, setImgData] = useState() //for displaying avatar
     const { Title } = Typography;
-    console.log(userObj)
-    //for change password
-    async function onSubmit(){
-       try {
-         console.log(userObj.USER._id)
-          const data = {
-            id : userObj.USER._id,
-            newPass: password.newPassword,
-            oldPass: password.oldPassword
-          }
-           if(password.newPassword !== password.confrimPassword){
-            alert("Password does not match!")
-           }else{
-              await onChangePassword(data)
-              alert("Password Updated")
-          }
-       } catch (error) {
-          console.log(error)
-          alert("Invalid password")
-       }
-    }
+  const dispatch = useDispatch()
     
    //for mobile UI 
   function useWindowSize(){
@@ -82,16 +62,26 @@ const Account = () => {
               <Row style={{marginTop:'10px', marginLeft: '10px', justifyContent:'center', alignItems:'center', margintTop: '20px'}}>
                 <Col span={10} >
               <div style={{marginLeft:'10px', marginTop:'15px'}} >
-              <Avatar src={userObj.USER.avatar}  size={128} icon={<UserOutlined />} />
-              <label for="file_input_id">Upload Photo</label>
-              <input type="file" id="file_input_id" accept=".png" onChange={e => {
+              <Avatar src={imgData||`http://localhost:8080/avatar/${userObj.USER.avatarFilename}`}  size={128} icon={<UserOutlined />} />
+              <label for="file_input_id" style={{marginLeft: '20px'}}>Upload Photo</label>
+              <input type="file" id="file_input_id" accept=".png" onChange={async e => {
                 const file = e.target.files[0]
-                console.log(file)
                 setFile(file)
+                const reader = new FileReader();
+                reader.addEventListener("load", () => {
+                  setImgData(reader.result);
+                });
+                reader.readAsDataURL(file)
                 const data = new FormData()
                 data.append("user", userObj.USER._id )
                 data.append("file", file)
-                onUploadAvatar(data)
+                let result = await onUploadAvatar(data)
+                dispatch({
+                  type: "SET_USER",
+                  value: result.data.user
+                })
+                alert(result.data.message)
+                console.log(userObj)
               }
             }
               ></input>
@@ -107,50 +97,7 @@ const Account = () => {
                 </Col>
               </Row>
             </div>
-            
-            <Form style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat", display: 'grid', justifyItems: 'center'}} onFinish={onSubmit}>
-                <Title level={3}>Change Password</Title>
-                <Form.Item  style={{maxWidth:"50%", margin:'0px'}}
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please enter your current password!',
-                      },
-                    ]}
-                >
-                  <label>Current Password</label>
-                  <Input.Password placeholder="Current Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
-                  onChange={e => setPassword({...password, oldPassword: e.target.value})} value={password.oldPassword}/>
-                </Form.Item>
-                <Form.Item  style={{maxWidth:"50%", margin:'0px'}}
-                  rules={[
-                  {
-                    required: true,
-                    message: 'Please input your new password!',
-                  },
-                ]}
-                >
-                <label>New Password</label>
-                <Input.Password placeholder="New Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
-                  onChange={e => setPassword({...password, newPassword: e.target.value})} value={password.newPassword}/>
-                </Form.Item>
-                <Form.Item   style={{maxWidth:"50%", marginTop:'0px'}}
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please confirm your new password!',
-                      },
-                    ]}
-                >
-                  <label>Confirm Password</label>
-                  <Input.Password placeholder="Confirm New Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
-                  onChange={e => setPassword({...password, confrimPassword: e.target.value})} value={password.confrimPassword}
-                />
-                </Form.Item>
-                <Form.Item>
-                  <Button htmlType="submit" style={{background: "#A0BF85", borderRadius: "5px"}}>SUBMIT</Button>
-                </Form.Item>
-        </Form>
+            <ChangePassword/>
         </Row>
       </div>
         </Content>

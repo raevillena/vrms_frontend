@@ -17,7 +17,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 const userRouter =  require('./routes/user')
 const authRouter =  require('./routes/auth')
-const uploadRouter = require('./routes/upload')
+const uploadRouter = require('./upload')
 //const studiesRouter =  require('./routes/studies')
 
 app.use('/v1/upload', uploadRouter)

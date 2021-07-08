@@ -8,6 +8,9 @@ const UserSchema = new mongoose.Schema({
         required:  true,
         minlength:1
     },
+    avatarFilename:{
+        type: String,
+    },
     email: {
         type: String,
         required: true,
@@ -29,9 +32,6 @@ const UserSchema = new mongoose.Schema({
         required: true,
         minlength:1
     },
-    avatar:{
-        type: String,
-    }
 })
 
 UserSchema.pre('save', async function(next){

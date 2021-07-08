@@ -1,6 +1,5 @@
 label{
     cursor: pointer;
-    margin-left: 20px;
   }
   
   label:hover{
@@ -11,3 +10,5 @@ label{
   #file_input_id{
     display:none;
   }
+
+ 
