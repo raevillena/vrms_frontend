@@ -1,36 +1,51 @@
 import { Input, Button, Form, Row, DatePicker, Space, Select, Menu, Dropdown, message  } from 'antd';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
+import { onStudyCreate } from '../services/studyAPI';
+import { onGetAllUsers } from '../services/userAPI';
 
 const Study = () => {
     const { Option } = Select;
-    const children = [];  //for assigning user(change to get all user in database)
-        for (let i = 10; i < 36; i++) {
-        children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
+    const users = [];  //for assigning user(change to get all user in database)
+    async function getUsers(){
+        let resultUsers = await onGetAllUsers()
+        let x = resultUsers.data
+        for(let i = 0; i < x.length; i++){ 
+            users.push(<Option key={x[i].name}>{x[i].name}</Option>);
+        }
     }
+        getUsers()
+        console.log(users)
+
+    
     const projectData = ['NBERIC', 'WARP']; //project select
     const [project, setProject] = useState(projectData); //useState for project selection
     const handleProjectChange = value => {
-        setProject(projectData[value]);
+        console.log(value)
+        setProject(value);
+        setStudy({...study, projectName: value})
       };
-    const [study, setStudy] = useState({title: "", studyNo:"", projectName:"", deadline:"",assignee:""})
+    const [study, setStudy] = useState({title: "", projectName:"", deadline:"",assignee:""})
 
     function handleChange(value) {   //for assigning user
         console.log(`selected ${value}`);
+        setStudy({...study, assignee: value})
     }
 
 
     async function onSubmit(){
         try {
-           // await onUserCreate(user) 
+            console.log(study)
+           let result =  await onStudyCreate(study) 
            //prompt study number and send email to those who are asigned to this project 
         } catch (error) {
             console.log(error)
         }
     }
 
-    function onChange(date, dateString) {
-        console.log(date, dateString);
+    function onChange(date) {
+        console.log(date);
+        setStudy({...study, deadline: date})
       }
 
     return (
@@ -81,7 +96,7 @@ const Study = () => {
                             },
                             ]}>
                         <label>Assign</label>
-                         <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']}>{children}</Select>
+                         <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']}>{users}</Select>
                     </Form.Item>
                     <Row justify="center">
                     <Button onClick={onSubmit} style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE STUDY</Button>

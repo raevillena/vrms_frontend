@@ -18,12 +18,14 @@ app.use(express.urlencoded({extended: true}))
 const userRouter =  require('./routes/user')
 const authRouter =  require('./routes/auth')
 const uploadRouter = require('./upload')
-//const studiesRouter =  require('./routes/studies')
+const projectRouter = require('./routes/project')
+const studiesRouter =  require('./routes/studies')
 
 app.use('/v1/upload', uploadRouter)
 app.use('/v1/user', userRouter)
 app.use('/v1/auth', authRouter)
-//app.use('/v1/studies',studiesRouter)
+app.use('/v1/project', projectRouter)
+app.use('/v1/studies',studiesRouter)
 
 
 app.listen(3001, () => console.log('server started at port 3001'))

@@ -89,3 +89,19 @@ export async function onResetPassword(token, body) {
 }
 
 
+export async function onGetAllUsers(token) {
+    try {
+        return axios.get(`/v1/user/getAllUser`, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        console.log(error)
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}
+

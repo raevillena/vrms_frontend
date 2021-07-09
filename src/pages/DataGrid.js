@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Layout} from 'antd'
+import { Layout, Button, Input, Form} from 'antd'
 import {
   DataSheetGrid,
   checkboxColumn,
@@ -60,18 +60,27 @@ const addNewColumn = () => {
       <Header style={{ padding: 0, background:'#f2f2f2' }} >
       <Headers/>
       </Header>
-      <Content style={{ margin: '24px 16px 0', overflow: 'initial' , minHeight: "100vh"}} >          
-      <DataSheetGrid
-          data={data}
-          onChange={setData}
-          columns={columns}
-        />
-        <input onChange={(e)=> {setNewColumn(e.target.value)}}/>
-        <button onClick={addNewColumn}>
-            CLICK ME
-        </button>
+      <Content style={{ margin: '24px 16px 0', overflow: 'initial' , minHeight: "100vh"}} >  
+      <Form> 
+        <Form.Item>
+          <Input placeholder="Input table title"/> 
+        </Form.Item>
+        <Form.Item>
+          <DataSheetGrid
+            data={data}
+            onChange={setData}
+            columns={columns}
+          />
+          <input onChange={(e)=> {setNewColumn(e.target.value)}}/>
+          <button onClick={addNewColumn}>
+              Add Column
+          </button>
+        </Form.Item>
+        <Form.Item>
+          <Button htmlType='submit'>Save</Button>
+        </Form.Item>
+        </Form>
       </Content>
-      
     </Layout>      
 </Layout>
     </div>

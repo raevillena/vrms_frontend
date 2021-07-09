@@ -1,9 +1,9 @@
 import axios from 'axios'
 
 
-export async function onStudyCreate(body) {
+export async function onProjectCreate(body) {
     try {
-        return axios.post("/v1/studies/createstudy", body, {
+        return axios.post("/v1/project/createproject", body, {
             headers: {
                         'Content-Type': 'application/json',
                     } 

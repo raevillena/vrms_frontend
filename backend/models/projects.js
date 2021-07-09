@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 
-const StudiesSchema = new mongoose.Schema({
+const ProjectSchema = new mongoose.Schema({
     dateCreated: {
         type: Date,
         required:  true,
@@ -18,26 +18,12 @@ const StudiesSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    studyTitle:{
-        type: String,
-        required: true
-    },
-    studyID:{
-        type: String,
-        required: true
-    },
-    status:{
-        type: String,
-        required: true
-    },
     projectName:{
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
-    progress:{
-        type: Number
-    },
-    deadline:{
+    projectID:{
         type: String,
         required: true
     },
@@ -47,4 +33,4 @@ const StudiesSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('Studies', StudiesSchema)
+module.exports = mongoose.model('Project', ProjectSchema)

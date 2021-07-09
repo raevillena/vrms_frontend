@@ -33,6 +33,10 @@ const Account = () => {
     return size;
   }
 
+  useEffect(()=>{
+    console.log(userObj)
+  },[file])
+
   //for mobile ui
   const [height, width] = useWindowSize();
   if(height <= 768 && width <= 768){
@@ -81,7 +85,7 @@ const Account = () => {
                   value: result.data.user
                 })
                 alert(result.data.message)
-                console.log(userObj)
+                //console.log(userObj)  
               }
             }
               ></input>

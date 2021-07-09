@@ -182,6 +182,14 @@ router.post('/reset-password/:token' , async(req, res) => {
   }
 })
 
-
+router.get("/getAllUser", async(req,res) => {
+  try {
+     User.find({}, {"name": 1, _id: 0}, function(err, users) {
+      res.send(users);  
+    });
+  } catch (error) {
+    
+  }
+})
 
 module.exports = router
