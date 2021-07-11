@@ -1,21 +1,19 @@
 
-import { Input, Button, Form, Row, Col, Typography} from 'antd';
+import { Input, Button, Form, Row, Col, Typography, Spin} from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined} from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
 import {onUserLogin } from '@services/authAPI';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 
 function Login() {
   const  history = useHistory();
   const dispatch = useDispatch();
-
+  const loading = useSelector(state => state.loader)
   const { Title } = Typography;
-  
   const [user, setUser] = useState({email:"", password:""}); //for login state
-  
   async function onSubmit(){
     const getUser = {
       email: user.email,
@@ -26,6 +24,11 @@ function Login() {
       console.log(result, "result")
       localStorage.setItem("accessToken", result.data.accessToken);
       localStorage.setItem("refreshToken", result.data.token.refreshToken);
+      localStorage.setItem("avatarFilename", result.data.data.avatarFilename);
+      dispatch({
+        type: "SET_LOADING",
+        value: true
+     })
 
       dispatch({
         type: "SET_USER",
@@ -40,7 +43,6 @@ function Login() {
      dispatch({
       type: "LOGIN_SUCCESS"
    })
-    
       history.push('/dash ')
 
     } catch (error) {
@@ -78,7 +80,7 @@ function Login() {
   if(height <= 760 && width <= 768){
     return(
       <div style={{background: '#f2f2f2', minHeight: "100vh"}}>
-      <Row justify="center">
+        <Row justify="center">
       <Col  >
         <Form style={{marginTop: "40%", width: '400px'}} name="basic"initialValues={{remember: true}} onFinish={onSubmit}>
         <Title level={5} style={{fontFamily: "Bangla MN", fontWeight: "bolder"}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</Title>
@@ -113,7 +115,7 @@ function Login() {
     )}
   return (
     <div style={{background: '#f2f2f2', minHeight: "100vh"}}>
-    <Row justify="center">
+     <Row justify="center">
     <Col  >
       <Form style={{marginTop: "40%"}} name="basic" initialValues={{remember: true,}} onFinish={onSubmit}>
       <Title level={4} style={{fontFamily: "Bangla MN", fontWeight: "bolder"}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</Title>

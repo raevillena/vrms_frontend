@@ -13,25 +13,6 @@ const auth = (state = initialState, action) => {
                 ...state,
                 AUTHENTICATED: action.value
             }
-        case "USER_LOADING":
-            return {
-                ...state,
-                LOADING: true
-            }
-        case "USER_LOADED":
-            return {
-                ...state,
-                AUTHENTICATED: true,
-                LOADING: false,
-                USER: action.payload
-            }
-        case "LOGIN_SUCCESS":
-            return {
-                ...state,
-                ...action.payload,
-                AUTHENTICATED: true,
-                LOADING: false
-            }
         case "AUTH_ERROR":
         case "LOGIN_FAIL":
             localStorage.removeItem("accessToken")

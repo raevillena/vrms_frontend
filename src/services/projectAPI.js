@@ -15,3 +15,19 @@ export async function onProjectCreate(body) {
         }
     }
 }
+
+
+export async function onGetAllProject(dispatch) {
+    try {
+        return axios.get(`/v1/project/getAllProject`, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}

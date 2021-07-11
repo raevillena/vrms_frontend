@@ -7,7 +7,7 @@ import '../styles/CSS/Account.css'
 
 const ChangePassword = () => {
 
-    const userObj = useSelector(state => state.userReducer) //reducer for user data
+    const userObj = useSelector(state => state.user) //reducer for user data
     const [password, setPassword] = useState({oldPassword: "", newPassword: "", confrimPassword: ""}) //for changepassword
     const { Title } = Typography;
 
@@ -25,6 +25,7 @@ const ChangePassword = () => {
             }else{
                await onChangePassword(data)
                alert("Password Updated")
+               setPassword({oldPassword: "", newPassword: "", confrimPassword: ""})
            }
         } catch (error) {
            console.log(error)
@@ -73,7 +74,7 @@ const ChangePassword = () => {
             />
             </Form.Item>
             <Form.Item>
-              <Button htmlType="submit" style={{background: "#A0BF85", borderRadius: "5px"}}>SUBMIT</Button>
+              <Button htmlType="submit" style={{background: "#A0BF85", borderRadius: "5px"}} >SUBMIT</Button>
             </Form.Item>
     </Form>
     )

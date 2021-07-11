@@ -16,7 +16,6 @@ router.route('/createproject').post(async (req, res) => {
         projectID: projectID,
         assignee: req.body.assignee
     })
-
    try {
     const doesExist = await Project.findOne({projectName: req.body.projectName})
     if(doesExist){
@@ -30,8 +29,19 @@ router.route('/createproject').post(async (req, res) => {
             newProject})
     }
    } catch (error) {
-    res.status(400).json({message: err.message})
+    res.status(400).json({message: error.message})
    }
  })
+
+
+ router.get("/getAllProject", async(req,res) => {
+    try {
+       Project.find({}, {"projectName": 1, _id: 0}, function(err, projects) {
+        res.send(projects);  
+      });
+    } catch (error) {
+      logger.log('error', err)  
+    }
+  })
 
  module.exports = router

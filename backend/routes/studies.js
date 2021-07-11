@@ -34,7 +34,7 @@ router.post('/createstudy', async(req, res) => {
             newStudy})
         }
     } catch (error) {
-        console.log(error)
+        logger.log('error', err)  
         res.status(400).json({message: error.message})
     }
 })

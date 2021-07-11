@@ -157,7 +157,7 @@ router.post('/reset-password/:token' , async(req, res) => {
   try {
     jwt.verify(req.params.token, process.env.FORGOT_TOKEN_SECRET, async(err, user) =>{
       if(err){
-        console.log(err)
+        logger.log('error', err)  
         res.status(401).json({message: "Link already expired"})
       }else{
         if(req.body.newPassword == req.body.confirmPassword){
@@ -165,6 +165,7 @@ router.post('/reset-password/:token' , async(req, res) => {
           let hashedPassword = await bcrypt.hash(req.body.newPassword, salt)
           await User.findOneAndUpdate({_id: user.id}, {password: hashedPassword}, (err) => {
             if(err){
+              logger.log('error', err)  
               res.status(400).json({message: "Unable to update password"})
             }else{
               console.log("Password Updated")
@@ -178,6 +179,7 @@ router.post('/reset-password/:token' , async(req, res) => {
     })
 
   } catch (error) {
+    logger.log('error', err)  
     res.status(500).json({message: error.message})
   }
 })
@@ -188,7 +190,7 @@ router.get("/getAllUser", async(req,res) => {
       res.send(users);  
     });
   } catch (error) {
-    
+    logger.log('error', err)  
   }
 })
 

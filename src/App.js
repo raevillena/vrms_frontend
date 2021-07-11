@@ -18,7 +18,7 @@ import { onRenewToken } from './services/authAPI';
 function App() {
   const dispatch = useDispatch();
   const authObj = useSelector(state => state.auth)
-  const errorObj = useSelector(state => state.errorReducer)
+  const errorObj = useSelector(state => state.error)
   console.log(errorObj)
   
   const {AUTHENTICATED}  = authObj

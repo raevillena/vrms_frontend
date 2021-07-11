@@ -34,7 +34,9 @@ const [columns, setColumns] = useState([
 const [newColumn, setNewColumn] = useState()
 
 useEffect(() => {
-    console.log(data, columns)
+  //save to database here
+    console.log(data)
+    console.log(data[0].camera)
 }, [data, columns])
 
 const addNewColumn = () => {

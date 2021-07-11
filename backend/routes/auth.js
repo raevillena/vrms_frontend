@@ -5,6 +5,7 @@ const router = express.Router()
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 const bcrypt = require ('bcrypt');
+const logger = require('../logger')
 
 //LOGIN
 router.post('/login', async (req, res) => {
@@ -60,15 +61,13 @@ router.post('/renewToken', async (req, res, next) =>{
         const user = await User.findOne({_id: refreshTokens.id})
         console.log(user)
         if (refToken == null){
-            console.log('error1')
             return res.status(401).json('Unauthorized/Missing token')
         }
         jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async(err, user) =>{
             if(err){
-                console.log(err)
                 Token.updateOne({refreshToken: refreshToken}, {isActive: false}, (err, res) =>{
                     if (err) {
-                    console.log(err)  
+                    logger.log('error', err)  
                     }else{
                     console.log("Database updated, expired token")
                     }
@@ -91,7 +90,7 @@ router.post('/logout', (req,res) =>{
     console.log(refreshToken)
     Token.updateOne({refreshToken: refreshToken}, {isActive: false}, (err, res) =>{
         if (err) {
-            throw err
+            logger.log('error', err)  
         }else{
             console.log("Updated DB")
         }

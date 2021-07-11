@@ -11,7 +11,7 @@ import { useHistory } from 'react-router-dom';
 
 
 const Account = () => {
-    const userObj = useSelector(state => state.userReducer) //reducer for user data
+    const userObj = useSelector(state => state.user) //reducer for user data
     const dispatch = useDispatch();
     const { Title } = Typography;
     let history= useHistory();

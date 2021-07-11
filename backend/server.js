@@ -20,6 +20,7 @@ const authRouter =  require('./routes/auth')
 const uploadRouter = require('./upload')
 const projectRouter = require('./routes/project')
 const studiesRouter =  require('./routes/studies')
+const logger = require('./logger')
 
 app.use('/v1/upload', uploadRouter)
 app.use('/v1/user', userRouter)
@@ -28,4 +29,4 @@ app.use('/v1/project', projectRouter)
 app.use('/v1/studies',studiesRouter)
 
 
-app.listen(3001, () => console.log('server started at port 3001'))
+app.listen(3001, () => logger.log('info', 'server started at port: 3001'))

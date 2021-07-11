@@ -3,11 +3,14 @@ import axios from 'axios'
 
 export async function onUserLogin(body, dispatch) {
     try {
+    
+
         return axios.post("/v1/auth/login", body, {
             headers: {
                         'Content-Type': 'application/json',
                     } 
         });
+    
     } catch (error) {
         dispatch({
             type: "GET_ERRORS",
@@ -33,13 +36,13 @@ export async function verifyAuth(dispatch) {
                 error: 'Access Token / Refresh Token is missing'
             }
         }
-        
         return axios.get("/v1/auth/verify", {
             headers: {
                          'Authorization' : `Bearer ${accessToken}`,
                         'Content-Type': 'application/json',
                     } 
         })
+       
     } catch (error) {
         dispatch({
             type: "GET_ERRORS",

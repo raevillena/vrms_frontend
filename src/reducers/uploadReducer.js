@@ -4,7 +4,7 @@ const initialState = {
 
 const uploadReducer = (state = initialState, action) => {
     switch(action.type) {
-        case "UPLOAD_SUCESS":
+        case "UPLOAD_SUCCESS":
             return {
                 ...state,
                 FILE: action.value

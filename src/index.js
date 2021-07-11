@@ -5,15 +5,15 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import {Provider} from 'react-redux'
-import { createStore } from 'redux';
-import appReducer from './reducers/index'
-const store = createStore(appReducer)
-
+import { createStore} from 'redux';
+import rootReducer from './reducers/index'
+import { composeWithDevTools } from 'redux-devtools-extension'
+const store = createStore(rootReducer, composeWithDevTools())
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+        <App />
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

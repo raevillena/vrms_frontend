@@ -1,17 +1,20 @@
 import React, {useState, useEffect} from 'react';
-import { Layout,Button, Table,Progress, Tag } from 'antd'
+import { Layout,Button, Table,Progress, Tag, Spin } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import Sidebar from '../components/components/Sidebar'
 import Headers from '../components/components/Header'
 import Mobile from '../pages/mobile/Userdash'
+import { useDispatch, useSelector } from 'react-redux';
 
 const { Header, Content, Sider } = Layout;
 
 
-const Userdash = () => {
-  let history= useHistory();
 
+const Userdash = () => {
+  const dispatch = useDispatch()
+  let history= useHistory();
+  const loading = useSelector(state => state.loader)
 
   // manage study
   const manage = async ()=>{
@@ -21,6 +24,13 @@ const Userdash = () => {
       console.log(error)
     }
   }
+
+  useEffect(()=>{
+    dispatch({
+      type: "SET_LOADING",
+      value: false
+   })
+  }, [])
 
   const dataSource = [
     {
@@ -136,10 +146,11 @@ const Userdash = () => {
 
   const [height, width] = useWindowSize();
   if(height <= 768 && width <= 768){
-    return <Mobile/>}
+    return <Mobile/>
+  
+  }
 
     return (
-      
     <Layout  > 
       <Sider  style={{
           overflow: 'auto',
@@ -154,9 +165,9 @@ const Userdash = () => {
       <Header style={{ padding: 0, background:'#f2f2f2' }} >
         <Headers/>
       </Header>
-      <Content style={{ margin: '24px 16px 0', overflow: 'initial', minHeight:'100vh' }} >          
+     <Content style={{ margin: '24px 16px 0', overflow: 'initial', minHeight:'100vh' }} >          
         <Table size="small" dataSource={dataSource} columns={columns} style={{minWidth:'100%'}}></Table>
-      </Content>
+      </Content> 
     </Layout>      
 </Layout>
 

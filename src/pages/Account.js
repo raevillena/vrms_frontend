@@ -1,22 +1,22 @@
-import { Row, Layout, Typography,Avatar, Col } from 'antd'
+import { Row, Layout, Typography,Avatar, Col, Spin } from 'antd'
 import React, {useState, useEffect} from 'react';
 import { useSelector, useDispatch} from 'react-redux';
 import {UserOutlined} from '@ant-design/icons';
 import Sidebar from '../components/components/Sidebar'
 import Headers from '../components/components/Header'
 import Mobile from '../pages/mobile/Userdash'
-import { onGetAvatar, onUploadAvatar } from '../services/uploadAPI';
+import { onUploadAvatar } from '../services/uploadAPI';
 import '../styles/CSS/Account.css'
 import ChangePassword from './ChangePassword';
 
 const { Header, Content, Sider } = Layout;
 
 const Account = () => {
-    const userObj = useSelector(state => state.userReducer) //reducer for user data
+    const userObj = useSelector(state => state.user) //reducer for user data
     const[file, setFile] = useState(); //for uploading avatar
     const [imgData, setImgData] = useState() //for displaying avatar
     const { Title } = Typography;
-  const dispatch = useDispatch()
+    let avatar = localStorage.getItem("avatarFilename")
     
    //for mobile UI 
   function useWindowSize(){
@@ -32,7 +32,7 @@ const Account = () => {
     }, [])
     return size;
   }
-
+ 
   useEffect(()=>{
     console.log(userObj)
   },[file])
@@ -66,7 +66,7 @@ const Account = () => {
               <Row style={{marginTop:'10px', marginLeft: '10px', justifyContent:'center', alignItems:'center', margintTop: '20px'}}>
                 <Col span={10} >
               <div style={{marginLeft:'10px', marginTop:'15px'}} >
-              <Avatar src={imgData||`http://localhost:8080/avatar/${userObj.USER.avatarFilename}`}  size={128} icon={<UserOutlined />} />
+              <Avatar src={imgData||`http://localhost:8080/avatar/${avatar}`}  size={128} icon={<UserOutlined />} />
               <label for="file_input_id" style={{marginLeft: '20px'}}>Upload Photo</label>
               <input type="file" id="file_input_id" accept=".png" onChange={async e => {
                 const file = e.target.files[0]
@@ -80,12 +80,9 @@ const Account = () => {
                 data.append("user", userObj.USER._id )
                 data.append("file", file)
                 let result = await onUploadAvatar(data)
-                dispatch({
-                  type: "SET_USER",
-                  value: result.data.user
-                })
-                alert(result.data.message)
-                //console.log(userObj)  
+                console.log(result)
+                localStorage.setItem("avatarFilename", result.data.user.avatarFilename)
+                alert(result.data.message)  
               }
             }
               ></input>

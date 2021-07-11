@@ -15,11 +15,12 @@ const Project = () => {
         setProject({...project, assignee: value})
     }
 
-    async function onSubmit(){
+    async function onSubmit(e){
         try {
           let result =  await onProjectCreate(project) 
           console.log(result)
-            alert(result.data.message)
+          alert(result.data.message)
+          setProject({projectName: '', assignee: ''})
         } catch (error) {
            alert(error.response.data.message)
         }
@@ -28,7 +29,7 @@ const Project = () => {
     return (
         <div>
             <Row justify="center" style={{minHeight: '100vh', background: '#f2f2f2'}}>
-                <Form style={{marginTop: '15%'}}>
+                <Form style={{marginTop: '15%'}} onFinish={onSubmit}>
                 <h1 style={{fontFamily: "Montserrat", fontWeight: "bolder"}}>CREATE PROJECT</h1>
                     <Form.Item name="ProjectName" 
                     rules={[
@@ -46,11 +47,10 @@ const Project = () => {
                                 message: 'Please assign the study!',
                             },
                             ]}>
-                        <label>Assign</label>
-                         <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']}>{children}</Select>
+                         <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} value={project.assignee}>{children}</Select>
                     </Form.Item>
                     <Row justify="center">
-                    <Button onClick={onSubmit} style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE PROJECT</Button>
+                    <Button htmlType="submit"  style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE PROJECT</Button>
                     </Row>
                 </Form>
             </Row>

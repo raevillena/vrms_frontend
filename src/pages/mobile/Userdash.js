@@ -3,7 +3,7 @@ import { Tabs} from 'antd-mobile';
 import 'antd-mobile/dist/antd-mobile.css';
 import '/Users/user/vrms/vrms_frontend/src/styles/CSS/Account.css'
 import {BookFilled} from '@ant-design/icons';
-import { Layout,Button, Row, Col, Typography, Progress} from 'antd'
+import { Layout,Button, Row, Col, Typography, Progress, Spin} from 'antd'
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import Account from './Account';
