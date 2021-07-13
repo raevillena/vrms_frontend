@@ -3,6 +3,7 @@ const router = express.Router()
 const Studies = require('../models/studies')
 const mongoose = require('mongoose')
 const shortid = require('shortid')
+const logger = require('../logger')
 
 //create study
 router.post('/createstudy', async(req, res) => {
@@ -34,8 +35,26 @@ router.post('/createstudy', async(req, res) => {
             newStudy})
         }
     } catch (error) {
-        logger.log('error', err)  
+        logger.log('error', error)  
         res.status(400).json({message: error.message})
+    }
+})
+
+
+//finding assigne study for each user
+router.post('/getStudyForUser', async(req, res) => {
+    console.log("user",req.body)
+    try {
+     Studies.find({"assignee": req.body.name}, function(err, studies) {
+            if(err){
+                logger.log('error', error)
+            } else{
+                console.log(studies)
+                res.send(studies)
+            }
+          });
+    } catch (error) {
+        logger.log('error', error)
     }
 })
 

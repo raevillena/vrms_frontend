@@ -39,6 +39,7 @@ router.post('/login', async (req, res) => {
                     return res.status(401).json({ message: "Invalid password!" });
                 }
     }catch(err){
+        logger.log('error', err)
         return res.status(500).json({ error: "Internal Server Error!" })
     }
 })
@@ -48,6 +49,7 @@ router.get('/verify',auth, async (req, res) =>{
     try {
         res.status(200).json({status: true})
     } catch (error) {
+        logger.log('error', `message: ${error}`)
         res.status(500).json(error)
     }
 })
@@ -79,6 +81,7 @@ router.post('/renewToken', async (req, res, next) =>{
             return res.status(401).json('Unauthorized')
         })
     } catch (error) {
+        logger.log('error', error)
         next(error)
     }
     

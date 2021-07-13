@@ -19,7 +19,6 @@ function App() {
   const dispatch = useDispatch();
   const authObj = useSelector(state => state.auth)
   const errorObj = useSelector(state => state.error)
-  console.log(errorObj)
   
   const {AUTHENTICATED}  = authObj
  //authentication for public and private route

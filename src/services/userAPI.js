@@ -89,12 +89,8 @@ export async function onResetPassword(token, body) {
 }
 
 
-export async function onGetAllUsers(dispatch) {
+export async function onGetAllUsers() {
     try {
-        dispatch({
-            type: "SET_LOADING",
-            value: true
-         })
         return axios.get(`/v1/user/getAllUser`, {
             headers: {
                         'Content-Type': 'application/json',

@@ -1,18 +1,48 @@
 
-import { Input, Button, Form, Row } from 'antd';
-import React, {useState} from 'react';
+import { Input, Button, Form, Row, Select } from 'antd';
+import React, {useState, useEffect} from 'react';
 import { onUserCreate } from '../services/userAPI';
+import { onGetAllProject } from '../services/projectAPI';
 
 
 const Signup = () => {
-
+    const { Option } = Select;
     const [user, setUser] = useState({name: "", email:"", project:"", title:"",password:""})
+    const [projectData, setProjectData] = useState([]) //for showing all project
+
+    async function getProjects(){ //for showing all project
+        let resultProject = await onGetAllProject()
+        let y = resultProject.data
+        let tempProjectData = []
+        for(let i = 0; i < y.length; i++){ 
+            tempProjectData.push({
+                key: y[i].projectName,
+                name:  y[i].projectName,
+                value:  y[i].projectName,
+            });
+        }
+        setProjectData(tempProjectData)
+    }
+
+    useEffect(async () => { //for showing all project
+        async function getData() {
+            getProjects()
+        }
+
+        await getData()
+    }, [])
+
+    const handleProjectChange = value => {
+        setUser({...user, project: value})
+      };
 
     async function onSubmit(){
         try {
-            await onUserCreate(user)  
+           let res = await onUserCreate(user) 
+            alert(res.data.message)
+            setUser({name: "", email:"", project:"", title:"",password:""})
         } catch (error) {
-            console.log(error)
+            alert(error.response.data)
         }
     }
 
@@ -47,7 +77,11 @@ const Signup = () => {
                                     message: 'Please input your project!',
                                 },
                                 ]}>
-                        <Input placeholder="Enter Project" onChange={e => setUser({...user, project: e.target.value})} value={user.project}></Input>
+                         <Select defaultValue={projectData[0]} onChange={handleProjectChange} placeholder="Project">
+                        {projectData.map(project => (
+                        <Option key={project.key} value={project.value}>{project.name}</Option>
+                        ))}
+                        </Select>
                     </Form.Item>
                     
                     <Form.Item name="Title" 

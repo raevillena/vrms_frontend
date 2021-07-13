@@ -31,6 +31,7 @@ const Forgotpassword = () => {
         try {
           await onForgotPassword(email) //checking email
           alert("password reset link already sent to your email")
+          setEmail({email: ""})
         } catch (error) {
           alert(error.response.data.message)
         }

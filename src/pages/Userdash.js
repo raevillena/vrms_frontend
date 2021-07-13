@@ -6,15 +6,45 @@ import Sidebar from '../components/components/Sidebar'
 import Headers from '../components/components/Header'
 import Mobile from '../pages/mobile/Userdash'
 import { useDispatch, useSelector } from 'react-redux';
+import { onGetStudyForUser } from '../services/studyAPI';
 
 const { Header, Content, Sider } = Layout;
 
 
-
 const Userdash = () => {
-  const dispatch = useDispatch()
   let history= useHistory();
-  const loading = useSelector(state => state.loader)
+  const userObj = useSelector(state => state.user)
+  const [studyData, setStudyData]= useState([])
+  const [loading, setLoading] = useState(false)
+
+  async function getStudies(){
+    console.log(userObj.USER)
+    let result = await onGetStudyForUser(userObj.USER)
+    setLoading(true)
+    let x = result.data
+    let tempStudyData = []
+    for(let i = 0; i < x.length; i++){ 
+      tempStudyData.push({
+          key: x[i],
+          title: x[i].studyTitle,
+          studyID: x[i].studyID,
+          dateCreated: x[i].dateCreated,
+          dateUpdated: x[i].dateUpdated,
+          progress: x[i].progress,
+          status: [x[i].status]
+      });
+  }
+  setStudyData(tempStudyData)
+  }
+    
+  useEffect(async () => {
+    async function getData() {
+        getStudies()
+    }
+
+    await getData()
+    setLoading(false)
+}, [])
 
   // manage study
   const manage = async ()=>{
@@ -25,41 +55,11 @@ const Userdash = () => {
     }
   }
 
-  useEffect(()=>{
-    dispatch({
-      type: "SET_LOADING",
-      value: false
-   })
-  }, [])
-
-  const dataSource = [
-    {
-      key: '1',
-      title: 'Try lang title 1',
-      studyno: 32,
-      date: 'May 31,2021 10:00 AM',
-      updated: 'May 31,2021 10:00 AM',
-      progress: 30,
-      status: ['Completed'],
-      action: 'Manage'
-    },
-    {
-      key: '2',
-      title: 'ATry lang title 1',
-      studyno: 31,
-      date: 'June 24,2021 10:00 AM',
-      updated: 'May 31,2021 10:00 AM',
-      progress: 80,
-      status: ['Ongoing'],
-      action: 'Manage'
-    },
-  ];
-  
   const columns = [
     {
-      title: 'Study No.',
-      dataIndex: 'studyno',
-      key: 'study no',
+      title: 'Study ID',
+      dataIndex: 'studyID',
+      key: 'studyID',
       width: '10%',
       sorter: true,
       defaultSortOrder: 'descend',
@@ -67,15 +67,15 @@ const Userdash = () => {
     },
     {
       title: 'Date Created',
-      dataIndex: 'date',
-      key: 'date',
+      dataIndex: 'dateCreated',
+      key: 'dateCreated',
       width: '15%',
       
     },
     {
       title: 'Updated',
-      dataIndex: 'updated',
-      key: 'updated',
+      dataIndex: 'dateUpdated',
+      key: 'dateUpdated',
       width: '15%',
     },
     {
@@ -90,21 +90,21 @@ const Userdash = () => {
       key: 'progress',
       width: '10%',
       render: () =>
-       <Progress percent={80} size="small" />,
+       <Progress percent={studyData.progress} size="small" />,
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
       filters: [
-        { text: 'Completed', value: 'Completed' },
-        { text: 'Ongoing', value: 'Ongoing' },
+        { text: 'Completed', value: 'COMPLETED' },
+        { text: 'Ongoing', value: 'ONGOING' },
       ],
       onFilter: (value, record) => record.status.indexOf(value) === 0,
       width: '10%',
-      render: stat => (
+      render: status => (
         <span>
-          {stat.map(status => {
+          {status.map(status => {
             let color = status === 'Ongoing' ? 'geekblue' : 'green';
             return (
               <Tag color={color} key={status}>
@@ -114,8 +114,6 @@ const Userdash = () => {
           })}
         </span>
       ),
-  
-
     },
     {
       title: 'Action',
@@ -145,9 +143,8 @@ const Userdash = () => {
  
 
   const [height, width] = useWindowSize();
-  if(height <= 768 && width <= 768){
+  if(height <= 768 || width <= 768){
     return <Mobile/>
-  
   }
 
     return (
@@ -166,7 +163,8 @@ const Userdash = () => {
         <Headers/>
       </Header>
      <Content style={{ margin: '24px 16px 0', overflow: 'initial', minHeight:'100vh' }} >          
-        <Table size="small" dataSource={dataSource} columns={columns} style={{minWidth:'100%'}}></Table>
+        {loading? <Table size="small" dataSource={studyData} columns={columns} style={{minWidth:'100%'}}></Table> : <Spin style={{display: 'flex', justifyContent:'center', padding: '25%'}} />}
+        
       </Content> 
     </Layout>      
 </Layout>

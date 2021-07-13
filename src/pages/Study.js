@@ -10,15 +10,13 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const Study = () => {
     const { Option } = Select;
-    const dispatch = useDispatch()
     const [projectData, setProjectData] = useState([])
     const [userData, setUserData] = useState([])
     const [study, setStudy] = useState({title: "", projectName:"", deadline:"",assignee:""})
     
     async function getUsers(){
-        let resultUsers = await onGetAllUsers(dispatch)
+        let resultUsers = await onGetAllUsers()
         let x = resultUsers.data
-        // console.log('user',resultUsers)
         let tempUserData = []
         for(let i = 0; i < x.length; i++){ 
             tempUserData.push({
@@ -53,16 +51,14 @@ const Study = () => {
     }, [])
     
     
-   // const [project, setProject] = useState(projectData); //useState for project selection
+  
     const handleProjectChange = value => {
         console.log(value)
-       // setProject(value);
         setStudy({...study, projectName: value})
       };
       
 
     function handleChange(value) {   //for assigning user
-        console.log(`selected ${value}`);
         setStudy({...study, assignee: value})
     }
 
@@ -72,9 +68,11 @@ const Study = () => {
             
             console.log(study)
            let result =  await onStudyCreate(study) 
+           alert(result.data.message)
+           setStudy({title: "", projectName:"", deadline:"",assignee:""})
            //prompt study number and send email to those who are asigned to this project 
         } catch (error) {
-            console.log(error)
+            alert(error.response.data.message)
         }
     }
 

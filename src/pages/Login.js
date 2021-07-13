@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from 'react-redux';
 function Login() {
   const  history = useHistory();
   const dispatch = useDispatch();
-  const loading = useSelector(state => state.loader)
   const { Title } = Typography;
   const [user, setUser] = useState({email:"", password:""}); //for login state
   async function onSubmit(){
@@ -21,14 +20,9 @@ function Login() {
     }
     try {
       let result = await onUserLogin(getUser)
-      console.log(result, "result")
       localStorage.setItem("accessToken", result.data.accessToken);
       localStorage.setItem("refreshToken", result.data.token.refreshToken);
       localStorage.setItem("avatarFilename", result.data.data.avatarFilename);
-      dispatch({
-        type: "SET_LOADING",
-        value: true
-     })
 
       dispatch({
         type: "SET_USER",
@@ -43,7 +37,7 @@ function Login() {
      dispatch({
       type: "LOGIN_SUCCESS"
    })
-      history.push('/dash ')
+     history.push('/dash')
 
     } catch (error) {
       alert(error.response.data.message)

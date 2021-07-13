@@ -39,7 +39,7 @@ const Account = () => {
 
   //for mobile ui
   const [height, width] = useWindowSize();
-  if(height <= 768 && width <= 768){
+  if(height <= 768 || width <= 768){
     return <Mobile/>}
 
 

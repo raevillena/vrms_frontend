@@ -19,7 +19,7 @@ router.post("/avatar", upload.single("file"), async (req, res, next) => {
     console.log(req.file)
     await User.updateOne({_id: req.body.user}, {avatarFilename: req.file.filename}, (err) =>{
       if (err) {
-        console.log(err)
+        logger.log('error', err)
       }else{
         console.log("filename updated")
       }
@@ -31,6 +31,7 @@ router.post("/avatar", upload.single("file"), async (req, res, next) => {
       user
     });
   } catch (error) {
+    logger.log('error', error)
     res.status(500).json({message: error.message})
   }
 });

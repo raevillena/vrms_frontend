@@ -6,6 +6,10 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require ('bcrypt');
 var generator = require('generate-password');
 var nodemailer = require('nodemailer');
+const logger = require('../logger')
+
+
+
 
 //create user
 router.route('/secretcreateuser').post(async (req, res) => {
@@ -45,14 +49,15 @@ router.route('/secretcreateuser').post(async (req, res) => {
             if (error) {
               console.log(error);
             } else {
+              res.status(201).json({message: "Email was sent to the user!", user: newUser})
               console.log('Email sent: ' + info.response);
             }
           });
         const newUser =  await users.save()
         console.log(newUser)
-         res.status(201).json(newUser)
         } 
     } catch(err){
+      console.log(err)
          res.status(400).json({message: err.message})
     }
  })

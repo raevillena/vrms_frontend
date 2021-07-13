@@ -3,6 +3,7 @@ const router = express.Router()
 const Project = require('../models/projects')
 const mongoose = require('mongoose')
 const shortid = require('shortid')
+const logger = require('../logger')
 
 //create project
 router.route('/createproject').post(async (req, res) => {
@@ -29,6 +30,7 @@ router.route('/createproject').post(async (req, res) => {
             newProject})
     }
    } catch (error) {
+    logger.log('error', error)
     res.status(400).json({message: error.message})
    }
  })
@@ -40,8 +42,10 @@ router.route('/createproject').post(async (req, res) => {
         res.send(projects);  
       });
     } catch (error) {
-      logger.log('error', err)  
+      logger.log('error', error)  
     }
   })
+
+
 
  module.exports = router

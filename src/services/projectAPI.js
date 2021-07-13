@@ -17,7 +17,7 @@ export async function onProjectCreate(body) {
 }
 
 
-export async function onGetAllProject(dispatch) {
+export async function onGetAllProject() {
     try {
         return axios.get(`/v1/project/getAllProject`, {
             headers: {

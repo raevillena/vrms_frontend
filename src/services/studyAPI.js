@@ -10,7 +10,20 @@ export async function onStudyCreate(body) {
         });
     } catch (error) {
         return {
-            status: 'false',
+            error: error
+        }
+    }
+}
+
+export async function onGetStudyForUser(body) {
+    try {
+        return axios.post(`/v1/studies/getStudyForUser`, body, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
             error: error
         }
     }

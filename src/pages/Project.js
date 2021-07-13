@@ -1,26 +1,46 @@
 import { Input, Button, Form, Row, Select} from 'antd';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { onProjectCreate } from '../services/projectAPI.js';
+import { onGetAllUsers } from '../services/userAPI';
 
 const Project = () => {
     const { Option } = Select;
-    const children = [];  //for assigning user(change to get all user in database)
-        for (let i = 10; i < 36; i++) {
-        children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-    }
+    const [userData, setUserData] = useState([])
     const [project, setProject] = useState({projectName: '', assignee: ''});
 
     function handleChange(value) {   //for assigning user
-        console.log(`selected ${value}`);
         setProject({...project, assignee: value})
     }
 
-    async function onSubmit(e){
+    async function getUsers(){
+        let resultUsers = await onGetAllUsers()
+        console.log(resultUsers)
+        let x = resultUsers.data
+        let tempUserData = []
+        for(let i = 0; i < x.length; i++){ 
+            tempUserData.push({
+                key: x[i].name,
+                name:  x[i].name,
+                value:  x[i].name,
+            })
+        }
+        setUserData(tempUserData)
+    }
+
+    useEffect(async () => {
+        async function getData() {
+            getUsers()
+        }
+
+        await getData()
+    }, [])
+
+    async function onSubmit(){
         try {
           let result =  await onProjectCreate(project) 
           console.log(result)
           alert(result.data.message)
-          setProject({projectName: '', assignee: ''})
+          setProject({projectName: "", assignee: ""})
         } catch (error) {
            alert(error.response.data.message)
         }
@@ -44,13 +64,17 @@ const Project = () => {
                             rules={[
                             {
                                 required: true,
-                                message: 'Please assign the study!',
+                                message: 'Please assign the project!',
                             },
                             ]}>
-                         <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} value={project.assignee}>{children}</Select>
+                         <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} placeholder="Assign Project">
+                         {userData.map(user => (
+                            <Option key={user.key} value={user.value}>{user.name}</Option>
+                        ))}
+                         </Select>
                     </Form.Item>
                     <Row justify="center">
-                    <Button htmlType="submit"  style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE PROJECT</Button>
+                    <Button htmlType="submit" block  style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE PROJECT</Button>
                     </Row>
                 </Form>
             </Row>
