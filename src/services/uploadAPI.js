@@ -16,3 +16,18 @@ export async function onUploadAvatar(file) {
     }
 }
 
+
+export async function onUploadDataGrid(file) {
+    try {
+        return axios.post("/v1/upload/datagrid", file, {headers:{
+            "Content-Type": "multipart/form-data",
+        }});
+
+
+    } catch (error) {
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}

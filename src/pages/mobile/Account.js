@@ -72,7 +72,7 @@ const Account = () => {
                 <div style={{marginTop:'15px'}} >
               <Avatar src={imgData||`http://localhost:8080/avatar/${userObj.USER.avatarFilename}`}  size={90} icon={<UserOutlined />} />
               <label for="file_input_id">Upload Photo</label>
-              <input type="file" id="file_input_id" accept=".png" onChange={e => {
+              <input type="file" id="file_input_id" accept="image/*" onChange={e => {
                 const file = e.target.files[0]
                 setFile(file)
                 const reader = new FileReader();

@@ -3,7 +3,7 @@ import { Tabs, Card, WingBlank, WhiteSpace} from 'antd-mobile';
 import 'antd-mobile/dist/antd-mobile.css';
 import '/Users/user/vrms/vrms_frontend/src/styles/CSS/Account.css'
 import {BookFilled} from '@ant-design/icons';
-import { Layout,Button, Row, Col, Typography, Progress, Spin} from 'antd'
+import { Layout,Button,Typography, Progress, Spin} from 'antd'
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
 import Account from './Account';

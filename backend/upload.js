@@ -12,7 +12,17 @@ const storage = multer.diskStorage({
   }
 });
 
+const storage1 = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, __dirname + '/uploads/datagrid')
+  },
+  filename: function (req, file, cb) {
+      cb(null, Math.random() * 1000 + file.originalname)
+  }
+});
+
 var upload = multer({storage: storage})
+var upload1 = multer({storage: storage1})
 
 router.post("/avatar", upload.single("file"), async (req, res, next) => {
   try {
@@ -30,6 +40,16 @@ router.post("/avatar", upload.single("file"), async (req, res, next) => {
       message: "submitted successfully",
       user
     });
+  } catch (error) {
+    logger.log('error', error)
+    res.status(500).json({message: error.message})
+  }
+});
+
+
+router.post("/datagrid", upload1.single("file"), async (req, res, next) => {
+  try {
+    console.log(req.file)
   } catch (error) {
     logger.log('error', error)
     res.status(500).json({message: error.message})

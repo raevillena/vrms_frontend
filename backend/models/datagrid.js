@@ -4,19 +4,19 @@ const mongoose = require('mongoose')
 const DatagridSchema = new mongoose.Schema({
     dateCreated: {
         type: Date,
-        required:  true,
+        required:  true
     },
     createdBy:{
         type: String,
-        required: true,
+        required: true
     },
     dateUpdated:{
         type: Date,
-        required: true,
+        required: true
     },
     updatedBy:{
-        type: Date,
-        required: true,
+        type: String,
+        required: true
     },
     title:{
         type: String,
@@ -24,6 +24,10 @@ const DatagridSchema = new mongoose.Schema({
     },
     data:{
         type: Array,
+        required: true
+    },
+    studyID:{
+        type: String,
         required: true
     }
 })

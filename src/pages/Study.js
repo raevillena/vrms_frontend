@@ -4,9 +4,6 @@ import { onGetAllProject } from '../services/projectAPI';
 import { onStudyCreate } from '../services/studyAPI';
 import { onGetAllUsers } from '../services/userAPI';
 
-import { useDispatch, useSelector } from 'react-redux';
-
-
 
 const Study = () => {
     const { Option } = Select;

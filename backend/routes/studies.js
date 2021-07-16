@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Studies = require('../models/studies')
+const Datagrid = require('../models/datagrid')
 const mongoose = require('mongoose')
 const shortid = require('shortid')
 const logger = require('../logger')
@@ -41,9 +42,8 @@ router.post('/createstudy', async(req, res) => {
 })
 
 
-//finding assigne study for each user
+//finding assignee study for each user
 router.post('/getStudyForUser', async(req, res) => {
-    console.log("user",req.body)
     try {
      Studies.find({"assignee": req.body.name}, function(err, studies) {
             if(err){
@@ -51,6 +51,62 @@ router.post('/getStudyForUser', async(req, res) => {
             } else{
                 console.log(studies)
                 res.send(studies)
+            }
+          });
+    } catch (error) {
+        logger.log('error', error)
+    }
+})
+
+
+//updating the datagrid in database
+router.post('/updateDatagrid', async(req, res) => {
+    console.log(req.body.data)
+    const newDatagrid = new Datagrid({
+        dateCreated: Date.now(),
+        createdBy: req.body.user,
+        dateUpdated: Date.now(),
+        updatedBy: req.body.user,
+        title: req.body.title,
+        data: req.body.data,
+        studyID: req.body.studyID
+    })
+    try {
+       const doesExist = await Datagrid.findOne({title: req.body.title})
+       console.log("exist",doesExist)
+       if(doesExist){
+        Datagrid.updateOne({title: req.body.title}, {data: req.body.data, dateUpdated: Date.now(), updatedBy: req.body.user}, (err) =>{
+            if (err) {
+              console.log(err)
+            }else{
+                Studies.updateOne({studyID: req.body.studyID}, {dateUpdated: Date.now()}, (err) =>{
+                    if(err){
+                        console.log("Unable to update study data!")
+                    }else{
+                        console.log("Study data updated!")
+                    }
+                })
+              console.log("data Updated")
+            }
+          }) 
+       }else{
+        await newDatagrid.save()
+        console.log("new")
+       }
+    } catch (error) {
+        logger.log('error', error)
+    }
+})
+
+//getting the data of datagrid to display
+router.get('/getdatagrid', async(req, res) => {
+    try {
+        Datagrid.find({"studyID": req.body.studyID}, function(err, grid) {
+            if(err){
+                logger.log('error', error)
+            } else{
+                console.log(grid)
+                res.send(grid)
             }
           });
     } catch (error) {

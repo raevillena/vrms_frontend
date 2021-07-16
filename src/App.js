@@ -13,6 +13,7 @@ import ForgotPassword from '@pages/Forgotpassword';
 import ResetPassword from '@pages/NewPassword'
 import CreateStudy from '@pages/Study'
 import CreateProject from '@pages/Project'
+import Table from '@pages/Table'
 import { onRenewToken } from './services/authAPI';
 
 function App() {

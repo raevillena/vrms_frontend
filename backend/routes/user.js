@@ -44,7 +44,6 @@ router.route('/secretcreateuser').post(async (req, res) => {
             subject: 'VRMS ACCOUNT',
             text: 'You can login in Mariano Marcos State University Virtual Research Management System with your email using this password:' + users.password
           };
-          console.log
           transporter.sendMail(mailOptions, function(error, info){
             if (error) {
               console.log(error);
@@ -122,7 +121,6 @@ router.route('/secretcreateuser').post(async (req, res) => {
         subject: 'VRMS ACCOUNT',
         text: 'You can update your password with this link: ' + link
       };
-      console.log
       transporter.sendMail(mailOptions, function(error, info){
         if (error) {
           console.log(error);

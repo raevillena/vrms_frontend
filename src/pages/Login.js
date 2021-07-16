@@ -1,5 +1,5 @@
 
-import { Input, Button, Form, Row, Col, Typography, Spin} from 'antd';
+import { Input, Button, Form, Row, Col, Typography} from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined} from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';

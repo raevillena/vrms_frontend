@@ -5,20 +5,20 @@ import { useHistory } from 'react-router-dom';
 import Sidebar from '../components/components/Sidebar'
 import Headers from '../components/components/Header'
 import Mobile from '../pages/mobile/Userdash'
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { onGetStudyForUser } from '../services/studyAPI';
 
 const { Header, Content, Sider } = Layout;
 
 
 const Userdash = () => {
+  const dispatch = useDispatch()
   let history= useHistory();
   const userObj = useSelector(state => state.user)
   const [studyData, setStudyData]= useState([])
   const [loading, setLoading] = useState(false)
 
   async function getStudies(){
-    console.log(userObj.USER)
     let result = await onGetStudyForUser(userObj.USER)
     setLoading(true)
     let x = result.data
@@ -44,16 +44,8 @@ const Userdash = () => {
 
     await getData()
     setLoading(false)
-}, [])
+}, [userObj])
 
-  // manage study
-  const manage = async ()=>{
-    try {
-      history.push('/datagrid')
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   const columns = [
     {
@@ -120,7 +112,15 @@ const Userdash = () => {
       dataIndex: 'action',
       key: 'action',
       width: '15%',
-      render: () => <Button onClick={manage} className="manageBtn">MANAGE</Button>
+      render: (text, record, index) => <Button onClick = {
+        (e) => {
+          dispatch({
+            type: "SET_STUDY",
+            value: record
+         })
+         history.push('/datagrid')
+        }
+      } className="manageBtn">MANAGE</Button>
     },
   ];
   
@@ -163,7 +163,7 @@ const Userdash = () => {
         <Headers/>
       </Header>
      <Content style={{ margin: '24px 16px 0', overflow: 'initial', minHeight:'100vh' }} >          
-        {loading? <Table size="small" dataSource={studyData} columns={columns} style={{minWidth:'100%'}}></Table> : <Spin style={{display: 'flex', justifyContent:'center', padding: '25%'}} />}
+        {loading? <Table size="small"  dataSource={studyData} columns={columns} style={{minWidth:'100%'}}></Table> : <Spin style={{display: 'flex', justifyContent:'center', padding: '25%'}} />}
         
       </Content> 
     </Layout>      

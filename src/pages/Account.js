@@ -68,7 +68,7 @@ const Account = () => {
               <div style={{marginLeft:'10px', marginTop:'15px'}} >
               <Avatar src={imgData||`http://localhost:8080/avatar/${avatar}`}  size={128} icon={<UserOutlined />} />
               <label for="file_input_id" style={{marginLeft: '20px'}}>Upload Photo</label>
-              <input type="file" id="file_input_id" accept=".png" onChange={async e => {
+              <input type="file" id="file_input_id" accept="image/*" onChange={async e => {
                 const file = e.target.files[0]
                 setFile(file)
                 const reader = new FileReader();
