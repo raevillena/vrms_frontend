@@ -7,6 +7,7 @@ import Headers from '../components/components/Header'
 import Mobile from '../pages/mobile/Userdash'
 import { useSelector, useDispatch } from 'react-redux';
 import { onGetStudyForUser } from '../services/studyAPI';
+import moment from 'moment';
 
 const { Header, Content, Sider } = Layout;
 
@@ -24,16 +25,17 @@ const Userdash = () => {
     let x = result.data
     let tempStudyData = []
     for(let i = 0; i < x.length; i++){ 
+      const dCreated = moment()
       tempStudyData.push({
           key: x[i],
           title: x[i].studyTitle,
           studyID: x[i].studyID,
-          dateCreated: x[i].dateCreated,
-          dateUpdated: x[i].dateUpdated,
+          dateCreated: moment(x[i].dateCreated).format('MM-DD-YYYY'),
+          dateUpdated: moment(x[i].dateUpdated).format('MM-DD-YYYY'),
           progress: x[i].progress,
           status: [x[i].status]
       });
-  }
+    }
   setStudyData(tempStudyData)
   }
     
@@ -41,7 +43,6 @@ const Userdash = () => {
     async function getData() {
         getStudies()
     }
-
     await getData()
     setLoading(false)
 }, [userObj])
@@ -143,7 +144,7 @@ const Userdash = () => {
  
 
   const [height, width] = useWindowSize();
-  if(height <= 768 || width <= 768){
+  if(height <= 768 ||  width <= 768){
     return <Mobile/>
   }
 

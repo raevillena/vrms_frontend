@@ -46,6 +46,7 @@ const Userdash = () => {
     }
     setLoading(false)
     await getData()
+    
 }, [])
 
   
@@ -73,7 +74,7 @@ const Userdash = () => {
             <h1 style={{fontFamily: "Bangla MN", fontWeight: "bolder", fontSize:'100%'}}>Virtual Research Management System</h1>
           </Header>
           <Content style={{display:'flex', flexDirection:'row', justifyContent:'center'}}>
-            <Tabs tabs={tabs} initialPage={1} tabBarPosition="bottom" renderTab={tab => <span>{tab.title}</span>}>
+            <Tabs tabs={tabs} initialPage={0} tabBarPosition="bottom" renderTab={tab => <span>{tab.title}</span>}>
             {loading ? <div style={{ display: 'grid', alignItems: 'center', minHeight: '100vh', backgroundColor: '#f2f2f2', padding:'20px', fontFamily: "Montserrat", borderRadius: '5px' }} >
               {studyData.map(study => (
                         <WingBlank size="lg">

@@ -6,7 +6,6 @@ import { onChangePassword } from '../services/userAPI';
 import '../styles/CSS/Account.css'
 
 const ChangePassword = () => {
-
     const userObj = useSelector(state => state.user) //reducer for user data
     const [password, setPassword] = useState({oldPassword: "", newPassword: "", confrimPassword: ""}) //for changepassword
     const { Title } = Typography;

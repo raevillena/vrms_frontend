@@ -1,123 +1,142 @@
-import React, {useState, useEffect} from 'react';
-import { Layout, Button, Input, Form} from 'antd'
-import {
-  DataSheetGrid,
-  checkboxColumn,
-  textColumn,
-  cameraColumn,
-  progressColumn
-} from 'react-datasheet-grid'
-import 'react-datasheet-grid/dist/index.css'
+import React, {useState, useEffect, useMemo, useCallback} from 'react';
+import { Layout, Button, Input, Form, Select} from 'antd'
 import Sidebar from '../components/components/Sidebar'
 import Headers from '../components/components/Header'
-import { CSVLink, CSVDownload } from "react-csv"
 import { onUploadDataGrid } from '../services/uploadAPI';
-import { onGetDatagrid, onUpdateDatagrid } from '../services/studyAPI';
-import { useSelector, useDispatch} from 'react-redux';
+import { onAddDatagrid, onGetDatagrid,  } from '../services/studyAPI';
+import { useSelector} from 'react-redux';
+import { DynamicDataSheetGrid, 
+  checkboxColumn,
+  textColumn,
+  keyColumn  } from 'react-datasheet-grid'
+import GridTable, {getDatagridData} from './GridTable';
+import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined } from '@ant-design/icons';
+import { CSVLink } from 'react-csv'
 
 
 
 const { Header, Content, Sider } = Layout;
 
-let tempCol = [
-  checkboxColumn({title: 'Active', key:'active'}),
-  textColumn({title: 'First Name', key:'firstName'}),
-  textColumn({title: 'Last Name', key:'lastName'}),
-    cameraColumn({title:'camera', key: 'camera'}),
-]
 
 const DataGrid = () => {
+
+  const { Option } = Select
+
   const studyObj = useSelector(state => state.study)
   const userObj = useSelector(state => state.user)
-  const [titles, setTitles] = useState()
 
-  const [ data, setData ] = useState([
-    { active: true, firstName: 'Elon', lastName: 'Musk' },
-    { active: false, firstName: 'Jeff', lastName: 'Bezos' },
-  ])
+  const [title, setTitle] = useState() 
+  const [description, setDescription] = useState()
+  const [ data, setData ] = useState([])
+  const [columnsData, setColumnsData] = useState([]) // adding columns
+  const [addColumnTitle, setAddColumnTitle] = useState()
+  const [toRemoveColumn, setToRemoveColumn] = useState()
 
-const [columns, setColumns] = useState([
-  checkboxColumn({title: 'Active', key:'active'}),
-  textColumn({title: 'First Name', key:'firstName'}),
-  textColumn({title: 'Last Name', key:'lastName'}),
-    cameraColumn({title:'camera', key: 'camera'}),
-])
- 
-const [newColumn, setNewColumn] = useState()
-const [removeColumn, setRemoveColumn] = useState()
-useEffect(() => {
-  console.log(columns)
-  //save to database here
-  const dataToSend ={
-    user: userObj.USER._id,
-    title: titles,
-    studyID: studyObj.STUDY.studyID,
-    data: data
+
+  useEffect(()=> {
+    getColumns()
+  }, [data])
+
+  //adding columns
+  const getColumns= () =>{
+    let tempColumns = []
+        for(let i = 0; i < columns.length; i++){ 
+            tempColumns.push({
+                key: columns[i].title,
+                name:  columns[i].title,
+                value:  columns[i].title,
+            });
+        }
+        setColumnsData(tempColumns)
   }
-  onUpdateDatagrid(dataToSend)
- // onGetDatagrid(studyObj.STUDY.studyID)
-   
-}, [data, columns])
 
-const onUpload = () => {
- // for( var i = 0; i < data.length; i++){
- //   console.log("for loop")
-  //  data[i].setAttribute('data-index', i);
-  //  data[i].addEventListener('click', function(){
-  //     alert(this.getAttribute('data-index'));
-  //  });
-  //}
- // console.log(data[0].camera)
- //  const img = new FormData()
- //  img.append("user", data[0].firstName )
-  //  img.append("file", data[0].camera)
-  //  onUploadDataGrid(img)
-}
-
-
-
-
-const addNewColumn = () => {
-  if (!newColumn) {
-      return
+  const TextComponent = React.memo(
+    ({ rowData, setRowData }) => {
+      return (
+      <input type="file"/>
+      )
+    }
+  )
+  
+  
+  const cameraColumn = {
+    component: TextComponent,
+    deleteValue: () => '',
+    copyValue: ({ rowData }) => rowData,
+    pasteValue: ({ value }) => value,
   }
-  setColumns([...columns, textColumn({title: newColumn, key: newColumn, editable: true})])
-  console.log(tempCol)
-  tempCol = [...tempCol, textColumn({title: newColumn, key: newColumn, editable: true})]
-  console.log(tempCol)
-}
-
-const handleRemoveColumn = () => {
-
-  let temp = tempCol.filter((col) => {
-    return col.title !== removeColumn;
-  })
 
 
-  console.log(temp)
+  const [tempCol, setTempCol] = useState( [{
+    ...keyColumn('checkbox', checkboxColumn),
+    title: 'Checkbox',
+  }])
 
-  tempCol = temp
-  // setColumns(temp)
+  const columns = useMemo(() => tempCol, [tempCol])
+  const createRow = useCallback(() => ({}), [])
+  
+  const addTextColumn = () => {
+    setTempCol([...columns, {
+      ...keyColumn(addColumnTitle, textColumn),
+      title: addColumnTitle,
+    }])
+    setAddColumnTitle('')
+  }
 
-  // var index = columns.map(function (col) { return col.title }).indexOf(removeColumn);
-  // var index1 = tempCol.map(function (col) { return col.title }).indexOf(removeColumn);
+  const addCheckboxColumn = () => {
+    setTempCol([...columns, {
+      ...keyColumn(addColumnTitle, checkboxColumn),
+      title: addColumnTitle,
+    }])
+    setAddColumnTitle('')
+  }
 
-  // //console.log(index)
-  // console.log("remove pressed", columns, tempCol)
-  // if (index > -1) {
-  //   let temp = columns
-  //   temp.splice(index, 1)
-  //   tempCol.splice(index1, 1)
-  //   console.log("after splice", temp, tempCol)
-  //   setColumns(temp)
-  // }
-  //setColumns(columns => [...columns])
-  //setColumns(columns.filter(index));
- };
+  const addCameraColumn = () => {
+    setTempCol([...columns, {
+      ...keyColumn(addColumnTitle, cameraColumn),
+      title: addColumnTitle,
+    }])
+    setAddColumnTitle('')
+  }
 
+  const removeColumn = (key) => {
+    let newColumn = columns.filter((tempData) => {
+      return tempData.title !== key
+    })
+    setTempCol(newColumn)
+  }
 
+  function handleColumnToDelete(value) { 
+    setToRemoveColumn(value)
+  }
 
+  async function saveToDB(){
+    const dataToSend ={
+      user: userObj.USER._id,
+      title: title,
+      description: description,
+      studyID: studyObj.STUDY.studyID,
+      data: data,
+      columns: columns
+    }
+    let result = await onAddDatagrid(dataToSend)
+    console.log(result)
+    if(result.status === 200){
+      alert(result.data.message)
+    }else{
+      alert(result.data.message)
+    }
+  }
 
+  function showTable() {
+    var x = document.getElementById("table");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+  
   return (
     <div>
       <Layout  > 
@@ -135,28 +154,33 @@ const handleRemoveColumn = () => {
       <Headers/>
       </Header>
       <Content style={{ margin: '24px 16px 0', overflow: 'initial' , minHeight: "100vh"}} >  
-      <Form> 
-        <Form.Item>
-          <Input placeholder="Input table title" onChange={(e)=> {setTitles(e.target.value)}}/> 
-        </Form.Item>
-        <Form.Item>
-          {console.log(tempCol)}
-          <DataSheetGrid
-            data={data}
-            onChange={setData}
-            columns={[...tempCol]}
-          />
-          <input onChange={(e)=> {setNewColumn(e.target.value)}} placeholder="Enter Column Title"/>
-          <button onClick={addNewColumn}>
-              Add Column
-          </button>
-          <input onChange={(e)=> {setRemoveColumn(e.target.value)}} placeholder="Enter Column Title"/>
-          <button onClick={handleRemoveColumn}>
-              Delete Column
-          </button>
-          <CSVLink data={data}>Download as CSV</CSVLink>
-        </Form.Item>
-        </Form>
+      
+      <GridTable />
+      <div id='table' style={{display: 'none'}}>
+          <Input  placeholder="Input table title" onChange={(e)=> {setTitle(e.target.value)}} value={title}/> 
+          <Input  placeholder="Enter table description" onChange={(e)=> {setDescription(e.target.value)}} value={description}></Input>
+          <Input style={{maxWidth: '30%'}} placeholder="Enter Column title" onChange={(e)=> {setAddColumnTitle(e.target.value)}} value={addColumnTitle}></Input>
+            <Button  onClick={addTextColumn}>T</Button>
+            <Button  onClick={addCheckboxColumn} icon={<CheckSquareFilled />}></Button>
+            <Button  onClick={addCameraColumn} icon={<CameraFilled />}></Button>
+            <Button><CSVLink data={data}><DownloadOutlined/></CSVLink>
+    
+            </Button>
+        <Select style={{maxWidth: '30%'}} placeholder="Enter column title to delete" onChange={handleColumnToDelete}>
+            {columnsData.map(column => (
+                            <Option key={column.key} value={column.value}>{column.name}</Option>
+                        ))}
+            </Select>
+            <Button danger icon={<DeleteFilled />} onClick={() => removeColumn(toRemoveColumn)}></Button> 
+            <DynamicDataSheetGrid
+                data={data}
+                onChange={setData}
+                columns={columns}
+                createRow={createRow}
+            />
+            <Button type="primary" onClick={saveToDB}>Save</Button>
+            <Button danger onClick={showTable}>Exit</Button>
+        </div>
       </Content>
     </Layout>      
 </Layout>
