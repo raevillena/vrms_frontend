@@ -147,8 +147,9 @@ router.post('/deleteDataGrid', async(req, res) => {
 
 //update datagrid/table
 router.post('/updateDataGrid', async(req, res) => {
+    console.log('updating datagrid')
     try {
-        Datagrid.updateOne({title: req.body.title, studyID: req.body.studyID, active:true}, {data: req.body.data, dateUpdated: Date.now(), updatedBy: req.body.user}, (err) =>{
+        Datagrid.updateOne({title: req.body.title, studyID: req.body.studyID, active:true}, {data: req.body.data, title: req.body.title, description: req.body.description, dateUpdated: Date.now(), updatedBy: req.body.user}, (err) =>{
             if (err) {
               console.log(err)
             }else{

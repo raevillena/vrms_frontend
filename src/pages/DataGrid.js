@@ -1,16 +1,15 @@
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
-import { Layout, Button, Input, Form, Select} from 'antd'
+import { Layout, Button, Input, Select, Image} from 'antd'
 import Sidebar from '../components/components/Sidebar'
 import Headers from '../components/components/Header'
-import { onUploadDataGrid } from '../services/uploadAPI';
-import { onAddDatagrid, onGetDatagrid,  } from '../services/studyAPI';
+import { onAddDatagrid} from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import { DynamicDataSheetGrid, 
   checkboxColumn,
   textColumn,
   keyColumn  } from 'react-datasheet-grid'
-import GridTable, {getDatagridData} from './GridTable';
-import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined } from '@ant-design/icons';
+import GridTable from './GridTable';
+import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined } from '@ant-design/icons';
 import { CSVLink } from 'react-csv'
 
 
@@ -30,12 +29,45 @@ const DataGrid = () => {
   const [ data, setData ] = useState([])
   const [columnsData, setColumnsData] = useState([]) // adding columns
   const [addColumnTitle, setAddColumnTitle] = useState()
+  const [disabledColumn, setDisabledColumn] = useState(true)
   const [toRemoveColumn, setToRemoveColumn] = useState()
+  const [disabledCreate, setDisabledCreate] = useState(true)
+  const [addTable, setAddTable] = useState() //add data to table
+  const [tempCol, setTempCol] = useState( [{
+    ...keyColumn('checkbox', checkboxColumn),
+    title: 'Checkbox',
+    type: 'checkbox'
+  }])
+  const [loading, setLoading] = useState(true)
 
 
   useEffect(()=> {
     getColumns()
-  }, [data])
+  }, [tempCol])
+
+  useEffect(() => {
+    if (addColumnTitle === undefined ||addColumnTitle ==='') {
+      setDisabledColumn(true);
+    } else {
+      setDisabledColumn(false);
+    }
+  }, [addColumnTitle]);
+
+  useEffect(() => {
+    if (title === undefined ||title ===''|| description === undefined ||description ==='') {
+      setDisabledCreate(true);
+    } else {
+      setDisabledCreate(false);
+    }
+  }, [title,description]);
+
+  useEffect(() => {
+    if (addColumnTitle === undefined ||addColumnTitle ==='') {
+      setDisabledColumn(true);
+    } else {
+      setDisabledColumn(false);
+    }
+  }, [addColumnTitle]);
 
   //adding columns
   const getColumns= () =>{
@@ -50,27 +82,25 @@ const DataGrid = () => {
         setColumnsData(tempColumns)
   }
 
-  const TextComponent = React.memo(
+  const CameraComponent = React.memo(
     ({ rowData, setRowData }) => {
       return (
-      <input type="file"/>
+        <div>
+      <input type="file" accept="image/*"/>
+      <Image/>
+      </div>
       )
     }
   )
   
   
   const cameraColumn = {
-    component: TextComponent,
+    component: CameraComponent,
     deleteValue: () => '',
     copyValue: ({ rowData }) => rowData,
     pasteValue: ({ value }) => value,
   }
 
-
-  const [tempCol, setTempCol] = useState( [{
-    ...keyColumn('checkbox', checkboxColumn),
-    title: 'Checkbox',
-  }])
 
   const columns = useMemo(() => tempCol, [tempCol])
   const createRow = useCallback(() => ({}), [])
@@ -79,6 +109,7 @@ const DataGrid = () => {
     setTempCol([...columns, {
       ...keyColumn(addColumnTitle, textColumn),
       title: addColumnTitle,
+      type: 'text'
     }])
     setAddColumnTitle('')
   }
@@ -87,6 +118,7 @@ const DataGrid = () => {
     setTempCol([...columns, {
       ...keyColumn(addColumnTitle, checkboxColumn),
       title: addColumnTitle,
+      type:'checkbox'
     }])
     setAddColumnTitle('')
   }
@@ -95,14 +127,13 @@ const DataGrid = () => {
     setTempCol([...columns, {
       ...keyColumn(addColumnTitle, cameraColumn),
       title: addColumnTitle,
+      type:'camera'
     }])
     setAddColumnTitle('')
   }
 
   const removeColumn = (key) => {
-    let newColumn = columns.filter((tempData) => {
-      return tempData.title !== key
-    })
+   let newColumn = columns.filter(value => !key.includes(value.title));
     setTempCol(newColumn)
   }
 
@@ -117,12 +148,21 @@ const DataGrid = () => {
       description: description,
       studyID: studyObj.STUDY.studyID,
       data: data,
-      columns: columns
+      columns: tempCol
     }
+    console.log(dataToSend)
     let result = await onAddDatagrid(dataToSend)
-    console.log(result)
     if(result.status === 200){
       alert(result.data.message)
+      setAddTable(result.data.data)
+      setTitle('')
+      setDescription('')
+      setTempCol([{
+        ...keyColumn('checkbox', checkboxColumn),
+        title: 'Checkbox',
+        type: 'checkbox'
+      }])
+      setData([])
     }else{
       alert(result.data.message)
     }
@@ -134,6 +174,14 @@ const DataGrid = () => {
       x.style.display = "block";
     } else {
       x.style.display = "none";
+      setTitle('')
+      setDescription('')
+      setTempCol([{
+        ...keyColumn('checkbox', checkboxColumn),
+        title: 'Checkbox',
+        type: 'checkbox'
+      }])
+      setData([])
     }
   }
   
@@ -155,31 +203,54 @@ const DataGrid = () => {
       </Header>
       <Content style={{ margin: '24px 16px 0', overflow: 'initial' , minHeight: "100vh"}} >  
       
-      <GridTable />
+      <GridTable  data={addTable}/>
       <div id='table' style={{display: 'none'}}>
+        <h1 style={{fontFamily: 'Montserrat'}}>Add Table</h1>
+        <div style={{display: 'flex', flexDirection: 'row', rowGap:'0px', gap:'5px', maxWidth:'100%'}}>
+          <div style={{display:'grid'}}>
+          <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Table Title</label>
           <Input  placeholder="Input table title" onChange={(e)=> {setTitle(e.target.value)}} value={title}/> 
+          </div>
+          <div style={{display:'grid'}}>
+          <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Table Description</label>
           <Input  placeholder="Enter table description" onChange={(e)=> {setDescription(e.target.value)}} value={description}></Input>
-          <Input style={{maxWidth: '30%'}} placeholder="Enter Column title" onChange={(e)=> {setAddColumnTitle(e.target.value)}} value={addColumnTitle}></Input>
-            <Button  onClick={addTextColumn}>T</Button>
-            <Button  onClick={addCheckboxColumn} icon={<CheckSquareFilled />}></Button>
-            <Button  onClick={addCameraColumn} icon={<CameraFilled />}></Button>
-            <Button><CSVLink data={data}><DownloadOutlined/></CSVLink>
-    
-            </Button>
-        <Select style={{maxWidth: '30%'}} placeholder="Enter column title to delete" onChange={handleColumnToDelete}>
+          </div>
+          <div style={{display:'grid'}}>
+          <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Column Title</label>
+          <div style={{display:'flex', flexDirection:'row', gap:'3px'}}>
+          <Input  placeholder="Enter Column title" onChange={(e)=> {setAddColumnTitle(e.target.value)}} value={addColumnTitle}></Input>
+            <Button disabled={disabledColumn}  onClick={addTextColumn}><FontSizeOutlined /></Button>
+            <Button disabled={disabledColumn}  onClick={addCheckboxColumn} ><CheckSquareFilled /></Button>
+            <Button disabled={disabledColumn} onClick={addCameraColumn} ><CameraFilled /></Button>
+            </div>
+          </div>
+          <div style={{display:'grid'}}>
+          </div>
+          <div style={{display:'grid'}}>
+          <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Delete Column </label>
+          <div style={{display:'flex', flexDirection:'row', gap:'5px', width:'300px'}}>
+          <Select placeholder="Select column title to delete" onChange={handleColumnToDelete} mode="tags" tokenSeparators={[',']} style={{ width: '100%' }}>
             {columnsData.map(column => (
                             <Option key={column.key} value={column.value}>{column.name}</Option>
                         ))}
             </Select>
-            <Button danger icon={<DeleteFilled />} onClick={() => removeColumn(toRemoveColumn)}></Button> 
+          <Button danger onClick={() => removeColumn(toRemoveColumn)}><DeleteFilled/></Button> 
+          <Button><CSVLink data={data}><DownloadOutlined/></CSVLink></Button>
+            </div>
+          </div>
+          </div>
+            <div style={{marginTop:'20px'}}>
             <DynamicDataSheetGrid
-                data={data}
-                onChange={setData}
-                columns={columns}
-                createRow={createRow}
-            />
-            <Button type="primary" onClick={saveToDB}>Save</Button>
+                    data={data}
+                    onChange={setData}
+                    columns={columns}
+                    createRow={createRow}
+                />
+            <div style={{float:'right', rowGap:'0px', gap:'5px', display:'flex', marginTop:'20px'}}>
+            <Button type="primary" disabled={disabledCreate} onClick={saveToDB}>Create</Button>
             <Button danger onClick={showTable}>Exit</Button>
+            </div>
+            </div>
         </div>
       </Content>
     </Layout>      

@@ -1,20 +1,23 @@
 import React, {useEffect, useState, useMemo} from 'react';
 import { Table, Button, Popconfirm, Form, Spin } from 'antd';
-import { DeleteFilled, EditFilled, DownloadOutlined, PlusSquareFilled, SearchOutlined } from '@ant-design/icons';
+import { DeleteFilled, EditFilled, DownloadOutlined, PlusSquareFilled } from '@ant-design/icons';
 import { onDeleteDatagrid, onEditDatagrid, onGetDatagrid } from '../services/studyAPI';
-import { useSelector, useDispatch} from 'react-redux';
+import { useSelector} from 'react-redux';
 import moment from 'moment';
 import { CSVLink } from 'react-csv'
+import EditDatagrid from './EditDatagrid'
 
 
 
-const GridTable = () => {
+const GridTable = (props) => {
     const studyObj = useSelector(state => state.study)
     const [tableData, setTableData] = useState([])
     const [loading, setLoading] = useState(false)
     const [dataDownlaod, setDataDownload] = useState([])
+    const [editData, setEditData] = useState([])
+    const [filename, setFilename] = useState('')
     
-
+   
 
     async function getDatagridData(){
         let ID = {studyID: studyObj.STUDY.studyID}
@@ -49,7 +52,21 @@ const GridTable = () => {
     setLoading(false)
   }, [])
 
-
+  useEffect(() => {
+    if(props.data == null|undefined|''){
+        return
+    }else{
+    setTableData([...tableData, {key: tableData.length + 1,
+        tableID:props.data._id,
+        title: props.data.title,
+        description: props.data.description,
+        dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
+        dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
+    }])
+    console.log("props")
+    }
+  
+   }, [props.data])
 
     const columns = [
         {
@@ -91,16 +108,21 @@ const GridTable = () => {
           <Button   onClick={async (e) => {
                 let id ={_id: record.key._id}
                 let result = await onEditDatagrid(id)
-                setDataDownload(result.data.data)
-                console.log(dataDownlaod)
-            }}><CSVLink data={dataDownlaod}><DownloadOutlined /></CSVLink></Button>
+                let x = result.data
+                setFilename(result.ti)
+                console.log('data', result)
+                for(let i = 0; i < x.length; i++){   
+                    setDataDownload(x[i].data)
+                }
+            }}><CSVLink data={dataDownlaod} filename='VirtualResearchManagementSystemData.csv'><DownloadOutlined /></CSVLink></Button>
           <Button onClick = {
            async (e) => {
                 let id ={_id: record.key._id}
                 let result = await onEditDatagrid(id)
-                console.log(result)
+                setEditData(result.data)
+                showTableEdit()
             }
-          }   icon={<EditFilled />}></Button>
+          }   ><EditFilled /></Button>
           <Popconfirm title="Sure to delete?" onConfirm = {
            async (key) => {
                 let id ={_id: record.key._id}
@@ -109,7 +131,7 @@ const GridTable = () => {
                 await handleRemove(record.key)
             }
           }>
-          <Button danger icon={<DeleteFilled />}></Button>
+          <Button danger><DeleteFilled /></Button>
         </Popconfirm>
         </Form>,
                     
@@ -125,14 +147,20 @@ const GridTable = () => {
         }
       }
 
+    function showTableEdit() {
+    var x = document.getElementById("table1");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    }
+  }
+
     return (
         <div>
             {loading ? <div><Button onClick={showTable} style={{background:"#A0BF85"}} icon={<PlusSquareFilled />}>Add Table</Button> 
             <Table columns={columns} dataSource={finaldata} /> </div> : 
             <Spin style={{display: 'flex', justifyContent:'center'}} />}
-           
+            <EditDatagrid data={editData}/>
         </div>
-        
     )
 }
 

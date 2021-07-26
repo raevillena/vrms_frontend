@@ -89,7 +89,7 @@ export async function onDeleteDatagrid(body) {
 
 export async function onUpdateDatagrid(body) {
     try {
-        return axios.post('/v1/studies/deleteDataGrid', body, {
+        return axios.post('/v1/studies/updateDataGrid', body, {
             headers: {
                         'Content-Type': 'application/json',
                     } 
