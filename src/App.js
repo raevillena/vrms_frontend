@@ -3,7 +3,7 @@ import { BrowserRouter, Switch, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import LoginPage from '@pages/Login';
 import Userdash from '@pages/Userdash';
-import DataGrid from '@pages/DataGrid';
+import DataGrid from '@pages/StudyDash';
 import PrivateRoute from '@routes/privateRoute';
 import PublicRoute from '@routes/publicRoute';
 import {verifyAuth} from '@services/authAPI'

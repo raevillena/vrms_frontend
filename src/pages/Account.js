@@ -1,4 +1,4 @@
-import { Row, Layout, Typography,Avatar, Col, Spin } from 'antd'
+import { Row, Layout, Typography,Avatar, Col, Spin, notification, Space } from 'antd'
 import React, {useState, useEffect} from 'react';
 import { useSelector, useDispatch} from 'react-redux';
 import {UserOutlined} from '@ant-design/icons';
@@ -17,6 +17,14 @@ const Account = () => {
     const [imgData, setImgData] = useState() //for displaying avatar
     const { Title } = Typography;
     let avatar = localStorage.getItem("avatarFilename")
+
+    const notif = (type, message) => {
+      notification[type]({
+        message: 'Notification Title',
+        description:
+          message,
+      });
+    };
     
    //for mobile UI 
   function useWindowSize(){
@@ -82,7 +90,7 @@ const Account = () => {
                 let result = await onUploadAvatar(data)
                 console.log(result)
                 localStorage.setItem("avatarFilename", result.data.user.avatarFilename)
-                alert(result.data.message)  
+                notif('info', result.data.message)
               }
             }
               ></input>

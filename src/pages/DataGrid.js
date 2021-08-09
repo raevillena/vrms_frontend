@@ -1,7 +1,5 @@
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
-import { Layout, Button, Input, Select, Image} from 'antd'
-import Sidebar from '../components/components/Sidebar'
-import Headers from '../components/components/Header'
+import {Button, Input, Select, notification, Space} from 'antd'
 import { onAddDatagrid} from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import { DynamicDataSheetGrid, 
@@ -9,12 +7,13 @@ import { DynamicDataSheetGrid,
   textColumn,
   keyColumn  } from 'react-datasheet-grid'
 import GridTable from './GridTable';
-import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined } from '@ant-design/icons';
+import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, } from '@ant-design/icons';
 import { CSVLink } from 'react-csv'
 
 
 
-const { Header, Content, Sider } = Layout;
+
+
 
 
 const DataGrid = () => {
@@ -38,7 +37,6 @@ const DataGrid = () => {
     title: 'Checkbox',
     type: 'checkbox'
   }])
-  const [loading, setLoading] = useState(true)
 
 
   useEffect(()=> {
@@ -86,12 +84,14 @@ const DataGrid = () => {
     ({ rowData, setRowData }) => {
       return (
         <div>
-      <input type="file" accept="image/*"/>
-      <Image/>
+      <label for="file_input_id"><CameraFilled /></label>
+      <input type="file" id="file_input_id" accept="image/*"
+              ></input>
       </div>
       )
     }
   )
+
   
   
   const cameraColumn = {
@@ -141,6 +141,22 @@ const DataGrid = () => {
     setToRemoveColumn(value)
   }
 
+  const successNotif = (type, message) => {
+    notification[type]({
+      message: 'Notification',
+      description:
+        message,
+    });
+  };
+
+  const errorNotif = (type, message) => {
+    notification[type]({
+      message: 'Notification',
+      description:
+        message,
+    });
+  };
+
   async function saveToDB(){
     const dataToSend ={
       user: userObj.USER._id,
@@ -150,10 +166,10 @@ const DataGrid = () => {
       data: data,
       columns: tempCol
     }
-    console.log(dataToSend)
     let result = await onAddDatagrid(dataToSend)
     if(result.status === 200){
-      alert(result.data.message)
+      successNotif('success', result.data.message)
+     // alert(result.data.message)
       setAddTable(result.data.data)
       setTitle('')
       setDescription('')
@@ -164,7 +180,8 @@ const DataGrid = () => {
       }])
       setData([])
     }else{
-      alert(result.data.message)
+     // alert(result.data.message)
+     errorNotif('error', result.data.message)
     }
   }
 
@@ -187,22 +204,6 @@ const DataGrid = () => {
   
   return (
     <div>
-      <Layout  > 
-      <Sider  style={{
-        overflow: 'auto',
-        height: '100vh',
-        position: 'fixed',
-        left: 0,
-        background:'white'
-      }} >
-          <Sidebar/>
-      </Sider>
-    <Layout style={{ marginLeft: 200 }}>
-      <Header style={{ padding: 0, background:'#f2f2f2' }} >
-      <Headers/>
-      </Header>
-      <Content style={{ margin: '24px 16px 0', overflow: 'initial' , minHeight: "100vh"}} >  
-      
       <GridTable  data={addTable}/>
       <div id='table' style={{display: 'none'}}>
         <h1 style={{fontFamily: 'Montserrat'}}>Add Table</h1>
@@ -252,9 +253,6 @@ const DataGrid = () => {
             </div>
             </div>
         </div>
-      </Content>
-    </Layout>      
-</Layout>
     </div>
   )
 }

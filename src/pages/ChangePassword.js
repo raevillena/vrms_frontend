@@ -1,4 +1,4 @@
-import { Button, Form, Input, Typography} from 'antd'
+import { Button, Form, Input, Typography, notification} from 'antd'
 import React, {useState} from 'react';
 import { useSelector} from 'react-redux';
 import {EyeInvisibleOutlined, EyeTwoTone} from '@ant-design/icons';
@@ -10,6 +10,14 @@ const ChangePassword = () => {
     const [password, setPassword] = useState({oldPassword: "", newPassword: "", confrimPassword: ""}) //for changepassword
     const { Title } = Typography;
 
+    const notif = (type, message) => {
+      notification[type]({
+        message: 'Notification',
+        description:
+          message,
+      });
+    };
+
        //for change password
        async function onSubmit(){
         try {
@@ -20,15 +28,15 @@ const ChangePassword = () => {
              oldPass: password.oldPassword
            }
             if(password.newPassword !== password.confrimPassword){
-             alert("Password does not match!")
+             notif('error', 'Password does not match!')
             }else{
                await onChangePassword(data)
-               alert("Password Updated")
+               notif('success', 'Password Updated!')
                setPassword({oldPassword: "", newPassword: "", confrimPassword: ""})
            }
         } catch (error) {
            console.log(error)
-           alert("Invalid password")
+           notif('error', 'Invalid Password!')
         }
      }
 

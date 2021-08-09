@@ -1,11 +1,11 @@
 import React, {useState, useEffect, useMemo, useCallback, useRef} from 'react';
-import {Button, Input, Select, Image, Spin} from 'antd'
+import {Button, Input, Select, Image, Spin, Upload} from 'antd'
 import { onUpdateDatagrid} from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import { DynamicDataSheetGrid, 
   checkboxColumn,
   textColumn,
-  keyColumn  } from 'react-datasheet-grid'
+  keyColumn} from 'react-datasheet-grid'
 import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined } from '@ant-design/icons';
 import { CSVLink } from 'react-csv'
 import IdleTimer from 'react-idle-timer';
@@ -13,7 +13,7 @@ import IdleTimer from 'react-idle-timer';
 
 
 
-const DataGrid = (props) => {
+const EditDataGrid = (props) => {
 
   const { Option } = Select
 
@@ -30,7 +30,6 @@ const DataGrid = (props) => {
   const [disabledColumn, setDisabledColumn] = useState(true)
   const [toRemoveColumn, setToRemoveColumn] = useState()
   const [tempCol, setTempCol] = useState( [])
-  const [timer, setTimer] = useState(60000)
 
 const checkColumnType= (key,title) => {
     switch(key) {
@@ -52,7 +51,6 @@ const checkColumnType= (key,title) => {
   useEffect(()=> {
       setLoading(true)
       let x = props.data
-      console.log(x)
       let tempCols=[]
     for(let i = 0; i < x.length; i++){   
         setTitle(x[i].title)
@@ -63,7 +61,6 @@ const checkColumnType= (key,title) => {
         }
         console.log(tempCols)
         setTempCol(tempCols)   
-        
     }
    }, [props])
 
@@ -103,8 +100,18 @@ const checkColumnType= (key,title) => {
     ({ rowData, setRowData }) => {
       return (
         <div>
-      <input type="file" accept="image/*"/>
-      <Image/>
+          <label for="file_input_id"><CameraFilled /></label>
+          <input type="file" id="file_input_id" accept="image/*" onChange={async e => {
+                const file = e.target.files[0]
+                const data = new FormData()
+                data.append("tableTitle", title)
+                data.append("file", file)
+                let result = await onUpdateDatagrid(data)
+                console.log(result)
+                alert(result.data.message)  
+              }
+            }
+             />
       </div>
       )
     }
@@ -126,6 +133,7 @@ const checkColumnType= (key,title) => {
     setTempCol([...columns, {
       ...keyColumn(addColumnTitle, textColumn),
       title: addColumnTitle,
+      type: 'text'
     }])
     setAddColumnTitle('')
   }
@@ -134,6 +142,7 @@ const checkColumnType= (key,title) => {
     setTempCol([...columns, {
       ...keyColumn(addColumnTitle, checkboxColumn),
       title: addColumnTitle,
+      type: 'checkbox'
     }])
     setAddColumnTitle('')
   }
@@ -142,6 +151,7 @@ const checkColumnType= (key,title) => {
     setTempCol([...columns, {
       ...keyColumn(addColumnTitle, cameraColumn),
       title: addColumnTitle,
+      type: 'camera'
     }])
     setAddColumnTitle('')
   }
@@ -234,4 +244,4 @@ const checkColumnType= (key,title) => {
   )
 }
 
-export default DataGrid
+export default EditDataGrid

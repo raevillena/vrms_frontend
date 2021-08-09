@@ -49,7 +49,7 @@ router.post("/avatar", upload.single("file"), async (req, res, next) => {
 
 router.post("/datagrid", upload1.single("file"), async (req, res, next) => {
   try {
-    console.log(req.file)
+    console.log('file', req.file)
   } catch (error) {
     logger.log('error', error)
     res.status(500).json({message: error.message})

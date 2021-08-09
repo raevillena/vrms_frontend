@@ -15,7 +15,6 @@ const GridTable = (props) => {
     const [loading, setLoading] = useState(false)
     const [dataDownlaod, setDataDownload] = useState([])
     const [editData, setEditData] = useState([])
-    const [filename, setFilename] = useState('')
     
    
 
@@ -63,6 +62,7 @@ const GridTable = (props) => {
         dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
         dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
     }])
+    getDatagridData()
     console.log("props")
     }
   
@@ -109,8 +109,6 @@ const GridTable = (props) => {
                 let id ={_id: record.key._id}
                 let result = await onEditDatagrid(id)
                 let x = result.data
-                setFilename(result.ti)
-                console.log('data', result)
                 for(let i = 0; i < x.length; i++){   
                     setDataDownload(x[i].data)
                 }
