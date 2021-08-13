@@ -88,7 +88,6 @@ const Account = () => {
                 data.append("user", userObj.USER._id )
                 data.append("file", file)
                 let result = await onUploadAvatar(data)
-                console.log(result)
                 localStorage.setItem("avatarFilename", result.data.user.avatarFilename)
                 notif('info', result.data.message)
               }

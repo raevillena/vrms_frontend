@@ -290,3 +290,26 @@
 {"level":"error"}
 {"level":"error"}
 {"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"errors":{"lastUpdated":{"name":"ValidatorError","message":"Path `lastUpdated` is required.","properties":{"message":"Path `lastUpdated` is required.","type":"required","path":"lastUpdated"},"kind":"required","path":"lastUpdated"},"tasksDescription":{"name":"ValidatorError","message":"Path `tasksDescription` is required.","properties":{"message":"Path `tasksDescription` is required.","type":"required","path":"tasksDescription"},"kind":"required","path":"tasksDescription"},"studyID":{"name":"ValidatorError","message":"Path `studyID` is required.","properties":{"message":"Path `studyID` is required.","type":"required","path":"studyID"},"kind":"required","path":"studyID"},"projectID":{"name":"ValidatorError","message":"Path `projectID` is required.","properties":{"message":"Path `projectID` is required.","type":"required","path":"projectID"},"kind":"required","path":"projectID"}},"_message":"Tasks validation failed","level":"error","name":"ValidationError","message":"Tasks validation failed: lastUpdated: Path `lastUpdated` is required., tasksDescription: Path `tasksDescription` is required., studyID: Path `studyID` is required., projectID: Path `projectID` is required."}
+{"level":"error"}
+{"errors":{"tasksDescription":{"name":"ValidatorError","message":"Path `tasksDescription` is required.","properties":{"message":"Path `tasksDescription` is required.","type":"required","path":"tasksDescription"},"kind":"required","path":"tasksDescription"},"studyID":{"name":"ValidatorError","message":"Path `studyID` is required.","properties":{"message":"Path `studyID` is required.","type":"required","path":"studyID"},"kind":"required","path":"studyID"},"projectID":{"name":"ValidatorError","message":"Path `projectID` is required.","properties":{"message":"Path `projectID` is required.","type":"required","path":"projectID"},"kind":"required","path":"projectID"}},"_message":"Tasks validation failed","level":"error","name":"ValidationError","message":"Tasks validation failed: tasksDescription: Path `tasksDescription` is required., studyID: Path `studyID` is required., projectID: Path `projectID` is required."}
+{"errors":{"studyID":{"name":"ValidatorError","message":"Path `studyID` is required.","properties":{"message":"Path `studyID` is required.","type":"required","path":"studyID"},"kind":"required","path":"studyID"},"projectID":{"name":"ValidatorError","message":"Path `projectID` is required.","properties":{"message":"Path `projectID` is required.","type":"required","path":"projectID"},"kind":"required","path":"projectID"}},"_message":"Tasks validation failed","level":"error","name":"ValidationError","message":"Tasks validation failed: studyID: Path `studyID` is required., projectID: Path `projectID` is required."}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}

@@ -3,7 +3,7 @@ import { BrowserRouter, Switch, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import LoginPage from '@pages/Login';
 import Userdash from '@pages/Userdash';
-import DataGrid from '@pages/StudyDash';
+import StudyDash from '@pages/StudyDash';
 import PrivateRoute from '@routes/privateRoute';
 import PublicRoute from '@routes/publicRoute';
 import {verifyAuth} from '@services/authAPI'
@@ -13,6 +13,7 @@ import ForgotPassword from '@pages/Forgotpassword';
 import ResetPassword from '@pages/NewPassword'
 import CreateStudy from '@pages/Study'
 import CreateProject from '@pages/Project'
+import AddTask from '@pages/AddTask'
 import { onRenewToken } from './services/authAPI';
 
 function App() {
@@ -76,11 +77,12 @@ renew()
       <PublicRoute path="/" exact component={LoginPage} isAuthenticated={AUTHENTICATED}  />
       <PublicRoute path="/forgotpassword" exact component={ForgotPassword} isAuthenticated={AUTHENTICATED}/>
       <PublicRoute path="/createstudy" exact component={CreateStudy} isAuthenticated={AUTHENTICATED}/>
+      <PublicRoute path="/addtask" exact component={AddTask} isAuthenticated={AUTHENTICATED}/>
       <PublicRoute path="/createproject" exact component={CreateProject} isAuthenticated={AUTHENTICATED}/>
       <PublicRoute path="/reset-password/" exact component={ResetPassword} isAuthenticated={AUTHENTICATED}/>
       <PublicRoute path="/secretcreateuser" exact component={Signup} isAuthenticated={AUTHENTICATED}  />
       <PrivateRoute path="/dash" exact component={Userdash} isAuthenticated={AUTHENTICATED} />
-      <PrivateRoute path="/datagrid" exact component={DataGrid} isAuthenticated={AUTHENTICATED}/>
+      <PrivateRoute path="/datagrid" exact component={StudyDash} isAuthenticated={AUTHENTICATED}/>
       <PrivateRoute path="/account" exact component={Account} isAuthenticated={AUTHENTICATED}/>
       <Redirect to={AUTHENTICATED ? '/dash' : '/'} />
     </Switch>

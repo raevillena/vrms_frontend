@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
-import {Button, Input, Select, notification, Space} from 'antd'
+import {Button, Input, Select, notification, Modal, Image} from 'antd'
 import { onAddDatagrid} from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import { DynamicDataSheetGrid, 
@@ -7,9 +7,9 @@ import { DynamicDataSheetGrid,
   textColumn,
   keyColumn  } from 'react-datasheet-grid'
 import GridTable from './GridTable';
-import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, } from '@ant-design/icons';
+import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, EyeFilled} from '@ant-design/icons';
 import { CSVLink } from 'react-csv'
-
+import { onUploadDataGrid } from '../services/uploadAPI';
 
 
 
@@ -20,8 +20,8 @@ const DataGrid = () => {
 
   const { Option } = Select
 
-  const studyObj = useSelector(state => state.study)
-  const userObj = useSelector(state => state.user)
+  const studyObj = useSelector(state => state.study) //study reducer
+  const userObj = useSelector(state => state.user) //user reducer
 
   const [title, setTitle] = useState() 
   const [description, setDescription] = useState()
@@ -32,18 +32,20 @@ const DataGrid = () => {
   const [toRemoveColumn, setToRemoveColumn] = useState()
   const [disabledCreate, setDisabledCreate] = useState(true)
   const [addTable, setAddTable] = useState() //add data to table
-  const [tempCol, setTempCol] = useState( [{
+  const [tempCol, setTempCol] = useState( [{ //column
     ...keyColumn('checkbox', checkboxColumn),
     title: 'Checkbox',
     type: 'checkbox'
   }])
+  const [isModalVisible, setIsModalVisible] = useState(false) //modal for image viewing
+  const [imageFilename, setImageFilename] = useState() //to view image
 
 
-  useEffect(()=> {
+  useEffect(()=> { //getting column
     getColumns()
   }, [tempCol])
 
-  useEffect(() => {
+  useEffect(() => { //disable column
     if (addColumnTitle === undefined ||addColumnTitle ==='') {
       setDisabledColumn(true);
     } else {
@@ -51,7 +53,7 @@ const DataGrid = () => {
     }
   }, [addColumnTitle]);
 
-  useEffect(() => {
+  useEffect(() => { //create button disable
     if (title === undefined ||title ===''|| description === undefined ||description ==='') {
       setDisabledCreate(true);
     } else {
@@ -59,13 +61,6 @@ const DataGrid = () => {
     }
   }, [title,description]);
 
-  useEffect(() => {
-    if (addColumnTitle === undefined ||addColumnTitle ==='') {
-      setDisabledColumn(true);
-    } else {
-      setDisabledColumn(false);
-    }
-  }, [addColumnTitle]);
 
   //adding columns
   const getColumns= () =>{
@@ -83,11 +78,28 @@ const DataGrid = () => {
   const CameraComponent = React.memo(
     ({ rowData, setRowData }) => {
       return (
+        <div style={{display:'flex', gap:'5px'}}>
         <div>
-      <label for="file_input_id"><CameraFilled /></label>
-      <input type="file" id="file_input_id" accept="image/*"
-              ></input>
+          <Button value={rowData}><label className="file_input_id"><CameraFilled/>
+          <input type="file"  accept="image/*" onChange={async e => {
+                const file = e.target.files[0]
+                const data = new FormData()
+                data.append("file", file)
+                let result = await onUploadDataGrid(data) //uploading
+                setRowData(result.data.filename)
+              }
+            }
+             />
+          </label></Button>
+          
       </div>
+      <div>  <Button onClick={
+           async (e) => {
+                setImageFilename(rowData) //set the image to view
+                showImage()
+            }
+          }><EyeFilled /></Button></div>
+      </div>     
       )
     }
   )
@@ -102,8 +114,8 @@ const DataGrid = () => {
   }
 
 
-  const columns = useMemo(() => tempCol, [tempCol])
-  const createRow = useCallback(() => ({}), [])
+  const columns = useMemo(() => tempCol, [tempCol]) //displaying columns in datasheet 
+  const createRow = useCallback(() => ({}), []) //creating row
   
   const addTextColumn = () => {
     setTempCol([...columns, {
@@ -137,7 +149,7 @@ const DataGrid = () => {
     setTempCol(newColumn)
   }
 
-  function handleColumnToDelete(value) { 
+  function handleColumnToDelete(value) { //handling deleting column
     setToRemoveColumn(value)
   }
 
@@ -169,7 +181,6 @@ const DataGrid = () => {
     let result = await onAddDatagrid(dataToSend)
     if(result.status === 200){
       successNotif('success', result.data.message)
-     // alert(result.data.message)
       setAddTable(result.data.data)
       setTitle('')
       setDescription('')
@@ -180,12 +191,23 @@ const DataGrid = () => {
       }])
       setData([])
     }else{
-     // alert(result.data.message)
      errorNotif('error', result.data.message)
     }
   }
 
-  function showTable() {
+  const showImage = () => { //for viewing image
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => { //modal
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {//modal
+    setIsModalVisible(false);
+  };
+
+  function showTable() { //showing/hiding the addTable component
     var x = document.getElementById("table");
     if (x.style.display === "none") {
       x.style.display = "block";
@@ -247,6 +269,14 @@ const DataGrid = () => {
                     columns={columns}
                     createRow={createRow}
                 />
+                <Modal title="View Image" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                    <div style={{display: 'grid' }}>
+                      <Image
+                      src={`http://localhost:8080/datagrid/${imageFilename}`}
+                      />
+                    <a href={`http://localhost:8080/datagrid/${imageFilename}`} download target="_blank"><Button type="primary" block icon={<DownloadOutlined/>}>Download</Button></a>
+                    </div>
+                </Modal>
             <div style={{float:'right', rowGap:'0px', gap:'5px', display:'flex', marginTop:'20px'}}>
             <Button type="primary" disabled={disabledCreate} onClick={saveToDB}>Create</Button>
             <Button danger onClick={showTable}>Exit</Button>

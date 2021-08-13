@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useMemo} from 'react';
-import { Table, Button, Popconfirm, Form, Spin } from 'antd';
+import { Table, Button, Popconfirm, Form, Spin, notification } from 'antd';
 import { DeleteFilled, EditFilled, DownloadOutlined, PlusSquareFilled } from '@ant-design/icons';
 import { onDeleteDatagrid, onEditDatagrid, onGetDatagrid } from '../services/studyAPI';
 import { useSelector} from 'react-redux';
@@ -18,7 +18,7 @@ const GridTable = (props) => {
     
    
 
-    async function getDatagridData(){
+    async function getDatagridData(){ //displaying data in table
         let ID = {studyID: studyObj.STUDY.studyID}
         let result =await onGetDatagrid(ID)
         setLoading(true)
@@ -36,7 +36,16 @@ const GridTable = (props) => {
         }
         setTableData(tempTableData)
     }
-    const handleRemove = (key) => {
+
+    const notif = (type, message) => {
+      notification[type]({
+        message: 'Notification',
+        description:
+          message,
+      });
+    };
+
+    const handleRemove = (key) => { //deleting datasheet
         let newData = tableData.filter((tempData) => {
           return tempData.key !== key
         })
@@ -44,14 +53,14 @@ const GridTable = (props) => {
         console.log("data", tableData)
       }
 
-    const finaldata = useMemo(() => tableData, [tableData])
+    const finaldata = useMemo(() => tableData, [tableData]) //final table data
 
-  useEffect(() => {
+  useEffect(() => { //getting data
     getDatagridData()
     setLoading(false)
   }, [])
 
-  useEffect(() => {
+  useEffect(() => { //displaying the added table
     if(props.data == null|undefined|''){
         return
     }else{
@@ -104,7 +113,7 @@ const GridTable = (props) => {
           key: 'operation',
           width: '20%',
           render: (text, record, index) => 
-            <Form>
+            <Form style={{display:'flex', gap:'5px'}}>
           <Button   onClick={async (e) => {
                 let id ={_id: record.key._id}
                 let result = await onEditDatagrid(id)
@@ -116,8 +125,7 @@ const GridTable = (props) => {
           <Button onClick = {
            async (e) => {
                 let id ={_id: record.key._id}
-                let result = await onEditDatagrid(id)
-                setEditData(result.data)
+                setEditData(id)
                 showTableEdit()
             }
           }   ><EditFilled /></Button>
@@ -127,6 +135,7 @@ const GridTable = (props) => {
                 let result = await onDeleteDatagrid(id)
                 console.log('res',result)
                 await handleRemove(record.key)
+                notif("error", "Deleted")
             }
           }>
           <Button danger><DeleteFilled /></Button>
@@ -153,7 +162,7 @@ const GridTable = (props) => {
   }
 
     return (
-        <div>
+        <div style={{marginTop: '20px'}}>
             {loading ? <div><Button onClick={showTable} style={{background:"#A0BF85"}} icon={<PlusSquareFilled />}>Add Table</Button> 
             <Table columns={columns} dataSource={finaldata} /> </div> : 
             <Spin style={{display: 'flex', justifyContent:'center'}} />}

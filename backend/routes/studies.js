@@ -94,14 +94,11 @@ router.post('/addDatagrid', async(req, res) => {
 
 //getting the data of datagrid to display on table
 router.post('/getDataGrid', async(req, res) => {
-    console.log('get data grid')
-    console.log(req.body)
     try {
         Datagrid.find({"studyID": req.body.studyID, "active": true}, function(err, grid) {
             if(err){
                 logger.log('error', error)
             } else{
-                console.log("grid",grid)
                 res.send(grid)
             }
           });

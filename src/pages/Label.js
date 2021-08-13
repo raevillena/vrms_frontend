@@ -29,7 +29,7 @@ const Label = () => {
             </div>
             <div >
             <Progress percent={studyObj.STUDY.key.progress} size="small" style={{maxWidth: '150px'}} />
-            <Button style={{background: '#A0BF85', borderRadius: '50px'}}>Assigned</Button>
+            <Button style={{background: '#A0BF85', borderRadius: '50px'}}>{studyObj.STUDY.key.status}</Button>
             </div>
             </div>
         </div>

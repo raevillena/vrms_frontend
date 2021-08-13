@@ -3,6 +3,8 @@ const router = express.Router()
 const multer = require("multer")
 const path = require('path')
 const User = require('./models/user')
+const fs = require('fs'),
+ request = require('request');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
       cb(null, __dirname + '/uploads/avatar')
@@ -49,13 +51,40 @@ router.post("/avatar", upload.single("file"), async (req, res, next) => {
 
 router.post("/datagrid", upload1.single("file"), async (req, res, next) => {
   try {
-    console.log('file', req.file)
+    console.log('file', req.file.filename)
+    const filename = req.file.filename
+    return res.status(201).json({
+      message: "Upload successful",
+      filename
+    });
   } catch (error) {
     logger.log('error', error)
     res.status(500).json({message: error.message})
   }
 });
 
-  module.exports = router
+
+router.post('/downloadImage', async(req, res) => {
+  try {
+    const download = function(uri, filename, callback){
+      request.head(uri, function(err, res, body){
+        console.log('content-type:', res.headers['content-type']);
+        console.log('content-length:', res.headers['content-length']);
+    
+        request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+      });
+    };
+
+    download(req.body.loc, 'vrms.jpg', function(){
+      console.log('done');
+    });
+
+  } catch (error) {
+      console.log("error happened here", error)
+      logger.log('error', error)
+  }
+})
+
+ module.exports = router
 
   

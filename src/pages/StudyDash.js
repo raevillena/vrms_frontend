@@ -4,6 +4,7 @@ import DataGrid from './DataGrid'
 import { Layout} from 'antd'
 import Sidebar from '../components/components/Sidebar'
 import Headers from '../components/components/Header'
+import Tasks from './DisplayTasks'
 
 
 
@@ -29,6 +30,7 @@ const StudyDash = () => {
                 </Header>
                     <Content style={{ margin: '24px 16px 0', overflow: 'initial' , minHeight: "100vh"}}>
                         <Label/>
+                        <Tasks/>
                         <DataGrid/>
                     </Content>
                </Layout>

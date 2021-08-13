@@ -38,6 +38,7 @@ const Study = () => {
         }
         setProjectData(tempProjectData)
     }
+    
     useEffect(async () => {
         async function getData() {
             getUsers()
