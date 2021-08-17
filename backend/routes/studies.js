@@ -21,7 +21,8 @@ router.post('/createstudy', async(req, res) => {
         status: "ONGOING",
         progress: 0,
         projectName: req.body.projectName,
-        deadline: req.body.deadline
+        deadline: req.body.deadline,
+        budget: req.body.budget
     })
     try {
         const doesExist = await Studies.findOne({studyTitle: req.body.title})
@@ -42,7 +43,7 @@ router.post('/createstudy', async(req, res) => {
 })
 
 
-//finding assignee study for each user
+//finding assigned study for each user
 router.post('/getStudyForUser', async(req, res) => {
     try {
      Studies.find({"assignee": req.body.name}, function(err, studies) {
@@ -50,6 +51,38 @@ router.post('/getStudyForUser', async(req, res) => {
                 logger.log('error', error)
             } else{
                 res.send(studies)
+            }
+          });
+    } catch (error) {
+        logger.log('error', error)
+    }
+})
+
+//find specific study for documentation
+router.post('/getStudyforDoc', async(req, res) => {
+    try {
+     Studies.find({"studyID": req.body.studyID}, function(err, study) {
+            if(err){
+                logger.log('error', err)
+            } else{
+                res.send({study})
+            }
+          });
+    } catch (error) {
+        logger.log('error', error)
+    }
+})
+
+//updating the summary for documentation
+router.post('/updateSummary', async(req, res) => {
+    try {
+     Studies.findOneAndUpdate({"studyID": req.body.studyID} , {"summary": req.body.summary}, function(err, study) {
+            if(err){
+                console.log(err)
+                logger.log('error', err)
+            } else{
+                console.log(study)
+                res.send({study})
             }
           });
     } catch (error) {

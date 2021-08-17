@@ -9,7 +9,7 @@ const Study = () => {
     const { Option } = Select;
     const [projectData, setProjectData] = useState([])
     const [userData, setUserData] = useState([])
-    const [study, setStudy] = useState({title: "", projectName:"", deadline:"",assignee:""})
+    const [study, setStudy] = useState({title: "", projectName:"", deadline:"",assignee:"", budget: ""})
     
     async function getUsers(){
         let resultUsers = await onGetAllUsers()
@@ -106,7 +106,15 @@ const Study = () => {
                         ))}
                         </Select>
                     </Form.Item>
-                    
+                    <Form.Item name="Budget" 
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Please enterbudget!',
+                            },
+                            ]}>
+                         <Input placeholder="Enter Budget" onChange={e => setStudy({...study, budget: e.target.value})} value={study.budget}></Input>
+                    </Form.Item>
                     <Form.Item name="Deadline" 
                             rules={[
                             {

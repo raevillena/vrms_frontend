@@ -275,7 +275,7 @@ const checkColumnType= (key,title) => {
           
           </div>
           </Modal>
-        </div> : <Spin style={{display: 'flex', justifyContent:'center'}} />}
+        </div> : <div style={{display: 'flex', justifyContent: 'center'}}><Spin /> </div>}
         <div style={{float:'right', rowGap:'0px', gap:'5px', display:'flex', marginTop:'20px'}}>
           <Button type="primary" onClick={updateDB}>Save</Button>
           <Button danger onClick={showTableEdit}>Exit</Button>

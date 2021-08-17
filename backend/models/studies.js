@@ -44,7 +44,15 @@ const StudiesSchema = new mongoose.Schema({
     assignee:{
         type: Array,
         required: true
-    }
+    },
+    budget: {
+        type: String,
+        required: true
+    },
+    summary: {
+        type: JSON,
+    },
+    
 })
 
 module.exports = mongoose.model('Studies', StudiesSchema)

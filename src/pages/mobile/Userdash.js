@@ -9,6 +9,7 @@ import { useHistory } from 'react-router-dom';
 import Account from './Account';
 import {useSelector } from 'react-redux';
 import { onGetStudyForUser } from '../../services/studyAPI';
+import moment from 'moment';
 
 const { Header, Content} = Layout;
 
@@ -31,8 +32,8 @@ const Userdash = () => {
           key: x[i],
           title: x[i].studyTitle,
           studyID: x[i].studyID,
-          dateCreated: x[i].dateCreated,
-          dateUpdated: x[i].dateUpdated,
+          dateCreated: moment(x[i].dateCreated).format('MM-DD-YYYY'),
+          dateUpdated: moment(x[i].dateUpdated).format('MM-DD-YYYY'),
           progress: x[i].progress,
           status: [x[i].status]
       });
@@ -71,11 +72,11 @@ const Userdash = () => {
         <Layout>
           <Header style={{background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <img src={logo} className="logo" style={{left:'0px', top:'2.5px', height:'60px', width:'60px', marginLeft:'2.5px'}}></img>
-            <h1 style={{fontFamily: "Bangla MN", fontWeight: "bolder", fontSize:'100%'}}>Virtual Research Management System</h1>
+            <h1 style={{ fontWeight: "bolder", fontSize:'100%'}}>Virtual Research Management System</h1>
           </Header>
           <Content style={{display:'flex', flexDirection:'row', justifyContent:'center'}}>
             <Tabs tabs={tabs} initialPage={0} tabBarPosition="bottom" renderTab={tab => <span>{tab.title}</span>}>
-            {loading ? <div style={{ display: 'grid', alignItems: 'center', minHeight: '100vh', backgroundColor: '#f2f2f2', padding:'20px', fontFamily: "Montserrat", borderRadius: '5px' }} >
+            {loading ? <div style={{ display: 'grid', alignItems: 'center', minHeight: '100vh', backgroundColor: '#f2f2f2', padding:'20px', borderRadius: '5px' }} >
               {studyData.map(study => (
                         <WingBlank size="lg">
                         <WhiteSpace size="lg" />

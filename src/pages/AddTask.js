@@ -1,8 +1,8 @@
 import { Input, Button, Form, Row, DatePicker, Space, Select, notification} from 'antd';
 import React, {useState, useEffect} from 'react';
-import { onGetStudyForTask, onTaskCreate } from '../services/taskAPI';
-import { onGetAllUsers } from '../services/userAPI';
+import { onGetStudyForTask, onGetUserForTask, onTaskCreate } from '../services/taskAPI';
 import { onGetAllProject } from '../services/projectAPI';
+
 
 const AddTask = () => {
     const { Option } = Select;
@@ -21,7 +21,6 @@ const AddTask = () => {
 
 
     function deadline(date) {
-        console.log(date);
         setTask({...task, deadline: date})
     }
 
@@ -32,40 +31,44 @@ const AddTask = () => {
     async function handleProjectChange (value) {
         setTask({...task, projectName: value})
         let resultStudy = await onGetStudyForTask({"projectName": value})
-        console.log(resultStudy)
         let x = resultStudy.data.studies
         let tempStudyData = []
+        let tempAssigneeData = []
         for(let i = 0; i < x.length; i++){ 
             tempStudyData.push({
                 key: x[i].studyTitle,
                 name:  x[i].studyTitle,
                 value:  x[i].studyTitle,
             })
+            tempAssigneeData.push({
+                key: x[i].assignee,
+                name:  x[i].assignee,
+                value:  x[i].assignee,
+            })
         }
         setStudyData(tempStudyData)
+        setUserData(tempAssigneeData)
+
       };
 
     async function handleStudyChange(value){
         setTask({...task, studyName: value})
-    }
-
-    async function getUsers(){
-        let resultUsers = await onGetAllUsers()
-        let x = resultUsers.data
+        let resultUsers = await onGetUserForTask({study: value})
+        let x = resultUsers.data.studies
         let tempUserData = []
         for(let i = 0; i < x.length; i++){ 
             tempUserData.push({
-                key: x[i].name,
-                name:  x[i].name,
-                value:  x[i].name,
+                key: x[i].assignee,
+                name:  x[i].assignee,
+                value:  x[i].assignee,
             })
         }
         setUserData(tempUserData)
     }
 
+
     async function onSubmit(){
         try {
-        console.log('task', task)
         let newTask = await onTaskCreate(task)
         notif('info', newTask.data.message)
            //prompt study number and send email to those who are asigned to this project 
@@ -90,7 +93,6 @@ const AddTask = () => {
 
     useEffect(async () => {
         async function getData() {
-            getUsers()
             getProjects()
         }
 

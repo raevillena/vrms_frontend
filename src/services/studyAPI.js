@@ -29,6 +29,34 @@ export async function onGetStudyForUser(body) {
     }
 }
 
+export async function onUpdateSummary(body) {
+    try {
+        return axios.post(`/v1/studies/updateSummary`, body, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onGetStudyForDoc(body) {
+    try {
+        return axios.post(`/v1/studies/getStudyforDoc`, body, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
 
 export async function onAddDatagrid(body) {
     try {

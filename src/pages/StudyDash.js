@@ -1,10 +1,11 @@
 import React from 'react'
 import Label from './Label'
 import DataGrid from './DataGrid'
-import { Layout} from 'antd'
+import { Layout, Row,Col} from 'antd'
 import Sidebar from '../components/components/Sidebar'
 import Headers from '../components/components/Header'
 import Tasks from './DisplayTasks'
+import Documentation from './Documentation'
 
 
 
@@ -30,7 +31,10 @@ const StudyDash = () => {
                 </Header>
                     <Content style={{ margin: '24px 16px 0', overflow: 'initial' , minHeight: "100vh"}}>
                         <Label/>
-                        <Tasks/>
+                        <Row gutter={16}>
+                            <Col span={12}><Documentation/></Col>
+                            <Col span={12} style={{overflowY: 'scroll', height: '740px'}}> <Tasks/></Col>
+                        </Row>
                         <DataGrid/>
                     </Content>
                </Layout>

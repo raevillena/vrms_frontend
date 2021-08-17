@@ -74,7 +74,6 @@ const GridTable = (props) => {
     getDatagridData()
     console.log("props")
     }
-  
    }, [props.data])
 
     const columns = [
@@ -165,7 +164,7 @@ const GridTable = (props) => {
         <div style={{marginTop: '20px'}}>
             {loading ? <div><Button onClick={showTable} style={{background:"#A0BF85"}} icon={<PlusSquareFilled />}>Add Table</Button> 
             <Table columns={columns} dataSource={finaldata} /> </div> : 
-            <Spin style={{display: 'flex', justifyContent:'center'}} />}
+            <div style={{display: 'flex', justifyContent: 'center'}}><Spin /> </div>}
             <EditDatagrid data={editData}/>
         </div>
     )

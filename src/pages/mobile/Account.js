@@ -69,7 +69,7 @@ const Account = () => {
             <Form style={{background:'#FFFFFF', borderRadius: '5px'}}>
                 <Row>
                 <Col xs={{span: 10}} style={{padding:'25px'}}>
-              <div style={{marginTop:'15px'}} >
+              <div style={{marginTop:'15px', display: 'grid'}} >
               <Avatar src={imgData||`http://localhost:8080/avatar/${userObj.USER.avatarFilename}`}  size={90} icon={<UserOutlined />} />
               <label for="file_input_id">Upload Photo</label>
               <input type="file" id="file_input_id" accept="image/*" onChange={e => {

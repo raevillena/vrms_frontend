@@ -1,6 +1,6 @@
-import { Row, Layout, Typography,Avatar, Col, Spin, notification, Space } from 'antd'
+import { Row, Layout, Typography,Avatar, Col, notification } from 'antd'
 import React, {useState, useEffect} from 'react';
-import { useSelector, useDispatch} from 'react-redux';
+import { useSelector} from 'react-redux';
 import {UserOutlined} from '@ant-design/icons';
 import Sidebar from '../components/components/Sidebar'
 import Headers from '../components/components/Header'
