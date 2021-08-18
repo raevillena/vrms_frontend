@@ -11,6 +11,7 @@ const Summary = () => {
     const editor= useRef(null)
     const [study, setStudy] = useState({})
     const [assignees, setAssignees] = useState([])
+    const [update, setUpdate] = useState(true)
 
     const studyObj = useSelector(state => state.study) //study reducer
     const content = editorState.getCurrentContent(); 
@@ -25,24 +26,36 @@ const Summary = () => {
             let result = await onGetStudyForDoc({studyID: studyObj.STUDY.studyID})
             setStudy(result.data.study[0]) //study data
 
+                    
+        let xAssignee = [result.data.study[0].assignee] //for displaying assignee
+        let tempAssignee = []
+        for (let i = 0; i < xAssignee.length; i++) {
+            tempAssignee.push({
+               assignee:  xAssignee[i]
+            })
+        }
+            setAssignees(tempAssignee) 
             const contentState = convertFromRaw(JSON.parse(result.data.study[0].summary)); //displaying summary
             setEditorState(EditorState.createWithContent(contentState))
-
-            let xAssignee = [result.data.study[0].assignee] //for displaying assignee
-            let tempAssignee = []
-            for (let i = 0; i < xAssignee.length; i++) {
-                tempAssignee.push({
-                   assignee:  xAssignee[i]
-                })
-            }
-            setAssignees(tempAssignee) 
         } catch (error) {
-            alert(error)
+            console.log(error)
         }
     }
 
+
+    
+
     async function updateSummary(){
-        await onUpdateSummary({studyID: studyObj.STUDY.studyID, summary: dataToSaveBackend})
+        try {
+            await onUpdateSummary({studyID: studyObj.STUDY.studyID, summary: dataToSaveBackend})
+            setUpdate(true)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    function onUpdate(){
+        setUpdate(false)
     }
 
       useEffect(() => {
@@ -61,6 +74,7 @@ const Summary = () => {
                 <div onClick={focusEditor}>
                     {}
                     <Editor
+                        readOnly={update}
                         ref={editor}
                         editorState={editorState}
                         onChange={editorState => setEditorState(editorState)}
@@ -81,6 +95,7 @@ const Summary = () => {
             </div>
             <div style={{display:'flex', justifyContent:'flex-end', lineHeight: '20px', gap:'5px'}}>
                 <Button type='primary' onClick={updateSummary}>Save</Button>
+                <Button type='primary' onClick={onUpdate}>Update</Button>
             </div> 
         </div>
     )

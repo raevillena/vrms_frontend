@@ -43,6 +43,78 @@ export async function onUpdateSummary(body) {
     }
 }
 
+export async function onUpdateIntroduction(body) {
+    try {
+        return axios.post(`/v1/studies/updateIntroduction`, body, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onUpdateMethodology(body) {
+    try {
+        return axios.post(`/v1/studies/updateMethodology`, body, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onUpdateResultsAndDiscussion(body) {
+    try {
+        return axios.post(`/v1/studies/updateResultsAndDiscussion`, body, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onUpdateConclusion(body) {
+    try {
+        return axios.post(`/v1/studies/updateConclusion`, body, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onGetDocumentation(body) {
+    try {
+        return axios.post(`/v1/studies/getDocumentation`, body, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+
+
 export async function onGetStudyForDoc(body) {
     try {
         return axios.post(`/v1/studies/getStudyforDoc`, body, {

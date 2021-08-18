@@ -10,6 +10,7 @@ const Comments = require('../models/comment')
 
 //create study
 router.post('/createtask', async(req, res) => {
+ try {
     const tasks = new Tasks({
         dateCreated: Date.now(),
         createdBy: "test",
@@ -23,7 +24,6 @@ router.post('/createtask', async(req, res) => {
         projectName: req.body.projectName,
         deadline: req.body.deadline
     })
- try {
     const doesExist = await Tasks.findOne({tasksTitle: req.body.title, studyID: req.body.studyID, status: true})
     if(doesExist){
         console.log("Task Title already taken")
@@ -67,7 +67,7 @@ router.post('/getStudyForTask', async(req, res) => {
 //get user assigned to the study selected
 router.post('/getUserForTask', async(req, res) => {
     try {
-        Studies.find({"studyTitle": req.body.study}, function(err, studies) {
+       await Studies.find({"studyTitle": req.body.study}, function(err, studies) {
             if(err){
                 logger.log('error', err)
             } else{
@@ -88,7 +88,7 @@ router.post('/getUserForTask', async(req, res) => {
 //get all task for the study
 router.post('/getAllTask', async(req, res) => {
     try {
-        Tasks.find({"assignee": req.body.assignee, "studyName": req.body.studyName}, function(err, tasks){
+      await Tasks.find({"assignee": req.body.assignee, "studyName": req.body.studyName}, function(err, tasks){
             if(err){
                 logger.log('error', err)
             }else{
@@ -107,15 +107,15 @@ router.post('/getAllTask', async(req, res) => {
 
 //add comment
 router.post('/postComment', async(req, res) => {
-    console.log(req.body)
+    try { 
+        console.log(req.body)
     const comment = new Comments({
         comment: req.body.comment.value,
         user: req.body.comment.author,
         dateCreated: Date.now(),
         avatar: req.body.comment.avatar,
         taskId: req.body.taskID
-    })
-    try {   
+    })  
         const newComment =  await comment.save()
         console.log(newComment)
         res.status(201).json({

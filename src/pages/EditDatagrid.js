@@ -8,7 +8,6 @@ import { DynamicDataSheetGrid,
   keyColumn, dateColumn} from 'react-datasheet-grid';
 import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, EyeFilled } from '@ant-design/icons';
 import { CSVLink } from 'react-csv'
-import IdleTimer from 'react-idle-timer';
 import { onEditDatagrid } from '../services/studyAPI';
 import { onUploadDataGrid } from '../services/uploadAPI';
 
@@ -34,6 +33,7 @@ const EditDataGrid = (props) => {
   const [tempCol, setTempCol] = useState([]) //column state
   const [isModalVisible, setIsModalVisible] = useState(false) //modal for image viewing
   const [imageFilename, setImageFilename] = useState() //to view image
+  const AUTOSAVE_INTERVAL = 3000;
 
 
 const checkColumnType= (key,title) => {
@@ -55,6 +55,14 @@ const checkColumnType= (key,title) => {
             break;
       }
 }
+
+useEffect(() => {
+  const timer = setTimeout(()=>{
+    updateDB()
+    console.log('saving1')
+  }, AUTOSAVE_INTERVAL)
+  return () => clearTimeout(timer);
+}, [data])
 
   async function getEditData(){ //edit data
     let resultDB = await onEditDatagrid(props.data)
@@ -207,7 +215,6 @@ const checkColumnType= (key,title) => {
       data: data,
       columns: columns
     }
-    console.log('saving')
     await onUpdateDatagrid(dataToSend)
   }
 
@@ -226,7 +233,6 @@ const checkColumnType= (key,title) => {
   return (
     <div>
       <div id='table1' style={{display: 'none'}}>
-        <IdleTimer ref={idleTimerRef} timeout={60 * 1000} onIdle={updateDB}/>
         <h1 style={{fontFamily: 'Montserrat'}}>Edit Table</h1> 
         <div style={{display: 'flex', flexDirection: 'row', rowGap:'0px', gap:'5px', maxWidth:'100%'}}>
           <div style={{display:'grid'}}>

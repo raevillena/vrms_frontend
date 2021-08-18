@@ -1,6 +1,9 @@
 import React from 'react'
 import { Tabs } from 'antd';
-import Editors from './Editors';
+import Introduction from './Introduction';
+import Methodology from './Methodology';
+import ResultsAndDiscussion from './ResultsAndDiscussion';
+import Conclusion from './Conclusion';
 import '../styles/CSS/Documentation.css'
 import Summary from './Summary'
 
@@ -15,16 +18,16 @@ const Documentation = () => {
                     <Summary/>
                 </TabPane>
                 <TabPane tab="Introduction" key="2">
-                    <Editors/>
+                    <Introduction/>
                 </TabPane>
                 <TabPane tab="Methodology" key="3">
-                    <Editors/>
+                    <Methodology />
                 </TabPane>
                 <TabPane tab="Results and Discussion" key="4">
-                    <Editors/>
+                   <ResultsAndDiscussion/>
                 </TabPane>
                 <TabPane tab="Conclusion" key="5">
-                    <Editors/>
+                    <Conclusion/>
                 </TabPane>
             </Tabs>
   </div>

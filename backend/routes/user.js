@@ -13,7 +13,8 @@ const logger = require('../logger')
 
 //create user
 router.route('/secretcreateuser').post(async (req, res) => {
-    var password = generator.generate({
+    try{   
+      var password = generator.generate({
         length: 10,
         numbers: true
     });
@@ -25,7 +26,6 @@ router.route('/secretcreateuser').post(async (req, res) => {
         title: req.body.title,
         password: password
     })
-    try{   
     const doesExist = await User.findOne({email: users.email})
     if (doesExist){
         console.log("email taken")

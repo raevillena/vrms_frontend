@@ -5,6 +5,8 @@ const path = require('path')
 const User = require('./models/user')
 const fs = require('fs'),
  request = require('request');
+ const logger = require('./logger')
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
       cb(null, __dirname + '/uploads/avatar')
@@ -23,8 +25,18 @@ const storage1 = multer.diskStorage({
   }
 });
 
+const storage2 = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, __dirname + '/uploads/documentation')
+  },
+  filename: function (req, file, cb) {
+      cb(null, Math.random() * 1000 + file.originalname)
+  }
+});
+
 var upload = multer({storage: storage})
 var upload1 = multer({storage: storage1})
+var upload2 = multer({storage: storage2})
 
 router.post("/avatar", upload.single("file"), async (req, res, next) => {
   try {
@@ -63,6 +75,26 @@ router.post("/datagrid", upload1.single("file"), async (req, res, next) => {
   }
 });
 
+router.post("/documentation", upload2.single("file"), async (req, res, next) => {
+  try {
+    //console.log('file', req.file)
+    const filename = req.file.filename
+   if(!req.file) {
+    res.send({
+        status: false,
+        message: 'No file uploaded'
+    })}
+    return res.status(201).json({
+      status: true,
+      filename,
+      message: "Upload successful",
+    });
+  } catch (error) {
+    console.log('error', error)
+    res.status(500).json({message: error.message})
+  }
+});
+
 
 router.post('/downloadImage', async(req, res) => {
   try {
@@ -84,6 +116,9 @@ router.post('/downloadImage', async(req, res) => {
       logger.log('error', error)
   }
 })
+
+
+
 
  module.exports = router
 

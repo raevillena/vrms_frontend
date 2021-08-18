@@ -7,6 +7,7 @@ const logger = require('../logger')
 
 //create project
 router.route('/createproject').post(async (req, res) => {
+   try {
     const projectID = shortid.generate() 
     const project = new Project({
         dateCreated: Date.now(),
@@ -17,7 +18,6 @@ router.route('/createproject').post(async (req, res) => {
         projectID: projectID,
         assignee: req.body.assignee
     })
-   try {
     const doesExist = await Project.findOne({projectName: req.body.projectName})
     if(doesExist){
         console.log("Project name already taken")

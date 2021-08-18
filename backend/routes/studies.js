@@ -2,13 +2,17 @@ const express = require('express')
 const router = express.Router()
 const Studies = require('../models/studies')
 const Datagrid = require('../models/datagrid')
+const Documentation = require('../models/documentation')
 const mongoose = require('mongoose')
 const shortid = require('shortid')
 const logger = require('../logger')
+var HtmlDocx = require('html-docx-js');
+var fs = require('fs')
 
 //create study
 router.post('/createstudy', async(req, res) => {
-    console.log(req.body)
+    try {
+        console.log(req.body)
     const studyID = shortid.generate() 
     const study = new Studies({
         dateCreated: Date.now(),
@@ -24,7 +28,6 @@ router.post('/createstudy', async(req, res) => {
         deadline: req.body.deadline,
         budget: req.body.budget
     })
-    try {
         const doesExist = await Studies.findOne({studyTitle: req.body.title})
         if(doesExist){
             console.log("Project name already taken")
@@ -46,7 +49,7 @@ router.post('/createstudy', async(req, res) => {
 //finding assigned study for each user
 router.post('/getStudyForUser', async(req, res) => {
     try {
-     Studies.find({"assignee": req.body.name}, function(err, studies) {
+    await Studies.find({"assignee": req.body.name}, function(err, studies) {
             if(err){
                 logger.log('error', error)
             } else{
@@ -55,13 +58,14 @@ router.post('/getStudyForUser', async(req, res) => {
           });
     } catch (error) {
         logger.log('error', error)
+        res.status(400).json({message: error.message})
     }
 })
 
 //find specific study for documentation
 router.post('/getStudyforDoc', async(req, res) => {
     try {
-     Studies.find({"studyID": req.body.studyID}, function(err, study) {
+    await Studies.find({"studyID": req.body.studyID}, function(err, study) {
             if(err){
                 logger.log('error', err)
             } else{
@@ -70,42 +74,168 @@ router.post('/getStudyforDoc', async(req, res) => {
           });
     } catch (error) {
         logger.log('error', error)
+        res.status(400).json({message: error.message})
     }
 })
 
 //updating the summary for documentation
 router.post('/updateSummary', async(req, res) => {
     try {
-     Studies.findOneAndUpdate({"studyID": req.body.studyID} , {"summary": req.body.summary}, function(err, study) {
+     await Studies.findOneAndUpdate({"studyID": req.body.studyID} , {"summary": req.body.summary}, function(err, study) {
             if(err){
                 console.log(err)
                 logger.log('error', err)
             } else{
-                console.log(study)
                 res.send({study})
             }
           });
     } catch (error) {
         logger.log('error', error)
+        res.status(400).json({message: error.message})
     }
 })
 
 
+//updating documentation intro/methodology/results and conclusion
+router.post('/updateIntroduction', async(req, res) => {
+    try {
+       const doesExist = await Documentation.findOne({"studyID": req.body.studyID})
+        if(doesExist){
+            Documentation.updateOne({"studyID": req.body.studyID}, {"introduction": req.body.introduction},
+             function(err, docs){
+                if(err){
+                    console.log('inside',err)
+                    logger.log('error', err)
+                }else{
+                    res.send({docs})
+                }
+            })
+        }else{
+            const document = new Documentation({
+                introduction: req.body.introduction,
+                studyID: req.body.studyID
+            })
+            const newDoc =  await document.save()
+            res.send({newDoc})
+        }
+    } catch (error) {
+        logger.log('error', error)
+        res.status(400).json({message: error.message})
+    }
+})
+
+router.post('/updateMethodology', async(req, res) => {
+    try {
+       const doesExist = await Documentation.findOne({"studyID": req.body.studyID})
+        if(doesExist){
+            Documentation.updateOne({"studyID": req.body.studyID}, {"methodology": req.body.methodology},
+             function(err, docs){
+                if(err){
+                    console.log(err)
+                    logger.log('error', err)
+                }else{
+                    res.send({docs})
+                }
+            })
+        }else{
+            const document = new Documentation({
+                methodology: req.body.methodology,
+                studyID: req.body.studyID   
+            })
+            const newDoc =  await document.save()
+            res.send({newDoc})
+        }
+    } catch (error) {
+        logger.log('error', error)
+        res.status(400).json({message: error.message})
+    }
+})
+
+router.post('/updateResultsAndDiscussion', async(req, res) => {
+    try {
+       const doesExist = await Documentation.findOne({"studyID": req.body.studyID})
+        if(doesExist){
+            Documentation.updateOne({"studyID": req.body.studyID}, {"resultsAndDiscussion": req.body.resultsAndDiscussion},
+             function(err, docs){
+                if(err){
+                    console.log(err)
+                    logger.log('error', err)
+                }else{
+                    res.send({docs})
+                }
+            })
+        }else{
+            const document = new Documentation({
+                resultsAndDiscussion: req.body.resultsAndDiscussion,
+                studyID: req.body.studyID
+            })
+            const newDoc =  await document.save()
+            res.send({newDoc})
+        }
+    } catch (error) {
+        logger.log('error', error)
+        res.status(400).json({message: error.message})
+    }
+})
+
+router.post('/updateConclusion', async(req, res) => {
+    try {
+       const doesExist = await Documentation.findOne({"studyID": req.body.studyID})
+        if(doesExist){
+            Documentation.updateOne({"studyID": req.body.studyID}, {"conclusion": req.body.conclusion},
+             function(err, docs){
+                if(err){
+                    console.log(err)
+                    logger.log('error', err)
+                }else{
+                    res.send({docs})
+                }
+            })
+        }else{
+            const document = new Documentation({
+                conclusion: req.body.conclusion,
+                studyID: req.body.studyID
+            })
+            const newDoc =  await document.save()
+            res.send({newDoc})
+        }
+    } catch (error) {
+        logger.log('error', error)
+        res.status(400).json({message: error.message})
+    }
+})
+
+//get data for documentation
+router.post('/getDocumentation', async(req, res) => {
+    try {
+       await Documentation.findOne({"studyID": req.body.studyID}, function(err, docs) {
+               if(err){
+                   logger.log('error', err)
+               } else{
+                   res.send({docs})
+               }
+             });
+       } catch (error) {
+           logger.log('error', error)
+           res.status(400).json({message: error.message})
+       }
+})
+
 //updating the datagrid in database
 router.post('/addDatagrid', async(req, res) => {
-    const newDatagrid = new Datagrid({
-        dateCreated: Date.now(),
-        createdBy: req.body.user,
-        dateUpdated: Date.now(),
-        updatedBy: req.body.user,
-        title: req.body.title,
-        description: req.body.description,
-        data: req.body.data,
-        columns: req.body.columns,
-        studyID: req.body.studyID,
-        active: true
-    })
     try {
+        const newDatagrid = new Datagrid({
+            dateCreated: Date.now(),
+            createdBy: req.body.user,
+            dateUpdated: Date.now(),
+            updatedBy: req.body.user,
+            title: req.body.title,
+            description: req.body.description,
+            data: req.body.data,
+            columns: req.body.columns,
+            studyID: req.body.studyID,
+            active: true
+        })
        const doesExist = await Datagrid.findOne({title: req.body.title, studyID: req.body.studyID, active:true}) //status
        if(doesExist){
         res.status(201).json({message: "Title already exist!"}) 
@@ -128,7 +258,7 @@ router.post('/addDatagrid', async(req, res) => {
 //getting the data of datagrid to display on table
 router.post('/getDataGrid', async(req, res) => {
     try {
-        Datagrid.find({"studyID": req.body.studyID, "active": true}, function(err, grid) {
+       await  Datagrid.find({"studyID": req.body.studyID, "active": true}, function(err, grid) {
             if(err){
                 logger.log('error', error)
             } else{
@@ -144,7 +274,7 @@ router.post('/getDataGrid', async(req, res) => {
 //edit datagrid
 router.post('/editDataGrid', async(req, res) => {
     try {
-        Datagrid.find({"_id": req.body._id, "active": true}, function(err, grid) {
+      await  Datagrid.find({"_id": req.body._id, "active": true}, function(err, grid) {
             if(err){
                 logger.log('error', error)
             } else{
@@ -161,7 +291,7 @@ router.post('/editDataGrid', async(req, res) => {
 //delete datagrid/table
 router.post('/deleteDataGrid', async(req, res) => {
     try {
-        Datagrid.findOneAndUpdate({"_id": req.body._id}, {"active": false}, function(err) {
+      await  Datagrid.findOneAndUpdate({"_id": req.body._id}, {"active": false}, function(err) {
             if(err){
                 logger.log('error', error)
             } else{
@@ -179,7 +309,7 @@ router.post('/deleteDataGrid', async(req, res) => {
 router.post('/updateDataGrid', async(req, res) => {
     console.log('updating datagrid', req.body)
     try {
-        Datagrid.updateOne({title: req.body.title, studyID: req.body.studyID, active:true}, {data: req.body.data, title: req.body.title, description: req.body.description, columns: req.body.columns, dateUpdated: Date.now(), updatedBy: req.body.user}, (err) =>{
+      await  Datagrid.updateOne({title: req.body.title, studyID: req.body.studyID, active:true}, {data: req.body.data, title: req.body.title, description: req.body.description, columns: req.body.columns, dateUpdated: Date.now(), updatedBy: req.body.user}, (err) =>{
             if (err) {
               console.log(err)
             }else{
