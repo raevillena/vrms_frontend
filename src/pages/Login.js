@@ -1,5 +1,5 @@
 
-import { Input, Button, Form, Row, Col, Typography} from 'antd';
+import { Input, Button, Form, Row, Col, Typography, Spin} from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined} from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
@@ -12,18 +12,22 @@ function Login() {
   const  history = useHistory();
   const dispatch = useDispatch();
   const { Title } = Typography;
+
   const [user, setUser] = useState({email:"", password:""}); //for login state
+  const [loading, setLoading] = useState(false)
+
   async function onSubmit(){
     const getUser = {
       email: user.email,
       password: user.password
     }
     try {
+      setLoading(true)
       let result = await onUserLogin(getUser)
       localStorage.setItem("accessToken", result.data.accessToken);
       localStorage.setItem("refreshToken", result.data.token.refreshToken);
       localStorage.setItem("avatarFilename", result.data.data.avatarFilename);
-
+      
       dispatch({
         type: "SET_USER",
         value: result.data.data
@@ -38,7 +42,7 @@ function Login() {
       type: "LOGIN_SUCCESS"
    })
      history.push('/dash')
-
+    
     } catch (error) {
       alert(error.response.data.message)
       dispatch({
@@ -73,6 +77,7 @@ function Login() {
   const [height, width] = useWindowSize();
   if(height <= 760 && width <= 768){
     return(
+      <div> {loading? <Spin style={{display: 'flex', justifyContent:'center', padding: '25%'}} />  :
       <div style={{background: '#f2f2f2', minHeight: "100vh"}}>
         <Row justify="center">
       <Col  >
@@ -105,9 +110,13 @@ function Login() {
       </Form>
       </Col>
       </Row>
+      </div>}
       </div>
     )}
+
   return (
+    <div>
+      {loading? <Spin style={{display: 'flex', justifyContent:'center', padding: '25%'}} />  :
     <div style={{background: '#f2f2f2', minHeight: "100vh"}}>
      <Row justify="center">
     <Col  >
@@ -140,6 +149,7 @@ function Login() {
     </Form>
     </Col>
     </Row>
+    </div>}
     </div>
   )
 }

@@ -129,7 +129,6 @@ router.post('/postComment', async(req, res) => {
 
 //display comments
 router.post('/getAllComment', async(req, res) => {
-    console.log(req.body)
     try {
         Comments.find({"taskId": req.body.taskId}, function(err, comments){
             if(err){

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useEffect, useState, useMemo, useRef} from 'react';
 import { Table, Button, Popconfirm, Form, Spin, notification } from 'antd';
 import { DeleteFilled, EditFilled, DownloadOutlined, PlusSquareFilled } from '@ant-design/icons';
 import { onDeleteDatagrid, onEditDatagrid, onGetDatagrid } from '../services/studyAPI';
@@ -15,13 +15,13 @@ const GridTable = (props) => {
     const [loading, setLoading] = useState(false)
     const [dataDownlaod, setDataDownload] = useState([])
     const [editData, setEditData] = useState([])
-    
+    const csvLink = useRef()
    
 
     async function getDatagridData(){ //displaying data in table
         let ID = {studyID: studyObj.STUDY.studyID}
-        let result =await onGetDatagrid(ID)
         setLoading(true)
+        let result =await onGetDatagrid(ID)
         let x = result.data
         let tempTableData = []
         for(let i = 0; i < x.length; i++){ 
@@ -35,6 +35,7 @@ const GridTable = (props) => {
           });
         }
         setTableData(tempTableData)
+        setLoading(false)
     }
 
     const notif = (type, message) => {
@@ -57,7 +58,6 @@ const GridTable = (props) => {
 
   useEffect(() => { //getting data
     getDatagridData()
-    setLoading(false)
   }, [])
 
   useEffect(() => { //displaying the added table
@@ -72,10 +72,10 @@ const GridTable = (props) => {
         dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
     }])
     getDatagridData()
-    console.log("props")
     }
    }, [props.data])
 
+   
     const columns = [
         {
           title: 'Table ID',
@@ -113,18 +113,22 @@ const GridTable = (props) => {
           width: '20%',
           render: (text, record, index) => 
             <Form style={{display:'flex', gap:'5px'}}>
-          <Button   onClick={async (e) => {
-                let id ={_id: record.key._id}
-                let result = await onEditDatagrid(id)
-                let x = result.data
-                for(let i = 0; i < x.length; i++){   
-                    setDataDownload(x[i].data)
-                }
-            }}><CSVLink data={dataDownlaod} filename='VirtualResearchManagementSystemData.csv'><DownloadOutlined /></CSVLink></Button>
+              <div>
+                <Button  onClick={async (e) => {
+                    let id ={_id: record.key._id}
+                    let result = await onEditDatagrid(id)
+                    let x = result.data
+                    for(let i = 0; i < x.length; i++){
+                      console.log(x[i].data)   
+                        setDataDownload(x[i].data)
+                    }
+                }} icon={<DownloadOutlined/>}></Button>
+                <CSVLink data={dataDownlaod} filename='VirtualResearchManagementSystemData.csv' target="_blank" ref={csvLink}/>
+              </div>
           <Button onClick = {
            async (e) => {
                 let id ={_id: record.key._id}
-                setEditData(id)
+                await setEditData(id)
                 showTableEdit()
             }
           }   ><EditFilled /></Button>
@@ -162,9 +166,9 @@ const GridTable = (props) => {
 
     return (
         <div style={{marginTop: '20px'}}>
-            {loading ? <div><Button onClick={showTable} style={{background:"#A0BF85"}} icon={<PlusSquareFilled />}>Add Table</Button> 
-            <Table columns={columns} dataSource={finaldata} /> </div> : 
-            <div style={{display: 'flex', justifyContent: 'center'}}><Spin /> </div>}
+            {loading ?  <div style={{display: 'flex', justifyContent: 'center'}}><Spin /> </div> : <div><Button onClick={showTable} style={{background:"#A0BF85"}} icon={<PlusSquareFilled />}>Add Table</Button> 
+            <Table columns={columns} dataSource={finaldata} /> </div>
+           }
             <EditDatagrid data={editData}/>
         </div>
     )

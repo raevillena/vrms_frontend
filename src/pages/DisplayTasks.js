@@ -6,8 +6,8 @@ import moment from 'moment';
 import AddComment from './AddComment';
 
 
+
 const { Panel } = Collapse;
-const { Title } = Typography;
 const DisplayTasks = () => {
     const studyObj = useSelector(state => state.study)
     const userObj = useSelector(state => state.user)
@@ -15,7 +15,7 @@ const DisplayTasks = () => {
     const [task , setTask] = useState([])
     const [loading, setloading] = useState(false)
 
-    const [data, setData] = useState()
+    const [data, setData] = useState({task: '', length: 3})
 
     const forBackend = {
         studyName: studyObj.STUDY.title,
@@ -23,8 +23,8 @@ const DisplayTasks = () => {
     }
 
     async function getAllTask (){
-        let resultTask = await onGetAllTask(forBackend)
         setloading(true)
+        let resultTask = await onGetAllTask(forBackend)
         let loopTask = resultTask.data.tasks
         let tempTaskData = []
          for(let i = 0; i < loopTask.length; i++){ 
@@ -42,11 +42,11 @@ const DisplayTasks = () => {
            });
          }
          setTask(tempTaskData)
+         setloading(false)
     }
 
     useEffect( async () => {
         getAllTask()
-        setloading(false)
     }, [])
 
     
@@ -56,9 +56,8 @@ const DisplayTasks = () => {
 
     return (
         <div >
-            {loading? task.length==0 ? <Empty/> :
+            {loading?  <div style={{display: 'flex', justifyContent: 'center'}}><Spin /> </div> : task.length==0 ? <Empty/> :
             <div>
-            <Title level={2}>Tasks</Title>
             <Collapse accordion onChange={callback}>
                 {task.map(tasks =>(<Panel header={tasks.taskTitle} key={tasks.key} extra={<Button style={{background: '#A0BF85', borderRadius: '50px'}}>{tasks.status}</Button>}>
                     <div>
@@ -94,7 +93,7 @@ const DisplayTasks = () => {
                         </div>
                     </div>
                 </Panel>))}
-            </Collapse></div> : <div style={{display: 'flex', justifyContent: 'center'}}><Spin /> </div> }
+            </Collapse></div>  }
         </div>
     )
 }

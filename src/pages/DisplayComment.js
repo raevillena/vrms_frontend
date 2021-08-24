@@ -1,15 +1,17 @@
 import React, { createElement, useState, useEffect } from 'react';
-import { Comment, Tooltip, Avatar, Button } from 'antd';
+import { Comment, Tooltip, Avatar, Button, Spin } from 'antd';
 import moment from 'moment';
 import { onGetALlComment } from '../services/taskAPI';
 
 
 const DisplayComment = (props) => {
     const [comments, setComments] = useState([])
-    const [length, setLength] = useState(3)
+   const [length, setLength] = useState(3)
+   const [loading, setLoading] = useState(false)
     
 
     async function getAllComments(){
+        setLoading(true)
         let result = await onGetALlComment({taskId: props.data.task})
         let tempCommentData = []
         
@@ -23,27 +25,25 @@ const DisplayComment = (props) => {
             });
           }
           setComments(tempCommentData)
+          setLoading(false)
     }
 
     useEffect( () => {
         getAllComments()
     }, [props.data])
 
-    async function addLength(){
-        setLength(length+3)
-        getAllComments()
-        var x = document.getElementById("showComment");
-        if (comments.length <= length) {
-            x.style.display = "none";
-        }else{
-            x.style.display = "flex"
-        }
-    }
+    
 
+
+
+    async function addLength(){
+        setLength(length + 2)
+        getAllComments()
+    }
     return (
-        <div >
+        <div>{loading? <div style={{display: 'flex', justifyContent: 'center'}}><Spin /> </div> :
+        <div > 
             {comments.slice(0,length).map(comment =>(
-            
               <Comment
                     author={<a>{comment.author}</a>}
                     avatar={
@@ -68,6 +68,7 @@ const DisplayComment = (props) => {
             <div id="showComment" style={{display: 'flex', justifyContent: 'center'}}>
                 <Button onClick={addLength}>load more</Button>
             </div>
+        </div>}
         </div>
     )
 }

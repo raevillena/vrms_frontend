@@ -37,14 +37,11 @@ const Userdash = () => {
       });
     }
   setStudyData(tempStudyData)
+  setLoading(false)
   }
     
   useEffect(async () => {
-    async function getData() {
-        getStudies()
-    }
-    await getData()
-    setLoading(false)
+    await getStudies()
 }, [userObj])
 
 
@@ -164,7 +161,7 @@ const Userdash = () => {
         <Headers/>
       </Header>
      <Content style={{ margin: '24px 16px 0', overflow: 'initial', minHeight:'100vh' }} >          
-        {loading? <Table size="small"  dataSource={studyData} columns={columns} style={{minWidth:'100%'}}></Table> : <Spin style={{display: 'flex', justifyContent:'center', padding: '25%'}} />}
+        {loading?  <Spin style={{display: 'flex', justifyContent:'center', padding: '25%'}} /> :<Table size="small"  dataSource={studyData} columns={columns} style={{minWidth:'100%'}}></Table> }
         
       </Content> 
     </Layout>      

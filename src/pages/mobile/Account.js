@@ -67,8 +67,8 @@ const Account = () => {
     return (
         <div style={{ display: 'grid', alignItems: 'center',  minHeight: '100vh', backgroundColor: '#f2f2f2', padding:'20px', fontFamily: "Montserrat", borderRadius: '5px'}} >
             <Form style={{background:'#FFFFFF', borderRadius: '5px'}}>
-                <Row>
-                <Col xs={{span: 10}} style={{padding:'25px'}}>
+                <Row style={{justifyContent:'center', display:'flex', alignItems:'center'}}>
+                <Col  style={{margin:'25px'}}>
               <div style={{marginTop:'15px', display: 'grid'}} >
               <Avatar src={imgData||`http://localhost:8080/avatar/${userObj.USER.avatarFilename}`}  size={90} icon={<UserOutlined />} />
               <label for="file_input_id">Upload Photo</label>
@@ -89,8 +89,8 @@ const Account = () => {
               ></input>
               </div>
                 </Col>
-                <Col xs={{span: 14}}>
-                <div style={{justifyContent:'center', display:'grid', alignItems:'center', padding:'25px'}}>
+                <Col >
+                <div style={{justifyContent:'center', display:'grid', alignItems:'center', margin:'25px'}}>
                <Title style={{margin: '0px'}} level={3}>{userObj.USER.name}</Title>
                 <p style={{margin: '0px'}}>{userObj.USER.title}</p>
                 <p style={{margin: '0px'}}>{userObj.USER.project}</p>

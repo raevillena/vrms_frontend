@@ -1,19 +1,22 @@
 
 import React, { useState , useEffect} from "react";
-import { Button } from "antd";
+import { Button, Spin } from "antd";
 import { useSelector } from 'react-redux';
 import { onGetDocumentation, onUpdateMethodology } from "../services/studyAPI";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw, convertFromRaw} from "draft-js";
 import draftToHtml from 'draftjs-to-html'
-
+import { LoadingOutlined } from "@ant-design/icons";
 
 const Methodology = () => {
     const studyObj = useSelector(state => state.study) //study reducer
     const AUTOSAVE_INTERVAL = 3000;
+    const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
     const [editorState, setEditorState] = useState(EditorState.createEmpty())
+    const [loading, setLoading] = useState(false)
+
     const content = editorState.getCurrentContent(); 
     const dataToSaveBackend = JSON.stringify(convertToRaw(content))
     const markup = draftToHtml(convertToRaw(content))
@@ -28,9 +31,11 @@ const Methodology = () => {
 
     async function getDataFromDB(){
         try {
+          setLoading(true)
             let result = await onGetDocumentation({studyID: studyObj.STUDY.studyID})
             const contentState = convertFromRaw(JSON.parse(result.data.docs.methodology)); //displaying data
             setEditorState(EditorState.createWithContent(contentState))
+            setLoading(false)
         } catch (error) {
             console.log(error)
         }
@@ -95,6 +100,8 @@ const Methodology = () => {
         setEditorState(editorState)
       }
     return (
+      <div>
+        {loading? <Spin indicator={antIcon} style={{display: 'flex', justifyContent:'center', padding: '25%'}} /> :
         <div style={{justifyContent:'space-between', flexDirection:'column', display:'flex'}}>
             <div style={{lineHeight: '20px'}}>
                 <Editor editorState={editorState}
@@ -115,6 +122,7 @@ const Methodology = () => {
             <div style={{display:'flex', justifyContent:'flex-end', lineHeight: '20px', gap:'5px'}}>
             <Button type='primary' onClick={download}>Download</Button>
             </div>
+        </div>}
         </div>
     )
 }

@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useMemo, useCallback, useRef} from 'react';
 import {Button, Input, Select, Image, Spin, Modal} from 'antd'
-import { onUpdateDatagrid} from '../services/studyAPI';
+import { onUpdateDatagrid} from '../../services/studyAPI';
 import { useSelector} from 'react-redux';
 import { DynamicDataSheetGrid, 
   checkboxColumn,
@@ -8,13 +8,14 @@ import { DynamicDataSheetGrid,
   keyColumn, dateColumn} from 'react-datasheet-grid';
 import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, EyeFilled } from '@ant-design/icons';
 import { CSVLink } from 'react-csv'
-import { onEditDatagrid } from '../services/studyAPI';
-import { onDownloadImage, onUploadDataGrid } from '../services/uploadAPI';
+import { onEditDatagrid } from '../../services/studyAPI';
+import { onUploadDataGrid } from '../../services/uploadAPI';
+import '/Users/user/vrms/vrms_frontend/src/styles/CSS/Mobile.css'
 
 
 
 
-const EditDataGrid = (props) => {
+const EditDatagrid = (props) => {
 
   const { Option } = Select
 
@@ -68,7 +69,6 @@ useEffect(() => {
     setLoading(true)
     let resultDB = await onEditDatagrid(props.data)
     let result = resultDB.data
-    console.log(result)
     let tempCols=[]
   for(let i = 0; i < result.length; i++){   
       setTitle(result[i].title)
@@ -84,10 +84,10 @@ useEffect(() => {
 
 
   useEffect(()=> { //getting data
-      getEditData() 
-   }, [props])
-
-
+    getEditData() 
+    console.log('check loader')
+  
+ }, [props])
 
 
   useEffect(()=> { //getting columns data
@@ -218,33 +218,20 @@ useEffect(() => {
     await onUpdateDatagrid(dataToSend)
   }
 
-
-  function showTableEdit() { //show/hide table edit component
-    var x = document.getElementById("table1");
-    if (x.style.display === "none") {
-      x.style.display = "block";
-    } else {
-      x.style.display = "none";
-      setTitle('')
-      setDescription('')
-    }
-  }
   
   return (
-    <div>
-      <div id='table1' style={{display: 'none'}}>
-        <h1 style={{fontFamily: 'Montserrat'}}>Edit Table</h1> 
-        <div style={{display: 'flex', flexDirection: 'row', rowGap:'0px', gap:'5px', maxWidth:'100%'}}>
+    <div >
+        <div style={{display: 'grid', flexDirection: 'row', rowGap:'0px', gap:'5px', maxWidth:'100%'}}>
           <div style={{display:'grid'}}>
-            <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Table Title</label>
+            <label style={{fontSize: '20px'}}>Table Title</label>
             <Input  placeholder="Input table title" onChange={(e)=> {setTitle(e.target.value)}} value={title}/> 
           </div>
           <div style={{display:'grid'}}>
-            <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Table Description</label>
+            <label style={{fontSize: '20px'}}>Table Description</label>
             <Input  placeholder="Enter table description" onChange={(e)=> {setDescription(e.target.value)}} value={description}></Input>
           </div>
           <div style={{display:'grid'}}>
-            <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Column Title</label>
+            <label style={{fontSize: '20px'}}>Column Title</label>
             <div style={{display:'flex', flexDirection:'row', gap:'3px'}}>
               <Input  placeholder="Enter Column title" onChange={(e)=> {setAddColumnTitle(e.target.value)}} value={addColumnTitle}></Input>
               <Button disabled={disabledColumn}  onClick={addTextColumn}><FontSizeOutlined /></Button>
@@ -253,7 +240,7 @@ useEffect(() => {
             </div>
           </div>
           <div style={{display:'grid'}}>
-          <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Delete Column </label>
+          <label style={{fontSize: '20px'}}>Delete Column </label>
           <div style={{display:'flex', flexDirection:'row', gap:'5px', width:'300px'}}>
             <Select placeholder="Select column title to delete" onChange={handleColumnToDelete} mode="tags" tokenSeparators={[',']} style={{ width: '100%' }}>
               {columnsData.map(column => (
@@ -264,9 +251,8 @@ useEffect(() => {
             <Button><CSVLink data={data}><DownloadOutlined/></CSVLink></Button>
           </div>
           </div>
-        </div>  
-        <div style={{marginTop:'20px'}}>
-            {loading ?  <div style={{display: 'flex', justifyContent: 'center'}}><Spin /> </div>: <div><DynamicDataSheetGrid
+          <div style={{marginTop:'20px'}}>
+            {loading ?  <div style={{display: 'flex', justifyContent: 'center'}}><Spin /> </div> : <div><DynamicDataSheetGrid
             data={data}
             onChange={setData}
             columns={columns}
@@ -276,20 +262,19 @@ useEffect(() => {
            <div style={{display: 'grid' }}>
          <Image
               src={`http://localhost:8080/datagrid/${imageFilename}`}
-            
             />
-            
+            <a href={`http://localhost:8080/datagrid/${imageFilename}`} download target="_blank"><Button type="primary" block icon={<DownloadOutlined/>}>Download</Button></a>
+          
           </div>
           </Modal>
-        </div> }
-        <div style={{float:'right', rowGap:'0px', gap:'5px', display:'flex', marginTop:'20px'}}>
-          <Button type="primary" onClick={updateDB}>Save</Button>
-          <Button danger onClick={showTableEdit}>Exit</Button>
-        </div>
-        </div>   
-      </div>
+          <Button style={{float:'right', marginTop:'5px'}} type="primary" onClick={updateDB}>Save</Button>
+        </div>}
+        </div> 
+        </div>  
+         
+        
     </div>
   )
 }
 
-export default EditDataGrid
+export default EditDatagrid

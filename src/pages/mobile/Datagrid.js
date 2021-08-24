@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import {Button, Input, Select, notification, Modal, Image} from 'antd'
-import { onAddDatagrid} from '../services/studyAPI';
+import { onAddDatagrid } from '../../services/studyAPI';
 import { useSelector} from 'react-redux';
 import { DynamicDataSheetGrid, 
   checkboxColumn,
@@ -9,7 +9,8 @@ import { DynamicDataSheetGrid,
 import GridTable from './GridTable';
 import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, EyeFilled} from '@ant-design/icons';
 import { CSVLink } from 'react-csv'
-import { onUploadDataGrid } from '../services/uploadAPI';
+import { onUploadDataGrid } from '../../services/uploadAPI';
+import StudyDash from './StudyDash';
 
 
 
@@ -188,7 +189,7 @@ const DataGrid = () => {
         ...keyColumn('checkbox', checkboxColumn),
         title: 'Checkbox',
         type: 'checkbox'
-      }])
+      }])   
       setData([])
     }else{
      errorNotif('error', result.data.message)
@@ -207,39 +208,29 @@ const DataGrid = () => {
     setIsModalVisible(false);
   };
 
-  function showTable() { //showing/hiding the addTable component
-    var x = document.getElementById("table");
-    if (x.style.display === "none") {
-      x.style.display = "block";
-    } else {
-      x.style.display = "none";
+  function clearFields(){
       setTitle('')
-      setDescription('')
-      setTempCol([{
-        ...keyColumn('checkbox', checkboxColumn),
-        title: 'Checkbox',
-        type: 'checkbox'
-      }])
-      setData([])
-    }
+      setDescription(' ')
+      setData('')
   }
-  
+
+
   return (
     <div>
-      <GridTable  data={addTable}/>
-      <div id='table' style={{display: 'none'}}>
-        <h1 style={{fontFamily: 'Montserrat'}}>Add Table</h1>
-        <div style={{display: 'flex', flexDirection: 'row', rowGap:'0px', gap:'5px', maxWidth:'100%'}}>
+         <div style={{display: 'none'}}>
+              <GridTable data={addTable}/>
+        </div>
+        <div style={{display: 'grid', rowGap:'0px', gap:'5px', maxWidth:'100%', margin:'10px'}}>
           <div style={{display:'grid'}}>
-          <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Table Title</label>
+          <label style={{fontSize: '20px'}}>Table Title</label>
           <Input  placeholder="Input table title" onChange={(e)=> {setTitle(e.target.value)}} value={title}/> 
           </div>
           <div style={{display:'grid'}}>
-          <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Table Description</label>
+          <label style={{fontSize: '20px'}}>Table Description</label>
           <Input  placeholder="Enter table description" onChange={(e)=> {setDescription(e.target.value)}} value={description}></Input>
           </div>
           <div style={{display:'grid'}}>
-          <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Column Title</label>
+          <label style={{fontSize: '20px'}}>Column Title</label>
           <div style={{display:'flex', flexDirection:'row', gap:'3px'}}>
           <Input  placeholder="Enter Column title" onChange={(e)=> {setAddColumnTitle(e.target.value)}} value={addColumnTitle}></Input>
             <Button disabled={disabledColumn}  onClick={addTextColumn}><FontSizeOutlined /></Button>
@@ -250,8 +241,8 @@ const DataGrid = () => {
           <div style={{display:'grid'}}>
           </div>
           <div style={{display:'grid'}}>
-          <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Delete Column </label>
-          <div style={{display:'flex', flexDirection:'row', gap:'5px', width:'300px'}}>
+          <label style={{fontSize: '20px'}}>Delete Column </label>
+          <div style={{display:'flex', flexDirection:'row', gap:'5px'}}>
           <Select placeholder="Select column title to delete" onChange={handleColumnToDelete} mode="tags" tokenSeparators={[',']} style={{ width: '100%' }}>
             {columnsData.map(column => (
                             <Option key={column.key} value={column.value}>{column.name}</Option>
@@ -261,8 +252,7 @@ const DataGrid = () => {
           <Button><CSVLink data={data}><DownloadOutlined/></CSVLink></Button>
             </div>
           </div>
-          </div>
-            <div style={{marginTop:'20px'}}>
+          <div style={{marginTop:'30px'}}>
             <DynamicDataSheetGrid
                     data={data}
                     onChange={setData}
@@ -274,14 +264,16 @@ const DataGrid = () => {
                       <Image
                       src={`http://localhost:8080/datagrid/${imageFilename}`}
                       />
+                    <a href={`http://localhost:8080/datagrid/${imageFilename}`} download target="_blank"><Button type="primary" block icon={<DownloadOutlined/>}>Download</Button></a>
                     </div>
                 </Modal>
             <div style={{float:'right', rowGap:'0px', gap:'5px', display:'flex', marginTop:'20px'}}>
             <Button type="primary" disabled={disabledCreate} onClick={saveToDB}>Create</Button>
-            <Button danger onClick={showTable}>Exit</Button>
+            <Button type="primary" onClick={clearFields}>Clear</Button>
             </div>
             </div>
-        </div>
+          </div>
+           
     </div>
   )
 }

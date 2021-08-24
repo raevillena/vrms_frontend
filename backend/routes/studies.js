@@ -12,7 +12,6 @@ var fs = require('fs')
 //create study
 router.post('/createstudy', async(req, res) => {
     try {
-        console.log(req.body)
     const studyID = shortid.generate() 
     const study = new Studies({
         dateCreated: Date.now(),
@@ -245,7 +244,6 @@ router.post('/addDatagrid', async(req, res) => {
                 console.log("Unable to update study data!")
             }else{
                 await newDatagrid.save()
-                console.log("Study data updated!")
                 res.status(200).json({data: newDatagrid, message: "Table saved!"})
             }
         })
@@ -278,7 +276,6 @@ router.post('/editDataGrid', async(req, res) => {
             if(err){
                 logger.log('error', error)
             } else{
-                console.log("grid",grid)
                 res.send(grid)
             }
           });
@@ -307,20 +304,18 @@ router.post('/deleteDataGrid', async(req, res) => {
 
 //update datagrid/table
 router.post('/updateDataGrid', async(req, res) => {
-    console.log('updating datagrid', req.body)
     try {
-      await  Datagrid.updateOne({title: req.body.title, studyID: req.body.studyID, active:true}, {data: req.body.data, title: req.body.title, description: req.body.description, columns: req.body.columns, dateUpdated: Date.now(), updatedBy: req.body.user}, (err) =>{
+      await  Datagrid.updateOne({title: req.body.title, studyID: req.body.studyID, active:true}, {data: req.body.data, title: req.body.title, description: req.body.description, columns: req.body.columns, dateUpdated: Date.now(), updatedBy: req.body.user}, async(err) =>{
             if (err) {
               console.log(err)
             }else{
-                Studies.updateOne({studyID: req.body.studyID}, {dateUpdated: Date.now()}, (err) =>{
+              await  Studies.updateOne({studyID: req.body.studyID}, {dateUpdated: Date.now()}, (err) =>{
                     if(err){
                         console.log("Unable to update study data!")
                     }else{
                         console.log("Study data updated!")
                     }
                 })
-              console.log("data Updated")
             }
           })
     } catch (error) {

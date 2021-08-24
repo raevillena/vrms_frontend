@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { BrowserRouter, Switch, Redirect } from "react-router-dom";  
 import { useSelector, useDispatch } from 'react-redux';
 import LoginPage from '@pages/Login';
@@ -15,6 +15,7 @@ import CreateStudy from '@pages/Study'
 import CreateProject from '@pages/Project'
 import AddTask from '@pages/AddTask'
 import { onRenewToken } from './services/authAPI';
+import {Spin} from 'antd'
 
 
 
@@ -22,11 +23,13 @@ function App() {
   const dispatch = useDispatch();
   const authObj = useSelector(state => state.auth)
   const errorObj = useSelector(state => state.error)
+  const [loading, setLoading] = useState(true)
   
   const {AUTHENTICATED}  = authObj
  //authentication for public and private route
   useEffect(() => {
     async function verify() {
+      setLoading(true)
       let result = await verifyAuth()
       if (result.error) {
         dispatch({
@@ -42,12 +45,14 @@ function App() {
      
     }
     verify()
+    setLoading(false)
 }, [])
 
 
 //to renew acesstoken
 useEffect(()=>{
   async function renew(){
+    setLoading(true)
   let token = {refreshToken : localStorage.getItem("refreshToken")}
    console.log('updating access token')
   let result = await onRenewToken(token)
@@ -71,7 +76,15 @@ useEffect(()=>{
  }
 }
 renew()
+setLoading(false)
 }, [errorObj])
+
+
+useEffect(() => {
+  if(loading === true){
+    return <Spin style={{display: 'flex', justifyContent:'center', padding: '25%'}} />
+  } 
+}, [loading])
 
   return (
     <BrowserRouter>
@@ -88,7 +101,7 @@ renew()
       <PrivateRoute path="/account" exact component={Account} isAuthenticated={AUTHENTICATED}/>
       <Redirect to={AUTHENTICATED ? '/dash' : '/'} />
     </Switch>
-    </BrowserRouter>
+    </BrowserRouter> 
   );
 }
 

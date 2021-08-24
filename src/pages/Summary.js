@@ -3,8 +3,9 @@ import {Editor, EditorState} from 'draft-js';
 import { useSelector } from 'react-redux';
 import { onGetStudyForDoc, onUpdateSummary } from '../services/studyAPI';
 import moment from 'moment';
-import { Button } from 'antd';
+import { Button, Spin } from 'antd';
 import { convertToRaw, convertFromRaw } from 'draft-js';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const Summary = () => {
     const [editorState, setEditorState] = useState(EditorState.createEmpty())
@@ -12,10 +13,12 @@ const Summary = () => {
     const [study, setStudy] = useState({})
     const [assignees, setAssignees] = useState([])
     const [update, setUpdate] = useState(true)
+    const [loading, setLoading] = useState(false)
 
     const studyObj = useSelector(state => state.study) //study reducer
     const content = editorState.getCurrentContent(); 
     const dataToSaveBackend = JSON.stringify(convertToRaw(content))
+    const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
     
     function focusEditor() {
         editor.current.focus();
@@ -23,20 +26,20 @@ const Summary = () => {
 
     async function getStudyData(){
         try {
+            setLoading(true)
             let result = await onGetStudyForDoc({studyID: studyObj.STUDY.studyID})
             setStudy(result.data.study[0]) //study data
-
-                    
-        let xAssignee = [result.data.study[0].assignee] //for displaying assignee
-        let tempAssignee = []
-        for (let i = 0; i < xAssignee.length; i++) {
-            tempAssignee.push({
-               assignee:  xAssignee[i]
-            })
-        }
+                let xAssignee = [result.data.study[0].assignee] //for displaying assignee
+                let tempAssignee = []
+            for (let i = 0; i < xAssignee.length; i++) {
+                tempAssignee.push({
+                    assignee:  xAssignee[i]
+                })
+            }
             setAssignees(tempAssignee) 
             const contentState = convertFromRaw(JSON.parse(result.data.study[0].summary)); //displaying summary
             setEditorState(EditorState.createWithContent(contentState))
+            setLoading(false)
         } catch (error) {
             console.log(error)
         }
@@ -65,14 +68,15 @@ const Summary = () => {
 
     return (
         <div>
+            {loading? <Spin indicator={antIcon} style={{display: 'flex', justifyContent:'center', padding: '25%'}} /> : 
+            <div>
             <div style={{display: 'flex', gap: '5px'}}>
                 <label style={{fontWeight:'bolder'}}>Title: </label>
                 <p>{study.studyTitle}</p>
             </div>
-            <div style={{display: 'grid'}}>
+            <div style={{display: 'inline-grid', left:'0px'}}>
                 <label style={{fontWeight:'bolder'}}>Summary:</label>
                 <div onClick={focusEditor}>
-                    {}
                     <Editor
                         readOnly={update}
                         ref={editor}
@@ -96,7 +100,7 @@ const Summary = () => {
             <div style={{display:'flex', justifyContent:'flex-end', lineHeight: '20px', gap:'5px'}}>
                 <Button type='primary' onClick={updateSummary}>Save</Button>
                 <Button type='primary' onClick={onUpdate}>Update</Button>
-            </div> 
+            </div> </div>}
         </div>
     )
 }
