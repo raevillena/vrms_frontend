@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const Tasks = require('../models/tasks')
-const mongoose = require('mongoose')
 const logger = require('../logger')
 const Project = require('../models/projects')
 const Studies = require('../models/studies')
@@ -108,7 +107,6 @@ router.post('/getAllTask', async(req, res) => {
 //add comment
 router.post('/postComment', async(req, res) => {
     try { 
-        console.log(req.body)
     const comment = new Comments({
         comment: req.body.comment.value,
         user: req.body.comment.author,
@@ -117,9 +115,14 @@ router.post('/postComment', async(req, res) => {
         taskId: req.body.taskID
     })  
         const newComment =  await comment.save()
-        console.log(newComment)
-        res.status(201).json({
-            newComment
+        Studies.updateOne({"studyID": req.body.studyID}, {"updatedBy": req.body.comment.author}, function(err){
+            if(err){
+                logger.log('error', err)
+            }else{
+                res.status(201).json({
+                    newComment
+                })
+            }
         })
     } catch (error) {
         console.log(error)

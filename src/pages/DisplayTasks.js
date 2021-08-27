@@ -4,6 +4,7 @@ import { onGetAllTask } from '../services/taskAPI';
 import { useSelector} from 'react-redux';
 import moment from 'moment';
 import AddComment from './AddComment';
+import '../styles/CSS/Userdash.css'
 
 
 
@@ -56,7 +57,7 @@ const DisplayTasks = () => {
 
     return (
         <div >
-            {loading?  <div style={{display: 'flex', justifyContent: 'center'}}><Spin /> </div> : task.length==0 ? <Empty/> :
+            {loading?  <div className="spinner"><Spin /> </div> : task.length==0 ? <Empty/> :
             <div>
             <Collapse accordion onChange={callback}>
                 {task.map(tasks =>(<Panel header={tasks.taskTitle} key={tasks.key} extra={<Button style={{background: '#A0BF85', borderRadius: '50px'}}>{tasks.status}</Button>}>

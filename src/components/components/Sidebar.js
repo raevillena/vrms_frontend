@@ -25,7 +25,7 @@ const Sidebar = () => {
       }
     return (
         <div>
-             <img src={logo} className="logo"/>
+             <img alt="" src={logo} className="logo"/>
           <Menu>
           <Menu.Item key="1" icon={<BookOutlined />} className="menu1" onClick={research}>
            Research

@@ -80,7 +80,7 @@ router.post('/getStudyforDoc', async(req, res) => {
 //updating the summary for documentation
 router.post('/updateSummary', async(req, res) => {
     try {
-     await Studies.findOneAndUpdate({"studyID": req.body.studyID} , {"summary": req.body.summary}, function(err, study) {
+     await Studies.findOneAndUpdate({"studyID": req.body.studyID} , {"summary": req.body.summary, "updatedBy": req.body.user}, function(err, study) {
             if(err){
                 console.log(err)
                 logger.log('error', err)
@@ -106,7 +106,13 @@ router.post('/updateIntroduction', async(req, res) => {
                     console.log('inside',err)
                     logger.log('error', err)
                 }else{
-                    res.send({docs})
+                    Studies.updateOne({"studyID": req.body.studyID}, {"updatedBy": req.body.user}, function(err){
+                        if(err){
+                            logger.log('error', err)
+                        }else{
+                            res.send({docs})
+                        }
+                    })
                 }
             })
         }else{
@@ -115,7 +121,13 @@ router.post('/updateIntroduction', async(req, res) => {
                 studyID: req.body.studyID
             })
             const newDoc =  await document.save()
-            res.send({newDoc})
+            Studies.updateOne({"studyID": req.body.studyID}, {"updatedBy": req.body.user}, function(err){
+                if(err){
+                    logger.log('error', err)
+                }else{
+                    res.send({newDoc})
+                }
+            })
         }
     } catch (error) {
         logger.log('error', error)
@@ -133,7 +145,13 @@ router.post('/updateMethodology', async(req, res) => {
                     console.log(err)
                     logger.log('error', err)
                 }else{
-                    res.send({docs})
+                    Studies.updateOne({"studyID": req.body.studyID}, {"updatedBy": req.body.user}, function(err){
+                        if(err){
+                            logger.log('error', err)
+                        }else{
+                            res.send({docs})
+                        }
+                    })
                 }
             })
         }else{
@@ -142,7 +160,13 @@ router.post('/updateMethodology', async(req, res) => {
                 studyID: req.body.studyID   
             })
             const newDoc =  await document.save()
-            res.send({newDoc})
+            Studies.updateOne({"studyID": req.body.studyID}, {"updatedBy": req.body.user}, function(err){
+                if(err){
+                    logger.log('error', err)
+                }else{
+                    res.send({newDoc})
+                }
+            })
         }
     } catch (error) {
         logger.log('error', error)
@@ -160,7 +184,13 @@ router.post('/updateResultsAndDiscussion', async(req, res) => {
                     console.log(err)
                     logger.log('error', err)
                 }else{
-                    res.send({docs})
+                    Studies.updateOne({"studyID": req.body.studyID}, {"updatedBy": req.body.user}, function(err){
+                        if(err){
+                            logger.log('error', err)
+                        }else{
+                            res.send({docs})
+                        }
+                    })
                 }
             })
         }else{
@@ -169,7 +199,13 @@ router.post('/updateResultsAndDiscussion', async(req, res) => {
                 studyID: req.body.studyID
             })
             const newDoc =  await document.save()
-            res.send({newDoc})
+            Studies.updateOne({"studyID": req.body.studyID}, {"updatedBy": req.body.user}, function(err){
+                if(err){
+                    logger.log('error', err)
+                }else{
+                    res.send({newDoc})
+                }
+            })
         }
     } catch (error) {
         logger.log('error', error)
@@ -187,7 +223,13 @@ router.post('/updateConclusion', async(req, res) => {
                     console.log(err)
                     logger.log('error', err)
                 }else{
-                    res.send({docs})
+                    Studies.updateOne({"studyID": req.body.studyID}, {"updatedBy": req.body.user}, function(err){
+                        if(err){
+                            logger.log('error', err)
+                        }else{
+                            res.send({docs})
+                        }
+                    })
                 }
             })
         }else{
@@ -196,7 +238,13 @@ router.post('/updateConclusion', async(req, res) => {
                 studyID: req.body.studyID
             })
             const newDoc =  await document.save()
-            res.send({newDoc})
+            Studies.updateOne({"studyID": req.body.studyID}, {"updatedBy": req.body.user}, function(err){
+                if(err){
+                    logger.log('error', err)
+                }else{
+                    res.send({newDoc})
+                }
+            })
         }
     } catch (error) {
         logger.log('error', error)
@@ -239,7 +287,7 @@ router.post('/addDatagrid', async(req, res) => {
        if(doesExist){
         res.status(201).json({message: "Title already exist!"}) 
        }else{
-        Studies.updateOne({studyID: req.body.studyID}, {dateUpdated: Date.now()}, async (err) =>{
+        Studies.updateOne({"studyID": req.body.studyID}, {"dateUpdated": Date.now(), "updatedBy": req.body.user}, async (err) =>{
             if(err){
                 console.log("Unable to update study data!")
             }else{
@@ -292,8 +340,13 @@ router.post('/deleteDataGrid', async(req, res) => {
             if(err){
                 logger.log('error', error)
             } else{
-                console.log("grid status change")
-                res.send("Item Deleted!")
+                Studies.updateOne({studyID: req.body.studyID}, {dateUpdated: Date.now(), updatedBy: req.body.user}, (err) =>{
+                    if(err){
+                        console.log("Unable to update study data!")
+                    }else{
+                        res.send("Item Deleted!")
+                    }
+                })
             }
           });
     } catch (error) {
@@ -309,9 +362,9 @@ router.post('/updateDataGrid', async(req, res) => {
             if (err) {
               console.log(err)
             }else{
-              await  Studies.updateOne({studyID: req.body.studyID}, {dateUpdated: Date.now()}, (err) =>{
+              await  Studies.updateOne({studyID: req.body.studyID}, {dateUpdated: Date.now(), updatedBy: req.body.user}, (err) =>{
                     if(err){
-                        console.log("Unable to update study data!")
+                        logger.log('error', "unable to update study -update datagrid")
                     }else{
                         console.log("Study data updated!")
                     }

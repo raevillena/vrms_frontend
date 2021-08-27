@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
-import {Button, Input, Select, notification, Modal, Image} from 'antd'
+import {Button, Input, Select, notification, Modal, Image, Tooltip} from 'antd'
 import { onAddDatagrid} from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import { DynamicDataSheetGrid, 
@@ -8,8 +8,9 @@ import { DynamicDataSheetGrid,
   keyColumn  } from 'react-datasheet-grid'
 import GridTable from './GridTable';
 import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, EyeFilled} from '@ant-design/icons';
-import { CSVLink } from 'react-csv'
 import { onUploadDataGrid } from '../services/uploadAPI';
+import '../styles/CSS/Userdash.css'
+
 
 
 
@@ -33,9 +34,9 @@ const DataGrid = () => {
   const [disabledCreate, setDisabledCreate] = useState(true)
   const [addTable, setAddTable] = useState() //add data to table
   const [tempCol, setTempCol] = useState( [{ //column
-    ...keyColumn('checkbox', checkboxColumn),
+    ...keyColumn('Checkbox', checkboxColumn),
     title: 'Checkbox',
-    type: 'checkbox'
+    type: 'Checkbox'
   }])
   const [isModalVisible, setIsModalVisible] = useState(false) //modal for image viewing
   const [imageFilename, setImageFilename] = useState() //to view image
@@ -130,7 +131,7 @@ const DataGrid = () => {
     setTempCol([...columns, {
       ...keyColumn(addColumnTitle, checkboxColumn),
       title: addColumnTitle,
-      type:'checkbox'
+      type:'Checkbox'
     }])
     setAddColumnTitle('')
   }
@@ -185,9 +186,9 @@ const DataGrid = () => {
       setTitle('')
       setDescription('')
       setTempCol([{
-        ...keyColumn('checkbox', checkboxColumn),
+        ...keyColumn('Checkbox', checkboxColumn),
         title: 'Checkbox',
-        type: 'checkbox'
+        type: 'Checkbox'
       }])
       setData([])
     }else{
@@ -207,8 +208,30 @@ const DataGrid = () => {
     setIsModalVisible(false);
   };
 
+  async function downloadCSV(){
+    let csv = ''
+    let keys = Object.keys(data[0])
+    keys.forEach((key) => {
+      csv += key + ","
+    })
+    csv += "\n"
+
+    data.forEach((datarow) => {
+      keys.forEach((key)=>{
+        csv += datarow[key] + ","
+      })
+      csv += "\n"
+    });
+      const element = document.createElement('a')
+      const file = new Blob([csv], {type: 'data:text/csv;charset=utf-8'})
+      element.href = URL.createObjectURL(file)
+      element.download = 'try.csv'
+      document.body.appendChild(element)
+      element.click()
+  }
+
   function showTable() { //showing/hiding the addTable component
-    var x = document.getElementById("table");
+    var x = document.getElementById("addtable");
     if (x.style.display === "none") {
       x.style.display = "block";
     } else {
@@ -216,9 +239,9 @@ const DataGrid = () => {
       setTitle('')
       setDescription('')
       setTempCol([{
-        ...keyColumn('checkbox', checkboxColumn),
+        ...keyColumn('Checkbox', checkboxColumn),
         title: 'Checkbox',
-        type: 'checkbox'
+        type: 'Checkbox'
       }])
       setData([])
     }
@@ -227,9 +250,9 @@ const DataGrid = () => {
   return (
     <div>
       <GridTable  data={addTable}/>
-      <div id='table' style={{display: 'none'}}>
-        <h1 style={{fontFamily: 'Montserrat'}}>Add Table</h1>
-        <div style={{display: 'flex', flexDirection: 'row', rowGap:'0px', gap:'5px', maxWidth:'100%'}}>
+      <div id='addtable' style={{display: 'none'}}>
+        <h1 style={{fontFamily: 'Montserrat', fontSize: '20px'}}>Add Table</h1>
+        <div className="div-flex">
           <div style={{display:'grid'}}>
           <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Table Title</label>
           <Input  placeholder="Input table title" onChange={(e)=> {setTitle(e.target.value)}} value={title}/> 
@@ -242,9 +265,15 @@ const DataGrid = () => {
           <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Column Title</label>
           <div style={{display:'flex', flexDirection:'row', gap:'3px'}}>
           <Input  placeholder="Enter Column title" onChange={(e)=> {setAddColumnTitle(e.target.value)}} value={addColumnTitle}></Input>
-            <Button disabled={disabledColumn}  onClick={addTextColumn}><FontSizeOutlined /></Button>
-            <Button disabled={disabledColumn}  onClick={addCheckboxColumn} ><CheckSquareFilled /></Button>
-            <Button disabled={disabledColumn} onClick={addCameraColumn} ><CameraFilled /></Button>
+          <Tooltip placement='top' title='Text Column'>
+              <Button disabled={disabledColumn}  onClick={addTextColumn}><FontSizeOutlined /></Button>
+              </Tooltip>
+              <Tooltip placement='top' title='Checkbox Column'>
+              <Button disabled={disabledColumn}  onClick={addCheckboxColumn} ><CheckSquareFilled /></Button>
+              </Tooltip>
+              <Tooltip placement='top' title='Camera Column'>
+              <Button disabled={disabledColumn} onClick={addCameraColumn} ><CameraFilled /></Button>
+              </Tooltip>
             </div>
           </div>
           <div style={{display:'grid'}}>
@@ -257,8 +286,12 @@ const DataGrid = () => {
                             <Option key={column.key} value={column.value}>{column.name}</Option>
                         ))}
             </Select>
-          <Button danger onClick={() => removeColumn(toRemoveColumn)}><DeleteFilled/></Button> 
-          <Button><CSVLink data={data}><DownloadOutlined/></CSVLink></Button>
+            <Tooltip placement='top' title='Delete Selected Column'> 
+                    <Button danger onClick={() => removeColumn(toRemoveColumn)}><DeleteFilled/></Button> 
+                </Tooltip>
+                <Tooltip placement='top' title='Download table in CSV'> 
+                    <Button type='primary' onClick={downloadCSV}><DownloadOutlined/></Button>
+                </Tooltip>
             </div>
           </div>
           </div>

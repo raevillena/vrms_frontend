@@ -8,9 +8,11 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw, convertFromRaw} from "draft-js";
 import draftToHtml from 'draftjs-to-html'
 import { LoadingOutlined } from "@ant-design/icons";
+import '../styles/CSS/Userdash.css'
 
 const Methodology = () => {
     const studyObj = useSelector(state => state.study) //study reducer
+    const userObj = useSelector(state => state.user)
     const AUTOSAVE_INTERVAL = 3000;
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
@@ -23,7 +25,7 @@ const Methodology = () => {
 
     async function updateDB(){
         try {
-            await onUpdateMethodology({studyID: studyObj.STUDY.studyID, methodology: dataToSaveBackend})
+            await onUpdateMethodology({studyID: studyObj.STUDY.studyID, methodology: dataToSaveBackend, user: userObj.USER.name})
         } catch (error) {
             console.log(error)
         }
@@ -101,7 +103,7 @@ const Methodology = () => {
       }
     return (
       <div>
-        {loading? <Spin indicator={antIcon} style={{display: 'flex', justifyContent:'center', padding: '25%'}} /> :
+        {loading? <Spin indicator={antIcon} className="spinner" /> :
         <div style={{justifyContent:'space-between', flexDirection:'column', display:'flex'}}>
             <div style={{lineHeight: '20px'}}>
                 <Editor editorState={editorState}

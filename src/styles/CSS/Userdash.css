@@ -2,9 +2,10 @@
 
 
 
+
 .sidebar {
     padding: 5px 5px;
-    height: 100%;
+    min-height: 100vh;
     font-family: Montserrat;
     font-style: normal;
     color: #393550;
@@ -15,8 +16,12 @@
     font-family: Montserrat;
     font-style: normal;
     font-size: 28px;
-    color: #393550;
-    background: #FFFFFF;
+    padding: 0; 
+    background: #f2f2f2;
+}
+
+.hidden{
+    display: none;
 }
 
 .logo{
@@ -26,6 +31,7 @@
     left: 62px;
     top: 29px;
 }
+
 
 .menu1{
     position: static;
@@ -51,3 +57,100 @@
     border-radius: 5px;
 }
 
+
+.spinner{
+    display: flex;
+    justify-content: center;
+    padding: 25%;
+}
+
+.mobile-header{
+    display: none;
+}
+ h3{
+     font-size: 20px;
+ }
+
+ .menu-mobile{
+    display: flex;
+    margin-left: 50px;
+ }
+
+ .label-header{
+     margin-top: 0px;
+     margin-bottom: 0px;
+     font-family: 'Times New Roman', Times, serif;
+ }
+
+ .div-flex{
+     display: flex;
+     flex-direction: row;
+     gap: 5px;
+ }
+
+ .div-inline-block{
+    display: inline-block;
+    position: absolute;
+    gap: 10px;
+    left: 0px;
+ }
+
+ .content-grid{
+     margin: 24px 16px 0;
+  
+    min-height: 100vh;
+    min-width: 100vh    ;
+ }
+ .row-grid{
+     display: flex;
+     flex-direction: row;
+     gap: 50px;
+ }
+ .mobile-study-dash{
+    display: none;
+}
+
+.div-text-align{
+    position:absolute;
+    text-align: right;
+}
+
+@media screen and (max-width: 768px) {
+    .sidebar{
+        display: none;
+    }
+    .header{
+        display: none;
+    }
+    .mobile-header{
+        display: initial;
+    }
+    .study-dash{
+        display: none;
+    }
+    .mobile-study-dash{
+        display: initial;
+    }
+    .progress-label{
+        display: none;
+    }
+    .content-mobile{
+        margin-top: 50px;
+    }
+}
+
+@media screen and (max-width: 426px) {
+    h3{
+        font-size: 15px;
+    }
+    .menu-mobile{
+        display: flex;
+        margin-left: 20px;
+    }
+    .label-hidden{
+        display: none;
+    }
+    .content-mobile{
+        margin-top: 0px;
+    }
+}

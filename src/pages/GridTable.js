@@ -1,11 +1,11 @@
-import React, {useEffect, useState, useMemo, useRef} from 'react';
-import { Table, Button, Popconfirm, Form, Spin, notification } from 'antd';
+import React, {useEffect, useState, useMemo} from 'react';
+import { Table, Button, Popconfirm, Form, Spin, notification, Tooltip } from 'antd';
 import { DeleteFilled, EditFilled, DownloadOutlined, PlusSquareFilled } from '@ant-design/icons';
 import { onDeleteDatagrid, onEditDatagrid, onGetDatagrid } from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import moment from 'moment';
-import { CSVLink } from 'react-csv'
 import EditDatagrid from './EditDatagrid'
+import '../styles/CSS/Userdash.css'
 
 
 
@@ -13,10 +13,10 @@ const GridTable = (props) => {
     const studyObj = useSelector(state => state.study)
     const [tableData, setTableData] = useState([])
     const [loading, setLoading] = useState(false)
-    const [dataDownlaod, setDataDownload] = useState([])
     const [editData, setEditData] = useState([])
-    const csvLink = useRef()
    
+   
+
 
     async function getDatagridData(){ //displaying data in table
         let ID = {studyID: studyObj.STUDY.studyID}
@@ -57,8 +57,36 @@ const GridTable = (props) => {
     const finaldata = useMemo(() => tableData, [tableData]) //final table data
 
   useEffect(() => { //getting data
-    getDatagridData()
+    async function getdata(){
+      getDatagridData()
+    }
+    getdata()
   }, [])
+
+  async function downloadCSV(data){
+    console.log('data', data)
+    let toDownload = data[0].data
+    let csv = ''
+    let keys = Object.keys(data[0].data[0])
+    console.log('keys', keys)
+    keys.forEach((key) => {
+      csv += key + ","
+    })
+    csv += "\n"
+
+    toDownload.forEach((datarow) => {
+      keys.forEach((key)=>{
+        csv += datarow[key] + ","
+      })
+      csv += "\n"
+    });
+      const element = document.createElement('a')
+      const file = new Blob([csv], {type: 'data:text/csv;charset=utf-8'})
+      element.href = URL.createObjectURL(file)
+      element.download = `${data[0].title}.csv`
+      document.body.appendChild(element)
+      element.click()
+  }
 
   useEffect(() => { //displaying the added table
     if(props.data == null|undefined|''){
@@ -88,12 +116,14 @@ const GridTable = (props) => {
           width: '25%',
           dataIndex: 'title',
           key: 'title',
+          ellipsis: true
         },
         {
             title: 'Description',
             width: '25%',
             dataIndex: 'description',
             key: 'description',
+            ellipsis: true
         },
         {
             title: 'Date Created',
@@ -114,24 +144,25 @@ const GridTable = (props) => {
           render: (text, record, index) => 
             <Form style={{display:'flex', gap:'5px'}}>
               <div>
+                <Tooltip title='Download table in CSV' placement='top'>
                 <Button  onClick={async (e) => {
                     let id ={_id: record.key._id}
                     let result = await onEditDatagrid(id)
                     let x = result.data
-                    for(let i = 0; i < x.length; i++){
-                      console.log(x[i].data)   
-                        setDataDownload(x[i].data)
-                    }
+                    downloadCSV(x)
                 }} icon={<DownloadOutlined/>}></Button>
-                <CSVLink data={dataDownlaod} filename='VirtualResearchManagementSystemData.csv' target="_blank" ref={csvLink}/>
+                </Tooltip>
               </div>
+              <Tooltip title='Edit table' placement='top'>
           <Button onClick = {
            async (e) => {
                 let id ={_id: record.key._id}
                 await setEditData(id)
                 showTableEdit()
             }
-          }   ><EditFilled /></Button>
+          }   icon={<EditFilled />}></Button>
+          </Tooltip>
+          <Tooltip title='Delete table' placement='top'>
           <Popconfirm title="Sure to delete?" onConfirm = {
            async (key) => {
                 let id ={_id: record.key._id}
@@ -141,33 +172,31 @@ const GridTable = (props) => {
                 notif("error", "Deleted")
             }
           }>
-          <Button danger><DeleteFilled /></Button>
+          <Button danger icon={<DeleteFilled />}></Button>
         </Popconfirm>
+        </Tooltip>
         </Form>,
                     
         },
       ];
 
       function showTable() {
-        var x = document.getElementById("table");
-        if (x.style.display === "none") {
-          x.style.display = "block";
-        } else {
-          x.style.display = "none";
-        }
+        var x = document.getElementById("addtable");
+        console.log('x', x)
+        x.style.display = x.style.display == "none" ? "block" : "none";
       }
 
     function showTableEdit() {
-    var x = document.getElementById("table1");
-    if (x.style.display === "none") {
-      x.style.display = "block";
-    }
+    var x = document.getElementById("edittable");
+    x.style.display = x.style.display == "none" ? "block" : "none";
   }
+
+
 
     return (
         <div style={{marginTop: '20px'}}>
-            {loading ?  <div style={{display: 'flex', justifyContent: 'center'}}><Spin /> </div> : <div><Button onClick={showTable} style={{background:"#A0BF85"}} icon={<PlusSquareFilled />}>Add Table</Button> 
-            <Table columns={columns} dataSource={finaldata} /> </div>
+            {loading ?  <div className="spinner"><Spin /> </div> : <div><Button onClick={showTable} style={{background:"#A0BF85"}} icon={<PlusSquareFilled />}>Add Table</Button> 
+            <Table scroll={{ x: 1300, y: 500 }} columns={columns} dataSource={finaldata} /> </div>
            }
             <EditDatagrid data={editData}/>
         </div>

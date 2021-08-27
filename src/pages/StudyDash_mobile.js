@@ -8,17 +8,16 @@ import Tasks from './DisplayTasks'
 import Documentation from './Documentation'
 import MobileHeader from '../components/components/MobileHeader';
 import '../styles/CSS/Userdash.css'
-import StudyDash_Mobile from './StudyDash_mobile';
+
 
 
 const { Title } = Typography;
 
-const StudyDash = () => {
+const StudyDash_Mobile = () => {
     const { Header, Content, Sider } = Layout;
 
     return (
-      <div>
-        <div className="study-dash">
+        <div className="mobile-study-dash">
             <Layout>
             <Sider className='sidebar' >
                     <Sidebar/>
@@ -30,23 +29,20 @@ const StudyDash = () => {
                 <div className="mobile-header">
                     <MobileHeader/>
                 </div>
-                    <Content style={{ margin: '24px 16px 0', overflow: 'initial' , minHeight: "100vh"}}>
+                    <Content className="content-mobile" style={{ margin: '24px 16px 0', overflow: 'initial' , minHeight: "100vh"}}>
                         <Label/>
-                        <Row gutter={16}>
-                            <Col span={12}><Documentation/></Col>
-                            <Col span={12} style={{overflowY: 'scroll', height: '740px'}}>
-                                <Title level={2}>Tasks</Title>
-                                 <Tasks/>
-                            </Col>
-                        </Row>
+                        <div className="content-mobile">
+                            <Documentation/>
+                            <Title level={2}>Tasks</Title>
+                            <Tasks/>
+                            </div>
                         <DataGrid/>
                     </Content>
                </Layout>
             </Layout>
-        </div>
-        <StudyDash_Mobile/>
+            
         </div>
     )
 }
 
-export default StudyDash
+export default StudyDash_Mobile

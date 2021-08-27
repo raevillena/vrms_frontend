@@ -6,6 +6,7 @@ import moment from 'moment';
 import { Button, Spin } from 'antd';
 import { convertToRaw, convertFromRaw } from 'draft-js';
 import { LoadingOutlined } from '@ant-design/icons';
+import '../styles/CSS/Userdash.css'
 
 const Summary = () => {
     const [editorState, setEditorState] = useState(EditorState.createEmpty())
@@ -16,6 +17,7 @@ const Summary = () => {
     const [loading, setLoading] = useState(false)
 
     const studyObj = useSelector(state => state.study) //study reducer
+    const userObj = useSelector(state => state.user) //study reducer
     const content = editorState.getCurrentContent(); 
     const dataToSaveBackend = JSON.stringify(convertToRaw(content))
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
@@ -28,6 +30,7 @@ const Summary = () => {
         try {
             setLoading(true)
             let result = await onGetStudyForDoc({studyID: studyObj.STUDY.studyID})
+            setLoading(false)
             setStudy(result.data.study[0]) //study data
                 let xAssignee = [result.data.study[0].assignee] //for displaying assignee
                 let tempAssignee = []
@@ -39,7 +42,7 @@ const Summary = () => {
             setAssignees(tempAssignee) 
             const contentState = convertFromRaw(JSON.parse(result.data.study[0].summary)); //displaying summary
             setEditorState(EditorState.createWithContent(contentState))
-            setLoading(false)
+            
         } catch (error) {
             console.log(error)
         }
@@ -50,7 +53,7 @@ const Summary = () => {
 
     async function updateSummary(){
         try {
-            await onUpdateSummary({studyID: studyObj.STUDY.studyID, summary: dataToSaveBackend})
+            await onUpdateSummary({studyID: studyObj.STUDY.studyID, summary: dataToSaveBackend, user: userObj.USER.name})
             setUpdate(true)
         } catch (error) {
             console.log(error)
@@ -68,7 +71,7 @@ const Summary = () => {
 
     return (
         <div>
-            {loading? <Spin indicator={antIcon} style={{display: 'flex', justifyContent:'center', padding: '25%'}} /> : 
+            {loading? <Spin indicator={antIcon} className='spinner' /> : 
             <div>
             <div style={{display: 'flex', gap: '5px'}}>
                 <label style={{fontWeight:'bolder'}}>Title: </label>

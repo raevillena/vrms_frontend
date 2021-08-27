@@ -8,10 +8,12 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw, convertFromRaw} from "draft-js";
 import draftToHtml from 'draftjs-to-html'
 import { LoadingOutlined } from '@ant-design/icons';
+import '../styles/CSS/Userdash.css'
 
 
 const Conclusion = () => {
     const studyObj = useSelector(state => state.study) //study reducer
+    const userObj = useSelector(state => state.user)
     const AUTOSAVE_INTERVAL = 3000;
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
@@ -24,7 +26,7 @@ const Conclusion = () => {
 
     async function updateDB(){
         try {
-            await onUpdateConclusion({studyID: studyObj.STUDY.studyID, conclusion: dataToSaveBackend})
+            await onUpdateConclusion({studyID: studyObj.STUDY.studyID, conclusion: dataToSaveBackend, user: userObj.USER.name})
         } catch (error) {
             console.log(error)
         }
@@ -77,9 +79,10 @@ const Conclusion = () => {
         try {
           setLoading(true)
             let result = await onGetDocumentation({studyID: studyObj.STUDY.studyID})
+            setLoading(false)
             const contentState = convertFromRaw(JSON.parse(result.data.docs.conclusion)); //displaying data
             setEditorState(EditorState.createWithContent(contentState))
-            setLoading(false)
+            
         } catch (error) {
             console.log(error)
         }
@@ -101,7 +104,7 @@ const Conclusion = () => {
       }
     return (
       <div>
-        {loading? <Spin indicator={antIcon} style={{display: 'flex', justifyContent:'center', padding: '25%'}} /> : 
+        {loading? <Spin indicator={antIcon} className="spinner" /> : 
         <div style={{justifyContent:'space-between', flexDirection:'column', display:'flex'}}>
             <div style={{lineHeight: '20px'}}>
                 <Editor editorState={editorState}

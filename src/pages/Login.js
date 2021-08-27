@@ -5,6 +5,7 @@ import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
 import {onUserLogin } from '@services/authAPI';
 import { useDispatch, useSelector } from 'react-redux';
+import '../styles/CSS/Userdash.css'
 
 
 
@@ -77,7 +78,7 @@ function Login() {
   const [height, width] = useWindowSize();
   if(height <= 760 && width <= 768){
     return(
-      <div> {loading? <Spin style={{display: 'flex', justifyContent:'center', padding: '25%'}} />  :
+      <div> {loading? <Spin className="spinner" />  :
       <div style={{background: '#f2f2f2', minHeight: "100vh"}}>
         <Row justify="center">
       <Col  >
@@ -116,7 +117,7 @@ function Login() {
 
   return (
     <div>
-      {loading? <Spin style={{display: 'flex', justifyContent:'center', padding: '25%'}} />  :
+      {loading? <Spin className="spinner" />  :
     <div style={{background: '#f2f2f2', minHeight: "100vh"}}>
      <Row justify="center">
     <Col  >

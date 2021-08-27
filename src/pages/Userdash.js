@@ -4,10 +4,10 @@ import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import Sidebar from '../components/components/Sidebar'
 import Headers from '../components/components/Header'
-import Mobile from '../pages/mobile/Userdash'
 import { useSelector, useDispatch } from 'react-redux';
 import { onGetStudyForUser } from '../services/studyAPI';
 import moment from 'moment';
+import MobileHeader from '../components/components/MobileHeader';
 
 const { Header, Content, Sider } = Layout;
 
@@ -25,7 +25,6 @@ const Userdash = () => {
     let x = result.data
     let tempStudyData = []
     for(let i = 0; i < x.length; i++){ 
-      const dCreated = moment()
       tempStudyData.push({
           key: x[i],
           title: x[i].studyTitle,
@@ -40,8 +39,11 @@ const Userdash = () => {
   setLoading(false)
   }
     
-  useEffect(async () => {
-    await getStudies()
+  useEffect(() => {
+    async function getStud(){
+      await getStudies()
+    }
+    getStud()
 }, [userObj])
 
 
@@ -73,6 +75,7 @@ const Userdash = () => {
       dataIndex: 'title',
       key: 'title',
       width: '25%',
+      ellipsis: true
     },
     {
       title: 'Progress',
@@ -123,46 +126,20 @@ const Userdash = () => {
   ];
   
 
-  //for mobile Ui
-  function useWindowSize(){
-    const [size, setSize] = useState([window.innerHeight, window.innerWidth]);
-    useEffect(() => {
-      const handleResize = () => {
-        setSize([window.innerHeight, window.innerWidth])
-      }
-      window.addEventListener("resize", handleResize)
-      return() => {
-        window.removeEventListener("resize", handleResize)
-      }
-    }, [])
-    return size;
-  }
-
- 
-
-  const [height, width] = useWindowSize();
-  if(height <= 768 ||  width <= 768){
-    return <Mobile/>
-  }
-
     return (
     <Layout  > 
-      <Sider  style={{
-          overflow: 'auto',
-          height: '100vh',
-          position: 'fixed',
-          left: 0,
-          background:'white'
-        }} >
+      <Sider  className="sidebar" >
           <Sidebar/>
       </Sider>
-    <Layout style={{ marginLeft: 200 }}>
-      <Header style={{ padding: 0, background:'#f2f2f2' }} >
+    <Layout >
+      <Header className="header" style={{ padding: 0, background:'#f2f2f2' }} >
         <Headers/>
       </Header>
-     <Content style={{ margin: '24px 16px 0', overflow: 'initial', minHeight:'100vh' }} >          
-        {loading?  <Spin style={{display: 'flex', justifyContent:'center', padding: '25%'}} /> :<Table size="small"  dataSource={studyData} columns={columns} style={{minWidth:'100%'}}></Table> }
-        
+      <div className="mobile-header">
+        <MobileHeader/>
+      </div>
+     <Content style={{  minHeight: "100vh" }} >          
+        {loading?  <Spin className="spinner" /> :<Table size="small" scroll={{ x: 800, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
       </Content> 
     </Layout>      
 </Layout>

@@ -11,6 +11,7 @@ const AddComment = (props) => {
     const { TextArea } = Input;
 
     const userObj = useSelector(state => state.user)
+    const studyObj = useSelector(state => state.study)
     let avatar = localStorage.getItem("avatarFilename")
 
     const [comment, setComment] = useState({comments: '', submitting: false, value: '', author: `${userObj.USER.name}`,avatar: avatar, datetime: moment().fromNow(),})
@@ -20,7 +21,7 @@ const AddComment = (props) => {
   let forProps = {task}
 
     async function handleSubmit(){
-        let result = await onAddComment({taskID: task, comment})
+        let result = await onAddComment({taskID: task, comment, studyID: studyObj.STUDY.studyID})
         console.log(result)
         setComment({...comment, value: ''})
        forProps = {task, result}

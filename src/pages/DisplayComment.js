@@ -1,7 +1,8 @@
-import React, { createElement, useState, useEffect } from 'react';
+import React, {  useState, useEffect } from 'react';
 import { Comment, Tooltip, Avatar, Button, Spin } from 'antd';
 import moment from 'moment';
 import { onGetALlComment } from '../services/taskAPI';
+import '../styles/CSS/Userdash.css'
 
 
 const DisplayComment = (props) => {
@@ -11,8 +12,9 @@ const DisplayComment = (props) => {
     
 
     async function getAllComments(){
-        setLoading(true)
+      //  setLoading(true)
         let result = await onGetALlComment({taskId: props.data.task})
+      //  setLoading(false)
         let tempCommentData = []
         
         let commentLoop = result.data.comments
@@ -25,7 +27,7 @@ const DisplayComment = (props) => {
             });
           }
           setComments(tempCommentData)
-          setLoading(false)
+         
     }
 
     useEffect( () => {
@@ -41,7 +43,7 @@ const DisplayComment = (props) => {
         getAllComments()
     }
     return (
-        <div>{loading? <div style={{display: 'flex', justifyContent: 'center'}}><Spin /> </div> :
+        <div>{loading? <div className="spinner"><Spin /> </div> :
         <div > 
             {comments.slice(0,length).map(comment =>(
               <Comment

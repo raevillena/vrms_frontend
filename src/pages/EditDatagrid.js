@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useMemo, useCallback, useRef} from 'react';
-import {Button, Input, Select, Image, Spin, Modal} from 'antd'
+import {Button, Input, Select, Image, Spin, Modal, Tooltip} from 'antd'
 import { onUpdateDatagrid} from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import { DynamicDataSheetGrid, 
@@ -10,6 +10,7 @@ import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSiz
 import { CSVLink } from 'react-csv'
 import { onEditDatagrid } from '../services/studyAPI';
 import { onDownloadImage, onUploadDataGrid } from '../services/uploadAPI';
+import '../styles/CSS/Userdash.css'
 
 
 
@@ -38,8 +39,8 @@ const EditDataGrid = (props) => {
 
 const checkColumnType= (key,title) => {
     switch(key) {
-        case 'checkbox':
-          return { ...keyColumn(title, checkboxColumn), title: title, type: 'checkbox'}
+        case 'Checkbox':
+          return { ...keyColumn(title, checkboxColumn), title: title, type: 'Checkbox'}
           break;
         case 'text':
           return { ...keyColumn(title, textColumn), title: title, type: 'text'}
@@ -47,9 +48,6 @@ const checkColumnType= (key,title) => {
         case 'camera':
           return { ...keyColumn(title, cameraColumn), title: title, type: 'camera'}
           break;
-        case 'date':
-          return { ...keyColumn(title, dateColumn), title: title, type: 'date'}
-        break;
         default:
             return { ...keyColumn(title, textColumn), title: title, type: 'text'}
             break;
@@ -68,7 +66,6 @@ useEffect(() => {
     setLoading(true)
     let resultDB = await onEditDatagrid(props.data)
     let result = resultDB.data
-    console.log(result)
     let tempCols=[]
   for(let i = 0; i < result.length; i++){   
       setTitle(result[i].title)
@@ -183,7 +180,7 @@ useEffect(() => {
     setTempCol([...columns, {
       ...keyColumn(addColumnTitle, checkboxColumn),
       title: addColumnTitle,
-      type: 'checkbox'
+      type: 'Checkbox'
     }])
     setAddColumnTitle('')
   }
@@ -220,7 +217,7 @@ useEffect(() => {
 
 
   function showTableEdit() { //show/hide table edit component
-    var x = document.getElementById("table1");
+    var x = document.getElementById("edittable");
     if (x.style.display === "none") {
       x.style.display = "block";
     } else {
@@ -229,11 +226,33 @@ useEffect(() => {
       setDescription('')
     }
   }
+
+  async function downloadCSV(){
+    let csv = ''
+    let keys = Object.keys(data[0])
+    keys.forEach((key) => {
+      csv += key + ","
+    })
+    csv += "\n"
+
+    data.forEach((datarow) => {
+      keys.forEach((key)=>{
+        csv += datarow[key] + ","
+      })
+      csv += "\n"
+    });
+      const element = document.createElement('a')
+      const file = new Blob([csv], {type: 'data:text/csv;charset=utf-8'})
+      element.href = URL.createObjectURL(file)
+      element.download = 'try.csv'
+      document.body.appendChild(element)
+      element.click()
+  }
   
   return (
     <div>
-      <div id='table1' style={{display: 'none'}}>
-        <h1 style={{fontFamily: 'Montserrat'}}>Edit Table</h1> 
+      <div id='edittable'  style={{display: 'none'}}>
+        <h1 style={{fontFamily: 'Montserrat', fontSize: '20px'}}>Edit Table</h1> 
         <div style={{display: 'flex', flexDirection: 'row', rowGap:'0px', gap:'5px', maxWidth:'100%'}}>
           <div style={{display:'grid'}}>
             <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Table Title</label>
@@ -247,9 +266,15 @@ useEffect(() => {
             <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Column Title</label>
             <div style={{display:'flex', flexDirection:'row', gap:'3px'}}>
               <Input  placeholder="Enter Column title" onChange={(e)=> {setAddColumnTitle(e.target.value)}} value={addColumnTitle}></Input>
+              <Tooltip placement='top' title='Text Column'>
               <Button disabled={disabledColumn}  onClick={addTextColumn}><FontSizeOutlined /></Button>
+              </Tooltip>
+              <Tooltip placement='top' title='Checkbox Column'>
               <Button disabled={disabledColumn}  onClick={addCheckboxColumn} ><CheckSquareFilled /></Button>
+              </Tooltip>
+              <Tooltip placement='top' title='Camera Column'>
               <Button disabled={disabledColumn} onClick={addCameraColumn} ><CameraFilled /></Button>
+              </Tooltip>
             </div>
           </div>
           <div style={{display:'grid'}}>
@@ -260,28 +285,30 @@ useEffect(() => {
                 <Option key={column.key} value={column.value}>{column.name}</Option>
               ))}
             </Select>
-            <Button danger onClick={() => removeColumn(toRemoveColumn)}><DeleteFilled/></Button> 
-            <Button><CSVLink data={data}><DownloadOutlined/></CSVLink></Button>
+              <Tooltip placement='top' title='Delete Selected Column'> 
+                    <Button danger onClick={() => removeColumn(toRemoveColumn)}><DeleteFilled/></Button> 
+                </Tooltip>
+                <Tooltip placement='top' title='Download table in CSV'> 
+                    <Button  onClick={downloadCSV}><DownloadOutlined/></Button>
+                </Tooltip>
           </div>
           </div>
         </div>  
         <div style={{marginTop:'20px'}}>
-            {loading ?  <div style={{display: 'flex', justifyContent: 'center'}}><Spin /> </div>: <div><DynamicDataSheetGrid
-            data={data}
-            onChange={setData}
-            columns={columns}
-            createRow={createRow}
-        />
-         <Modal title="View Image" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-           <div style={{display: 'grid' }}>
-         <Image
-              src={`http://localhost:8080/datagrid/${imageFilename}`}
-            
+            {loading ?  <div className="spinner"><Spin /> </div>: 
+            <div><DynamicDataSheetGrid
+                data={data}
+                onChange={setData}
+                columns={columns}
+                createRow={createRow}
             />
-            
-          </div>
-          </Modal>
-        </div> }
+              <Modal title="View Image" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+              <div style={{display: 'grid' }}>
+                <Image src={`http://localhost:8080/datagrid/${imageFilename}`}/>
+                <Button block type='primary'>Download</Button>
+              </div>
+              </Modal>
+              </div> }
         <div style={{float:'right', rowGap:'0px', gap:'5px', display:'flex', marginTop:'20px'}}>
           <Button type="primary" onClick={updateDB}>Save</Button>
           <Button danger onClick={showTableEdit}>Exit</Button>
