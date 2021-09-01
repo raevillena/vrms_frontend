@@ -47,7 +47,7 @@ const Signup = () => {
     return (
         <div>
             <Row justify="center" style={{minHeight: '100vh', background: '#f2f2f2'}}>
-                <Form style={{marginTop: '25%'}}>
+                <Form >
                 <h1 style={{fontFamily: "Montserrat", fontWeight: "bolder"}}>SIGN UP</h1>
                     <Form.Item name="Name" 
                     rules={[
