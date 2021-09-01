@@ -186,7 +186,7 @@ const GridTable = (props) => {
           render: (text, record, index) => 
             <Form style={{display:'flex', gap:'5px'}}>
               <div>
-                <Tooltip title='Download table in CSV' placement='top'>
+                <Tooltip title='Download table in CSV' placement='rightTop'>
                 <Button  onClick={async (e) => {
                     let id ={_id: record.key._id}
                     let result = await onEditDatagrid(id)
@@ -197,7 +197,7 @@ const GridTable = (props) => {
                 }} icon={<DownloadOutlined/>}></Button>
                 </Tooltip>
               </div>
-              <Tooltip title='Edit table' placement='top'>
+              <Tooltip title='Edit table' placement='rightTop'>
           <Button onClick = {
            async (e) => {
                 let id ={_id: record.key._id}
@@ -205,7 +205,7 @@ const GridTable = (props) => {
             }
           }   icon={<EditFilled />}></Button>
           </Tooltip>
-          <Tooltip title='Delete table' placement='top'>
+          <Tooltip title='Delete table' placement='rightTop'>
           <Popconfirm title="Sure to delete?" onConfirm = {
            async (key) => {
                 let id ={_id: record.key._id}

@@ -221,8 +221,12 @@ useEffect(() => {
   }
 
   const removeColumn = (key) => { //removing column
-   let newColumn = columns.filter(value => !key.includes(value.title));
+   try {
+    let newColumn = columns.filter(value => !key.includes(value.title));
     setTempCol(newColumn)
+   } catch (error) {
+     notif('error', error)
+   }
   }
 
   function handleColumnToDelete(value) { //setting column to delete
@@ -270,9 +274,10 @@ useEffect(() => {
       const element = document.createElement('a')
       const file = new Blob([csv], {type: 'data:text/csv;charset=utf-8'})
       element.href = URL.createObjectURL(file)
-      element.download = 'try.csv'
+      element.download = `${title}.csv`
       document.body.appendChild(element)
       element.click()
+      notif('info', 'Downloaded!')
   }
   
   return (

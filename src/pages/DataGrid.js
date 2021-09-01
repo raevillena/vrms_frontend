@@ -36,6 +36,14 @@ const DataGrid = () => {
   const [isModalVisible, setIsModalVisible] = useState(false) //modal for image viewing
   const [imageFilename, setImageFilename] = useState() //to view image
 
+  const notif = (type, message) => {
+    notification[type]({
+      message: 'Notification Title',
+      description:
+        message,
+    });
+  };
+
   const CameraComponent = React.memo(
     ({ rowData, setRowData }) => {
       return (
@@ -136,8 +144,12 @@ const DataGrid = () => {
   }
 
   const removeColumn = (key) => {
-   let newColumn = columns.filter(value => !key.includes(value.title));
-    setTempCol(newColumn)
+try {
+  let newColumn = columns.filter(value => !key.includes(value.title));
+  setTempCol(newColumn)
+} catch (error) {
+  notif('error', error)
+}
   }
 
   function handleColumnToDelete(value) { //handling deleting column

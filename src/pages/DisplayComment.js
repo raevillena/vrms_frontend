@@ -26,7 +26,6 @@ const DisplayComment = (props) => {
           });
         }
         setComments(tempCommentData)
-       
   }
 
     useEffect( () => {
@@ -39,6 +38,7 @@ const DisplayComment = (props) => {
               let commentLoop = result.data.comments
               for(let i = 0; i < commentLoop.length; i++){ 
                   tempCommentData.push({
+                      key: commentLoop[i],
                     author: commentLoop[i].user,
                     avatar: commentLoop[i].avatar,
                     content: commentLoop[i].comment,
@@ -49,7 +49,7 @@ const DisplayComment = (props) => {
                
           }
         getAllComments()
-    }, [props.data.task])
+    }, [props.data])
 
     
     async function addLength(){

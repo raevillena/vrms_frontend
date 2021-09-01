@@ -88,11 +88,11 @@ function Login() {
   if(height <= 760 && width <= 768){
     return(
       <div> {loading? <Spin className="spinner" />  :
-      <div style={{background: '#f2f2f2', minHeight: "100vh"}}>
+      <div style={{background: '#f2f2f2', minHeight: "200vh", minWidth:'100vh'}}>
         <Row justify="center">
       <Col  >
-        <Form style={{marginTop: "40%", width: '400px'}} name="basic"initialValues={{remember: true}} onFinish={onSubmit}>
-        <Title level={5} style={{fontFamily: "Bangla MN", fontWeight: "bolder"}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</Title>
+        <Form style={{marginTop: "40%", width: '400px', alignItems:'center', justifyContent:'center' , minHeight: "100vh"}} name="basic"initialValues={{remember: true}} onFinish={onSubmit}>
+        <Title style={{fontFamily: "Bangla MN", fontWeight: "bolder", fontSize: '16.5px'}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</Title>
           <Form.Item name="email"  
               rules={[
               {
