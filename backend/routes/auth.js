@@ -120,7 +120,8 @@ async function auth(req, res, next){
       next()
     })
    } catch(error) {
-        next(error)
+    logger.log('error', 'access token') 
+    next(error)
    } 
 }
 

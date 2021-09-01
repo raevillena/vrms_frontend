@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const Studies = require('../models/studies')
 const Datagrid = require('../models/datagrid')
+const Projects = require('../models/projects')
+const Download = require('../models/download')
 const Documentation = require('../models/documentation')
 const mongoose = require('mongoose')
 const shortid = require('shortid')
@@ -15,9 +17,9 @@ router.post('/createstudy', async(req, res) => {
     const studyID = shortid.generate() 
     const study = new Studies({
         dateCreated: Date.now(),
-        createdBy: "test",
+        createdBy: req.body.user,
         dateUpdated: Date.now(),
-        updatedBy: "test",
+        updatedBy: req.body.user,
         studyTitle: req.body.title,
         studyID: studyID,
         assignee: req.body.assignee,
@@ -25,7 +27,8 @@ router.post('/createstudy', async(req, res) => {
         progress: 0,
         projectName: req.body.projectName,
         deadline: req.body.deadline,
-        budget: req.body.budget
+        budget: req.body.budget,
+        active: true
     })
         const doesExist = await Studies.findOne({studyTitle: req.body.title})
         if(doesExist){
@@ -34,6 +37,16 @@ router.post('/createstudy', async(req, res) => {
         } else{
             const newStudy =  await study.save()
             console.log(newStudy)
+            let completed = await Studies.find({"projectName": req.body.projectName, "status": "COMPLETED", "active": true})
+            let allTask =  await Studies.find({"projectName": req.body.projectName, "active": true})
+            let progress = Math.floor((completed.length/allTask.length)*100)
+            Projects.findOneAndUpdate({"projectName": req.body.projectName}, {"progress": progress, "status": "ONGOING"}, function(err, proj){
+                if(err){
+                    logger.log('error', err)
+                    console.log(err)
+                }
+                console.log('studies', proj)
+            })
             res.status(201).json({
                 message: `Study created with the id ${studyID}`,
             newStudy})
@@ -80,7 +93,7 @@ router.post('/getStudyforDoc', async(req, res) => {
 //updating the summary for documentation
 router.post('/updateSummary', async(req, res) => {
     try {
-     await Studies.findOneAndUpdate({"studyID": req.body.studyID} , {"summary": req.body.summary, "updatedBy": req.body.user}, function(err, study) {
+     await Studies.findOneAndUpdate({"studyID": req.body.studyID} , {"summary": req.body.summary, "updatedBy": req.body.user, "studyTitle": req.body.title, "budget": req.body.budget}, function(err, study) {
             if(err){
                 console.log(err)
                 logger.log('error', err)
@@ -257,13 +270,13 @@ router.post('/getDocumentation', async(req, res) => {
     try {
        await Documentation.findOne({"studyID": req.body.studyID}, function(err, docs) {
                if(err){
-                   logger.log('error', err)
+                   logger.log('error', 'Error: /getDocumentation')
                } else{
                    res.send({docs})
                }
              });
        } catch (error) {
-           logger.log('error', error)
+            logger.log('error', 'Error: /getDocumentation')
            res.status(400).json({message: error.message})
        }
 })
@@ -289,7 +302,7 @@ router.post('/addDatagrid', async(req, res) => {
        }else{
         Studies.updateOne({"studyID": req.body.studyID}, {"dateUpdated": Date.now(), "updatedBy": req.body.user}, async (err) =>{
             if(err){
-                console.log("Unable to update study data!")
+                logger.log('error', 'Error: /addDatagrid')
             }else{
                 await newDatagrid.save()
                 res.status(200).json({data: newDatagrid, message: "Table saved!"})
@@ -297,7 +310,7 @@ router.post('/addDatagrid', async(req, res) => {
         })
        }
     } catch (error) {
-        logger.log('error', error)
+        logger.log('error', 'Error: /addDatagrid')
     }
 })
 
@@ -306,14 +319,13 @@ router.post('/getDataGrid', async(req, res) => {
     try {
        await  Datagrid.find({"studyID": req.body.studyID, "active": true}, function(err, grid) {
             if(err){
-                logger.log('error', error)
+                logger.log('error', 'Error: /getDatagrid')
             } else{
                 res.send(grid)
             }
           });
     } catch (error) {
-        console.log("error happened here", error)
-        logger.log('error', error)
+        logger.log('error', 'Error: /getDatagrid')
     }
 })
 
@@ -322,14 +334,13 @@ router.post('/editDataGrid', async(req, res) => {
     try {
       await  Datagrid.find({"_id": req.body._id, "active": true}, function(err, grid) {
             if(err){
-                logger.log('error', error)
+                logger.log('error', 'Error: /editDatagrid')
             } else{
                 res.send(grid)
             }
           });
     } catch (error) {
-        console.log("error happened here", error)
-        logger.log('error', error)
+        logger.log('error', 'Error: /editDatagrid')
     }
 })
 
@@ -338,11 +349,11 @@ router.post('/deleteDataGrid', async(req, res) => {
     try {
       await  Datagrid.findOneAndUpdate({"_id": req.body._id}, {"active": false}, function(err) {
             if(err){
-                logger.log('error', error)
+                logger.log('error', 'Error: /deleteDatagrid')
             } else{
                 Studies.updateOne({studyID: req.body.studyID}, {dateUpdated: Date.now(), updatedBy: req.body.user}, (err) =>{
                     if(err){
-                        console.log("Unable to update study data!")
+                        logger.log('error', 'Error: /deleteDatagrid')
                     }else{
                         res.send("Item Deleted!")
                     }
@@ -350,8 +361,7 @@ router.post('/deleteDataGrid', async(req, res) => {
             }
           });
     } catch (error) {
-        console.log("error happened here", error)
-        logger.log('error', error)
+        logger.log('error', 'Error: /deleteDatagrid')
     }
 })
 
@@ -364,7 +374,7 @@ router.post('/updateDataGrid', async(req, res) => {
             }else{
               await  Studies.updateOne({studyID: req.body.studyID}, {dateUpdated: Date.now(), updatedBy: req.body.user}, (err) =>{
                     if(err){
-                        logger.log('error', "unable to update study -update datagrid")
+                        logger.log('error', 'Error: /updateDatagrid')
                     }else{
                         console.log("Study data updated!")
                     }
@@ -372,8 +382,56 @@ router.post('/updateDataGrid', async(req, res) => {
             }
           })
     } catch (error) {
-        console.log("error happened here", error)
-        logger.log('error', error)
+        logger.log('error', 'Error: /updateDatagrid')
+    }
+})
+
+//download history 
+router.post('/downloadHistory', async(req, res) => {
+    try {
+    const download = new Download({
+        downloadDate: Date.now(),
+        downloadedBy: req.body.user,
+        tableID: req.body.tableID
+    })
+    await download.save()
+    res.status(200).json({ message: "Download Recorded"})
+    } catch (error) {
+        logger.log('error', 'Error: /downloadHistory') 
+        res.status(400).json({message: error.message})
+    }
+})
+
+//get download history
+router.post('/getdownloadHistory', async(req, res) => {
+    try {
+    Download.find({"tableID": req.body.tableID}, function(err, history){
+        if(err){
+            logger.log('error', 'Error: /getdownloadhistory')
+        }
+        res.status(200).json({
+            history: history
+        })
+    })
+    } catch (error) {
+        logger.log('error', 'Error: /getdownloadhistory') 
+        res.status(400).json({message: error.message})
+    }
+})
+
+
+router.post('/studyForProject', async(req, res) => {
+    console.log('body', req.body.projectName)
+    try {
+        await Studies.find({"projectName": req.body.projectName}, function(err, projects) {
+            if(err){
+                logger.log('error', 'Error: /studyForProject')
+            } else{
+                res.send(projects)
+            }
+          });
+    } catch (error) {
+        logger.log('error', 'Error: /studyForProject')
     }
 })
 

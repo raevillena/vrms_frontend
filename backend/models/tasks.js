@@ -46,6 +46,12 @@ const TasksSchema = new mongoose.Schema({
         type: String,
         required:  true,
     },
+    active: {
+        type: Boolean,
+        required:  true,
+    },
+    
+
 })
 
 module.exports = mongoose.model('Tasks', TasksSchema)

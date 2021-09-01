@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Input, Button, Form, Row,Typography} from 'antd';
+import { Input, Button, Form, Row,Typography, notification} from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import {onVerifyResetPasswordToken, onResetPassword } from '../services/userAPI';
@@ -12,6 +12,14 @@ const NewPassword = () => {
     const queryParams = QueryString.parse(window.location.search);
     const token = queryParams  &&  queryParams.token ?  queryParams.token : undefined
 
+    const notif = (type, message) => {
+      notification[type]({
+        message: 'Notification',
+        description:
+          message,
+      });
+    };
+
     useEffect(() => {
       async function verifyToken() {
         let result = await onVerifyResetPasswordToken(token)
@@ -22,21 +30,21 @@ const NewPassword = () => {
       } else {
         verifyToken() 
       }
-    }, [])
+    }, [token, history])
 
     async function handleSubmit()  {
       const newPass = newPassword.newPassword
       const confirmPass = newPassword.confirmPassword
     try {
       if(newPass !== confirmPass){
-        alert("Password does not match!")
+        notif('error',"Password does not match!")
       }else{
         await onResetPassword(token,newPassword) 
-        alert("Password Updated")
+        notif('info',"Password Updated")
         history.push('/')
         }
       } catch (error) {
-        alert("Link already expired!")
+        notif('error',"Link already expired!")
         history.push('/')
       }
       };

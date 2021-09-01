@@ -32,6 +32,11 @@ const UserSchema = new mongoose.Schema({
         required: true,
         minlength:1
     },
+    category:{
+        type: String,
+        required: true,
+        minlength:1
+    },
 })
 
 UserSchema.pre('save', async function(next){

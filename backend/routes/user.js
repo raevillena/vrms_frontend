@@ -24,7 +24,8 @@ router.route('/secretcreateuser').post(async (req, res) => {
         email: req.body.email,
         project: req.body.project,
         title: req.body.title,
-        password: password
+        password: password,
+        category: req.body.category
     })
     const doesExist = await User.findOne({email: users.email})
     if (doesExist){
@@ -47,6 +48,7 @@ router.route('/secretcreateuser').post(async (req, res) => {
           transporter.sendMail(mailOptions, function(error, info){
             if (error) {
               console.log(error);
+              logger.log('error', 'Error: email sending')
             } else {
               res.status(201).json({message: "Email was sent to the user!", user: newUser})
               console.log('Email sent: ' + info.response);
@@ -56,7 +58,7 @@ router.route('/secretcreateuser').post(async (req, res) => {
         console.log(newUser)
         } 
     } catch(err){
-      console.log(err)
+      logger.log('error', `Error: /createUSer - ${err}`)
          res.status(400).json({message: err.message})
     }
  })
@@ -88,6 +90,7 @@ router.route('/secretcreateuser').post(async (req, res) => {
             }
         }
      } catch (error) {
+      logger.log('error', `Error: /updatePassword - ${err}`)
         res.status(500).json({message: error.message})
      }
  })
@@ -123,7 +126,7 @@ router.route('/secretcreateuser').post(async (req, res) => {
       };
       transporter.sendMail(mailOptions, function(error, info){
         if (error) {
-          console.log(error);
+          logger.log('error', `Error: /email sending forgot password - ${error}`)
         } else {
           console.log('Email sent: ' + info.response);
         }
@@ -168,7 +171,7 @@ router.post('/reset-password/:token' , async(req, res) => {
           let hashedPassword = await bcrypt.hash(req.body.newPassword, salt)
           await User.findOneAndUpdate({_id: user.id}, {password: hashedPassword}, (err) => {
             if(err){
-              logger.log('error', err)  
+              logger.log('error', `Error: /resetpassword - ${err}`)
               res.status(400).json({message: "Unable to update password"})
             }else{
               console.log("Password Updated")
@@ -182,18 +185,28 @@ router.post('/reset-password/:token' , async(req, res) => {
     })
 
   } catch (error) {
-    logger.log('error', err)  
+    logger.log('error', `Error: /reset password - ${error}`)  
     res.status(500).json({message: error.message})
   }
 })
 
 router.get("/getAllUser", async(req,res) => {
   try {
-     User.find({}, {"name": 1, _id: 0}, function(err, users) {
+     User.find({"category": "user"}, {"name": 1, _id: 0}, function(err, users) {
       res.send(users);  
     });
   } catch (error) {
-    logger.log('error', err)  
+    logger.log('error', `Error: /getAllUser`)  
+  }
+})
+
+router.get("/getAllManager", async(req,res) => {
+  try {
+     User.find({"category": "manager"}, {"name": 1, _id: 0}, function(err, users) {
+      res.send(users);  
+    });
+  } catch (error) {
+    logger.log('error', `Error: /getAllManager`)  
   }
 })
 

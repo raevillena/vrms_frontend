@@ -105,3 +105,19 @@ export async function onGetAllUsers() {
     }
 }
 
+export async function onGetAllManagers() {
+    try {
+        return axios.get(`/v1/user/getAllManager`, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        console.log(error)
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}
+

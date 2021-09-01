@@ -7,14 +7,9 @@ import { DynamicDataSheetGrid,
   textColumn,
   keyColumn  } from 'react-datasheet-grid'
 import GridTable from './GridTable';
-import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, EyeFilled} from '@ant-design/icons';
+import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, EyeFilled, PlusSquareFilled} from '@ant-design/icons';
 import { onUploadDataGrid } from '../services/uploadAPI';
 import '../styles/CSS/Userdash.css'
-
-
-
-
-
 
 
 const DataGrid = () => {
@@ -23,7 +18,7 @@ const DataGrid = () => {
 
   const studyObj = useSelector(state => state.study) //study reducer
   const userObj = useSelector(state => state.user) //user reducer
-
+  const [addTableStyle, setAddTableStyle] = useState("none")
   const [title, setTitle] = useState() 
   const [description, setDescription] = useState()
   const [ data, setData ] = useState([])
@@ -40,41 +35,6 @@ const DataGrid = () => {
   }])
   const [isModalVisible, setIsModalVisible] = useState(false) //modal for image viewing
   const [imageFilename, setImageFilename] = useState() //to view image
-
-
-  useEffect(()=> { //getting column
-    getColumns()
-  }, [tempCol])
-
-  useEffect(() => { //disable column
-    if (addColumnTitle === undefined ||addColumnTitle ==='') {
-      setDisabledColumn(true);
-    } else {
-      setDisabledColumn(false);
-    }
-  }, [addColumnTitle]);
-
-  useEffect(() => { //create button disable
-    if (title === undefined ||title ===''|| description === undefined ||description ==='') {
-      setDisabledCreate(true);
-    } else {
-      setDisabledCreate(false);
-    }
-  }, [title,description]);
-
-
-  //adding columns
-  const getColumns= () =>{
-    let tempColumns = []
-        for(let i = 0; i < columns.length; i++){ 
-            tempColumns.push({
-                key: columns[i].title,
-                name:  columns[i].title,
-                value:  columns[i].title,
-            });
-        }
-        setColumnsData(tempColumns)
-  }
 
   const CameraComponent = React.memo(
     ({ rowData, setRowData }) => {
@@ -105,15 +65,12 @@ const DataGrid = () => {
     }
   )
 
-  
-  
   const cameraColumn = {
     component: CameraComponent,
     deleteValue: () => '',
     copyValue: ({ rowData }) => rowData,
     pasteValue: ({ value }) => value,
   }
-
 
   const columns = useMemo(() => tempCol, [tempCol]) //displaying columns in datasheet 
   const createRow = useCallback(() => ({}), []) //creating row
@@ -126,6 +83,39 @@ const DataGrid = () => {
     }])
     setAddColumnTitle('')
   }
+
+  useEffect(()=> { //getting column
+      //adding columns
+  const getColumns= () =>{
+    let tempColumns = []
+        for(let i = 0; i < columns.length; i++){ 
+            tempColumns.push({
+                key: columns[i].title,
+                name:  columns[i].title,
+                value:  columns[i].title,
+            });
+        }
+        setColumnsData(tempColumns)
+  }
+    getColumns()
+  }, [tempCol, columns])
+
+  useEffect(() => { //disable column
+    if (addColumnTitle === undefined ||addColumnTitle ==='') {
+      setDisabledColumn(true);
+    } else {
+      setDisabledColumn(false);
+    }
+  }, [addColumnTitle]);
+
+  useEffect(() => { //create button disable
+    if (title === undefined ||title ===''|| description === undefined ||description ==='') {
+      setDisabledCreate(true);
+    } else {
+      setDisabledCreate(false);
+    }
+  }, [title,description]);
+
 
   const addCheckboxColumn = () => {
     setTempCol([...columns, {
@@ -172,7 +162,7 @@ const DataGrid = () => {
 
   async function saveToDB(){
     const dataToSend ={
-      user: userObj.USER._id,
+      user: userObj.USER.name,
       title: title,
       description: description,
       studyID: studyObj.STUDY.studyID,
@@ -230,12 +220,12 @@ const DataGrid = () => {
       element.click()
   }
 
-  function showTable() { //showing/hiding the addTable component
-    var x = document.getElementById("addtable");
-    if (x.style.display === "none") {
-      x.style.display = "block";
+  function showTable() { 
+
+    if (addTableStyle === "none") {
+      setAddTableStyle("block")
     } else {
-      x.style.display = "none";
+      setAddTableStyle("none")
       setTitle('')
       setDescription('')
       setTempCol([{
@@ -250,9 +240,14 @@ const DataGrid = () => {
   return (
     <div>
       <GridTable  data={addTable}/>
-      <div id='addtable' style={{display: 'none'}}>
+      <div >
+      <Tooltip placement="top" title="Add Table">
+      <Button style={{background: '#A0BF85', marginTop: '15px' }} onClick={showTable} icon={<PlusSquareFilled/>}>Add Table</Button>
+      </Tooltip>
+      </div>
+      <div style={{display: addTableStyle}}>
         <h1 style={{fontFamily: 'Montserrat', fontSize: '20px'}}>Add Table</h1>
-        <div className="div-flex">
+        <div className="add-grid">
           <div style={{display:'grid'}}>
           <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Table Title</label>
           <Input  placeholder="Input table title" onChange={(e)=> {setTitle(e.target.value)}} value={title}/> 

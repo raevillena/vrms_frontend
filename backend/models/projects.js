@@ -30,6 +30,12 @@ const ProjectSchema = new mongoose.Schema({
     assignee:{
         type: Array,
         required: true
+    },
+    active:{
+        type: Boolean
+    },
+    progress:{
+        type: Number
     }
 })
 

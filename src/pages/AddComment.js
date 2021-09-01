@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Comment, Avatar, Form, Button, List, Input} from 'antd'
+import {Comment, Avatar, Form, Button, Input} from 'antd'
 import { useSelector} from 'react-redux';
 import moment from 'moment';
 import { onAddComment } from '../services/taskAPI';
@@ -28,9 +28,8 @@ const AddComment = (props) => {
     }
 
     useEffect(() => {
-        console.log('taskID', props)
         setTask(props.data)
-    }, [props])
+    }, [props.data])
  
     
    

@@ -1,15 +1,14 @@
-import React, {useState, useEffect, useMemo, useCallback, useRef} from 'react';
-import {Button, Input, Select, Image, Spin, Modal, Tooltip} from 'antd'
+import React, {useState, useEffect, useMemo, useCallback} from 'react';
+import {Button, Input, Select, Image, Spin, Modal, Tooltip, notification} from 'antd'
 import { onUpdateDatagrid} from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import { DynamicDataSheetGrid, 
   checkboxColumn,
   textColumn,
-  keyColumn, dateColumn} from 'react-datasheet-grid';
+  keyColumn} from 'react-datasheet-grid';
 import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, EyeFilled } from '@ant-design/icons';
-import { CSVLink } from 'react-csv'
 import { onEditDatagrid } from '../services/studyAPI';
-import { onDownloadImage, onUploadDataGrid } from '../services/uploadAPI';
+import { onUploadDataGrid } from '../services/uploadAPI';
 import '../styles/CSS/Userdash.css'
 
 
@@ -21,12 +20,12 @@ const EditDataGrid = (props) => {
 
   const studyObj = useSelector(state => state.study)
   const userObj = useSelector(state => state.user)
-  const idleTimerRef = useRef(null)
 
   const [loading, setLoading] = useState(false)
   const [title, setTitle] = useState() 
   const [description, setDescription] = useState()
   const [ data, setData ] = useState([])
+  const [display, setDisplay] = useState("none")
   const [columnsData, setColumnsData] = useState([]) // delete columns
   const [addColumnTitle, setAddColumnTitle] = useState() //state for column title
   const [disabledColumn, setDisabledColumn] = useState(true) //disable button for adding column
@@ -35,72 +34,125 @@ const EditDataGrid = (props) => {
   const [isModalVisible, setIsModalVisible] = useState(false) //modal for image viewing
   const [imageFilename, setImageFilename] = useState() //to view image
   const AUTOSAVE_INTERVAL = 30000;
+  const columns = useMemo(() => tempCol, [tempCol]) //setting columns
+
+
+  const notif = (type, message) => {
+    notification[type]({
+      message: 'Notification Title',
+      description:
+        message,
+    });
+  };
 
 
 const checkColumnType= (key,title) => {
     switch(key) {
         case 'Checkbox':
           return { ...keyColumn(title, checkboxColumn), title: title, type: 'Checkbox'}
-          break;
         case 'text':
           return { ...keyColumn(title, textColumn), title: title, type: 'text'}
-          break;
         case 'camera':
           return { ...keyColumn(title, cameraColumn), title: title, type: 'camera'}
-          break;
         default:
             return { ...keyColumn(title, textColumn), title: title, type: 'text'}
-            break;
       }
 }
 
+const CameraComponent = React.memo(
+  ({ rowData, setRowData }) => {
+    return (
+      <div style={{display:'flex', gap:'5px'}}>
+      <div>
+        <Button value={rowData}><label className="file_input_id"><CameraFilled/>
+        <input type="file"  accept="image/*" onChange={async e => {
+              const file = e.target.files[0]
+              const data = new FormData()
+              data.append("file", file)
+              let result = await onUploadDataGrid(data) //uploading
+              setRowData(result.data.filename)
+            }
+          }
+           />
+        </label></Button>
+        
+    </div>
+    <div>  <Button onClick={
+         async (e) => {
+              setImageFilename(rowData) //set the image to view
+              showImage()
+          }
+        }><EyeFilled /></Button></div>
+    </div>     
+    )
+  }
+)
+
+const cameraColumn = {
+  component: CameraComponent,
+  deleteValue: () => '',
+  copyValue: ({ rowData }) => rowData,
+  pasteValue: ({ value }) => value,
+}
+
+const createRow = useCallback(() => ({}), []) //create row
+
 useEffect(() => {
   const timer = setTimeout(()=>{
+    async function updateDB(){
+      const dataToSend ={
+        user: userObj.USER.name,
+        title: title,
+        description: description,
+        studyID: studyObj.STUDY.studyID,
+        data: data,
+        columns: columns
+      }
+      await onUpdateDatagrid(dataToSend)
+      console.log('db updated datagrid')
+    }
     updateDB()
-    console.log('saving1')
   }, AUTOSAVE_INTERVAL)
   return () => clearTimeout(timer);
-}, [data])
+}, [data, userObj.USER.name, title, description, studyObj.STUDY.studyID, columns  ])
 
-  async function getEditData(){ //edit data
-    setLoading(true)
-    let resultDB = await onEditDatagrid(props.data)
-    let result = resultDB.data
-    let tempCols=[]
-  for(let i = 0; i < result.length; i++){   
-      setTitle(result[i].title)
-      setDescription(result[i].description)
-      setData(result[i].data) 
-      for(let j = 0; j < result[i].columns.length ; j++) {
-          tempCols.push(checkColumnType(result[i].columns[j].type, result[i].columns[j].title))
-      }
-      setTempCol(tempCols)   
-  }
-  setLoading(false)
-  }
 
 
   useEffect(()=> { //getting data
-      getEditData() 
-   }, [props])
+  try {
+    if(props.data === undefined||props.data === null|| props.data === ''){
+      return
+    }
+    async function getEditData(){ //edit data
+      console.log(props)
+      setLoading(true)
+      let resultDB = await onEditDatagrid(props.data.id)
+      let result = resultDB.data
+      let tempCols=[]
+    for(let i = 0; i < result.length; i++){   
+        setTitle(result[i].title)
+        setDescription(result[i].description)
+        setData(result[i].data) 
+        for(let j = 0; j < result[i].columns.length ; j++) {
+            tempCols.push(checkColumnType(result[i].columns[j].type, result[i].columns[j].title))
+        }
+        setTempCol(tempCols)   
+    }
+    setDisplay(props.data.display)
+    setLoading(false)
+    }
+    getEditData()
+  } catch (error) {
+    notif('error', 'There is something wrong! Please try again!')
+  }
+  
+   }, [props.data])
 
 
 
 
   useEffect(()=> { //getting columns data
-    getColumns()
-  }, [tempCol])
-
-  useEffect(() => { //disable buttons for adding column
-    if (addColumnTitle === undefined ||addColumnTitle ==='') {
-      setDisabledColumn(true);
-    } else {
-      setDisabledColumn(false);
-    }
-  }, [addColumnTitle]);
-
-
-  //delete columns data
+     //delete columns data
   const getColumns= () =>{
     let tempColumns = []
         for(let i = 0; i < columns.length; i++){ 
@@ -112,6 +164,19 @@ useEffect(() => {
         }
         setColumnsData(tempColumns)
   }
+  getColumns()
+  }, [tempCol, columns])
+
+  useEffect(() => { //disable buttons for adding column
+    if (addColumnTitle === undefined ||addColumnTitle ==='') {
+      setDisabledColumn(true);
+    } else {
+      setDisabledColumn(false);
+    }
+  }, [addColumnTitle]);
+
+
+ 
 
   const showImage = () => { //for viewing image
     setIsModalVisible(true);
@@ -126,46 +191,7 @@ useEffect(() => {
   };
 
   
-  const CameraComponent = React.memo(
-    ({ rowData, setRowData }) => {
-      return (
-        <div style={{display:'flex', gap:'5px'}}>
-        <div>
-          <Button value={rowData}><label className="file_input_id"><CameraFilled/>
-          <input type="file"  accept="image/*" onChange={async e => {
-                const file = e.target.files[0]
-                const data = new FormData()
-                data.append("file", file)
-                let result = await onUploadDataGrid(data) //uploading
-                setRowData(result.data.filename)
-              }
-            }
-             />
-          </label></Button>
-          
-      </div>
-      <div>  <Button onClick={
-           async (e) => {
-                setImageFilename(rowData) //set the image to view
-                showImage()
-            }
-          }><EyeFilled /></Button></div>
-      </div>     
-      )
-    }
-  )
-  
-  
-  const cameraColumn = {
-    component: CameraComponent,
-    deleteValue: () => '',
-    copyValue: ({ rowData }) => rowData,
-    pasteValue: ({ value }) => value,
-  }
-
-
-  const columns = useMemo(() => tempCol, [tempCol]) //setting columns
-  const createRow = useCallback(() => ({}), []) //create row
+ 
   
   const addTextColumn = () => {
     setTempCol([...columns, {
@@ -205,7 +231,7 @@ useEffect(() => {
 
   async function updateDB(){
     const dataToSend ={
-      user: userObj.USER._id,
+      user: userObj.USER.name,
       title: title,
       description: description,
       studyID: studyObj.STUDY.studyID,
@@ -217,11 +243,11 @@ useEffect(() => {
 
 
   function showTableEdit() { //show/hide table edit component
-    var x = document.getElementById("edittable");
-    if (x.style.display === "none") {
-      x.style.display = "block";
+   // var x = document.getElementById("edittable");
+    if (display === "none") {
+      setDisplay("block")
     } else {
-      x.style.display = "none";
+     setDisplay("none")
       setTitle('')
       setDescription('')
     }
@@ -251,9 +277,9 @@ useEffect(() => {
   
   return (
     <div>
-      <div id='edittable'  style={{display: 'none'}}>
+      <div  style={{display: display, marginTop: '20px'}}>
         <h1 style={{fontFamily: 'Montserrat', fontSize: '20px'}}>Edit Table</h1> 
-        <div style={{display: 'flex', flexDirection: 'row', rowGap:'0px', gap:'5px', maxWidth:'100%'}}>
+        <div className="add-grid">
           <div style={{display:'grid'}}>
             <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Table Title</label>
             <Input  placeholder="Input table title" onChange={(e)=> {setTitle(e.target.value)}} value={title}/> 
@@ -305,7 +331,6 @@ useEffect(() => {
               <Modal title="View Image" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
               <div style={{display: 'grid' }}>
                 <Image src={`http://localhost:8080/datagrid/${imageFilename}`}/>
-                <Button block type='primary'>Download</Button>
               </div>
               </Modal>
               </div> }

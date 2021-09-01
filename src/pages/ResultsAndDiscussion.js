@@ -24,13 +24,7 @@ const ResultsAndDiscussion = () => {
     const dataToSaveBackend = JSON.stringify(convertToRaw(content))
     const markup = draftToHtml(convertToRaw(content))
 
-    async function updateDB(){
-        try {
-            await onUpdateResultsAndDiscussion({studyID: studyObj.STUDY.studyID, resultsAndDiscussion: dataToSaveBackend, user: userObj.USER.name})
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    
 
     async function download(){
         try {
@@ -76,29 +70,36 @@ const ResultsAndDiscussion = () => {
         );
       }
 
-    async function getDataFromDB(){
-        try {
-          setLoading(true)
-            let result = await onGetDocumentation({studyID: studyObj.STUDY.studyID})
-            setLoading(false)
-            const contentState = convertFromRaw(JSON.parse(result.data.docs.resultsAndDiscussion)); //displaying data
-            setEditorState(EditorState.createWithContent(contentState))
-            
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
     useEffect(() => {
         const timer = setTimeout(()=>{
-          updateDB()
+          async function updateDB(){
+            try {
+                await onUpdateResultsAndDiscussion({studyID: studyObj.STUDY.studyID, resultsAndDiscussion: dataToSaveBackend, user: userObj.USER.name})
+                console.log('updating db, results and discussion')
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        updateDB()
         }, AUTOSAVE_INTERVAL)
         return () => clearTimeout(timer);
-      }, [editorState])
+      }, [editorState, studyObj.STUDY.studyID, userObj.USER.name, dataToSaveBackend ])
 
       useEffect(() => {
-        getDataFromDB()
-      }, [])
+        async function getDataFromDB(){
+          try {
+            setLoading(true)
+              let result = await onGetDocumentation({studyID: studyObj.STUDY.studyID})
+              setLoading(false)
+              const contentState = convertFromRaw(JSON.parse(result.data.docs.resultsAndDiscussion)); //displaying data
+              setEditorState(EditorState.createWithContent(contentState))
+              
+          } catch (error) {
+              console.log(error)
+          }
+      }
+      getDataFromDB()
+      }, [studyObj.STUDY.studyID])
 
       const onEditorStateChange = (editorState) =>{
         setEditorState(editorState)

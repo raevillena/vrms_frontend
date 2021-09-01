@@ -1,42 +1,23 @@
 import React, {useEffect, useState, useMemo} from 'react';
-import { Table, Button, Popconfirm, Form, Spin, notification, Tooltip } from 'antd';
-import { DeleteFilled, EditFilled, DownloadOutlined, PlusSquareFilled } from '@ant-design/icons';
-import { onDeleteDatagrid, onEditDatagrid, onGetDatagrid } from '../services/studyAPI';
+import { Table, Button, Popconfirm, Form, Spin, notification, Tooltip, Modal, Empty } from 'antd';
+import { DeleteFilled, EditFilled, DownloadOutlined, InfoCircleFilled } from '@ant-design/icons';
+import { onDeleteDatagrid, onDownloadHistory, onEditDatagrid, onGetDatagrid, onGetDownloadHistory } from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import moment from 'moment';
 import EditDatagrid from './EditDatagrid'
 import '../styles/CSS/Userdash.css'
 
 
-
 const GridTable = (props) => {
     const studyObj = useSelector(state => state.study)
+    const userObj = useSelector(state => state.user)
     const [tableData, setTableData] = useState([])
     const [loading, setLoading] = useState(false)
-    const [editData, setEditData] = useState([])
-   
-   
-
-
-    async function getDatagridData(){ //displaying data in table
-        let ID = {studyID: studyObj.STUDY.studyID}
-        setLoading(true)
-        let result =await onGetDatagrid(ID)
-        let x = result.data
-        let tempTableData = []
-        for(let i = 0; i < x.length; i++){ 
-          tempTableData.push({
-            key: x[i],
-            tableID: x[i]._id,
-            title: x[i].title,
-            description: x[i].description,
-            dateCreated: moment(x[i].dateCreated).format('MM-DD-YYYY'),
-            dateUpdated: moment(x[i].dateUpdated).format('MM-DD-YYYY'),
-          });
-        }
-        setTableData(tempTableData)
-        setLoading(false)
-    }
+    const [editData, setEditData] = useState()
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [history, setHistory] = useState([])
+    const [loadingModal, setLoadingModal] = useState(false)
+  
 
     const notif = (type, message) => {
       notification[type]({
@@ -57,11 +38,53 @@ const GridTable = (props) => {
     const finaldata = useMemo(() => tableData, [tableData]) //final table data
 
   useEffect(() => { //getting data
-    async function getdata(){
-      getDatagridData()
+    async function getDatagridData(){ //displaying data in table
+        let ID = {studyID: studyObj.STUDY.studyID}
+        setLoading(true)
+        let result =await onGetDatagrid(ID)
+        let x = result.data
+        let tempTableData = []
+        for(let i = 0; i < x.length; i++){ 
+          tempTableData.push({
+            key: x[i],
+            tableID: x[i]._id,
+            title: x[i].title,
+            description: x[i].description,
+            dateCreated: moment(x[i].dateCreated).format('MM-DD-YYYY'),
+            dateUpdated: moment(x[i].dateUpdated).format('MM-DD-YYYY'),
+          });
+        }
+        setTableData(tempTableData)
+        setLoading(false)
     }
-    getdata()
-  }, [])
+    getDatagridData()
+  }, [studyObj.STUDY.studyID])
+
+  const showModal = async(id) => {
+    console.log(id)
+    setLoadingModal(true)
+    let result = await onGetDownloadHistory({tableID: id._id})
+    console.log('download his', result.data.history)
+    let history = result.data.history
+    let tempHistory = []
+        for(let i = 0; i < history.length; i++){ 
+          tempHistory.push({
+            downloadedBy: history[i].downloadedBy,
+            downloadDate: moment(history[i].downloadDate).format('YYYY-MM-DD HH:mm:ss'),
+          });
+        }
+        setHistory(tempHistory)
+    setIsModalVisible(true);
+    setLoadingModal(false)
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
   async function downloadCSV(data){
     console.log('data', data)
@@ -89,7 +112,7 @@ const GridTable = (props) => {
   }
 
   useEffect(() => { //displaying the added table
-    if(props.data == null|undefined|''){
+    if(props.data == null||undefined||''){
         return
     }else{
     setTableData([...tableData, {key: tableData.length + 1,
@@ -99,9 +122,28 @@ const GridTable = (props) => {
         dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
         dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
     }])
+    async function getDatagridData(){ //displaying data in table
+        let ID = {studyID: studyObj.STUDY.studyID}
+        setLoading(true)
+        let result =await onGetDatagrid(ID)
+        let x = result.data
+        let tempTableData = []
+        for(let i = 0; i < x.length; i++){ 
+          tempTableData.push({
+            key: x[i],
+            tableID: x[i]._id,
+            title: x[i].title,
+            description: x[i].description,
+            dateCreated: moment(x[i].dateCreated).format('MM-DD-YYYY'),
+            dateUpdated: moment(x[i].dateUpdated).format('MM-DD-YYYY'),
+          });
+        }
+        setTableData(tempTableData)
+        setLoading(false)
+    }
     getDatagridData()
     }
-   }, [props.data])
+   }, [props.data, studyObj.STUDY.studyID])
 
    
     const columns = [
@@ -150,6 +192,8 @@ const GridTable = (props) => {
                     let result = await onEditDatagrid(id)
                     let x = result.data
                     downloadCSV(x)
+                    let resultDownload = await onDownloadHistory({user: userObj.USER.name, tableID: id})
+                    notif("info", resultDownload.data.message)
                 }} icon={<DownloadOutlined/>}></Button>
                 </Tooltip>
               </div>
@@ -157,8 +201,7 @@ const GridTable = (props) => {
           <Button onClick = {
            async (e) => {
                 let id ={_id: record.key._id}
-                await setEditData(id)
-                showTableEdit()
+                setEditData({id:id, display: 'block'})
             }
           }   icon={<EditFilled />}></Button>
           </Tooltip>
@@ -175,30 +218,37 @@ const GridTable = (props) => {
           <Button danger icon={<DeleteFilled />}></Button>
         </Popconfirm>
         </Tooltip>
+        <Tooltip title='View Download History' placement='top'>
+          <Button onClick={()=>{
+            let id ={_id: record.key._id}
+            showModal(id)}} icon={<InfoCircleFilled />}/>
+        </Tooltip>
         </Form>,
                     
         },
       ];
 
-      function showTable() {
-        var x = document.getElementById("addtable");
-        console.log('x', x)
-        x.style.display = x.style.display == "none" ? "block" : "none";
-      }
-
-    function showTableEdit() {
-    var x = document.getElementById("edittable");
-    x.style.display = x.style.display == "none" ? "block" : "none";
-  }
-
 
 
     return (
         <div style={{marginTop: '20px'}}>
-            {loading ?  <div className="spinner"><Spin /> </div> : <div><Button onClick={showTable} style={{background:"#A0BF85"}} icon={<PlusSquareFilled />}>Add Table</Button> 
-            <Table scroll={{ x: 1300, y: 500 }} columns={columns} dataSource={finaldata} /> </div>
+            {loading ?  <div className="spinner"><Spin /> </div> : <div> 
+            <Table scroll={{ x: 1300, y: 500 }} columns={columns} dataSource={finaldata} /> 
+            </div>
            }
             <EditDatagrid data={editData}/>
+            <Modal title="Add Study" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+              {loadingModal? <div className="spinner"><Spin /> </div> : <div>
+                {history.length === 0 ? <Empty/> : 
+                <div style={{justifyContent: 'center', alignItems: 'center'}}> 
+                  {history.map(hist => <div className="div-flex">
+                    <p>{hist.downloadedBy}</p>
+                    <p>{hist.downloadDate}</p>
+                  </div>)}
+                </div>
+                }
+                </div>}
+            </Modal>
         </div>
     )
 }

@@ -46,12 +46,15 @@ const StudiesSchema = new mongoose.Schema({
         required: true
     },
     budget: {
-        type: String,
+        type: Number,
         required: true
     },
     summary: {
         type: JSON,
     },
+    active:{
+        type: Boolean
+    }
     
 })
 

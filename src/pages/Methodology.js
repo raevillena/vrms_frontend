@@ -23,25 +23,7 @@ const Methodology = () => {
     const dataToSaveBackend = JSON.stringify(convertToRaw(content))
     const markup = draftToHtml(convertToRaw(content))
 
-    async function updateDB(){
-        try {
-            await onUpdateMethodology({studyID: studyObj.STUDY.studyID, methodology: dataToSaveBackend, user: userObj.USER.name})
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    async function getDataFromDB(){
-        try {
-          setLoading(true)
-            let result = await onGetDocumentation({studyID: studyObj.STUDY.studyID})
-            const contentState = convertFromRaw(JSON.parse(result.data.docs.methodology)); //displaying data
-            setEditorState(EditorState.createWithContent(contentState))
-            setLoading(false)
-        } catch (error) {
-            console.log(error)
-        }
-    }
+ 
 
     async function download(){
         try {
@@ -89,14 +71,34 @@ const Methodology = () => {
 
     useEffect(() => {
         const timer = setTimeout(()=>{
+          async function updateDB(){
+            try {
+                await onUpdateMethodology({studyID: studyObj.STUDY.studyID, methodology: dataToSaveBackend, user: userObj.USER.name})
+                console.log('updating methodology')
+            } catch (error) {
+                console.log(error)
+            }
+          }
           updateDB()
         }, AUTOSAVE_INTERVAL)
         return () => clearTimeout(timer);
-      }, [editorState])
+      }, [editorState, studyObj.STUDY.studyID, dataToSaveBackend,  userObj.USER.name ])
 
       useEffect(() => {
+        async function getDataFromDB(){
+          try {
+            setLoading(true)
+              let result = await onGetDocumentation({studyID: studyObj.STUDY.studyID})
+              setLoading(false)
+              const contentState = convertFromRaw(JSON.parse(result.data.docs.methodology)); //displaying data
+              setEditorState(EditorState.createWithContent(contentState))
+             
+          } catch (error) {
+              console.log(error)
+          }
+      }
         getDataFromDB()
-      }, [])
+      }, [studyObj.STUDY.studyID])
 
       const onEditorStateChange = (editorState) =>{
         setEditorState(editorState)

@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { onUserLogout } from '../../services/authAPI';
 
 
-const Header = () => {
+const HeaderManager = () => {
     let history= useHistory();
     const dispatch = useDispatch();
 
@@ -30,11 +30,12 @@ const Header = () => {
         }
       };
 
+
     return (
         <div>
-             <PageHeader onBack={()=> window.history.back() } title="Studies" extra={<Button type='link' onClick={handleLogout}  style={{float: 'right', color:'black', fontFamily: 'Montserrat'}}>Logout</Button>}/>
+             <PageHeader onBack={()=> window.history.back() } title="Projects" extra={<Button type='link' onClick={handleLogout}  style={{float: 'right', color:'black', fontFamily: 'Montserrat'}}>Logout</Button>}/>
         </div>
     )
 }
 
-export default Header
+export default HeaderManager

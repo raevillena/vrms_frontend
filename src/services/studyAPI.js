@@ -200,3 +200,45 @@ export async function onUpdateDatagrid(body) {
         }
     }
 }
+
+export async function onGetAllStudyforProject(body) {
+    try {
+        return axios.post('/v1/studies/studyForProject', body, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onDownloadHistory(body) {
+    try {
+        return axios.post('/v1/studies/downloadHistory', body, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onGetDownloadHistory(body) {
+    try {
+        return axios.post('/v1/studies/getdownloadHistory', body, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}

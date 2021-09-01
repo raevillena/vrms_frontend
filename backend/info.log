@@ -1,33 +1,22 @@
-{"level":"error","timestamp":"2021-08-25T07:30:10.454Z"}
-{"level":"error","timestamp":"2021-08-25T07:31:04.992Z"}
-{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-26T05:43:15.799Z"}
-{"level":"error","timestamp":"2021-08-26T05:43:43.699Z"}
-{"level":"error","timestamp":"2021-08-26T05:43:58.274Z"}
-{"level":"error","timestamp":"2021-08-26T05:44:34.357Z"}
-{"level":"error","timestamp":"2021-08-26T05:45:01.293Z"}
-{"level":"error","timestamp":"2021-08-26T05:45:10.092Z"}
-{"level":"error","timestamp":"2021-08-26T05:45:49.087Z"}
-{"level":"error","timestamp":"2021-08-26T05:46:25.192Z"}
-{"level":"error","timestamp":"2021-08-26T05:46:54.230Z"}
-{"level":"error","timestamp":"2021-08-26T05:47:30.806Z"}
-{"level":"error","timestamp":"2021-08-26T05:48:03.946Z"}
-{"errors":{"projectName":{"name":"ValidatorError","message":"Path `projectName` is required.","properties":{"message":"Path `projectName` is required.","type":"required","path":"projectName","value":""},"kind":"required","path":"projectName","value":""}},"_message":"Studies validation failed","level":"error","timestamp":"2021-08-26T05:48:50.683Z"}
-{"level":"error","timestamp":"2021-08-26T05:48:59.689Z"}
-{"level":"error","timestamp":"2021-08-26T05:50:06.083Z"}
-{"level":"error","timestamp":"2021-08-26T05:50:13.486Z"}
-{"level":"error","timestamp":"2021-08-26T05:50:30.243Z"}
-{"level":"error","timestamp":"2021-08-26T05:50:57.679Z"}
-{"level":"error","timestamp":"2021-08-26T05:52:56.356Z"}
-{"level":"error","timestamp":"2021-08-26T05:54:07.029Z"}
-{"errors":{"deadline":{"name":"ValidatorError","message":"Path `deadline` is required.","properties":{"message":"Path `deadline` is required.","type":"required","path":"deadline","value":null},"kind":"required","path":"deadline","value":null}},"_message":"Tasks validation failed","level":"error","timestamp":"2021-08-26T05:55:01.905Z"}
-{"level":"error","timestamp":"2021-08-26T05:55:24.745Z"}
-{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-26T06:18:30.464Z"}
-{"level":"error","timestamp":"2021-08-26T06:19:29.869Z"}
-{"level":"error","timestamp":"2021-08-26T06:20:00.230Z"}
-{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-26T15:10:46.357Z"}
-{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-26T15:19:38.609Z"}
-{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-26T15:34:04.274Z"}
-{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-26T15:36:21.414Z"}
-{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-26T15:43:42.742Z"}
-{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-26T15:46:41.866Z"}
-{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-26T15:51:02.679Z"}
+{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-30T13:16:30.506Z"}
+{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-30T13:39:16.739Z"}
+{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-30T13:59:29.508Z"}
+{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-30T14:46:09.710Z"}
+{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-30T14:47:45.962Z"}
+{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-30T14:53:00.427Z"}
+{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-30T14:59:15.182Z"}
+{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-30T15:03:12.884Z"}
+{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-30T15:05:56.028Z"}
+{"level":"error","timestamp":"2021-08-31T00:42:56.187Z"}
+{"level":"error","message":"Error: email sending","timestamp":"2021-08-31T00:44:43.439Z"}
+{"level":"error","message":"Error: email sending","timestamp":"2021-08-31T00:52:47.339Z"}
+{"level":"info","message":"server started at port: 3001","timestamp":"2021-08-31T00:56:04.294Z"}
+{"level":"error","timestamp":"2021-08-31T00:56:42.150Z"}
+{"level":"error","message":"Error: email sending","timestamp":"2021-08-31T00:57:13.630Z"}
+{"level":"error","timestamp":"2021-08-31T01:02:53.541Z"}
+{"level":"error","timestamp":"2021-08-31T01:03:25.873Z"}
+{"level":"error","timestamp":"2021-08-31T05:09:38.958Z"}
+{"level":"error","timestamp":"2021-08-31T07:22:44.468Z"}
+{"level":"error","timestamp":"2021-08-31T07:22:56.928Z"}
+{"errors":{"budget":{"stringValue":"\"test\"","valueType":"string","kind":"Number","value":"test","path":"budget","reason":{"generatedMessage":true,"code":"ERR_ASSERTION","actual":false,"expected":true,"operator":"=="},"name":"CastError","message":"Cast to Number failed for value \"test\" (type string) at path \"budget\""}},"_message":"Studies validation failed","level":"error","timestamp":"2021-08-31T12:51:54.521Z"}
+{"errors":{"createdBy":{"name":"ValidatorError","message":"Path `createdBy` is required.","properties":{"message":"Path `createdBy` is required.","type":"required","path":"createdBy"},"kind":"required","path":"createdBy"},"updatedBy":{"name":"ValidatorError","message":"Path `updatedBy` is required.","properties":{"message":"Path `updatedBy` is required.","type":"required","path":"updatedBy"},"kind":"required","path":"updatedBy"}},"_message":"Studies validation failed","level":"error","timestamp":"2021-08-31T12:53:15.612Z"}

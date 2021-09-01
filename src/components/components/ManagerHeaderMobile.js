@@ -8,7 +8,7 @@ import logo from '../images/logo.png'
 import '/Users/user/vrms/vrms_frontend/src/styles/CSS/Userdash.css'
 
 
-const MobileHeader = () => {
+const ManagerHeaderMobile = () => {
     let history= useHistory();
     const dispatch = useDispatch();
 
@@ -60,7 +60,7 @@ const MobileHeader = () => {
                             Account
                         </Menu.Item>
                         <Menu.Item icon={<BookOutlined/>} key="2" onClick={studies}>
-                            Research
+                            Projects
                         </Menu.Item>
                         <Menu.Item key="3" onClick={handleLogout}>
                             Logout
@@ -81,4 +81,4 @@ const MobileHeader = () => {
     )
 }
 
-export default MobileHeader
+export default ManagerHeaderMobile

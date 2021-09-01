@@ -31,3 +31,18 @@ export async function onGetAllProject() {
         }
     }
 }
+
+export async function onGetProjectforManager(body) {
+    try {
+        return axios.post(`/v1/project/getProjectforManager`, body, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}

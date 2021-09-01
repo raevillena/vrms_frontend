@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react'
-import {Button, Collapse, Spin, Empty, Typography } from 'antd'
-import { onGetAllTask } from '../services/taskAPI';
+import {Button, Collapse, Spin, Empty, Popconfirm, notification } from 'antd'
+import { onGetAllTask,  onUpdateTaskUser } from '../services/taskAPI';
 import { useSelector} from 'react-redux';
 import moment from 'moment';
 import AddComment from './AddComment';
 import '../styles/CSS/Userdash.css'
-
+import AddTask from './AddTask';
 
 
 const { Panel } = Collapse;
@@ -17,50 +17,74 @@ const DisplayTasks = () => {
     const [loading, setloading] = useState(false)
 
     const [data, setData] = useState({task: '', length: 3})
-
-    const forBackend = {
-        studyName: studyObj.STUDY.title,
-        assignee: userObj.USER.name
-    }
-
-    async function getAllTask (){
-        setloading(true)
-        let resultTask = await onGetAllTask(forBackend)
-        let loopTask = resultTask.data.tasks
-        let tempTaskData = []
-         for(let i = 0; i < loopTask.length; i++){ 
-           tempTaskData.push({
-             key: [i],
-             id: loopTask[i]._id,
-             createdBy: loopTask[i].createdBy,
-             dateCreated: moment(loopTask[i].dateCreated).format('MM-DD-YYYY HH:MM:SS'),
-             lastUpdated: moment(loopTask[i].lastUpdated).format('MM-DD-YYYY HH:MM:SS'),
-             deadline: moment(loopTask[i].deadline).format('MM-DD-YYYY HH:MM:SS'),
-             taskTitle: loopTask[i].tasksTitle,
-             taskDescription: loopTask[i].tasksDescription,
-             assignee: loopTask[i].assignee,
-             status: loopTask[i].status
-           });
-         }
-         setTask(tempTaskData)
-         setloading(false)
-    }
-
-    useEffect( async () => {
-        getAllTask()
-    }, [])
-
     
+    const notif = (type, message) => {
+        notification[type]({
+          message: 'Notification Title',
+          description:
+            message,
+        });
+      };
+
+
+
+    useEffect(() => {
+        async function getAllTask (){
+            const forBackend = {
+                studyName: studyObj.STUDY.title,
+                assignee: userObj.USER.name
+            }        
+            setloading(true)
+            let resultTask = await onGetAllTask(forBackend)
+            let loopTask = resultTask.data.tasks
+            let tempTaskData = []
+             for(let i = 0; i < loopTask.length; i++){ 
+               tempTaskData.push({
+                 key: [i],
+                 id: loopTask[i]._id,
+                 createdBy: loopTask[i].createdBy,
+                 dateCreated: moment(loopTask[i].dateCreated).format('MM-DD-YYYY HH:MM:SS'),
+                 lastUpdated: moment(loopTask[i].lastUpdated).format('MM-DD-YYYY HH:MM:SS'),
+                 deadline: moment(loopTask[i].deadline).format('MM-DD-YYYY HH:MM:SS'),
+                 taskTitle: loopTask[i].tasksTitle,
+                 taskDescription: loopTask[i].tasksDescription,
+                 assignee: loopTask[i].assignee,
+                 status: loopTask[i].status
+               });
+             }
+             setTask(tempTaskData)
+             setloading(false)
+        }
+        getAllTask()
+    }, [studyObj.STUDY.title, userObj.USER.name])
+
     async function callback(key) {
             setData(task[key||0].id)
       }
 
-    return (
+      async function markComplete(key){
+        try {
+          let result =  await onUpdateTaskUser({taskId: task[key||0].id, status: "SUBMITTED"})
+            notif('info', result.data.message)
+            let newTask = [...task]
+            newTask[key]= {...newTask[key], status : "SUBMITTED"}
+            setTask(newTask) 
+        } catch (error) {
+            notif('error', error)
+        }
+    }
+
+return (
+    <div>
+        {userObj.USER.category === "manager" ? <AddTask/> : 
         <div >
-            {loading?  <div className="spinner"><Spin /> </div> : task.length==0 ? <Empty/> :
+            {loading?  <div className="spinner"><Spin /> </div> : task.length===0 ? <Empty/> :
             <div>
-            <Collapse accordion onChange={callback}>
-                {task.map(tasks =>(<Panel header={tasks.taskTitle} key={tasks.key} extra={<Button style={{background: '#A0BF85', borderRadius: '50px'}}>{tasks.status}</Button>}>
+            <Collapse accordion onChange={callback} >
+                {task.map(tasks =>(<Panel header={tasks.taskTitle} key={tasks.key} extra={tasks.status === "ONGOING" ? <div><Popconfirm title="Are you sure to submit this task?" onConfirm={()=>markComplete(tasks.key)}>
+                    <Button disabled={tasks.status==="SUBMITTED" ? true: false} style={{background: '#A0BF85', borderRadius: '50px'}}>{tasks.status === "ONGOING"? "Submit" : "SUBMITTED"}</Button>
+                    </Popconfirm></div> : 
+                    <Button disabled={true} style={{background: '#A0BF85', borderRadius: '50px'}}>{tasks.status}</Button>}>
                     <div>
                         <div style={{display: 'flex', gap: '5px'}}>
                             <label style={{fontWeight:'bolder'}}>Task:</label>
@@ -95,7 +119,8 @@ const DisplayTasks = () => {
                     </div>
                 </Panel>))}
             </Collapse></div>  }
-        </div>
+        </div>}
+    </div>
     )
 }
 

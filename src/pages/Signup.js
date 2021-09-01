@@ -1,5 +1,5 @@
 
-import { Input, Button, Form, Row, Select } from 'antd';
+import { Input, Button, Form, Row, Select, Checkbox } from 'antd';
 import React, {useState, useEffect} from 'react';
 import { onUserCreate } from '../services/userAPI';
 import { onGetAllProject } from '../services/projectAPI';
@@ -7,29 +7,27 @@ import { onGetAllProject } from '../services/projectAPI';
 
 const Signup = () => {
     const { Option } = Select;
-    const [user, setUser] = useState({name: "", email:"", project:"", title:"",password:""})
+    const [user, setUser] = useState({name: "", email:"", project:"", title:"",password:"", category: ""})
     const [projectData, setProjectData] = useState([]) //for showing all project
 
-    async function getProjects(){ //for showing all project
-        let resultProject = await onGetAllProject()
-        let y = resultProject.data
-        let tempProjectData = []
-        for(let i = 0; i < y.length; i++){ 
-            tempProjectData.push({
-                key: y[i].projectName,
-                name:  y[i].projectName,
-                value:  y[i].projectName,
-            });
-        }
-        setProjectData(tempProjectData)
-    }
 
-    useEffect(async () => { //for showing all project
-        async function getData() {
-            getProjects()
+
+    useEffect( () => { //for showing all project
+        async function getProjects(){ //for showing all project
+            let resultProject = await onGetAllProject()
+            let y = resultProject.data
+            let tempProjectData = []
+            for(let i = 0; i < y.length; i++){ 
+                tempProjectData.push({
+                    key: y[i].projectName,
+                    name:  y[i].projectName,
+                    value:  y[i].projectName,
+                });
+            }
+            setProjectData(tempProjectData)
         }
 
-        await getData()
+        getProjects()
     }, [])
 
     const handleProjectChange = value => {
@@ -92,6 +90,18 @@ const Signup = () => {
                             },
                             ]}>
                         <Input placeholder="Enter Title" onChange={e => setUser({...user, title: e.target.value})} value={user.title}></Input>
+                    </Form.Item>
+                    <Form.Item name="Category" 
+                            rules={[
+                            {
+                                required: true,
+                                message: 'Please select category!',
+                            },
+                            ]}>
+                         <label>Category: </label>       
+                        <Checkbox onChange={e => setUser({...user, category: e.target.checked? "user": ""})} value="user">User</Checkbox>
+                        <Checkbox onChange={e => setUser({...user, category: e.target.checked? "manager": ""})} value="manager">Manager</Checkbox>
+                        <Checkbox onChange={e => setUser({...user, category: e.target.checked? "director": ""})} value="director">Director</Checkbox>
                     </Form.Item>
                     <Row justify="center">
                     <Button onClick={onSubmit} style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE USER</Button>

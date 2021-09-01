@@ -11,12 +11,13 @@ router.route('/createproject').post(async (req, res) => {
     const projectID = shortid.generate() 
     const project = new Project({
         dateCreated: Date.now(),
-        createdBy: "test",
+        createdBy: req.body.user,
         dateUpdated: Date.now(),
-        updatedBy: "test",
+        updatedBy: req.body.user,
         projectName: req.body.projectName,
         projectID: projectID,
-        assignee: req.body.assignee
+        assignee: req.body.assignee,
+        active: true
     })
     const doesExist = await Project.findOne({projectName: req.body.projectName})
     if(doesExist){
@@ -30,7 +31,7 @@ router.route('/createproject').post(async (req, res) => {
             newProject})
     }
    } catch (error) {
-    logger.log('error', error)
+    logger.log('error', 'Create project error!')
     res.status(400).json({message: error.message})
    }
  })
@@ -42,10 +43,25 @@ router.route('/createproject').post(async (req, res) => {
         res.send(projects);  
       });
     } catch (error) {
-      logger.log('error', error)  
+      logger.log('error', 'Get all project error!')  
     }
   })
 
+
+  //get all project assigned to the manager
+  router.post("/getProjectforManager", async(req,res) => {
+    try {
+      await Project.find({"assignee": req.body.user}, function(err, projects) {
+        if(err){
+            logger.log('error', 'Project find error: /getProjectforManager')
+        } else{
+            res.send(projects)
+        }
+      });
+    } catch (error) {
+      logger.log('error', 'Project find error: /getProjectforManager')  
+    }
+  })
 
 
  module.exports = router

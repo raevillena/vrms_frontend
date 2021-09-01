@@ -11,7 +11,7 @@ const Label = () => {
 
     return (
         <div className="label-hidden">
-            <Title className="label-header">{studyObj.STUDY.key.studyTitle}</Title>
+            <Title level={3} className="label-header">{studyObj.STUDY.key.studyTitle}</Title>
             <div style={{textAlign: 'right', position:'relative'}}>
                 <div className="div-inline-block">
                 <div className="div-flex">

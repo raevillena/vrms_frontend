@@ -24,13 +24,7 @@ const Conclusion = () => {
     const dataToSaveBackend = JSON.stringify(convertToRaw(content))
     const markup = draftToHtml(convertToRaw(content))
 
-    async function updateDB(){
-        try {
-            await onUpdateConclusion({studyID: studyObj.STUDY.studyID, conclusion: dataToSaveBackend, user: userObj.USER.name})
-        } catch (error) {
-            console.log(error)
-        }
-    }
+
     async function download(){
         try {
          var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
@@ -75,29 +69,35 @@ const Conclusion = () => {
         );
       }
 
-    async function getDataFromDB(){
-        try {
-          setLoading(true)
-            let result = await onGetDocumentation({studyID: studyObj.STUDY.studyID})
-            setLoading(false)
-            const contentState = convertFromRaw(JSON.parse(result.data.docs.conclusion)); //displaying data
-            setEditorState(EditorState.createWithContent(contentState))
-            
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
     useEffect(() => {
         const timer = setTimeout(()=>{
+          async function updateDB(){
+            try {
+                await onUpdateConclusion({studyID: studyObj.STUDY.studyID, conclusion: dataToSaveBackend, user: userObj.USER.name})
+            } catch (error) {
+                console.log(error)
+            }
+        }
           updateDB()
         }, AUTOSAVE_INTERVAL)
         return () => clearTimeout(timer);
-      }, [editorState])
+      }, [editorState, studyObj.STUDY.studyID,dataToSaveBackend, userObj.USER.name])
 
       useEffect(() => {
+        async function getDataFromDB(){
+          try {
+            setLoading(true)
+              let result = await onGetDocumentation({studyID: studyObj.STUDY.studyID})
+              setLoading(false)
+              const contentState = convertFromRaw(JSON.parse(result.data.docs.conclusion)); //displaying data
+              setEditorState(EditorState.createWithContent(contentState))
+              
+          } catch (error) {
+              console.log(error)
+          }
+      }
         getDataFromDB()
-      }, [])
+      }, [studyObj.STUDY.studyID])
 
       const onEditorStateChange = (editorState) =>{
         setEditorState(editorState)

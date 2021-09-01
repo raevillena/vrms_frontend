@@ -1,5 +1,5 @@
 import { Row, Layout, Typography,Avatar, Col, notification } from 'antd'
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { useSelector} from 'react-redux';
 import {UserOutlined} from '@ant-design/icons';
 import Sidebar from '../components/components/Sidebar'
@@ -8,12 +8,13 @@ import { onUploadAvatar } from '../services/uploadAPI';
 import '../styles/CSS/Account.css'
 import ChangePassword from './ChangePassword';
 import MobileHeader from '../components/components/MobileHeader';
+import ManagerHeaderMobile from '../components/components/ManagerHeaderMobile';
 
 const { Header, Content, Sider } = Layout;
 
 const Account = () => {
     const userObj = useSelector(state => state.user) //reducer for user data
-    const[file, setFile] = useState(); //for uploading avatar
+   // const[file, setFile] = useState(); //for uploading avatar
     const [imgData, setImgData] = useState() //for displaying avatar
     const { Title } = Typography;
     let avatar = localStorage.getItem("avatarFilename")
@@ -38,7 +39,7 @@ const Account = () => {
             <Headers/>
           </Header>
           <div className="mobile-header">
-            <MobileHeader/>
+            {userObj.USER.category ==="user"? <MobileHeader/>: <ManagerHeaderMobile/>}
           </div>
           <Content style={{ margin: '24px 16px 0', minHeight: "100vh" }} > 
               <div style={{display: 'flex', flexDirection: 'row'}}>
@@ -51,7 +52,7 @@ const Account = () => {
                   <label for="file_input_id" style={{marginLeft: '20px'}}>Upload Photo</label>
                   <input type="file" id="file_input_id" accept="image/*" onChange={async e => {
                     const file = e.target.files[0]
-                    setFile(file)
+                    //setFile(file)
                     const reader = new FileReader();
                     reader.addEventListener("load", () => {
                       setImgData(reader.result);

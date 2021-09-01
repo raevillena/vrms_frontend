@@ -1,10 +1,10 @@
 
-import { Input, Button, Form, Row, Col, Typography, Spin} from 'antd';
+import { Input, Button, Form, Row, Col, Typography, Spin, notification} from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined} from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
 import {onUserLogin } from '@services/authAPI';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import '../styles/CSS/Userdash.css'
 
 
@@ -16,6 +16,14 @@ function Login() {
 
   const [user, setUser] = useState({email:"", password:""}); //for login state
   const [loading, setLoading] = useState(false)
+
+  const notif = (type, message) => {
+    notification[type]({
+      message: 'Notification',
+      description:
+        message,
+    });
+  };
 
   async function onSubmit(){
     const getUser = {
@@ -45,7 +53,8 @@ function Login() {
      history.push('/dash')
     
     } catch (error) {
-      alert(error.response.data.message)
+      setLoading(false)
+      notif("error", error.response.data.message)
       dispatch({
         type: "GET_ERRORS",
         message: error.response.data.message,

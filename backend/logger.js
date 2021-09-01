@@ -15,7 +15,7 @@ const logger = createLogger({
         new transports.File({
             filename: 'error.log',
             level: 'error',
-           
+            format: format.combine(format.timestamp(), format.json())
         })
     ]
 })

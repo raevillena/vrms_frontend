@@ -1,36 +1,40 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import Label from './Label'
 import DataGrid from './DataGrid'
 import { Layout, Row,Col, Typography} from 'antd'
 import Sidebar from '../components/components/Sidebar'
+import SidebarManager from '../components/components/ManagerSidebar'
 import Headers from '../components/components/Header'
 import Tasks from './DisplayTasks'
 import Documentation from './Documentation'
 import MobileHeader from '../components/components/MobileHeader';
+import ManagerHeaderMobile from '../components/components/ManagerHeaderMobile';
 import '../styles/CSS/Userdash.css'
-import StudyDash_Mobile from './StudyDash_mobile';
+import Mobiledash from './StudyDash_mobile';
+import { useSelector } from 'react-redux';
 
 
 const { Title } = Typography;
 
 const StudyDash = () => {
     const { Header, Content, Sider } = Layout;
+    const userObj = useSelector(state => state.user)
 
     return (
       <div>
         <div className="study-dash">
             <Layout>
             <Sider className='sidebar' >
-                    <Sidebar/>
+                    {userObj.USER.category === "user"? <Sidebar/> : <SidebarManager/>}
                 </Sider>
                <Layout >
                 <Header className="header" style={{ padding: 0, background:'#f2f2f2' }} >
                         <Headers/>
                 </Header>
                 <div className="mobile-header">
-                    <MobileHeader/>
+                    {userObj.USER.category === "user" ? <MobileHeader/> : <ManagerHeaderMobile/>}
                 </div>
-                    <Content style={{ margin: '24px 16px 0', overflow: 'initial' , minHeight: "100vh"}}>
+                    <Content style={{ margin: '24px 16px 0' , minHeight: "100vh"}}>
                         <Label/>
                         <Row gutter={16}>
                             <Col span={12}><Documentation/></Col>
@@ -44,7 +48,7 @@ const StudyDash = () => {
                </Layout>
             </Layout>
         </div>
-        <StudyDash_Mobile/>
+        <Mobiledash/>
         </div>
     )
 }

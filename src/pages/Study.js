@@ -1,60 +1,64 @@
-import { Input, Button, Form, Row, DatePicker, Space, Select} from 'antd';
+import { Input, Button, Form, DatePicker, Space, Select, notification, Layout, Modal, Tooltip} from 'antd';
 import React, {useState, useEffect} from 'react';
-import { onGetAllProject } from '../services/projectAPI';
 import { onStudyCreate } from '../services/studyAPI';
 import { onGetAllUsers } from '../services/userAPI';
+import { useSelector } from 'react-redux';
+import ManagerStudyDash from './ManagerStudyDash';
+import MobileHeader from '../components/components/ManagerHeaderMobile';
+import Sidebar from '../components/components/ManagerSidebar'
+import Headers from '../components/components/Header'
+import '../styles/CSS/Userdash.css'
 
+const { Header, Content, Sider } = Layout;
 
 const Study = () => {
     const { Option } = Select;
-    const [projectData, setProjectData] = useState([])
-    const [userData, setUserData] = useState([])
-    const [study, setStudy] = useState({title: "", projectName:"", deadline:"",assignee:"", budget: ""})
-    
-    async function getUsers(){
-        let resultUsers = await onGetAllUsers()
-        let x = resultUsers.data
-        let tempUserData = []
-        for(let i = 0; i < x.length; i++){ 
-            tempUserData.push({
-                key: x[i].name,
-                name:  x[i].name,
-                value:  x[i].name,
-            })
-        }
-        setUserData(tempUserData)
-    }
-  
-    async function getProjects(){
-        let resultProject = await onGetAllProject()
-        let y = resultProject.data
-        let tempProjectData = []
-        for(let i = 0; i < y.length; i++){ 
-            tempProjectData.push({
-                key: y[i].projectName,
-                name:  y[i].projectName,
-                value:  y[i].projectName,
-            });
-        }
-        setProjectData(tempProjectData)
-    }
-    
-    useEffect(async () => {
-        async function getData() {
-            getUsers()
-            getProjects()
-        }
+    const projectObj = useSelector(state => state.project) //redux for project
+    const userObj = useSelector(state => state.user)
 
-        await getData()
-    }, [])
+    const [userData, setUserData] = useState([])
+    const [study, setStudy] = useState({title: "", projectName: projectObj.PROJECT.projectName, deadline:"",assignee:"", budget: "", user: userObj.USER.name})
+    const [forProps, setForProps] = useState()
+    const [isModalVisible, setIsModalVisible] = useState(false);
     
+    const notif = (type, message) => {
+        notification[type]({
+          message: 'Notification',
+          description:
+            message,
+        });
+      };
+
+      const showModal = () => {
+        setIsModalVisible(true);
+      };
     
-  
-    const handleProjectChange = value => {
-        console.log(value)
-        setStudy({...study, projectName: value})
+      const handleOk = () => {
+        setIsModalVisible(false);
+      };
+    
+      const handleCancel = () => {
+        setIsModalVisible(false);
       };
       
+    
+    useEffect(() => {
+        async function getUsers(){
+            let resultUsers = await onGetAllUsers()
+            let x = resultUsers.data
+            let tempUserData = []
+            for(let i = 0; i < x.length; i++){ 
+                tempUserData.push({
+                    key: x[i].name,
+                    name:  x[i].name,
+                    value:  x[i].name,
+                })
+            }
+            setUserData(tempUserData)
+        }
+        getUsers()
+    }, [])
+    
 
     function handleChange(value) {   //for assigning user
         setStudy({...study, assignee: value})
@@ -63,88 +67,92 @@ const Study = () => {
 
     async function onSubmit(){
         try {
-            
-            console.log(study)
            let result =  await onStudyCreate(study) 
-           alert(result.data.message)
-           setStudy({title: "", projectName:"", deadline:"",assignee:""})
+           notif("success",result.data.message)
+           setStudy({title: "  ", projectName:" ", deadline:" ",assignee:" "})
+           setForProps(result.data.newStudy)
            //prompt study number and send email to those who are asigned to this project 
         } catch (error) {
-            alert(error.response.data.message)
+            notif("error", error.response.data.message)
         }
     }
 
     function onChange(date) {
-        console.log(date);
         setStudy({...study, deadline: date})
       }
 
     return (
         <div>
-            <Row justify="center" style={{minHeight: '100vh', background: '#f2f2f2'}}>
-                <Form style={{marginTop: '15%'}}>
-                <h1 style={{fontFamily: "Montserrat", fontWeight: "bolder"}}>CREATE STUDY</h1>
-                    <Form.Item name="Title" 
-                    rules={[
-                        {
-                        required: true,
-                        message: 'Please input your title!',
-                        },
-                    ]}>
-                        <Input placeholder="Enter Title" onChange={e => setStudy({...study, title: e.target.value})} value={study.title}></Input>
-                    </Form.Item>
-                    <Form.Item name="Project" 
+            <Layout  > 
+                <Sider  className="sidebar" >
+                    <Sidebar/>
+                </Sider>
+            <Layout >
+            <Header className="header" style={{ padding: 0, background:'#f2f2f2' }} >
+                <Headers/>
+            </Header>
+            <div className="mobile-header">
+                <MobileHeader/>
+            </div>
+             <Content style={{  minHeight: "200vh", minWidth: '100vh', background: '#f2f2f2' }} >
+                <h3 style={{marginTop: '10px', marginLeft: '25px', fontFamily: 'initial'}}>{projectObj.PROJECT.projectName}</h3>          
+                <ManagerStudyDash data={forProps}/> 
+                <Tooltip placement="top" title="Add Study">
+                    <Button className="add-button" onClick={showModal}>+</Button>
+                </Tooltip>
+                    <Modal title="Add Study" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                        <Form >
+                        <h1 style={{fontFamily: "Montserrat", fontWeight: "bolder"}}>CREATE STUDY</h1>
+                            <Form.Item 
                             rules={[
                                 {
-                                    required: true,
-                                    message: 'Please choose a project',
+                                required: true,
+                                message: 'Please input your title!',
                                 },
-                                ]}>
-                       <Select defaultValue={projectData[0]} onChange={handleProjectChange} placeholder="Project">
-                        {projectData.map(project => (
-                        <Option key={project.key} value={project.value}>{project.name}</Option>
-                        ))}
-                        </Select>
-                    </Form.Item>
-                    <Form.Item name="Budget" 
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please enterbudget!',
-                            },
                             ]}>
-                         <Input placeholder="Enter Budget" onChange={e => setStudy({...study, budget: e.target.value})} value={study.budget}></Input>
-                    </Form.Item>
-                    <Form.Item name="Deadline" 
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please input deadline of study!',
-                            },
-                            ]}>
-                        <label>Deadline</label>
-                         <Space direction="vertical">
-                        <DatePicker onChange={onChange}/>
-                         </Space>
-                    </Form.Item>
-                    <Form.Item name="Assignee" 
-                            rules={[
-                            {
-                                required: true,
-                                message: 'Please assign the study!',
-                            },
-                            ]}>
-                         <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} placeholder="Assign Study">
-                         {userData.map(user => (
-                            <Option key={user.key} value={user.value}>{user.name}</Option>
-                        ))}
-                         </Select>
-                    </Form.Item>
-                    <Row justify="center">
-                    <Button onClick={onSubmit} style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE STUDY</Button>
-                    </Row>
-                </Form>
-            </Row>
+                                <Input placeholder="Enter Title" onChange={e => setStudy({...study, title: e.target.value})} value={study.title}></Input>
+                            </Form.Item>
+                            <Form.Item  
+                                    rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please enter budget!',
+                                    },
+                                    ]}>
+                                <Input placeholder="Enter Budget" onChange={e => setStudy({...study, budget: e.target.value})} value={study.budget}></Input>
+                            </Form.Item>
+                            <Form.Item  
+                                    rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input deadline of study!',
+                                    },
+                                    ]}>
+                                <label>Deadline</label>
+                                <Space direction="vertical">
+                                <DatePicker onChange={onChange}/>
+                                </Space>
+                            </Form.Item>
+                            <Form.Item 
+                                    rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please assign the study!',
+                                    },
+                                    ]}>
+                                <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} placeholder="Assign Study">
+                                {userData.map(user => (
+                                    <Option key={user.key} value={user.value}>{user.name}</Option>
+                                ))}
+                                </Select>
+                            </Form.Item>
+                            <Button onClick={onSubmit} style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE STUDY</Button>
+                        </Form>
+                    </Modal>
+            </Content> 
+            </Layout>      
+            </Layout>
+            
         </div>
     )
 }

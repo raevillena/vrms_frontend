@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Input, Button, Form, Row, Typography} from 'antd';
+import { Input, Button, Form, Row, Typography, notification} from 'antd';
 import {MailOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -20,6 +20,13 @@ function useWindowSize(){
   return size;
 }
 
+const notif = (type, message) => {
+  notification[type]({
+    message: 'Notification',
+    description:
+      message,
+  });
+};
 
 const Forgotpassword = () => {
     const  history = useHistory();
@@ -30,10 +37,10 @@ const Forgotpassword = () => {
     async function handleOk()  {  
         try {
           await onForgotPassword(email) //checking email
-          alert("password reset link already sent to your email")
+          notif('info',"password reset link already sent to your email")
           setEmail({email: ""})
         } catch (error) {
-          alert(error.response.data.message)
+          notif('error',error.response.data.message)
         }
       };
 
