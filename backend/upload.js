@@ -1,10 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const multer = require("multer")
-const path = require('path')
 const User = require('./models/user')
-const fs = require('fs'),
- request = require('request');
  const logger = require('./logger')
 
 const storage = multer.diskStorage({
@@ -94,30 +91,6 @@ router.post("/documentation", upload2.single("file"), async (req, res, next) => 
     res.status(500).json({message: error.message})
   }
 });
-
-
-router.post('/downloadImage', async(req, res) => {
-  try {
-    const download = function(uri, filename, callback){
-      request.head(uri, function(err, res, body){
-        console.log('content-type:', res.headers['content-type']);
-        console.log('content-length:', res.headers['content-length']);
-    
-        request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
-      });
-    };
-
-    download(req.body.loc, 'vrms.jpg', function(){
-      console.log('done');
-    });
-
-  } catch (error) {
-      console.log("error happened here", error)
-      logger.log('error', error)
-  }
-})
-
-
 
 
  module.exports = router
