@@ -46,3 +46,19 @@ export async function onGetProjectforManager(body) {
         }
     }
 }
+
+
+export async function onDeleteProject(body) {
+    try {
+        return axios.post(`/v1/project/deleteProject`, body, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}

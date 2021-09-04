@@ -27,20 +27,16 @@ router.post('/createtask', async(req, res) => {
     })
     const doesExist = await Tasks.findOne({tasksTitle: req.body.title, studyName: req.body.studyName, status: true})
     if(doesExist){
-        console.log("Task Title already taken")
         res.status(400).json({message: "Task title already exist!"})
     } else{
         const newTask =  await tasks.save()
-        console.log(newTask)
         let completed = await Tasks.find({"studyName": req.body.studyName, "status": "COMPLETED", "active": true})
         let allTask =  await Tasks.find({"studyName": req.body.studyName, "active": true})
         let progress = Math.floor((completed.length/allTask.length)*100)
         Studies.findOneAndUpdate({"studyTitle": req.body.studyName}, {"progress": progress, "status": "ONGOING"}, function(err, studies){
             if(err){
                 logger.log('error', 'Error: /createTask, study')
-                console.log(err)
             }
-            console.log('studies', studies)
         })
         let  completedStudy =  await Studies.find({"projectName": req.body.projectName, "active": true, "status": "COMPLETED"})
         let allStudy = await Studies.find({"projectName": req.body.projectName, "active": true})
@@ -70,7 +66,6 @@ router.post('/getUserForTask', async(req, res) => {
             if(err){
                 logger.log('error', 'Error: /getUserForTask')
             } else{
-                console.log(studies)
                 res.status(201).json({
                     studies: studies
                 }) 
@@ -142,7 +137,6 @@ router.post('/postComment', async(req, res) => {
             }
         })
     } catch (error) {
-        console.log(error)
         logger.log('error', 'Error: /postComment')
     }
 })
@@ -153,7 +147,6 @@ router.post('/getAllComment', async(req, res) => {
         Comments.find({"taskId": req.body.taskId}, function(err, comments){
             if(err){
                 logger.log('error', 'Error: /getAllComment')
-                console.log(err)
             }else{
                 res.status(201).json({
                     comments
@@ -161,7 +154,6 @@ router.post('/getAllComment', async(req, res) => {
             }
         }) 
     } catch (error) {
-        console.log(error)
         logger.log('error', 'Error: /getAllComment')
     }
 })
@@ -170,7 +162,6 @@ router.post('/getAllComment', async(req, res) => {
 router.post('/onUpdateTask', async(req, res) => {
     try {
         let status = req.body.progress === 100 ? "COMPLETED": "ONGOING"
-        console.log(status, req.body.progress)
        await Tasks.findOneAndUpdate({"_id": req.body.taskId}, {"status": req.body.status},async function(err, task){
             if(err){
                 logger.log('error', 'Error: /onUpdateTAsk')
@@ -196,14 +187,12 @@ router.post('/onUpdateTask', async(req, res) => {
             }
         }) 
     } catch (error) {
-        console.log(error)
         logger.log('error', error)
     }
 })
 
 
 router.post('/onUpdateTaskUser', async(req, res) => {
-    console.log("update user", req.body)
     try {
        await Tasks.findOneAndUpdate({"_id": req.body.taskId}, {"status": req.body.status,"dateUpdated": Date.now()},function(err, task){
             if(err){
@@ -216,14 +205,12 @@ router.post('/onUpdateTaskUser', async(req, res) => {
             }
         }) 
     } catch (error) {
-        console.log(error)
         logger.log('error', 'Error: /onUpdateTaskUser')
     }
 })
 
 //delete task
 router.post('/onDeleteTask', async(req, res) => {
-    //console.log("delete task", req.body)
     try {
        await Tasks.findOneAndUpdate({"_id": req.body.taskId}, {"active": false,"dateUpdated": Date.now()}, async function(err, task){
             if(err){

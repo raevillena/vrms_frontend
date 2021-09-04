@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Table,Progress, Spin } from 'antd'
+import { Button, Table,Progress, Spin, Popconfirm, notification } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
-import { onGetProjectforManager } from '../services/projectAPI';
+import { onDeleteProject, onGetProjectforManager } from '../services/projectAPI';
 
 
 
@@ -16,6 +16,13 @@ const ManagerDash = (props) => {
   const [projectData, setProjectData]= useState([])
   const [loading, setLoading] = useState(false)
 
+  const notif = (type, message) => {
+    notification[type]({
+      message: 'Notification',
+      description:
+        message,
+    });
+  };
 
   useEffect(() => {
     async function getProjects(){
@@ -56,6 +63,13 @@ useEffect(() => {
     }
 }, [props.data])
 
+
+const handleRemove = (key) => { //deleting datasheet
+  let newData = projectData.filter((tempData) => {
+    return tempData.key !== key
+  })
+  setProjectData(newData)
+}
 
   const columns = [
     {
@@ -99,7 +113,8 @@ useEffect(() => {
       dataIndex: 'action',
       key: 'action',
       width: '15%',
-      render: (text, record, index) => <Button onClick = {
+      render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row', gap:'5px'}}>
+        <Button onClick = {
         (e) => {
           dispatch({
             type: "SET_PROJECT",
@@ -108,6 +123,18 @@ useEffect(() => {
          history.push('/studies')
         }
       } className="manageBtn">MANAGE</Button>
+
+      <Popconfirm title="Sure to delete?" onConfirm = {
+           async (key) => {
+                let id ={_id: record.key._id}
+                let result = await onDeleteProject(id)
+                await handleRemove(record.key)
+                notif("error", result.data.message)
+            }
+          }>
+      <Button danger>DELETE</Button>
+      </Popconfirm>
+      </div>
     },
   ];
 

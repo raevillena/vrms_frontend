@@ -37,7 +37,7 @@ const StudyDash = () => {
                     <Content style={{ margin: '24px 16px 0' , minHeight: "100vh"}}>
                         <Label/>
                         <Row gutter={16}>
-                            <Col span={12}><Documentation/></Col>
+                            <Col span={12} style={{overflowY: 'scroll'}}><Documentation/></Col>
                             <Col span={12} style={{overflowY: 'scroll', height: '740px'}}>
                                 <Title level={2}>Tasks</Title>
                                  <Tasks/>

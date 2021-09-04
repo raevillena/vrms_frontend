@@ -156,21 +156,6 @@ try {
     setToRemoveColumn(value)
   }
 
-  const successNotif = (type, message) => {
-    notification[type]({
-      message: 'Notification',
-      description:
-        message,
-    });
-  };
-
-  const errorNotif = (type, message) => {
-    notification[type]({
-      message: 'Notification',
-      description:
-        message,
-    });
-  };
 
   async function saveToDB(){
     const dataToSend ={
@@ -183,7 +168,6 @@ try {
     }
     let result = await onAddDatagrid(dataToSend)
     if(result.status === 200){
-      successNotif('success', result.data.message)
       setAddTable(result.data.data)
       setTitle('')
       setDescription('')
@@ -193,8 +177,10 @@ try {
         type: 'Checkbox'
       }])
       setData([])
+      notif('success', result.data.message)
+      setAddTableStyle('none')
     }else{
-     errorNotif('error', result.data.message)
+     notif('error', result.data.message)
     }
   }
 
@@ -211,7 +197,8 @@ try {
   };
 
   async function downloadCSV(){
-    let csv = ''
+    try {
+      let csv = ''
     let keys = Object.keys(data[0])
     keys.forEach((key) => {
       csv += key + ","
@@ -227,28 +214,22 @@ try {
       const element = document.createElement('a')
       const file = new Blob([csv], {type: 'data:text/csv;charset=utf-8'})
       element.href = URL.createObjectURL(file)
-      element.download = 'try.csv'
+      element.download = `${title}.csv`
       document.body.appendChild(element)
       element.click()
+      notif('success', "Download sucessful!")
+    } catch (error) {
+      notif('error', 'Download failed!')
+    }
+      
   }
 
   function showTable() { 
-
-    if (addTableStyle === "none") {
-      setAddTableStyle("block")
-    } else {
-      setAddTableStyle("none")
-      setTitle('')
-      setDescription('')
-      setTempCol([{
-        ...keyColumn('Checkbox', checkboxColumn),
-        title: 'Checkbox',
-        type: 'Checkbox'
-      }])
-      setData([])
-    }
+    setAddTableStyle("block")
   }
-  
+  function hideTable(){
+    setAddTableStyle("none")
+  }
   return (
     <div>
       <GridTable  data={addTable}/>
@@ -312,13 +293,13 @@ try {
                 <Modal title="View Image" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                     <div style={{display: 'grid' }}>
                       <Image
-                      src={`http://localhost:8080/datagrid/${imageFilename}`}
+                      src={`/datagrid/${imageFilename}`}
                       />
                     </div>
                 </Modal>
             <div style={{float:'right', rowGap:'0px', gap:'5px', display:'flex', marginTop:'20px'}}>
             <Button type="primary" disabled={disabledCreate} onClick={saveToDB}>Create</Button>
-            <Button danger onClick={showTable}>Exit</Button>
+            <Button danger onClick={hideTable}>Exit</Button>
             </div>
             </div>
         </div>

@@ -23,7 +23,6 @@ const NewPassword = () => {
     useEffect(() => {
       async function verifyToken() {
         let result = await onVerifyResetPasswordToken(token)
-        console.log(result)
       }
       if (token === undefined) {
         history.push('/')

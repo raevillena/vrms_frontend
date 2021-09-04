@@ -16,13 +16,12 @@ router.post('/login', async (req, res) => {
         }
 
         const user = await User.findOne({email: req.body.email})
-       // console.log(user)
         if (!user) {
             res.status(401).json({message: "User not found"})
         }
             let valid = await bcrypt.compare(req.body.password, user.password);
                 if(valid){
-                    const refreshDuration = '300000000'
+                    const refreshDuration = '3000000'
                     const accessToken = await generateAccessToken(user);
                     const refreshToken = await jwt.sign({user}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: refreshDuration})
 
@@ -61,7 +60,6 @@ router.post('/renewToken', async (req, res, next) =>{
         const refreshTokens = await Token.findOne({refreshToken: refToken}) //find refreshtoken if available in db
         const refreshToken = refreshTokens.refreshToken
         const user = await User.findOne({_id: refreshTokens.id})
-        console.log(user)
         if (refToken == null){
             return res.status(401).json('Unauthorized/Missing token')
         }
@@ -71,7 +69,6 @@ router.post('/renewToken', async (req, res, next) =>{
                     if (err) {
                     logger.log('error', err)  
                     }else{
-                    console.log("Database updated, expired token")
                     }
                 })
             }else{
@@ -90,12 +87,9 @@ router.post('/renewToken', async (req, res, next) =>{
 //Logout
 router.post('/logout', (req,res) =>{
     const refreshToken = req.body.refreshToken
-    console.log(refreshToken)
     Token.updateOne({refreshToken: refreshToken}, {isActive: false}, (err, res) =>{
         if (err) {
             logger.log('error', err)  
-        }else{
-            console.log("Updated DB")
         }
     })
 })

@@ -1,6 +1,6 @@
 
 import React, { useState , useEffect} from "react";
-import { Button, Spin } from "antd";
+import { Button, Spin, notification } from "antd";
 import { useSelector } from 'react-redux';
 import { onGetDocumentation, onUpdateMethodology } from "../services/studyAPI";
 import { Editor } from "react-draft-wysiwyg";
@@ -23,7 +23,13 @@ const Methodology = () => {
     const dataToSaveBackend = JSON.stringify(convertToRaw(content))
     const markup = draftToHtml(convertToRaw(content))
 
- 
+    const notif = (type, message) => {
+      notification[type]({
+        message: 'Notification',
+        description:
+          message,
+      });
+    };
 
     async function download(){
         try {
@@ -41,8 +47,9 @@ const Methodology = () => {
         fileDownload.download = `${studyObj.STUDY.title}Methodology.doc`;
         fileDownload.click();
         document.body.removeChild(fileDownload);
+        notif('success', 'Download sucessful!')
         } catch (error) {
-            console.log(error)
+            notif('error', 'Download Failed!')
         }
      }
 
@@ -51,18 +58,15 @@ const Methodology = () => {
           (resolve, reject) => {
             const xhr = new XMLHttpRequest();
             xhr.open('POST', '/v1/upload/documentation'); 
-         console.log('file', file)
             const data = new FormData();
             data.append('file', file);
             xhr.send(data);
             xhr.addEventListener('load', () => {
               const response = JSON.parse(xhr.responseText);
-              resolve({data: {link: `http://localhost:8080/documentation/${response.filename}`}})
-              console.log(response.filename);
+              resolve({data: {link: `/documentation/${response.filename}`}})
             });
             xhr.addEventListener('error', () => {
               const error = JSON.parse(xhr.responseText);
-              console.log(error)
               reject(error);
             });
           }
@@ -74,9 +78,9 @@ const Methodology = () => {
           async function updateDB(){
             try {
                 await onUpdateMethodology({studyID: studyObj.STUDY.studyID, methodology: dataToSaveBackend, user: userObj.USER.name})
-                console.log('updating methodology')
+                notif('success', "Document updated!")
             } catch (error) {
-                console.log(error)
+                notif('error', "Error in saving document!")
             }
           }
           updateDB()
@@ -94,7 +98,7 @@ const Methodology = () => {
               setEditorState(EditorState.createWithContent(contentState))
              
           } catch (error) {
-              console.log(error)
+              notif('error', "Error in displaying data!")
           }
       }
         getDataFromDB()

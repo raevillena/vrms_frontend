@@ -33,6 +33,7 @@ const EditDataGrid = (props) => {
   const [tempCol, setTempCol] = useState([]) //column state
   const [isModalVisible, setIsModalVisible] = useState(false) //modal for image viewing
   const [imageFilename, setImageFilename] = useState() //to view image
+  const [contextState, setContextState] = useState(false) //disable when saving
   const AUTOSAVE_INTERVAL = 30000;
   const columns = useMemo(() => tempCol, [tempCol]) //setting columns
 
@@ -71,6 +72,7 @@ const CameraComponent = React.memo(
               data.append("file", file)
               let result = await onUploadDataGrid(data) //uploading
               setRowData(result.data.filename)
+              notif('info', result.data.message)
             }
           }
            />
@@ -109,9 +111,11 @@ useEffect(() => {
         columns: columns
       }
       await onUpdateDatagrid(dataToSend)
-      console.log('db updated datagrid')
+      notif('success', 'Table updated!')
     }
+    setContextState(true)
     updateDB()
+    setContextState(false)
   }, AUTOSAVE_INTERVAL)
   return () => clearTimeout(timer);
 }, [data, userObj.USER.name, title, description, studyObj.STUDY.studyID, columns  ])
@@ -124,7 +128,6 @@ useEffect(() => {
       return
     }
     async function getEditData(){ //edit data
-      console.log(props)
       setLoading(true)
       let resultDB = await onEditDatagrid(props.data.id)
       let result = resultDB.data
@@ -143,7 +146,7 @@ useEffect(() => {
     }
     getEditData()
   } catch (error) {
-    notif('error', 'There is something wrong! Please try again!')
+    notif('error', 'There is something wrong! Unable to display data!')
   }
   
    }, [props.data])
@@ -242,19 +245,12 @@ useEffect(() => {
       data: data,
       columns: columns
     }
-    await onUpdateDatagrid(dataToSend)
+    let result = await onUpdateDatagrid(dataToSend)
+    notif('success', result.data.message)
   }
 
-
-  function showTableEdit() { //show/hide table edit component
-   // var x = document.getElementById("edittable");
-    if (display === "none") {
-      setDisplay("block")
-    } else {
-     setDisplay("none")
-      setTitle('')
-      setDescription('')
-    }
+  function hideTableEdit(){
+    setDisplay("none")
   }
 
   async function downloadCSV(){
@@ -277,7 +273,7 @@ useEffect(() => {
       element.download = `${title}.csv`
       document.body.appendChild(element)
       element.click()
-      notif('info', 'Downloaded!')
+      notif('success', 'Downloaded!')
   }
   
   return (
@@ -327,7 +323,7 @@ useEffect(() => {
         </div>  
         <div style={{marginTop:'20px'}}>
             {loading ?  <div className="spinner"><Spin /> </div>: 
-            <div><DynamicDataSheetGrid
+            <div disabled={contextState}><DynamicDataSheetGrid
                 data={data}
                 onChange={setData}
                 columns={columns}
@@ -335,13 +331,13 @@ useEffect(() => {
             />
               <Modal title="View Image" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
               <div style={{display: 'grid' }}>
-                <Image src={`http://localhost:8080/datagrid/${imageFilename}`}/>
+                <Image src={`/datagrid/${imageFilename}`}/>
               </div>
               </Modal>
               </div> }
         <div style={{float:'right', rowGap:'0px', gap:'5px', display:'flex', marginTop:'20px'}}>
           <Button type="primary" onClick={updateDB}>Save</Button>
-          <Button danger onClick={showTableEdit}>Exit</Button>
+          <Button danger onClick={hideTableEdit}>Exit</Button>
         </div>
         </div>   
       </div>

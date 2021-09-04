@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Table,Progress, Tag, Spin } from 'antd'
+import { Button, Table,Progress, Tag, Spin, Popconfirm, notification } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { onGetAllStudyforProject } from '../services/studyAPI';
+import { onDeleteStudy, onGetAllStudyforProject } from '../services/studyAPI';
 import moment from 'moment';
 
 
@@ -14,7 +14,13 @@ const ManagerStudyDash = (props) => {
   const [studyData, setStudyData]= useState([])
   const [loading, setLoading] = useState(false)
 
-
+  const notif = (type, message) => {
+    notification[type]({
+      message: 'Notification',
+      description:
+        message,
+    });
+  };
   
     
   useEffect(() => {
@@ -54,6 +60,13 @@ useEffect(() => {
     }])
     }
 }, [props.data])
+
+const handleRemove = (key) => { //deleting datasheet
+  let newData = studyData.filter((tempData) => {
+    return tempData.key !== key
+  })
+  setStudyData(newData)
+}
 
 
   const columns = [
@@ -123,7 +136,8 @@ useEffect(() => {
       dataIndex: 'action',
       key: 'action',
       width: '15%',
-      render: (text, record, index) => <Button onClick = {
+      render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row', gap:'5px'}}>
+      <Button onClick = {
         (e) => {
           dispatch({
             type: "SET_STUDY",
@@ -132,6 +146,18 @@ useEffect(() => {
          history.push('/datagrid')
         }
       } className="manageBtn">MANAGE</Button>
+
+      <Popconfirm title="Sure to delete?" onConfirm = {
+        async (key) => {
+             let id ={_id: record.key._id}
+            let result = await onDeleteStudy(id)
+             await handleRemove(record.key)
+             notif("error", result.data.message)
+         }
+       }>
+   <Button danger>DELETE</Button>
+   </Popconfirm>
+   </div>
     },
   ];
   

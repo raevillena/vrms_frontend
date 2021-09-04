@@ -9,23 +9,15 @@ const Sidebar = () => {
     let history= useHistory();
 
     const research = async () => {
-        try {
           history.push("/dash")
-        } catch (error) {
-          console.log(error)
-        }
       }
 
     const account = async () => {
-        try {
           history.push("/account")
-        } catch (error) {
-          console.log(error)
-        }
       }
     return (
         <div>
-             <img alt="" src={logo} className="logo"/>
+             <img alt="" src={logo} className="logo" />
           <Menu>
           <Menu.Item key="1" icon={<BookOutlined />} className="menu1" onClick={research}>
            Research

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { BrowserRouter, Switch, Redirect } from "react-router-dom";  
+import { BrowserRouter, Switch, Redirect, useLocation } from "react-router-dom";  
 import { useSelector, useDispatch } from 'react-redux';
 import LoginPage from '@pages/Login';
 import Userdash from '@pages/Userdash';
@@ -23,6 +23,7 @@ function App() {
   const errorObj = useSelector(state => state.error)
   const [loading, setLoading] = useState(true)
   
+
   const {AUTHENTICATED}  = authObj
  //authentication for public and private route
   useEffect(() => {
@@ -52,12 +53,10 @@ useEffect(()=>{
   async function renew(){
     setLoading(true)
   let token = {refreshToken : localStorage.getItem("refreshToken")}
-   console.log('updating access token')
   let result = await onRenewToken(token)
 
    if (result.status === 200) {
      localStorage.setItem("accessToken", result.data.accessToken);
-     console.log("access token updated")
      dispatch({
        type: "SET_USER",
        value: result.data.user.user
@@ -67,7 +66,6 @@ useEffect(()=>{
       value: true
    })
   }else {
-    console.log('auth')
      dispatch({
        type: "AUTH_ERROR"
      })
@@ -77,12 +75,12 @@ renew()
 setLoading(false)
 }, [errorObj, dispatch])
 
-
 useEffect(() => {
   if(loading === true){
     return <Spin style={{display: 'flex', justifyContent:'center', padding: '25%'}} />
   } 
 }, [loading])
+
 
   return (
     <BrowserRouter>

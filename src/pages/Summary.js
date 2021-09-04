@@ -3,7 +3,7 @@ import {Editor, EditorState} from 'draft-js';
 import { useSelector } from 'react-redux';
 import { onGetStudyForDoc, onUpdateSummary } from '../services/studyAPI';
 import moment from 'moment';
-import { Button, Spin, Input } from 'antd';
+import { Button, Spin, Input, notification } from 'antd';
 import { convertToRaw, convertFromRaw } from 'draft-js';
 import { LoadingOutlined } from '@ant-design/icons';
 import '../styles/CSS/Userdash.css'
@@ -22,6 +22,14 @@ const Summary = () => {
     const content = editorState.getCurrentContent(); 
     const dataToSaveBackend = JSON.stringify(convertToRaw(content))
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+
+    const notif = (type, message) => {
+        notification[type]({
+          message: 'Notification',
+          description:
+            message,
+        });
+      };
     
     function focusEditor() {
         editor.current.focus();
@@ -32,8 +40,9 @@ const Summary = () => {
             await onUpdateSummary({studyID: studyObj.STUDY.studyID, summary: dataToSaveBackend, user: userObj.USER.name, title: study.studyTitle, budget: study.budget})
             setUpdate(true)
             setUpdateTitleandBudget(true)
+            notif('success', 'Document updated!')
         } catch (error) {
-            console.log(error)
+            notif('error', 'Error in updating document!')
         }
     }
 
@@ -64,7 +73,7 @@ const Summary = () => {
                 setEditorState(EditorState.createWithContent(contentState))
                 
             } catch (error) {
-                console.log(error)
+                notif('error', 'Error in getting data!')
             }
         }
 

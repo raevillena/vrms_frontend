@@ -37,16 +37,12 @@ var upload2 = multer({storage: storage2})
 
 router.post("/avatar", upload.single("file"), async (req, res, next) => {
   try {
-    console.log(req.file)
     await User.updateOne({_id: req.body.user}, {avatarFilename: req.file.filename}, (err) =>{
       if (err) {
         logger.log('error', err)
-      }else{
-        console.log("filename updated")
       }
     })
     const user = await User.findOne({_id: req.body.user})
-    console.log(user)
     return res.status(201).json({
       message: "submitted successfully",
       user
@@ -60,7 +56,6 @@ router.post("/avatar", upload.single("file"), async (req, res, next) => {
 
 router.post("/datagrid", upload1.single("file"), async (req, res, next) => {
   try {
-    console.log('file', req.file.filename)
     const filename = req.file.filename
     return res.status(201).json({
       message: "Upload successful",
@@ -74,7 +69,6 @@ router.post("/datagrid", upload1.single("file"), async (req, res, next) => {
 
 router.post("/documentation", upload2.single("file"), async (req, res, next) => {
   try {
-    //console.log('file', req.file)
     const filename = req.file.filename
    if(!req.file) {
     res.send({
@@ -87,7 +81,6 @@ router.post("/documentation", upload2.single("file"), async (req, res, next) => 
       message: "Upload successful",
     });
   } catch (error) {
-    console.log('error', error)
     res.status(500).json({message: error.message})
   }
 });

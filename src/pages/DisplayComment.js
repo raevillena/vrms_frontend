@@ -64,7 +64,7 @@ const DisplayComment = (props) => {
                     author={<p>{comment.author}</p>}
                     avatar={
                         <Avatar
-                            src={`http://localhost:8080/avatar/${comment.avatar}`}
+                            src={`/avatar/${comment.avatar}`}
                             alt={comment.author}
                         />
                     }

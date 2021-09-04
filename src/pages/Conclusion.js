@@ -1,6 +1,6 @@
 
 import React, { useState , useEffect} from "react";
-import { Button, Spin } from "antd";
+import { Button, Spin, notification } from "antd";
 import { useSelector } from 'react-redux';
 import { onGetDocumentation, onUpdateConclusion } from "../services/studyAPI";
 import { Editor } from "react-draft-wysiwyg";
@@ -24,6 +24,13 @@ const Conclusion = () => {
     const dataToSaveBackend = JSON.stringify(convertToRaw(content))
     const markup = draftToHtml(convertToRaw(content))
 
+    const notif = (type, message) => {
+      notification[type]({
+        message: 'Notification',
+        description:
+          message,
+      });
+    };
 
     async function download(){
         try {
@@ -41,8 +48,9 @@ const Conclusion = () => {
         fileDownload.download = `${studyObj.STUDY.title}Conclusion.doc`;
         fileDownload.click();
         document.body.removeChild(fileDownload);
+        notif('success', 'Download successful!')
         } catch (error) {
-            console.log(error)
+            notif('error', 'Download Failed!')
         }
      }
 
@@ -51,18 +59,15 @@ const Conclusion = () => {
           (resolve, reject) => {
             const xhr = new XMLHttpRequest();
             xhr.open('POST', '/v1/upload/documentation'); 
-         console.log('file', file)
             const data = new FormData();
             data.append('file', file);
             xhr.send(data);
             xhr.addEventListener('load', () => {
               const response = JSON.parse(xhr.responseText);
-              resolve({data: {link: `http://localhost:8080/documentation/${response.filename}`}})
-              console.log(response.filename);
+              resolve({data: {link: `/documentation/${response.filename}`}})
             });
             xhr.addEventListener('error', () => {
               const error = JSON.parse(xhr.responseText);
-              console.log(error)
               reject(error);
             });
           }
@@ -74,8 +79,9 @@ const Conclusion = () => {
           async function updateDB(){
             try {
                 await onUpdateConclusion({studyID: studyObj.STUDY.studyID, conclusion: dataToSaveBackend, user: userObj.USER.name})
+                notif('success', 'Document Updated!')
             } catch (error) {
-                console.log(error)
+                notif('error', 'Error in updating document!')
             }
         }
           updateDB()
@@ -93,7 +99,7 @@ const Conclusion = () => {
               setEditorState(EditorState.createWithContent(contentState))
               
           } catch (error) {
-              console.log(error)
+              notif('error', 'Error in displaying data!')
           }
       }
         getDataFromDB()

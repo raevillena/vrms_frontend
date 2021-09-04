@@ -65,7 +65,6 @@ export async function onVerifyResetPasswordToken(token) {
                     } 
         });
     } catch (error) {
-        console.log(error)
         return {
             status: 'false',
             error: error
@@ -97,7 +96,6 @@ export async function onGetAllUsers() {
                     } 
         });
     } catch (error) {
-        console.log(error)
         return {
             status: 'false',
             error: error
@@ -113,7 +111,6 @@ export async function onGetAllManagers() {
                     } 
         });
     } catch (error) {
-        console.log(error)
         return {
             status: 'false',
             error: error

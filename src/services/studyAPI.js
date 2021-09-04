@@ -242,3 +242,17 @@ export async function onGetDownloadHistory(body) {
         }
     }
 }
+
+export async function onDeleteStudy(body) {
+    try {
+        return axios.post('/v1/studies/deleteStudy', body, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}

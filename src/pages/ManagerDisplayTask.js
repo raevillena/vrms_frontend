@@ -36,7 +36,6 @@ const ManagerDisplayTask = (props) => {
         async function getAllTask (){
             setloading(true)
             let resultTask = await onGetAllTaskManager({studyName: studyObj.STUDY.title})
-            console.log('res', resultTask)
             let loopTask = resultTask.data.tasks
             let tempTaskData = []
              for(let i = 0; i < loopTask.length; i++){ 
@@ -81,7 +80,6 @@ const ManagerDisplayTask = (props) => {
         setloading(true)
         let resultTask = await onGetAllTaskManager({studyName: studyObj.STUDY.title})
         setloading(false)
-        console.log('res', resultTask)
         let loopTask = resultTask.data.tasks
         let tempTaskData = []
          for(let i = 0; i < loopTask.length; i++){ 
@@ -106,7 +104,6 @@ const ManagerDisplayTask = (props) => {
     }, [props.data])
     
     async function callback(key) {
-        console.log('callback', key)
             setData(task[key||0].id)
       }
 
@@ -124,7 +121,6 @@ const ManagerDisplayTask = (props) => {
             }) 
             let progress = (complete.length+1)/task.length
             let progressDB =  Math.floor(progress*100)
-            console.log(progressDB)
             let result = await onUpdateTask({taskId: task[key||0].id, status: "COMPLETED", study: studyObj.STUDY.studyID, progress: progressDB, projectName: projectObj.PROJECT.projectName})
             notif('info', result.data.message)
             let newTask = [...task]
@@ -154,16 +150,16 @@ const ManagerDisplayTask = (props) => {
             <Collapse accordion onChange={callback} >
                 {task.map(tasks =>(<Panel header={tasks.taskTitle} key={tasks.key} extra={ tasks.status === "SUBMITTED" ? 
                     <div>
-                        <Popconfirm title="Are you sure to complete the task?" onConfirm={()=>markComplete(tasks.key)}>
-                            <Tooltip title="Click to complete task!" placement="top">
+                        <Popconfirm title="Are you sure?" onConfirm={()=>markComplete(tasks.key)}>
+                            <Tooltip title="Click to complete task!" placement="leftTop">
                             <Button disabled={tasks.status==="COMPLETED"? true: false} style={{background: '#A0BF85', borderRadius: '50px'}}>{tasks.status}</Button>
                             </Tooltip>
                         </Popconfirm>
                     </div> : 
                     <div>
                         <Button disabled={true} >{tasks.status}</Button>
-                        <Popconfirm title="Are you sure to delete task?" onConfirm={()=>deleteTask(tasks.key)}>
-                        <Tooltip title="Click to delete task!" placement="top">
+                        <Popconfirm title="Are you sure?" onConfirm={()=>deleteTask(tasks.key)}>
+                        <Tooltip title="Click to delete task!" placement="leftTop">
                             <Button danger icon={<DeleteFilled/>}></Button>
                         </Tooltip>
                         </Popconfirm>

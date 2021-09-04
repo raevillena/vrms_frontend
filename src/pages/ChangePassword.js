@@ -21,7 +21,6 @@ const ChangePassword = () => {
        //for change password
        async function onSubmit(){
         try {
-          console.log(userObj.USER._id)
            const data = {
              id : userObj.USER._id,
              newPass: password.newPassword,
@@ -35,7 +34,6 @@ const ChangePassword = () => {
                setPassword({oldPassword: "", newPassword: "", confrimPassword: ""})
            }
         } catch (error) {
-           console.log(error)
            notif('error', 'Invalid Password!')
         }
      }

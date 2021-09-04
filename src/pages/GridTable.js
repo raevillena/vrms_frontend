@@ -32,7 +32,6 @@ const GridTable = (props) => {
           return tempData.key !== key
         })
         setTableData(newData)
-        console.log("data", tableData)
       }
 
     const finaldata = useMemo(() => tableData, [tableData]) //final table data
@@ -61,10 +60,8 @@ const GridTable = (props) => {
   }, [studyObj.STUDY.studyID])
 
   const showModal = async(id) => {
-    console.log(id)
     setLoadingModal(true)
     let result = await onGetDownloadHistory({tableID: id._id})
-    console.log('download his', result.data.history)
     let history = result.data.history
     let tempHistory = []
         for(let i = 0; i < history.length; i++){ 
@@ -87,11 +84,9 @@ const GridTable = (props) => {
   };
 
   async function downloadCSV(data){
-    console.log('data', data)
     let toDownload = data[0].data
     let csv = ''
     let keys = Object.keys(data[0].data[0])
-    console.log('keys', keys)
     keys.forEach((key) => {
       csv += key + ","
     })
@@ -209,8 +204,7 @@ const GridTable = (props) => {
           <Popconfirm title="Sure to delete?" onConfirm = {
            async (key) => {
                 let id ={_id: record.key._id}
-                let result = await onDeleteDatagrid(id)
-                console.log('res',result)
+                await onDeleteDatagrid(id)
                 await handleRemove(record.key)
                 notif("error", "Deleted")
             }
@@ -218,7 +212,7 @@ const GridTable = (props) => {
           <Button danger icon={<DeleteFilled />}></Button>
         </Popconfirm>
         </Tooltip>
-        <Tooltip title='View Download History' placement='top'>
+        <Tooltip title='View Download History' placement='rightTop'>
           <Button onClick={()=>{
             let id ={_id: record.key._id}
             showModal(id)}} icon={<InfoCircleFilled />}/>

@@ -1,5 +1,5 @@
 
-import { Input, Button, Form, Row, Select, Checkbox } from 'antd';
+import { Input, Button, Form, Row, Select, Checkbox, notification } from 'antd';
 import React, {useState, useEffect} from 'react';
 import { onUserCreate } from '../services/userAPI';
 import { onGetAllProject } from '../services/projectAPI';
@@ -10,7 +10,13 @@ const Signup = () => {
     const [user, setUser] = useState({name: "", email:"", project:"", title:"",password:"", category: ""})
     const [projectData, setProjectData] = useState([]) //for showing all project
 
-
+    const notif = (type, message) => {
+        notification[type]({
+          message: 'Notification',
+          description:
+            message,
+        });
+      };
 
     useEffect( () => { //for showing all project
         async function getProjects(){ //for showing all project
@@ -37,10 +43,10 @@ const Signup = () => {
     async function onSubmit(){
         try {
            let res = await onUserCreate(user) 
-            alert(res.data.message)
+            notif('success', res.data.message)
             setUser({name: "", email:"", project:"", title:"",password:""})
         } catch (error) {
-            alert(error.response.data)
+            notif('error',error.response.data)
         }
     }
 

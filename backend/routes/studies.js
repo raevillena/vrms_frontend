@@ -10,6 +10,7 @@ const shortid = require('shortid')
 const logger = require('../logger')
 var HtmlDocx = require('html-docx-js');
 var fs = require('fs')
+const { message } = require('antd')
 
 //create study
 router.post('/createstudy', async(req, res) => {
@@ -32,20 +33,16 @@ router.post('/createstudy', async(req, res) => {
     })
         const doesExist = await Studies.findOne({studyTitle: req.body.title})
         if(doesExist){
-            console.log("Project name already taken")
             res.status(400).json({message: "Study title already exist!"})
         } else{
             const newStudy =  await study.save()
-            console.log(newStudy)
             let completed = await Studies.find({"projectName": req.body.projectName, "status": "COMPLETED", "active": true})
             let allTask =  await Studies.find({"projectName": req.body.projectName, "active": true})
             let progress = Math.floor((completed.length/allTask.length)*100)
-            Projects.findOneAndUpdate({"projectName": req.body.projectName}, {"progress": progress, "status": "ONGOING"}, function(err, proj){
+            Projects.findOneAndUpdate({"projectName": req.body.projectName,"active": true}, {"progress": progress, "status": "ONGOING"}, function(err, proj){
                 if(err){
                     logger.log('error', err)
-                    console.log(err)
                 }
-                console.log('studies', proj)
             })
             res.status(201).json({
                 message: `Study created with the id ${studyID}`,
@@ -95,7 +92,6 @@ router.post('/updateSummary', async(req, res) => {
     try {
      await Studies.findOneAndUpdate({"studyID": req.body.studyID} , {"summary": req.body.summary, "updatedBy": req.body.user, "studyTitle": req.body.title, "budget": req.body.budget}, function(err, study) {
             if(err){
-                console.log(err)
                 logger.log('error', err)
             } else{
                 res.send({study})
@@ -116,7 +112,6 @@ router.post('/updateIntroduction', async(req, res) => {
             Documentation.updateOne({"studyID": req.body.studyID}, {"introduction": req.body.introduction},
              function(err, docs){
                 if(err){
-                    console.log('inside',err)
                     logger.log('error', err)
                 }else{
                     Studies.updateOne({"studyID": req.body.studyID}, {"updatedBy": req.body.user}, function(err){
@@ -155,7 +150,6 @@ router.post('/updateMethodology', async(req, res) => {
             Documentation.updateOne({"studyID": req.body.studyID}, {"methodology": req.body.methodology},
              function(err, docs){
                 if(err){
-                    console.log(err)
                     logger.log('error', err)
                 }else{
                     Studies.updateOne({"studyID": req.body.studyID}, {"updatedBy": req.body.user}, function(err){
@@ -194,7 +188,6 @@ router.post('/updateResultsAndDiscussion', async(req, res) => {
             Documentation.updateOne({"studyID": req.body.studyID}, {"resultsAndDiscussion": req.body.resultsAndDiscussion},
              function(err, docs){
                 if(err){
-                    console.log(err)
                     logger.log('error', err)
                 }else{
                     Studies.updateOne({"studyID": req.body.studyID}, {"updatedBy": req.body.user}, function(err){
@@ -233,7 +226,6 @@ router.post('/updateConclusion', async(req, res) => {
             Documentation.updateOne({"studyID": req.body.studyID}, {"conclusion": req.body.conclusion},
              function(err, docs){
                 if(err){
-                    console.log(err)
                     logger.log('error', err)
                 }else{
                     Studies.updateOne({"studyID": req.body.studyID}, {"updatedBy": req.body.user}, function(err){
@@ -370,14 +362,13 @@ router.post('/updateDataGrid', async(req, res) => {
     try {
       await  Datagrid.updateOne({title: req.body.title, studyID: req.body.studyID, active:true}, {data: req.body.data, title: req.body.title, description: req.body.description, columns: req.body.columns, dateUpdated: Date.now(), updatedBy: req.body.user}, async(err) =>{
             if (err) {
-              console.log(err)
+                logger.log('error', 'Error: /updateDatagrid')
             }else{
               await  Studies.updateOne({studyID: req.body.studyID}, {dateUpdated: Date.now(), updatedBy: req.body.user}, (err) =>{
                     if(err){
                         logger.log('error', 'Error: /updateDatagrid')
-                    }else{
-                        console.log("Study data updated!")
                     }
+                    res.send({message: "Data updated!"})
                 })
             }
           })
@@ -419,11 +410,10 @@ router.post('/getdownloadHistory', async(req, res) => {
     }
 })
 
-
+//study for project
 router.post('/studyForProject', async(req, res) => {
-    console.log('body', req.body.projectName)
     try {
-        await Studies.find({"projectName": req.body.projectName}, function(err, projects) {
+        await Studies.find({"projectName": req.body.projectName, "active": true}, function(err, projects) {
             if(err){
                 logger.log('error', 'Error: /studyForProject')
             } else{
@@ -434,5 +424,22 @@ router.post('/studyForProject', async(req, res) => {
         logger.log('error', 'Error: /studyForProject')
     }
 })
+
+
+//delete study
+router.post("/deleteStudy", async(req,res) => {
+    console.log(req.body)
+    try {
+      await Studies.findOneAndUpdate({"_id": req.body._id},{"active": false}, function(err, study) {
+        if(err){
+            logger.log('error', 'Project delete')
+        } else{
+            res.send({message: "Deleted!"})
+        }
+      });
+    } catch (error) {
+      logger.log('error', 'Studies delete error')  
+    }
+  })
 
 module.exports = router

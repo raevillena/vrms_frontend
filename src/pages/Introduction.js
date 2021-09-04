@@ -1,6 +1,6 @@
 
 import React, { useState , useEffect} from "react";
-import { Button, Spin } from "antd";
+import { Button, Spin, notification } from "antd";
 import { useSelector } from 'react-redux';
 import { onGetDocumentation, onUpdateIntroduction } from "../services/studyAPI";
 import { Editor } from "react-draft-wysiwyg";
@@ -25,6 +25,13 @@ const Introduction = () => {
     const dataToSaveBackend = JSON.stringify(convertToRaw(content))
     const markup = draftToHtml(convertToRaw(content))
     
+    const notif = (type, message) => {
+      notification[type]({
+        message: 'Notification',
+        description:
+          message,
+      });
+    };
 
     async function download(){
        try {
@@ -42,8 +49,9 @@ const Introduction = () => {
        fileDownload.download = `${studyObj.STUDY.title}Introduction.doc`;
        fileDownload.click();
        document.body.removeChild(fileDownload);
+       notif('success', "Download Successful!")
        } catch (error) {
-           console.log(error)
+           notif('error', "Download Failed!")
        }
     }
 
@@ -52,8 +60,9 @@ const Introduction = () => {
           async function updateDB(){
               try {
                   await onUpdateIntroduction({studyID: studyObj.STUDY.studyID, introduction: dataToSaveBackend, user: userObj.USER.name})
+                  notif('success', "Document Updated!")
               } catch (error) {
-                  console.log(error)
+                  notif('error', 'Error in saving document!')
               }
           }
           updateDB()
@@ -72,7 +81,7 @@ const Introduction = () => {
               setEditorState(EditorState.createWithContent(contentState))
               
           } catch (error) {
-              console.log(error)
+              notif('error', 'Error in displaying data!')
           }
       }
         getDataFromDB()
@@ -87,18 +96,15 @@ const Introduction = () => {
           (resolve, reject) => {
             const xhr = new XMLHttpRequest();
             xhr.open('POST', '/v1/upload/documentation'); 
-         console.log('file', file)
             const data = new FormData();
             data.append('file', file);
             xhr.send(data);
             xhr.addEventListener('load', () => {
               const response = JSON.parse(xhr.responseText);
-              resolve({data: {link: `http://localhost:8080/documentation/${response.filename}`}})
-              console.log(response.filename);
+              resolve({data: {link: `/documentation/${response.filename}`}})
             });
             xhr.addEventListener('error', () => {
               const error = JSON.parse(xhr.responseText);
-              console.log(error)
               reject(error);
             });
           }

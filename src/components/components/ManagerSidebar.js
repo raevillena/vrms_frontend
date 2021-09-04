@@ -5,23 +5,15 @@ import { BookOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 
 
-const Sidebar = () => {
+const ManagerSidebar = () => {
     let history= useHistory();
 
     const project = async () => {
-        try {
-          history.push("/dash")
-        } catch (error) {
-          console.log(error)
-        }
+        history.push("/dash")
       }
 
     const account = async () => {
-        try {
-          history.push("/account")
-        } catch (error) {
-          console.log(error)
-        }
+        history.push("/account")
       }
     return (
         <div>
@@ -38,4 +30,4 @@ const Sidebar = () => {
     )
 }
 
-export default Sidebar
+export default ManagerSidebar

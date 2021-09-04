@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import { useSelector} from 'react-redux';
 import {UserOutlined} from '@ant-design/icons';
 import Sidebar from '../components/components/Sidebar'
+import ManagerSidebar from '../components/components/ManagerSidebar';
 import Headers from '../components/components/Header'
 import { onUploadAvatar } from '../services/uploadAPI';
 import '../styles/CSS/Account.css'
@@ -30,9 +31,9 @@ const Account = () => {
 
     return (
     <div>
-      <Layout  > 
+      <Layout> 
         <Sider className="sidebar" >
-          <Sidebar/>
+        {userObj.USER.category === "user"?  <Sidebar/> : <ManagerSidebar/>}
         </Sider>
         <Layout>
           <Header className="header" >
@@ -41,48 +42,44 @@ const Account = () => {
           <div className="mobile-header">
             {userObj.USER.category ==="user"? <MobileHeader/>: <ManagerHeaderMobile/>}
           </div>
-          <Content style={{ margin: '24px 16px 0', minHeight: "100vh" }} > 
-              <div style={{display: 'flex', flexDirection: 'row'}}>
-                <Row style={{rowGap:'0px', gap: '10px'}} >
+          <Content className="content" > 
+            <div className="content-col" >
+              <Row style={{gap: '10px'}} >
                 <div style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat"}}>
-                  <Row style={{marginTop:'10px', marginLeft: '10px', justifyContent:'center', alignItems:'center', margintTop: '20px'}}>
-                    <Col span={10} >
-                  <div style={{marginLeft:'10px', marginTop:'15px'}} >
-                  <Avatar src={imgData||`http://localhost:8080/avatar/${avatar}`}  size={128} icon={<UserOutlined />} />
-                  <label for="file_input_id" style={{marginLeft: '20px'}}>Upload Photo</label>
-                  <input type="file" id="file_input_id" accept="image/*" onChange={async e => {
-                    const file = e.target.files[0]
-                    //setFile(file)
-                    const reader = new FileReader();
-                    reader.addEventListener("load", () => {
-                      setImgData(reader.result);
-                    });
-                    reader.readAsDataURL(file)
-                    const data = new FormData()
-                    data.append("user", userObj.USER._id )
-                    data.append("file", file)
-                    let result = await onUploadAvatar(data)
-                    localStorage.setItem("avatarFilename", result.data.user.avatarFilename)
-                    notif('info', result.data.message)
+                  <Row style={{marginTop:'10px', marginLeft: '10px', justifyContent:'center', alignItems:'center', margintTop: '20px', display:'flex', gap:'20px', marginRight:'20px', marginBottom:'20px'}}>
+                  <div style={{marginLeft:'10px', marginTop:'15px', display:'grid'}} >
+                    <Avatar src={imgData||`/avatar/${avatar}`}  size={128} icon={<UserOutlined />} />
+                    <label for="file_input_id" style={{marginLeft: '20px'}}>Upload Photo</label>
+                    <input type="file" id="file_input_id" accept="image/*" onChange={async e => {
+                      const file = e.target.files[0]
+                      //setFile(file)
+                      const reader = new FileReader();
+                      reader.addEventListener("load", () => {
+                        setImgData(reader.result);
+                      });
+                      reader.readAsDataURL(file)
+                      const data = new FormData()
+                      data.append("user", userObj.USER._id )
+                      data.append("file", file)
+                      let result = await onUploadAvatar(data)
+                      localStorage.setItem("avatarFilename", result.data.user.avatarFilename)
+                      notif('info', result.data.message)
+                    }
                   }
-                }
-                  ></input>
+                    ></input>
                   </div>
-                  </Col>
-                  <Col span={14}>
                     <div style={{justifyContent:'center', display:'grid', alignItems:'center'}}>
                     <Title style={{margin: '0px'}} level={3}>{userObj.USER.name}</Title>
                     <p style={{margin: '0px'}}>{userObj.USER.title}</p>
                     <p style={{margin: '0px'}}>{userObj.USER.project}</p>
                     <p style={{margin: '0px'}}>{userObj.USER.email}</p>
                     </div>
-                    </Col>
                   </Row>
                 </div>
-                <ChangePassword/>
-            </Row>
-          </div>
-        </Content>
+                <div><ChangePassword/></div>
+              </Row>
+            </div>
+          </Content>
         
       </Layout>      
       </Layout>

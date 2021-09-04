@@ -11,3 +11,12 @@
 {"errors":{"budget":{"stringValue":"\"test\"","valueType":"string","kind":"Number","value":"test","path":"budget","reason":{"generatedMessage":true,"code":"ERR_ASSERTION","actual":false,"expected":true,"operator":"=="},"name":"CastError","message":"Cast to Number failed for value \"test\" (type string) at path \"budget\""}},"_message":"Studies validation failed","level":"error","timestamp":"2021-08-31T12:51:54.533Z"}
 {"errors":{"createdBy":{"name":"ValidatorError","message":"Path `createdBy` is required.","properties":{"message":"Path `createdBy` is required.","type":"required","path":"createdBy"},"kind":"required","path":"createdBy"},"updatedBy":{"name":"ValidatorError","message":"Path `updatedBy` is required.","properties":{"message":"Path `updatedBy` is required.","type":"required","path":"updatedBy"},"kind":"required","path":"updatedBy"}},"_message":"Studies validation failed","level":"error","timestamp":"2021-08-31T12:53:15.612Z"}
 {"level":"error","timestamp":"2021-09-01T03:14:50.355Z"}
+{"level":"error","timestamp":"2021-09-02T03:13:57.676Z"}
+{"level":"error","timestamp":"2021-09-02T05:55:15.440Z"}
+{"level":"error","timestamp":"2021-09-03T00:46:03.118Z"}
+{"level":"error","timestamp":"2021-09-03T02:56:32.697Z"}
+{"level":"error","message":"Error: /createUSer - ValidationError: title: Path `title` is required., category: Path `category` is required.","timestamp":"2021-09-03T02:58:31.791Z"}
+{"level":"error","timestamp":"2021-09-03T02:58:50.321Z"}
+{"level":"error","timestamp":"2021-09-03T03:00:05.048Z"}
+{"level":"error","timestamp":"2021-09-03T03:00:19.085Z"}
+{"level":"error","message":"Create project error!","timestamp":"2021-09-03T14:58:25.686Z"}

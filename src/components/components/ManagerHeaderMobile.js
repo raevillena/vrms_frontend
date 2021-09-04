@@ -1,11 +1,11 @@
 import React from 'react'
-import {  Menu } from 'antd'
+import {  Menu, notification } from 'antd'
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { onUserLogout } from '../../services/authAPI';
 import { UserOutlined, BookOutlined, MenuOutlined } from '@ant-design/icons';
 import logo from '../images/logo.png'
-import '/Users/user/vrms/vrms_frontend/src/styles/CSS/Userdash.css'
+import '../../styles/CSS/Userdash.css'
 
 
 const ManagerHeaderMobile = () => {
@@ -13,6 +13,14 @@ const ManagerHeaderMobile = () => {
     const dispatch = useDispatch();
 
     const {SubMenu}= Menu
+
+    const notif = (type, message) => {
+      notification[type]({
+        message: 'Notification',
+        description:
+          message,
+      });
+    };
 
     const handleLogout = async () => { 
         try {
@@ -30,25 +38,16 @@ const ManagerHeaderMobile = () => {
          })
           history.push('/')
         } catch (error) {
-          console.error(error)
-          alert(error.response.data.error);
+          notif('error',error.response.data.error);
         }
       };
 
       const studies = async() => {
-          try {
-              history.push('/dash')
-          } catch (error) {
-              console.log(error)
-          }
+        history.push('/dash')
       }
 
     const account = async () => {
-        try {
-          history.push("/account")
-        } catch (error) {
-          console.log(error)
-        }
+        history.push("/account")
       }
 
     return (

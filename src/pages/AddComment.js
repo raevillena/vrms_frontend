@@ -22,7 +22,6 @@ const AddComment = (props) => {
 
     async function handleSubmit(){
         let result = await onAddComment({taskID: task, comment, studyID: studyObj.STUDY.studyID})
-        console.log(result)
         setComment({...comment, value: ''})
        forProps = {task, result}
     }
@@ -39,7 +38,7 @@ const AddComment = (props) => {
         <Comment
           avatar={
             <Avatar
-              src={`http://localhost:8080/avatar/${avatar}`}
+              src={`/avatar/${avatar}`}
               alt={userObj.USER.name}
             />
           }

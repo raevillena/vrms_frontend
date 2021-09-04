@@ -57,9 +57,7 @@ const AddTask = () => {
 
     useEffect(() => {
         async function onGetUser(){
-            console.log(studyObj.STUDY.studyName)
             let resultUsers = await onGetUserForTask({study: studyObj.STUDY.title})
-            console.log(resultUsers)
             let x = resultUsers.data.studies[0].assignee
             let tempUserData = []
             for(let i = 0; i < x.length; i++){ 
@@ -69,7 +67,6 @@ const AddTask = () => {
                     value:  x[i],
                 })
             }
-            console.log(tempUserData)
             setUserData(tempUserData)
         }
        onGetUser()
