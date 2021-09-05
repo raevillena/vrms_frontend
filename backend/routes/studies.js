@@ -276,6 +276,7 @@ router.post('/getDocumentation', async(req, res) => {
 //updating the datagrid in database
 router.post('/addDatagrid', async(req, res) => {
     try {
+        const id = shortid.generate() 
         const newDatagrid = new Datagrid({
             dateCreated: Date.now(),
             createdBy: req.body.user,
@@ -286,7 +287,8 @@ router.post('/addDatagrid', async(req, res) => {
             data: req.body.data,
             columns: req.body.columns,
             studyID: req.body.studyID,
-            active: true
+            active: true,
+           tableID: id
         })
        const doesExist = await Datagrid.findOne({title: req.body.title, studyID: req.body.studyID, active:true}) //status
        if(doesExist){
@@ -296,7 +298,7 @@ router.post('/addDatagrid', async(req, res) => {
             if(err){
                 logger.log('error', 'Error: /addDatagrid')
             }else{
-                await newDatagrid.save()
+               await newDatagrid.save()
                 res.status(200).json({data: newDatagrid, message: "Table saved!"})
             }
         })
@@ -324,7 +326,7 @@ router.post('/getDataGrid', async(req, res) => {
 //edit datagrid
 router.post('/editDataGrid', async(req, res) => {
     try {
-      await  Datagrid.find({"_id": req.body._id, "active": true}, function(err, grid) {
+      await  Datagrid.find({"tableID": req.body.tableID, "active": true}, function(err, grid) {
             if(err){
                 logger.log('error', 'Error: /editDatagrid')
             } else{

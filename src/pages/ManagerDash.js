@@ -34,12 +34,13 @@ const ManagerDash = (props) => {
             tempProjectData.push({
                 key:  projectResult[i],
                 projectID:  projectResult[i].projectID,
-                projectLeader:  projectResult[i].assignee,
+                projectLeader:  [projectResult[i].assignee],
                 projectName:  projectResult[i].projectName,
                 dateCreated: moment( projectResult[i].dateCreated).format('MM-DD-YYYY'),
                 dateUpdated: moment( projectResult[i].dateUpdated).format('MM-DD-YYYY'),
                 progress:  projectResult[i].progress,
             });
+            
           }
         setProjectData(tempProjectData)
         setLoading(false)
@@ -54,7 +55,7 @@ useEffect(() => {
     }else{
     setProjectData([...projectData, {key: projectData.length + 1,
         projectID:props.data.projectID,
-        projectLeader: props.data.assignee,
+        projectLeader: [props.data.assignee],
         projectName: props.data.projectName,
         dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
         dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
@@ -92,6 +93,13 @@ const handleRemove = (key) => { //deleting datasheet
       dataIndex: 'projectLeader',
       key: 'projectLeader',
       width: '15%',
+      render: ([leader]) => leader.map( lead =>
+        <div style={{display: 'grid'}}>
+        <p>{lead}</p>
+      </div>
+        )
+      
+      
     },
     {
       title: 'Project Name',
@@ -104,7 +112,7 @@ const handleRemove = (key) => { //deleting datasheet
       title: 'Progress',
       dataIndex: 'progress',
       key: 'progress',
-      width: '10%',
+      width: '15%',
       render: progress =>
        <Progress percent={progress} size="small" />,
     },
@@ -112,7 +120,7 @@ const handleRemove = (key) => { //deleting datasheet
       title: 'Action',
       dataIndex: 'action',
       key: 'action',
-      width: '15%',
+      width: '20%',
       render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row', gap:'5px'}}>
         <Button onClick = {
         (e) => {
@@ -140,7 +148,7 @@ const handleRemove = (key) => { //deleting datasheet
 
     return (
     <div>      
-        {loading?  <Spin className="spinner" /> :<Table size="small" scroll={{ x: 800, y: 500 }} dataSource={projectData} columns={columns} style={{margin: '15px'}}></Table> }
+        {loading?  <Spin className="spinner" /> :<Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={projectData} columns={columns} style={{margin: '15px'}}></Table> }
     </div>
     )
 }

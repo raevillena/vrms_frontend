@@ -1,19 +1,29 @@
 import React, {  useState, useEffect } from 'react';
-import { Comment, Tooltip, Avatar, Button } from 'antd';
+import { Comment, Tooltip, Avatar, Button, notification, Spin } from 'antd';
 import moment from 'moment';
 import { onGetALlComment } from '../services/taskAPI';
 import '../styles/CSS/Userdash.css'
+import { LoadingOutlined } from '@ant-design/icons';
+
 
 
 const DisplayComment = (props) => {
     const [comments, setComments] = useState([])
    const [length, setLength] = useState(3)
-    
+   const [loading, setLoading] = useState(false)
+   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />; 
+
+   const notif = (type, message) => {
+    notification[type]({
+      message: 'Notification Title',
+      description:
+        message,
+    });
+  };
 
    async function getAllComments(){
-    //  setLoading(true)
+      setLoading(true)
       let result = await onGetALlComment({taskId: props.data.task})
-    //  setLoading(false)
       let tempCommentData = []
       
       let commentLoop = result.data.comments
@@ -26,6 +36,7 @@ const DisplayComment = (props) => {
           });
         }
         setComments(tempCommentData)
+        setLoading(false)
   }
 
     useEffect( () => {
@@ -55,9 +66,13 @@ const DisplayComment = (props) => {
     async function addLength(){
         setLength(length + 2)
         getAllComments()
+        if(length >= comments.length){
+          notif('info', 'All comments already displayed!')
+        }
     }
     return (
         <div>
+          {loading? <Spin indicator={antIcon} className="spinner" /> :
         <div > 
             {comments.slice(0,length).map(comment =>(
               <Comment
@@ -84,7 +99,7 @@ const DisplayComment = (props) => {
             <div id="showComment" style={{display: 'flex', justifyContent: 'center'}}>
                 <Button onClick={addLength}>load more</Button>
             </div>
-        </div>
+        </div>}
         </div>
     )
 }

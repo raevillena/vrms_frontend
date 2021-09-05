@@ -73,7 +73,7 @@ const Summary = () => {
                 setEditorState(EditorState.createWithContent(contentState))
                 
             } catch (error) {
-                notif('error', 'Error in getting data!')
+               // notif('error', 'Error in getting data!')
             }
         }
 

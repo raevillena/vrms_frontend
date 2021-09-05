@@ -58,14 +58,14 @@ const Userdash = () => {
       title: 'Date Created',
       dataIndex: 'dateCreated',
       key: 'dateCreated',
-      width: '15%',
+      width: '10%',
       
     },
     {
       title: 'Updated',
       dataIndex: 'dateUpdated',
       key: 'dateUpdated',
-      width: '15%',
+      width: '10%',
     },
     {
       title: 'Title',
@@ -78,7 +78,7 @@ const Userdash = () => {
       title: 'Progress',
       dataIndex: 'progress',
       key: 'progress',
-      width: '10%',
+      width: '15%',
       render: () =>
        <Progress percent={studyData.progress} size="small" />,
     },
@@ -91,7 +91,7 @@ const Userdash = () => {
         { text: 'Ongoing', value: 'ONGOING' },
       ],
       onFilter: (value, record) => record.status.indexOf(value) === 0,
-      width: '10%',
+      width: '15%',
       render: status => (
         <span>
           {status.map(status => {
@@ -138,7 +138,7 @@ return (
           <MobileHeader/>
         </div>
       <Content style={{  minHeight: "200vh", minWidth: '100vh', background:'#f2f2f2' }} >          
-          {loading?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 800, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
+          {loading?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
         </Content> 
       </Layout>      
     </Layout>: 

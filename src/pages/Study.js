@@ -1,4 +1,4 @@
-import { Input, Button, Form, DatePicker, Space, Select, notification, Layout, Modal, Tooltip} from 'antd';
+import { Input, Button, Form, DatePicker, Space, Select, notification, Layout, Modal, Tooltip, InputNumber} from 'antd';
 import React, {useState, useEffect} from 'react';
 import { onStudyCreate } from '../services/studyAPI';
 import { onGetAllUsers } from '../services/userAPI';
@@ -81,6 +81,11 @@ const Study = () => {
         setStudy({...study, deadline: date})
       }
 
+    function budgetChange(value){
+        setStudy({...study, budget: value})
+    }
+
+    
     return (
         <div>
             <Layout  > 
@@ -119,7 +124,11 @@ const Study = () => {
                                         message: 'Please enter budget!',
                                     },
                                     ]}>
-                                <Input placeholder="Enter Budget" onChange={e => setStudy({...study, budget: e.target.value})} value={study.budget}></Input>
+                                <label style={{fontWeight:'bolder'}}>Budget: </label>
+                                <InputNumber style={{width:'250px'}} placeholder="Enter Budget" min={1} max={1000000000}
+                                formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                                onChange={budgetChange} ></InputNumber>
                             </Form.Item>
                             <Form.Item  
                                     rules={[
@@ -128,7 +137,7 @@ const Study = () => {
                                         message: 'Please input deadline of study!',
                                     },
                                     ]}>
-                                <label>Deadline</label>
+                                <label style={{fontWeight:'bolder'}}>Deadline: </label>
                                 <Space direction="vertical">
                                 <DatePicker onChange={onChange}/>
                                 </Space>

@@ -6,7 +6,7 @@ import { DynamicDataSheetGrid,
   checkboxColumn,
   textColumn,
   keyColumn} from 'react-datasheet-grid';
-import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, EyeFilled } from '@ant-design/icons';
+import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, EyeFilled, LoadingOutlined } from '@ant-design/icons';
 import { onEditDatagrid } from '../services/studyAPI';
 import { onUploadDataGrid } from '../services/uploadAPI';
 import '../styles/CSS/Userdash.css'
@@ -33,10 +33,11 @@ const EditDataGrid = (props) => {
   const [tempCol, setTempCol] = useState([]) //column state
   const [isModalVisible, setIsModalVisible] = useState(false) //modal for image viewing
   const [imageFilename, setImageFilename] = useState() //to view image
-  const [contextState, setContextState] = useState(false) //disable when saving
-  const AUTOSAVE_INTERVAL = 30000;
+  const [AUTOSAVE_INTERVAL, setAUTOSAVE_INTERVAL] = useState(3000);
   const columns = useMemo(() => tempCol, [tempCol]) //setting columns
+  const [disabled, setDisabled] = useState(false); //disable div
 
+  const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
   const notif = (type, message) => {
     notification[type]({
@@ -46,6 +47,7 @@ const EditDataGrid = (props) => {
     });
   };
 
+  
 
 const checkColumnType= (key,title) => {
     switch(key) {
@@ -110,15 +112,15 @@ useEffect(() => {
         data: data,
         columns: columns
       }
-      await onUpdateDatagrid(dataToSend)
-      notif('success', 'Table updated!')
+      setDisabled(true)
+      let result = await onUpdateDatagrid(dataToSend)
+      notif('success', result.data.message)
+      setDisabled(false)
     }
-    setContextState(true)
     updateDB()
-    setContextState(false)
   }, AUTOSAVE_INTERVAL)
   return () => clearTimeout(timer);
-}, [data, userObj.USER.name, title, description, studyObj.STUDY.studyID, columns  ])
+}, [data, title, description, columns])
 
 
 
@@ -245,8 +247,10 @@ useEffect(() => {
       data: data,
       columns: columns
     }
+    setDisabled(true)
     let result = await onUpdateDatagrid(dataToSend)
     notif('success', result.data.message)
+    setDisabled(false)
   }
 
   function hideTableEdit(){
@@ -322,8 +326,11 @@ useEffect(() => {
           </div>
         </div>  
         <div style={{marginTop:'20px'}}>
-            {loading ?  <div className="spinner"><Spin /> </div>: 
-            <div disabled={contextState}><DynamicDataSheetGrid
+            {loading ?  <div className="spinner"><Spin indicator={antIcon}/> </div>: 
+            <div style={{
+              opacity: disabled ? 0.25 : 1,
+              pointerEvents: disabled ? "none" : "initial"
+            }}><DynamicDataSheetGrid
                 data={data}
                 onChange={setData}
                 columns={columns}

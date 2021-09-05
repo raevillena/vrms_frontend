@@ -74,20 +74,21 @@ const Conclusion = () => {
         );
       }
 
+      async function updateDB(){
+        try {
+            await onUpdateConclusion({studyID: studyObj.STUDY.studyID, conclusion: dataToSaveBackend, user: userObj.USER.name})
+            notif('success', 'Document Updated!')
+        } catch (error) {
+            notif('error', 'Error in updating document!')
+        }
+    }
+
     useEffect(() => {
         const timer = setTimeout(()=>{
-          async function updateDB(){
-            try {
-                await onUpdateConclusion({studyID: studyObj.STUDY.studyID, conclusion: dataToSaveBackend, user: userObj.USER.name})
-                notif('success', 'Document Updated!')
-            } catch (error) {
-                notif('error', 'Error in updating document!')
-            }
-        }
           updateDB()
         }, AUTOSAVE_INTERVAL)
         return () => clearTimeout(timer);
-      }, [editorState, studyObj.STUDY.studyID,dataToSaveBackend, userObj.USER.name])
+      }, [editorState])
 
       useEffect(() => {
         async function getDataFromDB(){
@@ -129,6 +130,7 @@ const Conclusion = () => {
                 />
             </div>
             <div style={{display:'flex', justifyContent:'flex-end', lineHeight: '20px', gap:'5px'}}>
+            <Button type='primary' onClick={updateDB}>Save</Button>
             <Button type='primary' onClick={download}>Download</Button>
             </div>
         </div>}

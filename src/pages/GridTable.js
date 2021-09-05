@@ -46,7 +46,7 @@ const GridTable = (props) => {
         for(let i = 0; i < x.length; i++){ 
           tempTableData.push({
             key: x[i],
-            tableID: x[i]._id,
+            tableID: x[i].tableID,
             title: x[i].title,
             description: x[i].description,
             dateCreated: moment(x[i].dateCreated).format('MM-DD-YYYY'),
@@ -111,7 +111,7 @@ const GridTable = (props) => {
         return
     }else{
     setTableData([...tableData, {key: tableData.length + 1,
-        tableID:props.data._id,
+        tableID:props.data.tableID,
         title: props.data.title,
         description: props.data.description,
         dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
@@ -126,7 +126,7 @@ const GridTable = (props) => {
         for(let i = 0; i < x.length; i++){ 
           tempTableData.push({
             key: x[i],
-            tableID: x[i]._id,
+            tableID: x[i].tableID,
             title: x[i].title,
             description: x[i].description,
             dateCreated: moment(x[i].dateCreated).format('MM-DD-YYYY'),
@@ -195,7 +195,7 @@ const GridTable = (props) => {
               <Tooltip title='Edit table' placement='rightTop'>
           <Button onClick = {
            async (e) => {
-                let id ={_id: record.key._id}
+                let id ={tableID: record.key.tableID}
                 setEditData({id:id, display: 'block'})
             }
           }   icon={<EditFilled />}></Button>
@@ -222,6 +222,21 @@ const GridTable = (props) => {
         },
       ];
 
+      const historyColumns=[
+        {
+          title: 'Downloader',
+          width: '50%',
+          dataIndex: 'downloadedBy',
+          key: 'downloadedBy',
+        },
+        {
+          title: 'Download Date',
+          width: '50%',
+          dataIndex: 'downloadDate',
+          key: 'downloadDate',
+        }
+      ]
+
 
 
     return (
@@ -234,11 +249,8 @@ const GridTable = (props) => {
             <Modal title="Add Study" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
               {loadingModal? <div className="spinner"><Spin /> </div> : <div>
                 {history.length === 0 ? <Empty/> : 
-                <div style={{justifyContent: 'center', alignItems: 'center'}}> 
-                  {history.map(hist => <div className="div-flex">
-                    <p>{hist.downloadedBy}</p>
-                    <p>{hist.downloadDate}</p>
-                  </div>)}
+                <div style={{justifyContent: 'center', alignItems: 'center', marginLeft:'20px'}}> 
+                  <Table pagination={false} scroll={{y: 500}} columns={historyColumns} dataSource={history} />
                 </div>
                 }
                 </div>}

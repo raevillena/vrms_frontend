@@ -15,7 +15,7 @@ import '../styles/CSS/Userdash.css'
 const Introduction = () => {
     const studyObj = useSelector(state => state.study) //study reducer
     const userObj = useSelector(state => state.user)
-    const AUTOSAVE_INTERVAL = 3000;
+    const AUTOSAVE_INTERVAL = 10000;
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
     const [editorState, setEditorState] = useState(EditorState.createEmpty())
@@ -55,21 +55,21 @@ const Introduction = () => {
        }
     }
 
+    async function updateDB(){
+      try {
+          await onUpdateIntroduction({studyID: studyObj.STUDY.studyID, introduction: dataToSaveBackend, user: userObj.USER.name})
+          notif('success', "Document Updated!")
+      } catch (error) {
+          notif('error', 'Error in saving document!')
+      }
+  }
     useEffect(() => {
         const timer = setTimeout(()=>{
-          async function updateDB(){
-              try {
-                  await onUpdateIntroduction({studyID: studyObj.STUDY.studyID, introduction: dataToSaveBackend, user: userObj.USER.name})
-                  notif('success', "Document Updated!")
-              } catch (error) {
-                  notif('error', 'Error in saving document!')
-              }
-          }
           updateDB()
         
         }, AUTOSAVE_INTERVAL)
         return () => clearTimeout(timer);
-      }, [editorState, studyObj.STUDY.studyID, dataToSaveBackend, userObj.USER.name ])
+      }, [editorState])
 
       useEffect(() => {
         async function getDataFromDB(){
@@ -133,6 +133,7 @@ const Introduction = () => {
                 />
             </div>
             <div style={{display:'flex', justifyContent:'flex-end', lineHeight: '20px', gap:'5px'}}>
+            <Button type='primary' onClick={updateDB}>Save</Button>
             <Button type='primary' onClick={download}>Download</Button>
             </div>
         </div>}

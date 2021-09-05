@@ -73,16 +73,17 @@ const Methodology = () => {
         );
       }
 
+      async function updateDB(){
+        try {
+            await onUpdateMethodology({studyID: studyObj.STUDY.studyID, methodology: dataToSaveBackend, user: userObj.USER.name})
+            notif('success', "Document updated!")
+        } catch (error) {
+            notif('error', "Error in saving document!")
+        }
+      }
+
     useEffect(() => {
         const timer = setTimeout(()=>{
-          async function updateDB(){
-            try {
-                await onUpdateMethodology({studyID: studyObj.STUDY.studyID, methodology: dataToSaveBackend, user: userObj.USER.name})
-                notif('success', "Document updated!")
-            } catch (error) {
-                notif('error', "Error in saving document!")
-            }
-          }
           updateDB()
         }, AUTOSAVE_INTERVAL)
         return () => clearTimeout(timer);
@@ -128,6 +129,7 @@ const Methodology = () => {
                 />
             </div>
             <div style={{display:'flex', justifyContent:'flex-end', lineHeight: '20px', gap:'5px'}}>
+            <Button type='primary' onClick={updateDB}>Save</Button>
             <Button type='primary' onClick={download}>Download</Button>
             </div>
         </div>}

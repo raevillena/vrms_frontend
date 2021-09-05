@@ -41,6 +41,10 @@ const DatagridSchema = new mongoose.Schema({
     },
     active:{
         type: Boolean
+    },
+    tableID:{
+        type: String,
+        require: true
     }
 })
 

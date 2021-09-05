@@ -48,7 +48,7 @@ const DisplayTasks = () => {
                  deadline: moment(loopTask[i].deadline).format('MM-DD-YYYY HH:MM:SS'),
                  taskTitle: loopTask[i].tasksTitle,
                  taskDescription: loopTask[i].tasksDescription,
-                 assignee: loopTask[i].assignee,
+                 assignee: [loopTask[i].assignee],
                  status: loopTask[i].status
                });
              }
@@ -105,7 +105,7 @@ return (
                         </div>
                         <div style={{display: 'flex', gap: '5px',lineHeight:'2px'}}>
                             <label style={{fontWeight:'bold'}}>Assignee:</label>
-                            <p>{tasks.assignee}</p>
+                            <p>{tasks.assignee}</p> 
                         </div>
                         <div style={{display: 'flex', gap: '5px', lineHeight:'2px'}}>
                             <label style={{fontWeight:'bold'}}>Adviser:</label>

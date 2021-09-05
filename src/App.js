@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { BrowserRouter, Switch, Redirect, useLocation } from "react-router-dom";  
+import { BrowserRouter, Switch, Redirect, Route } from "react-router-dom";  
 import { useSelector, useDispatch } from 'react-redux';
 import LoginPage from '@pages/Login';
 import Userdash from '@pages/Userdash';
@@ -14,6 +14,7 @@ import ResetPassword from '@pages/NewPassword'
 import { onRenewToken } from './services/authAPI';
 import {Spin} from 'antd'
 import ManagerStudyDash from '@pages/Study';
+import PageNotFound from '@pages/PageNotFound';
 
 
 
@@ -22,6 +23,7 @@ function App() {
   const authObj = useSelector(state => state.auth)
   const errorObj = useSelector(state => state.error)
   const [loading, setLoading] = useState(true)
+
   
 
   const {AUTHENTICATED}  = authObj
@@ -82,6 +84,7 @@ useEffect(() => {
 }, [loading])
 
 
+
   return (
     <BrowserRouter>
     <Switch>
@@ -93,7 +96,10 @@ useEffect(() => {
       <PrivateRoute path="/studies" exact component={ManagerStudyDash} isAuthenticated={AUTHENTICATED} />
       <PrivateRoute path="/datagrid" exact component={StudyDash} isAuthenticated={AUTHENTICATED}/>
       <PrivateRoute path="/account" exact component={Account} isAuthenticated={AUTHENTICATED}/>
-      <Redirect to={AUTHENTICATED ? '/dash' : '/'} />
+      <Route path='*'>
+       <PageNotFound/>
+      </Route>
+      <Redirect to={AUTHENTICATED ? `/${window.location.pathname}` : '/'} />
     </Switch>
     </BrowserRouter> 
   );

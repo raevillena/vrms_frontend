@@ -135,7 +135,7 @@ const handleRemove = (key) => { //deleting datasheet
       title: 'Action',
       dataIndex: 'action',
       key: 'action',
-      width: '15%',
+      width: '20%',
       render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row', gap:'5px'}}>
       <Button onClick = {
         (e) => {
@@ -164,7 +164,7 @@ const handleRemove = (key) => { //deleting datasheet
 
 return (
   <div>
-        {loading?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 800, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
+        {loading?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
   </div>
     )
 }
