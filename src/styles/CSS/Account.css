@@ -1,0 +1,38 @@
+label{
+    cursor: pointer;
+  }
+  
+  label:hover{
+   
+    text-decoration: underline;
+  }
+  
+  #file_input_id{
+    display:none;
+  }
+
+  input[type="file"] {
+    display: none;
+}
+
+.content{
+  min-height: 200vh;
+  min-width: 120vh;
+  margin-left: 20px;
+  display: flex;
+  flex-direction: row;
+  background-color: #f2f2f2;
+}
+
+
+@media screen and (max-width: 768px) {
+  .content{
+    min-height: 200vh;
+    margin-left: 20px;
+    margin-right: 20px;
+    display: grid;
+  }
+  .content-col{
+    margin-top: 20px;
+  }
+}
