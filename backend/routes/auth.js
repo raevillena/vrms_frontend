@@ -57,26 +57,26 @@ router.get('/verify',auth, async (req, res) =>{
 router.post('/renewToken', async (req, res, next) =>{
     try {
         const refToken = req.body.refreshToken //refresh token from localstorage
-        const refreshTokens = await Token.findOne({refreshToken: refToken}) //find refreshtoken if available in db
-        const refreshToken = refreshTokens.refreshToken
-        const user = await User.findOne({_id: refreshTokens.id})
-        if (refToken == null){
-            return res.status(401).json('Unauthorized/Missing token')
-        }
-        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async(err, user) =>{
-            if(err){
-                Token.updateOne({refreshToken: refreshToken}, {isActive: false}, (err, res) =>{
-                    if (err) {
-                    logger.log('error', err)  
-                    }else{
-                    }
-                })
-            }else{
-                const accessToken = generateAccessToken(user)
-                res.status(200).json({accessToken, user})
-            } 
-            return res.status(401).json('Unauthorized')
-        })
+        const refreshTokens = await Token.findOne({refreshToken: refToken}, async function(err, refToken){
+            if (refToken === null)  {
+                return res.status(401).json('Unauthorized')
+            }    
+            console.log('refToken', refToken) 
+            const refreshToken = refToken.refreshToken
+            if (refToken === null || refreshToken === null){
+                return res.status(401).json('Unauthorized/Missing token')
+            }
+            await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async(err, user) =>{
+                if(err){
+                    Token.updateOne({refreshToken: refreshToken}, {isActive: false})
+                }else{
+                    const accessToken = generateAccessToken(user)
+                    res.status(200).json({accessToken, user})
+                } 
+                return res.status(401).json('Unauthorized')
+            })
+        }) //find refreshtoken if available in db
+
     } catch (error) {
         logger.log('error', error)
         next(error)

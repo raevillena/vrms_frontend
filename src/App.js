@@ -94,7 +94,7 @@ useEffect(() => {
       <PublicRoute path="/secretcreateuser" exact component={Signup} isAuthenticated={AUTHENTICATED}  />
       <PrivateRoute path="/dash" exact component={Userdash} isAuthenticated={AUTHENTICATED} />
       <PrivateRoute path="/studies" exact component={ManagerStudyDash} isAuthenticated={AUTHENTICATED} />
-      <PrivateRoute path="/datagrid" exact component={StudyDash} isAuthenticated={AUTHENTICATED}/>
+      <PrivateRoute path="/editstudy" exact component={StudyDash} isAuthenticated={AUTHENTICATED}/>
       <PrivateRoute path="/account" exact component={Account} isAuthenticated={AUTHENTICATED}/>
       <Route path='*'>
        <PageNotFound/>

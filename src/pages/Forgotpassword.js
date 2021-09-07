@@ -36,8 +36,8 @@ const Forgotpassword = () => {
 
     async function handleOk()  {  
         try {
-          await onForgotPassword(email) //checking email
-          notif('info',"password reset link already sent to your email")
+         let result =  await onForgotPassword(email) //checking email
+          notif('info',result.data.message)
           setEmail({email: ""})
         } catch (error) {
           notif('error',error.response.data.message)

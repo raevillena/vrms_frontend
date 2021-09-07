@@ -33,12 +33,12 @@ router.route('/secretcreateuser').post(async (req, res) => {
         var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-              user: process.env.EMAIL, //sender email
-              pass: process.env.PASSWORD //sender password
+              user: 'mmsuvrms@gmail.com', //sender email
+              pass: 'lalalililolo98765' //sender password
             }
           });
           var mailOptions = {
-            from: process.env.EMAIL,
+            from: 'mmsuvrms@gmail.com',
             to: users.email,
             subject: 'VRMS ACCOUNT',
             text: 'You can login in Mariano Marcos State University Virtual Research Management System with your email using this password:' + users.password
@@ -101,7 +101,7 @@ router.route('/secretcreateuser').post(async (req, res) => {
         id: user._id
       }
       const token = await jwt.sign(payload, process.env.FORGOT_TOKEN_SECRET, {expiresIn: '360000'})
-      const link = `http://localhost:3000/reset-password/?token=${token}` 
+      const link = `http://nberic.org/reset-password/?token=${token}` 
 
       var transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -123,7 +123,7 @@ router.route('/secretcreateuser').post(async (req, res) => {
           console.log('Email sent: ' + info.response);
         }
       });
-      res.status(200).json({payload, token})
+      res.status(200).json({payload, token, message: 'Email sent to the user!'})
     }
   } catch (error) {
     res.status(500).json({message: error.message})  

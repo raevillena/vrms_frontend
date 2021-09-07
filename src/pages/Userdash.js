@@ -116,7 +116,7 @@ const Userdash = () => {
             type: "SET_STUDY",
             value: record
          })
-         history.push('/datagrid')
+         history.push('/editstudy')
         }
       } className="manageBtn">MANAGE</Button>
     },

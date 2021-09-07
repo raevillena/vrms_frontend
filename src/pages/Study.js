@@ -125,10 +125,7 @@ const Study = () => {
                                     },
                                     ]}>
                                 <label style={{fontWeight:'bolder'}}>Budget: </label>
-                                <InputNumber style={{width:'250px'}} placeholder="Enter Budget" min={1} max={1000000000}
-                                formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                                onChange={budgetChange} ></InputNumber>
+                                <Input type="number" placeholder="Enter budget" onChange={(e)=> setStudy({...study, budget: e.target.value})} value={study.budget}/>
                             </Form.Item>
                             <Form.Item  
                                     rules={[

@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { onDeleteProject, onGetProjectforManager } from '../services/projectAPI';
+import {SearchOutlined} from '@ant-design/icons'
 
 
 
@@ -15,6 +16,7 @@ const ManagerDash = (props) => {
   const userObj = useSelector(state => state.user)
   const [projectData, setProjectData]= useState([])
   const [loading, setLoading] = useState(false)
+  const [search, setSearch] = useState({searchText : '', searchedColumn: ''})
 
   const notif = (type, message) => {
     notification[type]({
@@ -71,6 +73,8 @@ const handleRemove = (key) => { //deleting datasheet
   })
   setProjectData(newData)
 }
+
+
 
   const columns = [
     {
