@@ -1,12 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Table,Progress, Spin, Popconfirm, notification } from 'antd'
+import { Button, Table,Progress, Spin, Popconfirm, notification, Input, Space } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { onDeleteProject, onGetProjectforManager } from '../services/projectAPI';
-import {SearchOutlined} from '@ant-design/icons'
-
 
 
 
@@ -16,7 +14,7 @@ const ManagerDash = (props) => {
   const userObj = useSelector(state => state.user)
   const [projectData, setProjectData]= useState([])
   const [loading, setLoading] = useState(false)
-  const [search, setSearch] = useState({searchText : '', searchedColumn: ''})
+
 
   const notif = (type, message) => {
     notification[type]({
@@ -76,6 +74,8 @@ const handleRemove = (key) => { //deleting datasheet
 
 
 
+
+
   const columns = [
     {
       title: 'Project ID',
@@ -110,7 +110,7 @@ const handleRemove = (key) => { //deleting datasheet
       dataIndex: 'projectName',
       key: 'projectName',
       width: '25%',
-      ellipsis: true
+      ellipsis: true,
     },
     {
       title: 'Progress',

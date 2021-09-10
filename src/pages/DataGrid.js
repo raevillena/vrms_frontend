@@ -18,7 +18,6 @@ const DataGrid = () => {
 
   const studyObj = useSelector(state => state.study) //study reducer
   const userObj = useSelector(state => state.user) //user reducer
-  const [addTableStyle, setAddTableStyle] = useState("none")
   const [title, setTitle] = useState() 
   const [description, setDescription] = useState()
   const [ data, setData ] = useState([])
@@ -35,6 +34,7 @@ const DataGrid = () => {
   }])
   const [isModalVisible, setIsModalVisible] = useState(false) //modal for image viewing
   const [imageFilename, setImageFilename] = useState() //to view image
+  const [isModalVisibleAdd, setIsModalVisibleAdd] = useState(false) //modal add table
 
   const notif = (type, message) => {
     notification[type]({
@@ -178,7 +178,6 @@ try {
       }])
       setData([])
       notif('success', result.data.message)
-      setAddTableStyle('none')
     }else{
      notif('error', result.data.message)
     }
@@ -186,10 +185,6 @@ try {
 
   const showImage = () => { //for viewing image
     setIsModalVisible(true);
-  };
-
-  const handleOk = () => { //modal
-    setIsModalVisible(false);
   };
 
   const handleCancel = () => {//modal
@@ -224,22 +219,27 @@ try {
       
   }
 
-  function showTable() { 
-    setAddTableStyle("block")
-  }
-  function hideTable(){
-    setAddTableStyle("none")
-  }
+  const showModalAdd = () => {
+    setIsModalVisibleAdd(true)
+};
+
+const handleCancelAdd = () => {
+  setIsModalVisibleAdd(false)
+  setDescription('')
+  setTitle('')
+  setAddColumnTitle('')
+  setToRemoveColumn('')
+};
+
   return (
     <div>
-      <GridTable  data={addTable}/>
-      <div >
+      <div style={{marginTop: '20px'}} >
       <Tooltip placement="top" title="Add Table">
-      <Button style={{background: '#A0BF85', marginTop: '15px' }} onClick={showTable} icon={<PlusSquareFilled/>}>Add Table</Button>
+      <Button style={{background: '#A0BF85', marginTop: '15px' }} onClick={showModalAdd} icon={<PlusSquareFilled/>}>Add Table</Button>
       </Tooltip>
       </div>
-      <div style={{display: addTableStyle}}>
-        <h1 style={{fontFamily: 'Montserrat', fontSize: '20px'}}>Add Table</h1>
+     <Modal visible={isModalVisibleAdd} footer={null} onCancel={handleCancelAdd} width={1000} title="Add Table">
+     <div>
         <div className="add-grid">
           <div style={{display:'grid'}}>
           <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>Table Title</label>
@@ -290,19 +290,20 @@ try {
                     columns={columns}
                     createRow={createRow}
                 />
-                <Modal title="View Image" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                <Modal title="View Image" visible={isModalVisible} footer={null} onCancel={handleCancel}>
                     <div style={{display: 'grid' }}>
                       <Image
                       src={`/datagrid/${imageFilename}`}
                       />
                     </div>
                 </Modal>
-            <div style={{float:'right', rowGap:'0px', gap:'5px', display:'flex', marginTop:'20px'}}>
+            <div style={{marginTop: '20px', display: 'flex', justifyContent:'flex-end'}}>
             <Button type="primary" disabled={disabledCreate} onClick={saveToDB}>Create</Button>
-            <Button danger onClick={hideTable}>Exit</Button>
             </div>
             </div>
         </div>
+     </Modal>
+     <GridTable  data={addTable}/>
     </div>
   )
 }

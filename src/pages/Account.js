@@ -1,4 +1,4 @@
-import { Row, Layout, Typography,Avatar, Col, notification } from 'antd'
+import { Row, Layout, Typography,Avatar, notification } from 'antd'
 import React, {useState} from 'react';
 import { useSelector} from 'react-redux';
 import {UserOutlined} from '@ant-design/icons';

@@ -61,7 +61,7 @@ router.post('/renewToken', async (req, res, next) =>{
             if (refToken === null)  {
                 return res.status(401).json('Unauthorized')
             }    
-            console.log('refToken', refToken) 
+            //console.log('refToken', refToken) 
             const refreshToken = refToken.refreshToken
             if (refToken === null || refreshToken === null){
                 return res.status(401).json('Unauthorized/Missing token')

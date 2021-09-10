@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { BrowserRouter, Switch, Redirect, Route } from "react-router-dom";  
 import { useSelector, useDispatch } from 'react-redux';
-import LoginPage from '@pages/Login';
+import Login from '@pages/Login';
 import Userdash from '@pages/Userdash';
 import StudyDash from '@pages/StudyDash';
 import PrivateRoute from '@routes/privateRoute';
@@ -88,7 +88,7 @@ useEffect(() => {
   return (
     <BrowserRouter>
     <Switch>
-      <PublicRoute path="/" exact component={LoginPage} isAuthenticated={AUTHENTICATED}  />
+      <PublicRoute path="/" exact component={Login} isAuthenticated={AUTHENTICATED}  />
       <PublicRoute path="/forgotpassword" exact component={ForgotPassword} isAuthenticated={AUTHENTICATED}/>
       <PublicRoute path="/reset-password/" exact component={ResetPassword} isAuthenticated={AUTHENTICATED}/>
       <PublicRoute path="/secretcreateuser" exact component={Signup} isAuthenticated={AUTHENTICATED}  />

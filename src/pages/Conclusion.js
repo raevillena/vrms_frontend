@@ -81,7 +81,7 @@ const Conclusion = () => {
         } catch (error) {
             notif('error', 'Error in updating document!')
         }
-    }
+      }
 
     useEffect(() => {
         const timer = setTimeout(()=>{

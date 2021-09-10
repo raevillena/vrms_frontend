@@ -385,12 +385,12 @@ router.post('/downloadHistory', async(req, res) => {
     const download = new Download({
         downloadDate: Date.now(),
         downloadedBy: req.body.user,
-        tableID: req.body.tableID
+        tableID: req.body.id.tableID
     })
     await download.save()
     res.status(200).json({ message: "Download Recorded"})
     } catch (error) {
-        logger.log('error', 'Error: /downloadHistory') 
+        logger.log('error', `Error: /downloadHistory - ${error}`) 
         res.status(400).json({message: error.message})
     }
 })

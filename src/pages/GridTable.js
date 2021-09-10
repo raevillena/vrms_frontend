@@ -15,6 +15,7 @@ const GridTable = (props) => {
     const [loading, setLoading] = useState(false)
     const [editData, setEditData] = useState()
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [history, setHistory] = useState([])
     const [loadingModal, setLoadingModal] = useState(false)
   
@@ -61,7 +62,7 @@ const GridTable = (props) => {
 
   const showModal = async(id) => {
     setLoadingModal(true)
-    let result = await onGetDownloadHistory({tableID: id._id})
+    let result = await onGetDownloadHistory({tableID: id.tableID})
     let history = result.data.history
     let tempHistory = []
         for(let i = 0; i < history.length; i++){ 
@@ -83,7 +84,16 @@ const GridTable = (props) => {
     setIsModalVisible(false);
   };
 
+  const showModalEdit = () => {
+      setIsEditModalVisible(true)
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditModalVisible(false)
+  };
+
   async function downloadCSV(data){
+    console.log(data)
     let toDownload = data[0].data
     let csv = ''
     let keys = Object.keys(data[0].data[0])
@@ -183,11 +193,11 @@ const GridTable = (props) => {
               <div>
                 <Tooltip title='Download table in CSV' placement='rightTop'>
                 <Button  onClick={async (e) => {
-                    let id ={_id: record.key._id}
+                    let id ={tableID: record.key.tableID}
                     let result = await onEditDatagrid(id)
                     let x = result.data
                     downloadCSV(x)
-                    let resultDownload = await onDownloadHistory({user: userObj.USER.name, tableID: id})
+                    let resultDownload = await onDownloadHistory({user: userObj.USER.name,  id})
                     notif("info", resultDownload.data.message)
                 }} icon={<DownloadOutlined/>}></Button>
                 </Tooltip>
@@ -196,7 +206,8 @@ const GridTable = (props) => {
           <Button onClick = {
            async (e) => {
                 let id ={tableID: record.key.tableID}
-                setEditData({id:id, display: 'block'})
+                setEditData({id:id})
+                showModalEdit()
             }
           }   icon={<EditFilled />}></Button>
           </Tooltip>
@@ -214,7 +225,7 @@ const GridTable = (props) => {
         </Tooltip>
         <Tooltip title='View Download History' placement='rightTop'>
           <Button onClick={()=>{
-            let id ={_id: record.key._id}
+            let id ={tableID: record.key.tableID}
             showModal(id)}} icon={<InfoCircleFilled />}/>
         </Tooltip>
         </Form>,
@@ -240,12 +251,14 @@ const GridTable = (props) => {
 
 
     return (
-        <div style={{marginTop: '20px'}}>
+        <div>
             {loading ?  <div className="spinner"><Spin /> </div> : <div> 
             <Table scroll={{ x: 1300, y: 500 }} columns={columns} dataSource={finaldata} /> 
             </div>
            }
-            <EditDatagrid data={editData}/>
+            <Modal visible={isEditModalVisible} footer={null} onCancel={handleCancelEdit} width={1000} title="Edit Table">
+                <EditDatagrid data={editData}/>
+            </Modal>
             <Modal title="Add Study" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
               {loadingModal? <div className="spinner"><Spin /> </div> : <div>
                 {history.length === 0 ? <Empty/> : 

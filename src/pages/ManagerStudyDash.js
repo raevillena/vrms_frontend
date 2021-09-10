@@ -120,11 +120,11 @@ const handleRemove = (key) => { //deleting datasheet
       width: '10%',
       render: status => (
         <span>
-          {status.map(status => {
-            let color = status === 'Ongoing' ? 'geekblue' : 'green';
+          {status.map(stat => {
+            let color = stat === 'Ongoing' ? 'geekblue' : 'green';
             return (
-              <Tag color={color} key={status}>
-                {status.toUpperCase()}
+              <Tag color={color} key={stat}>
+                {stat.toUpperCase()}
               </Tag>
             );
           })}
