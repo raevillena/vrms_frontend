@@ -24,8 +24,8 @@ function App() {
   const authObj = useSelector(state => state.auth)
   const errorObj = useSelector(state => state.error)
   const [loading, setLoading] = useState(true)
-  const socketObj = useSelector(state => state.socket)
-  let socket = socketObj.SOCKET
+ // const socketObj = useSelector(state => state.socket)
+  //let socket = socketObj.SOCKET
   
   
 
