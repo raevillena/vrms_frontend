@@ -17,7 +17,7 @@ import ManagerStudyDash from '@pages/Study';
 import PageNotFound from '@pages/PageNotFound';
 import {io} from 'socket.io-client'
 
-export const socket = io("http://localhost:3002")
+export const socket = io("http://nberic.org:3002")
 
 function App() {
   const dispatch = useDispatch();
