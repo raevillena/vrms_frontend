@@ -1,3 +1,5 @@
+require('dotenv').config({path: '../.env'})
+
 const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
@@ -7,9 +9,6 @@ const bcrypt = require ('bcrypt');
 var generator = require('generate-password');
 var nodemailer = require('nodemailer');
 const logger = require('../logger')
-
-
-
 
 //create user
 router.route('/secretcreateuser').post(async (req, res) => {
@@ -33,12 +32,12 @@ router.route('/secretcreateuser').post(async (req, res) => {
         var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-              user: 'mmsuvrms@gmail.com', //sender email
-              pass: 'lalalililolo98765' //sender password
+              user: process.env.EMAIL,  //sender email
+              pass: process.env.PASSWORD //sender password
             }
           });
           var mailOptions = {
-            from: 'mmsuvrms@gmail.com',
+            from: process.env.EMAIL,
             to: users.email,
             subject: 'VRMS ACCOUNT',
             text: 'You can login in Mariano Marcos State University Virtual Research Management System with your email using this password:' + users.password
