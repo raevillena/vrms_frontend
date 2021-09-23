@@ -88,10 +88,10 @@ useEffect(() => {
 }, [loading])
 
 useEffect(() => {
-  const s = io("http://localhost:3002")
+  
   dispatch({
     type: "SET_SOCKET",
-    value: s
+    value: socket
   })
   return () =>{
     socket.disconnect()
