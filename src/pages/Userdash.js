@@ -18,38 +18,39 @@ const Userdash = () => {
   let history= useHistory();
   const userObj = useSelector(state => state.user)
   const [studyData, setStudyData]= useState([])
-  const [loading, setLoading] = useState(false)
+
 
  
     
   useEffect(() => {
     async function getStudies(){
       let result = await onGetStudyForUser(userObj.USER)
-      setLoading(true)
       let x = result.data
       let tempStudyData = []
       for(let i = 0; i < x.length; i++){ 
         tempStudyData.push({
-            key: x[i],
+            key: x[i]._id,
             title: x[i].studyTitle,
             studyID: x[i].studyID,
             dateCreated: moment(x[i].dateCreated).format('MM-DD-YYYY'),
             dateUpdated: moment(x[i].dateUpdated).format('MM-DD-YYYY'),
             progress: x[i].progress,
-            status: [x[i].status]
+            status: [x[i].status],
+            updatedBy: x[i].updatedBy,
+            deadline: x[i].deadline
         });
       }
     setStudyData(tempStudyData)
-    setLoading(false)
     }
       getStudies()
-}, [userObj])
+}, [userObj.USER])
 
   const columns = [
     {
       title: 'Study ID',
       dataIndex: 'studyID',
       key: 'studyID',
+      fixed: 'left',
       width: '10%',
       defaultSortOrder: 'descend',
       sorter: (a, b) => a.studyno - b.studyno,
@@ -79,8 +80,8 @@ const Userdash = () => {
       dataIndex: 'progress',
       key: 'progress',
       width: '15%',
-      render: () =>
-       <Progress percent={studyData.progress} size="small" />,
+      render: progress=>
+       <Progress percent={progress} size="small" />,
     },
     {
       title: 'Status',
@@ -109,6 +110,7 @@ const Userdash = () => {
       title: 'Action',
       dataIndex: 'action',
       key: 'action',
+      fixed: 'right',
       width: '15%',
       render: (text, record, index) => <Button onClick = {
         (e) => {
@@ -131,14 +133,14 @@ return (
             <Sidebar/>
         </Sider>
       <Layout >
-        <Header className="header" style={{ padding: 0, background:'#f2f2f2' }} >
+        <Header className="header"  >
           <Headers/>
         </Header>
         <div className="mobile-header">
           <MobileHeader/>
         </div>
-      <Content style={{  minHeight: "200vh", minWidth: '100vh', background:'#f2f2f2' }} >          
-          {loading?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
+      <Content style={{  height: '100%', width: '100%', background:'#f2f2f2' }} >          
+          {studyData && studyData.constructor === Array && studyData.length === 0?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
         </Content> 
       </Layout>      
     </Layout>: 

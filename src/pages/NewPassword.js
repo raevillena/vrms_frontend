@@ -22,7 +22,7 @@ const NewPassword = () => {
 
     useEffect(() => {
       async function verifyToken() {
-        let result = await onVerifyResetPasswordToken(token)
+        await onVerifyResetPasswordToken(token)
       }
       if (token === undefined) {
         history.push('/')

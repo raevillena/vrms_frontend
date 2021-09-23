@@ -3,8 +3,6 @@ import axios from 'axios'
 
 export async function onUserLogin(body, dispatch) {
     try {
-    
-
         return axios.post("/v1/auth/login", body, {
             headers: {
                         'Content-Type': 'application/json',

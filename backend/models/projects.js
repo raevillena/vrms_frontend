@@ -36,6 +36,10 @@ const ProjectSchema = new mongoose.Schema({
     },
     progress:{
         type: Number
+    },
+    status:{
+        type: String,
+        required: true
     }
 })
 

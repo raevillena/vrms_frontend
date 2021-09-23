@@ -12,5 +12,15 @@ module.exports = {
       '@reducers': path.join(path.resolve(__dirname, 'src', 'reducers')),
 
     },
+    configure: {
+      optimization: {
+        runtimeChunk: false,
+        splitChunks: {
+          chunks(chunk) {
+            return false
+          },
+        },
+      },
+    },
   },
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import Label from './Label'
 import DataGrid from './DataGrid'
-import { Layout, Row,Col, Typography} from 'antd'
+import { Col, Layout, Row, Typography} from 'antd'
 import Sidebar from '../components/components/Sidebar'
 import SidebarManager from '../components/components/ManagerSidebar'
 import Headers from '../components/components/Header'
@@ -23,27 +23,34 @@ const StudyDash = () => {
     return (
       <div>
         <div className="study-dash">
-            <Layout>
+            <Layout >
             <Sider className='sidebar' >
                     {userObj.USER.category === "user"? <Sidebar/> : <SidebarManager/>}
                 </Sider>
-               <Layout >
-                <Header className="header" style={{ padding: 0, background:'#f2f2f2' }} >
+               <Layout style={{width: '100%', marginLeft: '10px'}}>
+                <Header className="header"  >
                         <Headers/>
                 </Header>
                 <div className="mobile-header">
                     {userObj.USER.category === "user" ? <MobileHeader/> : <ManagerHeaderMobile/>}
                 </div>
-                    <Content style={{ margin: '24px 16px 0' , minHeight: "100vh"}}>
+                    <Content style={{height: '100%', width:'100%'}}>
                         <Label/>
-                        <Row gutter={16}>
-                            <Col span={12} style={{overflowY: 'scroll'}}><Documentation/></Col>
-                            <Col span={12} style={{overflowY: 'scroll', height: '740px'}}>
+                        <Row gutter={16} style={{ width: '100%'}}>
+                            <Col span={12}>
+                                <Documentation/>
+                            </Col>
+                            <Col span={12}>
                                 <Title level={2}>Tasks</Title>
-                                 <Tasks/>
+                                <Tasks/>
+                            </Col>
+                           
+                        </Row>
+                        <Row gutter={16} style={{ width: '100%'}}>
+                            <Col>
+                                <DataGrid/>
                             </Col>
                         </Row>
-                        <DataGrid/>
                     </Content>
                </Layout>
             </Layout>

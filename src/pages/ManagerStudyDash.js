@@ -12,7 +12,6 @@ const ManagerStudyDash = (props) => {
   let history= useHistory();
   const projectObj = useSelector(state => state.project)
   const [studyData, setStudyData]= useState([])
-  const [loading, setLoading] = useState(false)
 
   const notif = (type, message) => {
     notification[type]({
@@ -26,22 +25,22 @@ const ManagerStudyDash = (props) => {
   useEffect(() => {
     async function getStudies(){
         let result = await onGetAllStudyforProject(projectObj.PROJECT)
-        setLoading(true)
         let x = result.data
         let tempStudyData = []
         for(let i = 0; i < x.length; i++){ 
           tempStudyData.push({
-              key: x[i],
+              key: x[i]._id,
               title: x[i].studyTitle,
               studyID: x[i].studyID,
               dateCreated: moment(x[i].dateCreated).format('MM-DD-YYYY'),
               dateUpdated: moment(x[i].dateUpdated).format('MM-DD-YYYY'),
               progress: x[i].progress,
-              status: [x[i].status]
+              status: [x[i].status],
+              updatedBy: x[i].updatedBy,
+              deadline: x[i].deadline
           });
         }
       setStudyData(tempStudyData)
-      setLoading(false)
       }
       getStudies()
 }, [projectObj.PROJECT])
@@ -56,7 +55,7 @@ useEffect(() => {
         dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
         dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
         status: [props.data.status],
-        progress: props.data.progress
+        progress: props.data.progress,
     }])
     }
 }, [props.data])
@@ -74,6 +73,7 @@ const handleRemove = (key) => { //deleting datasheet
       title: 'Study ID',
       dataIndex: 'studyID',
       key: 'studyID',
+      fixed: 'left',
       width: '10%',
       defaultSortOrder: 'descend',
       sorter: (a, b) => a.studyno - b.studyno,
@@ -135,6 +135,7 @@ const handleRemove = (key) => { //deleting datasheet
       title: 'Action',
       dataIndex: 'action',
       key: 'action',
+      fixed: 'right',
       width: '20%',
       render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row', gap:'5px'}}>
       <Button onClick = {
@@ -164,7 +165,7 @@ const handleRemove = (key) => { //deleting datasheet
 
 return (
   <div>
-        {loading?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
+        {studyData && studyData.constructor === Array && studyData.length === 0?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
   </div>
     )
 }

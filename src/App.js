@@ -15,15 +15,18 @@ import { onRenewToken } from './services/authAPI';
 import {Spin} from 'antd'
 import ManagerStudyDash from '@pages/Study';
 import PageNotFound from '@pages/PageNotFound';
+import {io} from 'socket.io-client'
 
-
+export const socket = io("http://localhost:3002")
 
 function App() {
   const dispatch = useDispatch();
   const authObj = useSelector(state => state.auth)
   const errorObj = useSelector(state => state.error)
   const [loading, setLoading] = useState(true)
-
+  const socketObj = useSelector(state => state.socket)
+  let socket = socketObj.SOCKET
+  
   
 
   const {AUTHENTICATED}  = authObj
@@ -37,17 +40,18 @@ function App() {
           type: "VERIFIED_AUTHENTICATION",
           value: false
        })
+        return
       } else {
         dispatch({
           type: "VERIFIED_AUTHENTICATION",
           value: true
        })
       }
-     
+     return
     }
     verify()
     setLoading(false)
-}, [dispatch])
+}, [errorObj])
 
 
 //to renew acesstoken
@@ -83,6 +87,16 @@ useEffect(() => {
   } 
 }, [loading])
 
+useEffect(() => {
+  const s = io("http://localhost:3002")
+  dispatch({
+    type: "SET_SOCKET",
+    value: s
+  })
+  return () =>{
+    socket.disconnect()
+  }
+}, [])
 
 
   return (

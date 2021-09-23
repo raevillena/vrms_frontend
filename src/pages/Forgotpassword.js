@@ -59,9 +59,9 @@ const Forgotpassword = () => {
 
       if(height <= 760 && width <= 768){
         return(
-          <div style={{background: '#f2f2f2', minHeight: "100vh"}}>
+          <div style={{background: '#f2f2f2', height: "100vh" }}>
         <Row justify="center">
-        <Form style={{marginTop: "20%", width: '400px'}}>
+        <Form style={{marginTop: "25%", width: '400px', marginRight: '10px', marginLeft: '10px'}}>
             <Title level={4} style={{fontFamily: "Bangla MN", fontWeight: "bolder"}}>Need help with your password?</Title>
             <p>Enter the email you use for Virtual Research Management System, and we’ll help you create a new password.</p>
             <Form.Item> <Input  placeholder="Enter Email" prefix={<MailOutlined/>} onChange={e => setEmail({email: e.target.value})} value={email.email}></Input></Form.Item>
@@ -73,7 +73,7 @@ const Forgotpassword = () => {
         )
       }
     return (
-        <div style={{background: '#f2f2f2', minHeight: "100vh"}}>
+        <div style={{background: '#f2f2f2', height: "100vh"}}>
         <Row justify="center">
         <Form style={{marginTop: '10%'}}>
             <Title level={2} style={{fontFamily: "Bangla MN", fontWeight: "bolder"}}>Need help with your password?</Title>

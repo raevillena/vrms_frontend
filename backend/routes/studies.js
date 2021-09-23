@@ -8,12 +8,33 @@ const Documentation = require('../models/documentation')
 const mongoose = require('mongoose')
 const shortid = require('shortid')
 const logger = require('../logger')
-var HtmlDocx = require('html-docx-js');
-var fs = require('fs')
-const { message } = require('antd')
+const jwt = require('jsonwebtoken')
+const Token = require('../models/token')
+
+async function auth(req, res, next){
+    try {
+     let token = req.header('Authorization')
+     token = token.split(" ")[1]
+
+     if(token == null){
+         return res.sendStatus(401).json({message: "Unauthorized, missing token"})
+     }
+     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async(err, payload) => {
+       if(err){
+         return res.sendStatus(401).json({err})
+       }
+       req.payload =payload
+       next()
+     })
+    } catch(error) {
+     logger.log('error', 'access token') 
+     next(error)
+    } 
+ }
+
 
 //create study
-router.post('/createstudy', async(req, res) => {
+router.post('/createstudy', auth, async(req, res) => {
     try {
     const studyID = shortid.generate() 
     const study = new Studies({
@@ -39,6 +60,13 @@ router.post('/createstudy', async(req, res) => {
             let completed = await Studies.find({"projectName": req.body.projectName, "status": "COMPLETED", "active": true})
             let allTask =  await Studies.find({"projectName": req.body.projectName, "active": true})
             let progress = Math.floor((completed.length/allTask.length)*100)
+            if(progress === 100){
+                Projects.findOneAndUpdate({"projectName": req.body.projectName,"active": true}, {"progress": progress, "status": "COMPLETED"}, function(err, proj){
+                    if(err){
+                        logger.log('error', err)
+                    }
+                })
+            }
             Projects.findOneAndUpdate({"projectName": req.body.projectName,"active": true}, {"progress": progress, "status": "ONGOING"}, function(err, proj){
                 if(err){
                     logger.log('error', err)
@@ -56,9 +84,9 @@ router.post('/createstudy', async(req, res) => {
 
 
 //finding assigned study for each user
-router.post('/getStudyForUser', async(req, res) => {
+router.get('/getStudyForUser/:assignee', auth , async(req, res) => {
     try {
-    await Studies.find({"assignee": req.body.name}, function(err, studies) {
+    await Studies.find({"assignee": req.params.assignee}, function(err, studies) {
             if(err){
                 logger.log('error', error)
             } else{
@@ -72,9 +100,9 @@ router.post('/getStudyForUser', async(req, res) => {
 })
 
 //find specific study for documentation
-router.post('/getStudyforDoc', async(req, res) => {
+router.get('/getStudyforDoc/:studyID', auth, async(req, res) => {
     try {
-    await Studies.find({"studyID": req.body.studyID}, function(err, study) {
+    await Studies.find({"studyID": req.params.studyID}, function(err, study) {
             if(err){
                 logger.log('error', err)
             } else{
@@ -88,7 +116,7 @@ router.post('/getStudyforDoc', async(req, res) => {
 })
 
 //updating the summary for documentation
-router.post('/updateSummary', async(req, res) => {
+router.post('/updateSummary', auth,  async(req, res) => {
     try {
      await Studies.findOneAndUpdate({"studyID": req.body.studyID} , {"summary": req.body.summary, "updatedBy": req.body.user, "studyTitle": req.body.title, "budget": req.body.budget}, function(err, study) {
             if(err){
@@ -105,7 +133,7 @@ router.post('/updateSummary', async(req, res) => {
 
 
 //updating documentation intro/methodology/results and conclusion
-router.post('/updateIntroduction', async(req, res) => {
+router.post('/updateIntroduction', auth,  async(req, res) => {
     try {
        const doesExist = await Documentation.findOne({"studyID": req.body.studyID})
         if(doesExist){
@@ -143,7 +171,7 @@ router.post('/updateIntroduction', async(req, res) => {
     }
 })
 
-router.post('/updateMethodology', async(req, res) => {
+router.post('/updateMethodology', auth, async(req, res) => {
     try {
        const doesExist = await Documentation.findOne({"studyID": req.body.studyID})
         if(doesExist){
@@ -181,7 +209,7 @@ router.post('/updateMethodology', async(req, res) => {
     }
 })
 
-router.post('/updateResultsAndDiscussion', async(req, res) => {
+router.post('/updateResultsAndDiscussion', auth, async(req, res) => {
     try {
        const doesExist = await Documentation.findOne({"studyID": req.body.studyID})
         if(doesExist){
@@ -219,7 +247,7 @@ router.post('/updateResultsAndDiscussion', async(req, res) => {
     }
 })
 
-router.post('/updateConclusion', async(req, res) => {
+router.post('/updateConclusion', auth, async(req, res) => {
     try {
        const doesExist = await Documentation.findOne({"studyID": req.body.studyID})
         if(doesExist){
@@ -258,9 +286,10 @@ router.post('/updateConclusion', async(req, res) => {
 })
 
 //get data for documentation
-router.post('/getDocumentation', async(req, res) => {
+router.get('/getDocumentation/:studyID', auth, async(req, res) => {
+    console.log(req.params)
     try {
-       await Documentation.findOne({"studyID": req.body.studyID}, function(err, docs) {
+       await Documentation.findOne({"studyID": req.params.studyID}, function(err, docs) {
                if(err){
                    logger.log('error', 'Error: /getDocumentation')
                } else{
@@ -274,7 +303,7 @@ router.post('/getDocumentation', async(req, res) => {
 })
 
 //updating the datagrid in database
-router.post('/addDatagrid', async(req, res) => {
+router.post('/addDatagrid', auth, async(req, res) => {
     try {
         const id = shortid.generate() 
         const newDatagrid = new Datagrid({
@@ -309,9 +338,9 @@ router.post('/addDatagrid', async(req, res) => {
 })
 
 //getting the data of datagrid to display on table
-router.post('/getDataGrid', async(req, res) => {
+router.get('/getDataGrid/:studyID', auth, async(req, res) => {
     try {
-       await  Datagrid.find({"studyID": req.body.studyID, "active": true}, function(err, grid) {
+       await  Datagrid.find({"studyID": req.params.studyID, "active": true}, function(err, grid) {
             if(err){
                 logger.log('error', 'Error: /getDatagrid')
             } else{
@@ -324,9 +353,10 @@ router.post('/getDataGrid', async(req, res) => {
 })
 
 //edit datagrid
-router.post('/editDataGrid', async(req, res) => {
+router.get('/editDataGrid/:tableID', auth, async(req, res) => {
+
     try {
-      await  Datagrid.find({"tableID": req.body.tableID, "active": true}, function(err, grid) {
+      await  Datagrid.find({"tableID": req.params.tableID, "active": true}, function(err, grid) {
             if(err){
                 logger.log('error', 'Error: /editDatagrid')
             } else{
@@ -339,7 +369,8 @@ router.post('/editDataGrid', async(req, res) => {
 })
 
 //delete datagrid/table
-router.post('/deleteDataGrid', async(req, res) => {
+router.post('/deleteDataGrid', auth, async(req, res) => {
+    console.log(req.body)
     try {
       await  Datagrid.findOneAndUpdate({"_id": req.body._id}, {"active": false}, function(err) {
             if(err){
@@ -360,13 +391,13 @@ router.post('/deleteDataGrid', async(req, res) => {
 })
 
 //update datagrid/table
-router.post('/updateDataGrid', async(req, res) => {
+router.post('/updateDataGrid', auth, async(req, res) => {
     try {
       await  Datagrid.updateOne({title: req.body.title, studyID: req.body.studyID, active:true}, {data: req.body.data, title: req.body.title, description: req.body.description, columns: req.body.columns, dateUpdated: Date.now(), updatedBy: req.body.user}, async(err) =>{
             if (err) {
                 logger.log('error', 'Error: /updateDatagrid')
             }else{
-              await  Studies.updateOne({studyID: req.body.studyID}, {dateUpdated: Date.now(), updatedBy: req.body.user}, (err) =>{
+              await  Studies.findOneAndUpdate({studyID: req.body.studyID}, {dateUpdated: Date.now(), updatedBy: req.body.user}, (err, study) =>{
                     if(err){
                         logger.log('error', 'Error: /updateDatagrid')
                     }
@@ -380,7 +411,8 @@ router.post('/updateDataGrid', async(req, res) => {
 })
 
 //download history 
-router.post('/downloadHistory', async(req, res) => {
+router.post('/downloadHistory', auth,  async(req, res) => {
+    console.log('his', req.body)
     try {
     const download = new Download({
         downloadDate: Date.now(),
@@ -396,9 +428,9 @@ router.post('/downloadHistory', async(req, res) => {
 })
 
 //get download history
-router.post('/getdownloadHistory', async(req, res) => {
+router.get('/getdownloadHistory/:tableID', auth,  async(req, res) => {
     try {
-    Download.find({"tableID": req.body.tableID}, function(err, history){
+    Download.find({"tableID": req.params.tableID}, function(err, history){
         if(err){
             logger.log('error', 'Error: /getdownloadhistory')
         }
@@ -413,9 +445,9 @@ router.post('/getdownloadHistory', async(req, res) => {
 })
 
 //study for project
-router.post('/studyForProject', async(req, res) => {
+router.get('/studyForProject/:projectName', auth, async(req, res) => {
     try {
-        await Studies.find({"projectName": req.body.projectName, "active": true}, function(err, projects) {
+        await Studies.find({"projectName": req.params.projectName, "active": true}, function(err, projects) {
             if(err){
                 logger.log('error', 'Error: /studyForProject')
             } else{
@@ -429,7 +461,7 @@ router.post('/studyForProject', async(req, res) => {
 
 
 //delete study
-router.post("/deleteStudy", async(req,res) => {
+router.post("/deleteStudy", auth, async(req,res) => {
     console.log(req.body)
     try {
       await Studies.findOneAndUpdate({"_id": req.body._id},{"active": false}, function(err, study) {

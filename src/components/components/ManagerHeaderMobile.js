@@ -51,7 +51,7 @@ const ManagerHeaderMobile = () => {
       }
 
     return (
-        <div  style={{background:'white',height: '50px', minWidth: '100vh'}}>
+        <div  style={{background:'white',height: '50px', width: '100%'}}>
             <div style={{float:'left'}}>
             <Menu triggerSubMenuAction="click">
                     <SubMenu key="sub1" icon={<MenuOutlined/>}>

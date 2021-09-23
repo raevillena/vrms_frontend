@@ -24,11 +24,12 @@ const DisplayComment = (props) => {
    async function getAllComments(){
       setLoading(true)
       let result = await onGetALlComment({taskId: props.data.task})
+      console.log('res com', result)
       let tempCommentData = []
-      
       let commentLoop = result.data.comments
       for(let i = 0; i < commentLoop.length; i++){ 
           tempCommentData.push({
+            key: commentLoop[i]._id,
             author: commentLoop[i].user,
             avatar: commentLoop[i].avatar,
             content: commentLoop[i].comment,
@@ -41,15 +42,15 @@ const DisplayComment = (props) => {
 
     useEffect( () => {
         async function getAllComments(){
-            //  setLoading(true)
+              setLoading(true)
               let result = await onGetALlComment({taskId: props.data.task})
-            //  setLoading(false)
+              setLoading(false)
               let tempCommentData = []
               
               let commentLoop = result.data.comments
               for(let i = 0; i < commentLoop.length; i++){ 
                   tempCommentData.push({
-                      key: commentLoop[i],
+                      key: commentLoop[i]._id,
                     author: commentLoop[i].user,
                     avatar: commentLoop[i].avatar,
                     content: commentLoop[i].comment,
@@ -76,6 +77,7 @@ const DisplayComment = (props) => {
         <div > 
             {comments.slice(0,length).map(comment =>(
               <Comment
+                    key={comment.key}
                     author={<p>{comment.author}</p>}
                     avatar={
                         <Avatar

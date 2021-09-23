@@ -58,13 +58,14 @@ const AddTask = () => {
     useEffect(() => {
         async function onGetUser(){
             let resultUsers = await onGetUserForTask({study: studyObj.STUDY.title})
-            let x = resultUsers.data.studies[0].assignee
+            let x = resultUsers.data.studies[0]
+
             let tempUserData = []
             for(let i = 0; i < x.length; i++){ 
                 tempUserData.push({
-                    key: x[i],
-                    name:  x[i],
-                    value:  x[i],
+                    key: x[i].assignee,
+                    name:  x[i].assignee,
+                    value:  x[i].assignee,
                 })
             }
             setUserData(tempUserData)
@@ -84,7 +85,7 @@ const AddTask = () => {
     }
 
     return (
-        <div>
+        <div style= {{width: '100%'}}>
             <ManagerDisplayTask data={forProps}/>
             <Tooltip placement="top" title="Add Task">
                 <Button style={{background: '#A0BF85', borderRadius: '50%', float: 'right', height:'40px', marginTop: '10px'}} onClick={showModal}>+</Button>

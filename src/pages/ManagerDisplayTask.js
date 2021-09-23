@@ -84,7 +84,7 @@ const ManagerDisplayTask = (props) => {
         let tempTaskData = []
          for(let i = 0; i < loopTask.length; i++){ 
            tempTaskData.push({
-             key: [i],
+             key: [i]._id,
              id: loopTask[i]._id,
              createdBy: loopTask[i].createdBy,
              dateCreated: moment(loopTask[i].dateCreated).format('MM-DD-YYYY HH:MM:SS'),
@@ -172,23 +172,23 @@ const ManagerDisplayTask = (props) => {
                             <p>{tasks.taskDescription}</p>
                         </div>
                         <div style={{display: 'grid', margin: '0px'}}>
-                        <div style={{display: 'flex', gap: '5px', lineHeight:'2px'}}>
+                        <div className="task-display">
                             <label style={{fontWeight:'bold'}}>Date Created:</label>
                             <p>{tasks.dateCreated}</p>
                         </div>
-                        <div style={{display: 'flex', gap: '5px', lineHeight:'2px'}}>
+                        <div className="task-display">
                             <label style={{fontWeight:'bold'}}>Last Updated:</label>
                             <p>{tasks.lastUpdated}</p>
                         </div>
-                        <div style={{display: 'flex', gap: '5px',lineHeight:'2px'}}>
+                        <div className="task-display">
                             <label style={{fontWeight:'bold'}}>Deadline:</label>
                             <p>{tasks.deadline}</p>
                         </div>
-                        <div style={{display: 'flex', gap: '5px',lineHeight:'2px'}}>
+                        <div className="task-display">
                             <label style={{fontWeight:'bold'}}>Assignee:</label>
                             <p>{tasks.assignee}</p>
                         </div>
-                        <div style={{display: 'flex', gap: '5px', lineHeight:'2px'}}>
+                        <div className="task-display">
                             <label style={{fontWeight:'bold'}}>Adviser:</label>
                             <p>{tasks.createdBy}</p>
                         </div>

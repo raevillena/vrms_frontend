@@ -61,11 +61,12 @@ const Summary = () => {
                 let result = await onGetStudyForDoc({studyID: studyObj.STUDY.studyID})
                 setLoading(false)
                 setStudy(result.data.study[0]) //study data
-                    let xAssignee = [result.data.study[0].assignee] //for displaying assignee
+                    let xAssignee = [result.data.study[0]] //for displaying assignee
                     let tempAssignee = []
                 for (let i = 0; i < xAssignee.length; i++) {
                     tempAssignee.push({
-                        assignee:  xAssignee[i]
+                        key: xAssignee[i],
+                        assignee:  xAssignee[i].assignee
                     })
                 }
                 setAssignees(tempAssignee) 
@@ -109,7 +110,7 @@ const Summary = () => {
             </div>
             <div className="div-flex">
                 <label style={{fontWeight:'bolder'}}>Person Involved: </label>
-                {assignees.map( assign => (<p>{assign.assignee}</p>))}
+                {assignees.map( assign => (<p key={assign.key}>{assign.assignee}</p>))}
             </div>
             <div style={{display:'flex', justifyContent:'flex-end', lineHeight: '20px', gap:'5px'}}>
                 <Button type='primary' onClick={updateSummary}>Save</Button>

@@ -21,7 +21,7 @@ router.post('/login', async (req, res) => {
         }
             let valid = await bcrypt.compare(req.body.password, user.password);
                 if(valid){
-                    const refreshDuration = '3000000'
+                    const refreshDuration = 60*1440
                     const accessToken = await generateAccessToken(user);
                     const refreshToken = await jwt.sign({user}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: refreshDuration})
 
@@ -31,14 +31,14 @@ router.post('/login', async (req, res) => {
                     refreshTokenDuration: refreshDuration,
                     isActive: true
                 })
-                const newToken = await token.save()
+                await token.save()
         
                 res.status(200).json({data: user, token: token, accessToken})
                 }else{
                     return res.status(401).json({ message: "Invalid password!" });
                 }
     }catch(err){
-        logger.log('error', `message: ${error}`)
+        logger.log('error', `message: ${err}`)
         return res.status(500).json({ error: "Internal Server Error!" })
     }
 })
@@ -57,7 +57,7 @@ router.get('/verify',auth, async (req, res) =>{
 router.post('/renewToken', async (req, res, next) =>{
     try {
         const refToken = req.body.refreshToken //refresh token from localstorage
-        const refreshTokens = await Token.findOne({refreshToken: refToken}, async function(err, refToken){
+        await Token.findOne({refreshToken: refToken}, async function(err, refToken){
             if (refToken === null)  {
                 return res.status(401).json('Unauthorized')
             }    
@@ -69,11 +69,12 @@ router.post('/renewToken', async (req, res, next) =>{
             await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async(err, user) =>{
                 if(err){
                     Token.updateOne({refreshToken: refreshToken}, {isActive: false})
+                    return res.status(401).json('Unauthorized')
                 }else{
                     const accessToken = generateAccessToken(user)
                     res.status(200).json({accessToken, user})
                 } 
-                return res.status(401).json('Unauthorized')
+              //  return res.status(401).json('Unauthorized')
             })
         }) //find refreshtoken if available in db
 
@@ -98,7 +99,7 @@ router.post('/logout', (req,res) =>{
 //middleware
 
 //for user authentication using access token
-async function auth(req, res, next){
+ async function auth(req, res, next){
    try {
     let token = req.header('Authorization')
     token = token.split(" ")[1]
@@ -121,8 +122,8 @@ async function auth(req, res, next){
 
 
 //generating access token
-function generateAccessToken(user){
-    return jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '300000'})
+ function generateAccessToken(user){
+    return jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: 60*300})
 }
 
 module.exports = router

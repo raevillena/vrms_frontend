@@ -33,9 +33,9 @@ const StudyDash_Mobile = () => {
                 <div className="mobile-header">
                 {userObj.USER.category === "user" ? <MobileHeader/> : <ManagerHeaderMobile/>}
                 </div>
-                    <Content style={{minWidth: '100vh', background: '#f2f2f2',marginLeft:'5px', minHeight: '100vh'}}>
+                    <Content style={{width: '100%', background: '#f2f2f2', height: '100%'}}>
                         <Label/>
-                        <div style={{marginTop: '5px'}}>
+                        <div style={{marginTop: '5px',marginLeft:'10px', marginRight: '10px'}}>
                             <Documentation/>
                             <Title level={2}>Tasks</Title>
                             <Tasks/>

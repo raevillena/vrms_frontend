@@ -4,9 +4,32 @@ const Project = require('../models/projects')
 const mongoose = require('mongoose')
 const shortid = require('shortid')
 const logger = require('../logger')
+const jwt = require('jsonwebtoken')
+
+async function auth(req, res, next){
+  try {
+   let token = req.header('Authorization')
+   token = token.split(" ")[1]
+
+   if(token == null){
+       return res.sendStatus(401).json({message: "Unauthorized, missing token"})
+   }
+   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async(err, payload) => {
+     if(err){
+       return res.sendStatus(401).json({err})
+     }
+     req.payload =payload
+     next()
+   })
+  } catch(error) {
+   logger.log('error', 'access token') 
+   next(error)
+  } 
+}
 
 //create project
 router.route('/createproject').post(async (req, res) => {
+  console.log('req0', req.body)
    try {
     const projectID = shortid.generate() 
     const project = new Project({
@@ -17,7 +40,8 @@ router.route('/createproject').post(async (req, res) => {
         projectName: req.body.projectName,
         projectID: projectID,
         assignee: req.body.assignee,
-        active: true
+        active: true,
+        status: 'ONGOING'
     })
     const doesExist = await Project.findOne({projectName: req.body.projectName})
     if(doesExist){
@@ -47,9 +71,9 @@ router.route('/createproject').post(async (req, res) => {
 
 
   //get all project assigned to the manager
-  router.post("/getProjectforManager", async(req,res) => {
+  router.get("/getProjectforManager/:user", auth, async(req,res) => {
     try {
-      await Project.find({"assignee": req.body.user, "active": true}, function(err, projects) {
+      await Project.find({"assignee": req.params.user, "active": true}, function(err, projects) {
         if(err){
             logger.log('error', 'Project find error: /getProjectforManager')
         } else{
@@ -63,7 +87,7 @@ router.route('/createproject').post(async (req, res) => {
 
   //delete project by the manager
 
-  router.post("/deleteProject", async(req,res) => {
+  router.post("/deleteProject", auth, async(req,res) => {
     console.log(req.body)
     try {
       await Project.findOneAndUpdate({"_id": req.body._id},{"active": false}, function(err, projects) {

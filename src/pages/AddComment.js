@@ -33,30 +33,29 @@ const AddComment = (props) => {
     
    
     return (
-        <div>
-           <DisplayComment data={forProps}/>
-        <Comment
-          avatar={
+      <div>
+        <DisplayComment data={forProps}/>
+          <Comment
+            avatar={
             <Avatar
-              src={`/avatar/${avatar}`}
-              alt={userObj.USER.name}
-            />
-          }
+            src={`/avatar/${avatar}`}
+            alt={userObj.USER.name}
+          />}
           content={
-              <>
+            <>
             <Form.Item>
-            <TextArea rows={4} onChange={e => setComment({...comment, value: e.target.value})} value={comment.value} />
-          </Form.Item>
-          <Form.Item>
-            <Button htmlType="submit" loading={comment.submitting} onClick={handleSubmit} style={{background: '#A0BF85'}}>
-              Add Comment
-            </Button>
-          </Form.Item>
-          </>
+              <TextArea rows={4} onChange={e => setComment({...comment, value: e.target.value})} value={comment.value} />
+            </Form.Item>
+            <Form.Item>
+              <Button htmlType="submit" loading={comment.submitting} onClick={handleSubmit} style={{background: '#A0BF85'}}>
+                Add Comment
+              </Button>
+            </Form.Item>
+            </>
           }
         />
-        </div>
-    )
+      </div>
+  )
 }
 
 export default AddComment

@@ -1,11 +1,12 @@
 import React, {useEffect, useState, useMemo} from 'react';
-import { Table, Button, Popconfirm, Form, Spin, notification, Tooltip, Modal, Empty } from 'antd';
+import { Table, Button, Popconfirm, Form, Spin, Tooltip, Modal, Empty } from 'antd';
 import { DeleteFilled, EditFilled, DownloadOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { onDeleteDatagrid, onDownloadHistory, onEditDatagrid, onGetDatagrid, onGetDownloadHistory } from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import moment from 'moment';
 import EditDatagrid from './EditDatagrid'
 import '../styles/CSS/Userdash.css'
+import { notif, downloadCSVonGrid } from '../functions/datagrid';
 
 
 const GridTable = (props) => {
@@ -18,15 +19,8 @@ const GridTable = (props) => {
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [history, setHistory] = useState([])
     const [loadingModal, setLoadingModal] = useState(false)
-  
-
-    const notif = (type, message) => {
-      notification[type]({
-        message: 'Notification',
-        description:
-          message,
-      });
-    };
+    const socketObj = useSelector(state => state.socket)
+    let socket = socketObj.SOCKET
 
     const handleRemove = (key) => { //deleting datasheet
         let newData = tableData.filter((tempData) => {
@@ -46,7 +40,7 @@ const GridTable = (props) => {
         let tempTableData = []
         for(let i = 0; i < x.length; i++){ 
           tempTableData.push({
-            key: x[i],
+            key: x[i]._id,
             tableID: x[i].tableID,
             title: x[i].title,
             description: x[i].description,
@@ -67,6 +61,7 @@ const GridTable = (props) => {
     let tempHistory = []
         for(let i = 0; i < history.length; i++){ 
           tempHistory.push({
+            key: history[i]._id,
             downloadedBy: history[i].downloadedBy,
             downloadDate: moment(history[i].downloadDate).format('YYYY-MM-DD HH:mm:ss'),
           });
@@ -90,31 +85,10 @@ const GridTable = (props) => {
 
   const handleCancelEdit = () => {
     setIsEditModalVisible(false)
+    socket.off('receive-datagrid')
   };
 
-  async function downloadCSV(data){
-    console.log(data)
-    let toDownload = data[0].data
-    let csv = ''
-    let keys = Object.keys(data[0].data[0])
-    keys.forEach((key) => {
-      csv += key + ","
-    })
-    csv += "\n"
 
-    toDownload.forEach((datarow) => {
-      keys.forEach((key)=>{
-        csv += datarow[key] + ","
-      })
-      csv += "\n"
-    });
-      const element = document.createElement('a')
-      const file = new Blob([csv], {type: 'data:text/csv;charset=utf-8'})
-      element.href = URL.createObjectURL(file)
-      element.download = `${data[0].title}.csv`
-      document.body.appendChild(element)
-      element.click()
-  }
 
   useEffect(() => { //displaying the added table
     if(props.data == null||undefined||''){
@@ -135,7 +109,7 @@ const GridTable = (props) => {
         let tempTableData = []
         for(let i = 0; i < x.length; i++){ 
           tempTableData.push({
-            key: x[i],
+            key: x[i]._id,
             tableID: x[i].tableID,
             title: x[i].title,
             description: x[i].description,
@@ -150,12 +124,27 @@ const GridTable = (props) => {
     }
    }, [props.data, studyObj.STUDY.studyID])
 
-   
+   const historyColumns=[
+    {
+      title: 'Downloader',
+      width: '50%',
+      dataIndex: 'downloadedBy',
+      key: 'downloadedBy',
+    },
+    {
+      title: 'Download Date',
+      width: '50%',
+      dataIndex: 'downloadDate',
+      key: 'downloadDate',
+    }
+  ]
+
     const columns = [
         {
           title: 'Table ID',
           width: '10%',
           dataIndex: 'tableID',
+          fixed: 'left',
           key: 'tableID',
         },
         {
@@ -187,16 +176,17 @@ const GridTable = (props) => {
         {
           title: 'Action',
           key: 'operation',
+          fixed: 'right',
           width: '20%',
           render: (text, record, index) => 
             <Form style={{display:'flex', gap:'5px'}}>
               <div>
                 <Tooltip title='Download table in CSV' placement='rightTop'>
                 <Button  onClick={async (e) => {
-                    let id ={tableID: record.key.tableID}
+                    let id ={tableID: record.tableID}
                     let result = await onEditDatagrid(id)
                     let x = result.data
-                    downloadCSV(x)
+                    downloadCSVonGrid(x)
                     let resultDownload = await onDownloadHistory({user: userObj.USER.name,  id})
                     notif("info", resultDownload.data.message)
                 }} icon={<DownloadOutlined/>}></Button>
@@ -205,8 +195,10 @@ const GridTable = (props) => {
               <Tooltip title='Edit table' placement='rightTop'>
           <Button onClick = {
            async (e) => {
-                let id ={tableID: record.key.tableID}
+                let id ={tableID: record.tableID}
                 setEditData({id:id})
+                console.log('room id', record.tableID)
+                socket.emit('join-table', {room: record.tableID, user: userObj.USER.name})
                 showModalEdit()
             }
           }   icon={<EditFilled />}></Button>
@@ -214,7 +206,7 @@ const GridTable = (props) => {
           <Tooltip title='Delete table' placement='rightTop'>
           <Popconfirm title="Sure to delete?" onConfirm = {
            async (key) => {
-                let id ={_id: record.key._id}
+                let id ={_id: record.key}
                 await onDeleteDatagrid(id)
                 await handleRemove(record.key)
                 notif("error", "Deleted")
@@ -225,7 +217,7 @@ const GridTable = (props) => {
         </Tooltip>
         <Tooltip title='View Download History' placement='rightTop'>
           <Button onClick={()=>{
-            let id ={tableID: record.key.tableID}
+            let id ={tableID: record.tableID}
             showModal(id)}} icon={<InfoCircleFilled />}/>
         </Tooltip>
         </Form>,
@@ -233,27 +225,10 @@ const GridTable = (props) => {
         },
       ];
 
-      const historyColumns=[
-        {
-          title: 'Downloader',
-          width: '50%',
-          dataIndex: 'downloadedBy',
-          key: 'downloadedBy',
-        },
-        {
-          title: 'Download Date',
-          width: '50%',
-          dataIndex: 'downloadDate',
-          key: 'downloadDate',
-        }
-      ]
-
-
-
     return (
         <div>
             {loading ?  <div className="spinner"><Spin /> </div> : <div> 
-            <Table scroll={{ x: 1300, y: 500 }} columns={columns} dataSource={finaldata} /> 
+            <Table scroll={{ x: 1000, y: 500 }} columns={columns} dataSource={finaldata} /> 
             </div>
            }
             <Modal visible={isEditModalVisible} footer={null} onCancel={handleCancelEdit} width={1000} title="Edit Table">
@@ -262,7 +237,7 @@ const GridTable = (props) => {
             <Modal title="Add Study" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
               {loadingModal? <div className="spinner"><Spin /> </div> : <div>
                 {history.length === 0 ? <Empty/> : 
-                <div style={{justifyContent: 'center', alignItems: 'center', marginLeft:'20px'}}> 
+                <div style={{justifyContent: 'center', alignItems: 'center'}}> 
                   <Table pagination={false} scroll={{y: 500}} columns={historyColumns} dataSource={history} />
                 </div>
                 }

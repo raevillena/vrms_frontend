@@ -80,10 +80,16 @@ return (
         <div >
             {loading?  <div className="spinner"><Spin /> </div> : task.length===0 ? <Empty/> :
             <div>
-            <Collapse accordion onChange={callback} >
-                {task.map(tasks =>(<Panel header={tasks.taskTitle} key={tasks.key} extra={tasks.status === "ONGOING" ? <div><Popconfirm placement="leftTop" title="Continue to submit?" onConfirm={()=>markComplete(tasks.key)}>
-                    <Button disabled={tasks.status==="SUBMITTED" ? true: false} style={{background: '#A0BF85', borderRadius: '50px'}}>{tasks.status === "ONGOING"? "Submit" : "SUBMITTED"}</Button>
-                    </Popconfirm></div> : 
+            <Collapse accordion onChange={callback}>
+                {task.map(tasks =>(
+                <Panel header={tasks.taskTitle} key={tasks.key} extra={tasks.status === "ONGOING" ? 
+                    <div>
+                        <Popconfirm placement="leftTop" title="Continue to submit?" onConfirm={()=>markComplete(tasks.key)}>
+                            <Button disabled={tasks.status === "SUBMITTED" ? true : false} style={{background: '#A0BF85', borderRadius: '50px'}}>
+                                {tasks.status === "ONGOING" ? "Submit" : "SUBMITTED"}
+                            </Button>
+                        </Popconfirm>
+                    </div> : 
                     <Button disabled={true} style={{background: '#A0BF85', borderRadius: '50px'}}>{tasks.status}</Button>}>
                     <div>
                         <div style={{display: 'flex', gap: '5px'}}>

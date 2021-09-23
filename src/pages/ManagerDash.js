@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Table,Progress, Spin, Popconfirm, notification, Input, Space } from 'antd'
+import { Button, Table,Progress, Spin, Popconfirm, notification, List, Tag } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -13,7 +13,7 @@ const ManagerDash = (props) => {
   let history= useHistory();
   const userObj = useSelector(state => state.user)
   const [projectData, setProjectData]= useState([])
-  const [loading, setLoading] = useState(false)
+ 
 
 
   const notif = (type, message) => {
@@ -26,41 +26,45 @@ const ManagerDash = (props) => {
 
   useEffect(() => {
     async function getProjects(){
-        setLoading(true)
         let result = await onGetProjectforManager({user: userObj.USER.name})
         let projectResult = result.data
         let tempProjectData = []
         for(let i = 0; i < projectResult.length; i++){ 
             tempProjectData.push({
-                key:  projectResult[i],
+                key:  projectResult[i]._id,
                 projectID:  projectResult[i].projectID,
                 projectLeader:  [projectResult[i].assignee],
                 projectName:  projectResult[i].projectName,
                 dateCreated: moment( projectResult[i].dateCreated).format('MM-DD-YYYY'),
                 dateUpdated: moment( projectResult[i].dateUpdated).format('MM-DD-YYYY'),
                 progress:  projectResult[i].progress,
+                status: [projectResult[i].status]
             });
             
           }
         setProjectData(tempProjectData)
-        setLoading(false)
-      }
-
+    }
       getProjects()
 }, [userObj.USER.name])
 
 useEffect(() => {
+  let cancel = false;
     if(props.data === null||props.data === undefined||props.data === ''){
         return
     }else{
+      if(cancel) return
     setProjectData([...projectData, {key: projectData.length + 1,
         projectID:props.data.projectID,
         projectLeader: [props.data.assignee],
         projectName: props.data.projectName,
         dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
         dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
-        progress: props.data.progress
+        progress: props.data.progress,
+        status:  [props.data.status]
     }])
+    }
+    return () => { 
+      cancel = true;
     }
 }, [props.data])
 
@@ -74,8 +78,6 @@ const handleRemove = (key) => { //deleting datasheet
 
 
 
-
-
   const columns = [
     {
       title: 'Project ID',
@@ -83,27 +85,19 @@ const handleRemove = (key) => { //deleting datasheet
       key: 'projectID',
       width: '10%',
       defaultSortOrder: 'descend',
+      fixed: 'left',
       sorter: (a, b) => a.studyno - b.studyno,
-    },
-    {
-      title: 'Date Created',
-      dataIndex: 'dateCreated',
-      key: 'dateCreated',
-      width: '15%',
-      
     },
     {
       title: 'Project Leader',
       dataIndex: 'projectLeader',
       key: 'projectLeader',
       width: '15%',
-      render: ([leader]) => leader.map( lead =>
-        <div style={{display: 'grid'}}>
-        <p>{lead}</p>
-      </div>
-        )
-      
-      
+      render: (leader) => <List size="small"
+      dataSource={leader[0]}
+      renderItem={item => <List.Item>{item}</List.Item>}
+      >
+      </List>
     },
     {
       title: 'Project Name',
@@ -113,18 +107,49 @@ const handleRemove = (key) => { //deleting datasheet
       ellipsis: true,
     },
     {
+      title: 'Date Created',
+      dataIndex: 'dateCreated',
+      key: 'dateCreated',
+      width: '10%',
+      
+    },
+    {
       title: 'Progress',
       dataIndex: 'progress',
       key: 'progress',
-      width: '15%',
+      width: '10%',
       render: progress =>
        <Progress percent={progress} size="small" />,
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      filters: [
+        { text: 'Completed', value: 'COMPLETED' },
+        { text: 'Ongoing', value: 'ONGOING' },
+      ],
+      onFilter: (value, record) => record.status.indexOf(value) === 0,
+      width: '10%',
+      render: status => (
+        <span>
+          {status.map(stat => {
+            let color = stat === 'Ongoing' ? 'geekblue' : 'green';
+            return (
+              <Tag color={color} key={stat}>
+                {stat.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </span>
+      ),
     },
     {
       title: 'Action',
       dataIndex: 'action',
       key: 'action',
-      width: '20%',
+      fixed: 'right',
+      width: '15%',
       render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row', gap:'5px'}}>
         <Button onClick = {
         (e) => {
@@ -151,8 +176,8 @@ const handleRemove = (key) => { //deleting datasheet
   ];
 
     return (
-    <div>      
-        {loading?  <Spin className="spinner" /> :<Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={projectData} columns={columns} style={{margin: '15px'}}></Table> }
+    <div style={{  width: '100%', background:'#f2f2f2' }}>      
+        {projectData && projectData.constructor === Array && projectData.length === 0?  <Spin className="spinner" /> :<Table size="small" scroll={{ x: 1200, y: 300 }} dataSource={projectData} columns={columns} style={{margin: '15px'}}></Table> }
     </div>
     )
 }

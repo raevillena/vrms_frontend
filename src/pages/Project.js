@@ -79,13 +79,13 @@ const Project = () => {
             <Sidebar/>
             </Sider>
             <Layout >
-                <Header className="header" style={{ padding: 0, background:'#f2f2f2' }} >
+                <Header className="header"  >
                     <Headers/>
                 </Header>
                 <div className="mobile-header">
                     <MobileHeader/>
                 </div>
-                <Content style={{  minHeight: "200vh", minWidth: '100vh', background:'#f2f2f2'}} >          
+                <Content style={{height: '100vh', width: '100%', background:'#f2f2f2'}} >          
                     <ManagerDash data={forProps}/>
                     <Tooltip placement="top" title="Add Study">
                         <Button className="add-button" onClick={showModal}>+</Button>

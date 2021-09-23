@@ -5,11 +5,32 @@ const logger = require('../logger')
 const Project = require('../models/projects')
 const Studies = require('../models/studies')
 const Comments = require('../models/comment')
+const jwt = require('jsonwebtoken')
 
 
+async function auth(req, res, next){
+    try {
+     let token = req.header('Authorization')
+     token = token.split(" ")[1]
+     
+     if(token == null){
+         return res.sendStatus(401).json({message: "Unauthorized, missing token"})
+     }
+     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async(err, payload) => {
+       if(err){
+         return res.sendStatus(401).json({err})
+       }
+       req.payload =payload
+       next()
+     })
+    } catch(error) {
+     logger.log('error', 'access token') 
+     next(error)
+    } 
+ }
 
 //create study
-router.post('/createtask', async(req, res) => {
+router.post('/createtask', auth, async(req, res) => {
  try {
     const tasks = new Tasks({
         dateCreated: Date.now(),
@@ -60,9 +81,9 @@ router.post('/createtask', async(req, res) => {
 
 
 //get user assigned to the study selected
-router.post('/getUserForTask', async(req, res) => {
+router.get('/getUserForTask/:study', auth, async(req, res) => {
     try {
-       await Studies.find({"studyTitle": req.body.study}, function(err, studies) {
+       await Studies.find({"studyTitle": req.params.study}, function(err, studies) {
             if(err){
                 logger.log('error', 'Error: /getUserForTask')
             } else{
@@ -80,9 +101,9 @@ router.post('/getUserForTask', async(req, res) => {
 
 
 //get all task for the study (user)
-router.post('/getAllTask', async(req, res) => {
+router.get('/getAllTask/:studyName/:assignee', auth, async(req, res) => {
     try {
-      await Tasks.find({"assignee": req.body.assignee, "studyName": req.body.studyName, "active": true}, function(err, tasks){
+      await Tasks.find({"assignee": req.params.assignee, "studyName": req.params.studyName, "active": true}, function(err, tasks){
             if(err){
                 logger.log('error', 'Error: /getAllTask')
             }else{
@@ -97,9 +118,9 @@ router.post('/getAllTask', async(req, res) => {
 })
 
 //get all task for the study (manager)
-router.post('/getAllTaskManager', async(req, res) => {
+router.get('/getAllTaskManager/:studyName', auth, async(req, res) => {
     try {
-      await Tasks.find({"studyName": req.body.studyName, "active": true}, function(err, tasks){
+      await Tasks.find({"studyName": req.params.studyName, "active": true}, function(err, tasks){
             if(err){
                 logger.log('error', 'Error: /getAllTaskManager')
             }else{
@@ -117,7 +138,7 @@ router.post('/getAllTaskManager', async(req, res) => {
 //comments
 
 //add comment
-router.post('/postComment', async(req, res) => {
+router.post('/postComment', auth, async(req, res) => {
     try { 
     const comment = new Comments({
         comment: req.body.comment.value,
@@ -142,9 +163,9 @@ router.post('/postComment', async(req, res) => {
 })
 
 //display comments
-router.post('/getAllComment', async(req, res) => {
+router.get('/getAllComment/:taskId', auth, async(req, res) => {
     try {
-        Comments.find({"taskId": req.body.taskId}, function(err, comments){
+        Comments.find({"taskId": req.params.taskId}, function(err, comments){
             if(err){
                 logger.log('error', 'Error: /getAllComment')
             }else{
@@ -159,7 +180,7 @@ router.post('/getAllComment', async(req, res) => {
 })
 
 //manager update task
-router.post('/onUpdateTask', async(req, res) => {
+router.post('/onUpdateTask', auth, async(req, res) => {
     try {
         let status = req.body.progress === 100 ? "COMPLETED": "ONGOING"
        await Tasks.findOneAndUpdate({"_id": req.body.taskId}, {"status": req.body.status},async function(err, task){
@@ -192,12 +213,13 @@ router.post('/onUpdateTask', async(req, res) => {
 })
 
 
-router.post('/onUpdateTaskUser', async(req, res) => {
+router.post('/onUpdateTaskUser', auth, async(req, res) => {
     try {
        await Tasks.findOneAndUpdate({"_id": req.body.taskId}, {"status": req.body.status,"dateUpdated": Date.now()},function(err, task){
             if(err){
                 logger.log('error', 'Error: /onUpdateTaskUser')
             }else{
+                console.log('task', task)
                 res.status(201).json({
                     task,
                     message: 'Task Submitted!'
@@ -210,7 +232,7 @@ router.post('/onUpdateTaskUser', async(req, res) => {
 })
 
 //delete task
-router.post('/onDeleteTask', async(req, res) => {
+router.post('/onDeleteTask', auth, async(req, res) => {
     try {
        await Tasks.findOneAndUpdate({"_id": req.body.taskId}, {"active": false,"dateUpdated": Date.now()}, async function(err, task){
             if(err){

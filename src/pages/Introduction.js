@@ -12,6 +12,7 @@ import '../styles/CSS/Userdash.css'
 
 
 
+
 const Introduction = () => {
     const studyObj = useSelector(state => state.study) //study reducer
     const userObj = useSelector(state => state.user)
@@ -63,13 +64,13 @@ const Introduction = () => {
           notif('error', 'Error in saving document!')
       }
   }
-    useEffect(() => {
-        const timer = setTimeout(()=>{
-          updateDB()
-        
-        }, AUTOSAVE_INTERVAL)
-        return () => clearTimeout(timer);
-      }, [editorState])
+
+      useEffect(() => {
+          const timer = setTimeout(()=>{
+            updateDB()
+          }, AUTOSAVE_INTERVAL)
+          return () => clearTimeout(timer);
+        }, [editorState])
 
       useEffect(() => {
         async function getDataFromDB(){

@@ -6,6 +6,7 @@ import userReducer from './userReducer'
 import errorReducer from './errorReducer'
 import studyReducer from './studyReducer'
 import projectReducer from './projectReducer'
+import socketReducer from './socketReducer'
 
 
 
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
    user : userReducer,
     error:errorReducer,
     study: studyReducer,
-    project: projectReducer
+    project: projectReducer,
+    socket: socketReducer
 
 })
 
