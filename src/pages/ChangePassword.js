@@ -64,7 +64,7 @@ const ChangePassword = () => {
             }
           ]}
         >
-          <Input.Password placeholder="New Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
+          <Input.Password placeholder="New Password" style={{marginLeft: '5px', marginRight: '5px'}} iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
             onChange={e => setPassword({...password, newPassword: e.target.value})} value={password.newPassword}/>
         </Form.Item>
         <Form.Item name='ccpassword' label="Confirm Password"

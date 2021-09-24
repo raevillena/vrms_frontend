@@ -133,7 +133,7 @@ return (
             <Sidebar/>
         </Sider>
       <Layout >
-        <Header className="header"  >
+        <Header className="header">
           <Headers/>
         </Header>
         <div className="mobile-header">
