@@ -127,6 +127,7 @@ const Userdash = () => {
 
 return (
   <div>
+    {console.log('studyData',studyData)}
     {userObj.USER.category === "user"? 
     <Layout  > 
         <Sider  className="sidebar" >
@@ -140,7 +141,7 @@ return (
           <MobileHeader/>
         </div>
       <Content style={{  height: '100%', width: '100%', background:'#f2f2f2' }} >          
-          {studyData[0] ==="spinme" ?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
+          {studyData[0] === "spinme" ?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
         </Content> 
       </Layout>      
     </Layout>: 
