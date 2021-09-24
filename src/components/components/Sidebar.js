@@ -9,7 +9,7 @@ const Sidebar = () => {
     let history= useHistory();
 
     const research = async () => {
-          history.push("/dash")
+          history.push("/")
       }
 
     const account = async () => {

@@ -17,15 +17,22 @@ const Userdash = () => {
   const dispatch = useDispatch()
   let history= useHistory();
   const userObj = useSelector(state => state.user)
-  const [studyData, setStudyData]= useState(["spinme"])
+  const [studyData, setStudyData]= useState()
+  const [loading, setLoading] = useState(false)
 
-
- 
+  const accessToken = localStorage.getItem("accessToken")
+  const refreshToken = localStorage.getItem("refreshToken")
+  
     
   useEffect(() => {
     async function getStudies(){
+      setLoading(true)
       let result = await onGetStudyForUser(userObj.USER)
-      let x = result.data
+      console.log(result)
+      if(result === undefined || result === null || result === ''){
+        return
+      }else{
+        let x = result.data
       let tempStudyData = []
       for(let i = 0; i < x.length; i++){ 
         tempStudyData.push({
@@ -40,9 +47,16 @@ const Userdash = () => {
             deadline: x[i].deadline
         });
       }
-    setStudyData(tempStudyData)
+      setStudyData(tempStudyData)
+      setLoading(false)
+      }
+ 
     }
-      getStudies()
+      if(accessToken === '' || refreshToken === ''|| userObj.USER === ''){
+        return
+      }else{
+        getStudies()
+      }
 }, [userObj.USER])
 
   const columns = [
@@ -141,7 +155,7 @@ return (
           <MobileHeader/>
         </div>
       <Content style={{  height: '100%', width: '100%', background:'#f2f2f2' }} >          
-          {studyData[0] === "spinme" ?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
+          {loading ?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
         </Content> 
       </Layout>      
     </Layout>: 

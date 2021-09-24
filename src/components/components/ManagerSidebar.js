@@ -9,7 +9,7 @@ const ManagerSidebar = () => {
     let history= useHistory();
 
     const project = async () => {
-        history.push("/dash")
+        history.push("/")
       }
 
     const account = async () => {

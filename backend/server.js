@@ -14,7 +14,7 @@ db.once('open', () => console.log('connected to database'))
 
 const io = require("socket.io")(3002, {
     cors: {
-        origin: "http://nberic.org", 
+        origin: "http://localhost:3000", 
         methods: ["GET", "POST"]
     }
 })
@@ -22,16 +22,37 @@ const io = require("socket.io")(3002, {
 
 io.on("connection", socket => {
     console.log('connected to socket.io')
-
-    socket.on("join-table", data => {    
-        console.log('room', data.room)    
-        socket.join(data.room)
-        const count = io.sockets.adapter.rooms.get(data.room).size
-        if(count == 1){
-            socket.emit(data.room, "allow-edit")
-        }
-        else{
-            socket.emit(data.room, "view-only")
+    socket.on("join-table", data => { 
+        if(data.join === true){
+            socket.join(data.room)
+            let count = null
+            try{
+                count = io.sockets.adapter.rooms.get(data.room).size
+                console.log(data.room," count:", count)
+            }catch{
+                console.log(data.room," count:", 0)
+            }
+            if(count == 1){
+                socket.emit(data.room, "allow-edit")
+            }
+            else{
+                socket.emit(data.room, "view-only")
+            }
+        }else if (data.join === false){
+            socket.leave(data.room)
+            let count = null
+            try{
+                count = io.sockets.adapter.rooms.get(data.room).size
+            }catch(error){
+                console.log(data.room," count:", 0)
+            }
+            
+            if(count == 1){
+                socket.emit(data.room, "allow-edit")
+            }
+            else{
+                socket.emit(data.room, "view-only")
+            }
         }
     })
 
@@ -60,6 +81,7 @@ const projectRouter = require('./routes/project')
 const studiesRouter =  require('./routes/studies')
 const tasksRouter =  require('./routes/tasks')
 const logger = require('./logger')
+const { error } = require('winston')
 
 app.use('/v1/upload', uploadRouter)
 app.use('/v1/user', userRouter)

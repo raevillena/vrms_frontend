@@ -36,14 +36,14 @@ const ManagerHeaderMobile = () => {
             type: "VERIFIED_AUTHENTICATION",
             value: false
          })
-          history.push('/')
+          history.push('/login')
         } catch (error) {
           notif('error',error.response.data.error);
         }
       };
 
       const studies = async() => {
-        history.push('/dash')
+        history.push('/')
       }
 
     const account = async () => {

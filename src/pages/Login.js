@@ -33,10 +33,6 @@ function Login() {
     try {
       setLoading(true)
       let result = await onUserLogin(getUser)
-      localStorage.setItem("accessToken", result.data.accessToken);
-      localStorage.setItem("refreshToken", result.data.token.refreshToken);
-      localStorage.setItem("avatarFilename", result.data.data.avatarFilename);
-      
       dispatch({
         type: "SET_USER",
         value: result.data.data
@@ -50,7 +46,11 @@ function Login() {
      dispatch({
       type: "LOGIN_SUCCESS"
    })
-     history.push('/dash')
+   localStorage.setItem("accessToken", result.data.accessToken);
+   localStorage.setItem("refreshToken", result.data.token.refreshToken);
+   localStorage.setItem("avatarFilename", result.data.data.avatarFilename);
+   
+     history.push('/')
     
     } catch (error) {
       setLoading(false)

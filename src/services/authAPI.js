@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 
+
 export async function onUserLogin(body, dispatch) {
     try {
         return axios.post("/v1/auth/login", body, {
@@ -15,10 +16,6 @@ export async function onUserLogin(body, dispatch) {
             message: error.response.data.message,
             status: error.response.status 
         })
-        return {
-            status: 'false',
-            error: error
-        }
     }
 }
 
@@ -28,19 +25,16 @@ export async function verifyAuth(dispatch) {
         const accessToken = localStorage.getItem("accessToken")
         const refreshToken = localStorage.getItem("refreshToken")
 
-        if (!accessToken || !refreshToken) {
-            return {
-                status: 'false',
-                error: 'Access Token / Refresh Token is missing'
-            }
+        if (accessToken === '' || refreshToken === '') {
+            console.log('empty token')
+        }else{
+            return axios.get("/v1/auth/verify", {
+                headers: {
+                             'Authorization' : `Bearer ${accessToken}`,
+                            'Content-Type': 'application/json',
+                        } 
+            })
         }
-        return axios.get("/v1/auth/verify", {
-            headers: {
-                         'Authorization' : `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json',
-                    } 
-        })
-       
     } catch (error) {
         dispatch({
             type: "GET_ERRORS",

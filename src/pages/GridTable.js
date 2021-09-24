@@ -84,7 +84,7 @@ const GridTable = (props) => {
 
   const handleCancelEdit = () => {
     setIsEditModalVisible(false)
-    //disconnect to joining
+    join(editData.id.tableID, userObj.USER.name, false)
   };
 
 
@@ -196,7 +196,7 @@ const GridTable = (props) => {
            async (e) => {
                 let id ={tableID: record.tableID}
                 setEditData({id:id})
-                join(record.tableID, userObj.USER.name)
+                join(record.tableID, userObj.USER.name, true)
                 showModalEdit()
             }
           }   icon={<EditFilled />}></Button>

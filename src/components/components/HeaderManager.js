@@ -23,7 +23,7 @@ const HeaderManager = () => {
             type: "VERIFIED_AUTHENTICATION",
             value: false
          })
-          history.push('/')
+          history.push('/login')
         } catch (error) {
           console.error(error)
           alert(error.response.data.error);

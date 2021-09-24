@@ -7,7 +7,7 @@ import { DynamicDataSheetGrid,
   textColumn,
   keyColumn  } from 'react-datasheet-grid'
 import GridTable from './GridTable';
-import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, EyeFilled, PlusSquareFilled} from '@ant-design/icons';
+import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, PlusSquareFilled} from '@ant-design/icons';
 import { onUploadDataGrid } from '../services/uploadAPI';
 import '../styles/CSS/Userdash.css'
 
@@ -36,7 +36,6 @@ const DataGrid = () => {
     isModalAdd: false
   })
   const [ data, setData ] = useState([])
-  const [imageFilename, setImageFilename] = useState()
 
   const notif = (type, message) => {
     notification[type]({
@@ -46,13 +45,6 @@ const DataGrid = () => {
     });
   };
 
-  const showImage = () => { //for viewing image
-    setstate({...state, isModalImage: true})
-  };
-
-  const handleCancel = () => {//modal
-    setstate({...state, isModalImage: false})
-  };
 
   const CameraComponent = React.memo(
     ({ rowData, setRowData }) => {
@@ -75,14 +67,7 @@ const DataGrid = () => {
             </Button>
           </div>
         <div>  
-          <Button onClick={
-             () => {
-                  setImageFilename(rowData) //set the image to view
-                  showImage()
-              }
-            }>
-              <EyeFilled />
-            </Button>
+          <Image width={20} src={`/datagrid/${rowData}`}/>
           </div>
       </div>     
       )
@@ -318,11 +303,6 @@ const DataGrid = () => {
                   columns={columns}
                   createRow={createRow}
                 />
-                <Modal title="View Image" visible={state.isModalImage} footer={null} onCancel={handleCancel}>
-                  <Image
-                    src={`/datagrid/${imageFilename}`}
-                  />  
-                </Modal>
                 <div style={{marginTop: '20px', display: 'flex', justifyContent:'flex-end'}}>
                   <Button type="primary" disabled={state.disableCreate} onClick={saveToDB}>
                     Create

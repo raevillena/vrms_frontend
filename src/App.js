@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import { BrowserRouter, Switch, Redirect, Route } from "react-router-dom";  
+import React, {useEffect} from 'react';
+import { BrowserRouter, Switch, Route } from "react-router-dom";  
 import { useSelector, useDispatch } from 'react-redux';
 import Login from '@pages/Login';
 import Userdash from '@pages/Userdash';
@@ -12,20 +12,16 @@ import Signup from '@pages/Signup';
 import ForgotPassword from '@pages/Forgotpassword';
 import ResetPassword from '@pages/NewPassword'
 import { onRenewToken } from './services/authAPI';
-import {Spin} from 'antd'
 import ManagerStudyDash from '@pages/Study';
 import PageNotFound from '@pages/PageNotFound';
-import {io} from 'socket.io-client'
 
-export const socket = io("http://nberic.org:3002")
+
+
 
 function App() {
   const dispatch = useDispatch();
   const authObj = useSelector(state => state.auth)
   const errorObj = useSelector(state => state.error)
-  const [loading, setLoading] = useState(true)
- // const socketObj = useSelector(state => state.socket)
-  //let socket = socketObj.SOCKET
   
   
 
@@ -33,7 +29,6 @@ function App() {
  //authentication for public and private route
   useEffect(() => {
     async function verify() {
-      setLoading(true)
       let result = await verifyAuth()
       if (result.error) {
         dispatch({
@@ -50,14 +45,12 @@ function App() {
      return
     }
     verify()
-    setLoading(false)
 }, [errorObj])
 
 
 //to renew acesstoken
 useEffect(()=>{
   async function renew(){
-    setLoading(true)
   let token = {refreshToken : localStorage.getItem("refreshToken")}
   let result = await onRenewToken(token)
 
@@ -78,42 +71,25 @@ useEffect(()=>{
  }
 }
 renew()
-setLoading(false)
-}, [errorObj, dispatch])
+}, [errorObj])
 
-useEffect(() => {
-  if(loading === true){
-    return <Spin style={{display: 'flex', justifyContent:'center', padding: '25%'}} />
-  } 
-}, [loading])
 
-useEffect(() => {
-  
-  dispatch({
-    type: "SET_SOCKET",
-    value: socket
-  })
-  return () =>{
-    socket.disconnect()
-  }
-}, [])
 
 
   return (
     <BrowserRouter>
     <Switch>
-      <PublicRoute path="/" exact component={Login} isAuthenticated={AUTHENTICATED}  />
+      <PublicRoute path="/login" exact component={Login} isAuthenticated={AUTHENTICATED}  />
       <PublicRoute path="/forgotpassword" exact component={ForgotPassword} isAuthenticated={AUTHENTICATED}/>
       <PublicRoute path="/reset-password/" exact component={ResetPassword} isAuthenticated={AUTHENTICATED}/>
       <PublicRoute path="/secretcreateuser" exact component={Signup} isAuthenticated={AUTHENTICATED}  />
-      <PrivateRoute path="/dash" exact component={Userdash} isAuthenticated={AUTHENTICATED} />
+      <PrivateRoute path="/" exact component={Userdash} isAuthenticated={AUTHENTICATED} />
       <PrivateRoute path="/studies" exact component={ManagerStudyDash} isAuthenticated={AUTHENTICATED} />
       <PrivateRoute path="/editstudy" exact component={StudyDash} isAuthenticated={AUTHENTICATED}/>
       <PrivateRoute path="/account" exact component={Account} isAuthenticated={AUTHENTICATED}/>
       <Route path='*'>
-       <PageNotFound/>
+        <PageNotFound/>
       </Route>
-      <Redirect to={AUTHENTICATED ? `/${window.location.pathname}` : '/'} />
     </Switch>
     </BrowserRouter> 
   );

@@ -14,8 +14,6 @@ const ManagerDash = (props) => {
   const userObj = useSelector(state => state.user)
   const [projectData, setProjectData]= useState(["spinme"])
  
-
-
   const notif = (type, message) => {
     notification[type]({
       message: 'Notification',
