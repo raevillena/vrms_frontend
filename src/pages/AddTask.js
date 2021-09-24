@@ -14,7 +14,7 @@ const AddTask = () => {
 
 
     const { Option } = Select;
-    const [task, setTask] = useState({title: "", description:"", deadline: "", assignee:'', projectName:  projectObj.PROJECT.projectName, studyName: studyObj.STUDY.title, user: userObj.USER.name})
+    const [task, setTask] = useState({title: "", description:"", deadline: "", assignee:[], projectName:  projectObj.PROJECT.projectName, studyName: studyObj.STUDY.title, user: userObj.USER.name})
     const [userData, setUserData] = useState([])
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [forProps, setForProps] =useState()
@@ -33,13 +33,13 @@ const AddTask = () => {
     
       const handleOk = () => {
         setIsModalVisible(false);
-        setTask({...task, deadline: '', description: '', title: '', assignee: ''})
+        setTask({...task, deadline: '', description: '', title: '', assignee: []})
   
       };
     
       const handleCancel = () => {
         setIsModalVisible(false);
-        setTask({...task, deadline: '', description: '', title: '', assignee:''})
+        setTask({...task, deadline: '', description: '', title: '', assignee:[]})
    
       };
 
@@ -58,26 +58,26 @@ const AddTask = () => {
     useEffect(() => {
         async function onGetUser(){
             let resultUsers = await onGetUserForTask({study: studyObj.STUDY.title})
-            let x = resultUsers.data.studies[0]
-
+            let x = resultUsers.data.studies[0].assignee
+            console.log(x)
             let tempUserData = []
             for(let i = 0; i < x.length; i++){ 
                 tempUserData.push({
-                    key: x[i].assignee,
-                    name:  x[i].assignee,
-                    value:  x[i].assignee,
+                    key: x[i],
+                    name:  x[i],
+                    value:  x[i],
                 })
             }
             setUserData(tempUserData)
         }
        onGetUser()
-    }, [studyObj.STUDY.title, studyObj.STUDY.studyName])
+    }, [studyObj])
 
     async function onSubmit(){
         try {
         let newTask = await onTaskCreate(task)
         notif('info', newTask.data.message)
-        setTask({...task, title: "", description:"", deadline: "", assignee: ''}) 
+        setTask({...task, title: "", description:"", deadline: "", assignee: []}) 
         setForProps(newTask.data)
         } catch (error) {
             notif("error",error.response.data.message)
@@ -91,8 +91,8 @@ const AddTask = () => {
                 <Button style={{background: '#A0BF85', borderRadius: '50%', float: 'right', height:'40px', marginTop: '10px'}} onClick={showModal}>+</Button>
             </Tooltip>
             <Modal title="Add Task" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                <Form onFinish={onSubmit}>
-                    <Form.Item 
+                <Form onFinish={onSubmit}> 
+                    <Form.Item label="Task title"
                         rules={[
                             {
                             required: true,
@@ -101,7 +101,7 @@ const AddTask = () => {
                         ]}>
                             <Input placeholder="Enter Task Title" onChange={e => setTask({...task, title: e.target.value})} value={task.title}></Input>
                     </Form.Item>
-                    <Form.Item  
+                    <Form.Item  label="Task Description"
                         rules={[
                             {
                             required: true,
@@ -110,26 +110,25 @@ const AddTask = () => {
                         ]}>
                             <Input placeholder="Enter Task Description" onChange={e => setTask({...task, description: e.target.value})} value={task.description}></Input>
                     </Form.Item>
-                    <Form.Item 
+                    <Form.Item label="Deadline"
                                 rules={[
                                 {
                                     required: true,
                                     message: 'Please input deadline of task!',
                                 },
                                 ]}>
-                            <label>Deadline</label>
                             <Space direction="vertical">
-                            <DatePicker onChange={deadline}/>
+                            <DatePicker value={task.deadline} onChange={deadline}/>
                             </Space>
                     </Form.Item>
-                    <Form.Item 
+                    <Form.Item label="Assign Task"
                                 rules={[
                                 {
                                     required: true,
                                     message: 'Please assign task!',
                                 },
                                 ]}>
-                            <Select mode="tags" style={{ width: '100%' }}  onChange={assignee} tokenSeparators={[',']} placeholder="Assign Study">
+                            <Select mode="tags" style={{ width: '100%' }} value={task.assignee}  onChange={assignee} tokenSeparators={[',']} placeholder="Assign Task">
                             {userData.map(user => (
                                 <Option key={user.key} value={user.value}>{user.name}</Option>
                             ))}

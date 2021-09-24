@@ -8,7 +8,7 @@ const { Title } = Typography;
 const Label = () => {
 
     const studyObj = useSelector(state => state.study)
-    console.log('studyObj', studyObj)
+
 
     return (
         <div className="label-hidden">

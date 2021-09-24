@@ -29,7 +29,6 @@ async function auth(req, res, next){
 
 //create project
 router.route('/createproject').post(async (req, res) => {
-  console.log('req0', req.body)
    try {
     const projectID = shortid.generate() 
     const project = new Project({
@@ -88,7 +87,6 @@ router.route('/createproject').post(async (req, res) => {
   //delete project by the manager
 
   router.post("/deleteProject", auth, async(req,res) => {
-    console.log(req.body)
     try {
       await Project.findOneAndUpdate({"_id": req.body._id},{"active": false}, function(err, projects) {
         if(err){

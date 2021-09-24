@@ -12,7 +12,7 @@ const ManagerDash = (props) => {
   const dispatch = useDispatch()
   let history= useHistory();
   const userObj = useSelector(state => state.user)
-  const [projectData, setProjectData]= useState([])
+  const [projectData, setProjectData]= useState(["spinme"])
  
 
 
@@ -163,7 +163,7 @@ const handleRemove = (key) => { //deleting datasheet
 
       <Popconfirm title="Sure to delete?" onConfirm = {
            async (key) => {
-                let id ={_id: record.key._id}
+                let id ={_id: record.key}
                 let result = await onDeleteProject(id)
                 await handleRemove(record.key)
                 notif("error", result.data.message)
@@ -177,7 +177,7 @@ const handleRemove = (key) => { //deleting datasheet
 
     return (
     <div style={{  width: '100%', background:'#f2f2f2' }}>      
-        {projectData && projectData.constructor === Array && projectData.length === 0?  <Spin className="spinner" /> :<Table size="small" scroll={{ x: 1200, y: 300 }} dataSource={projectData} columns={columns} style={{margin: '15px'}}></Table> }
+        {projectData[0]==="spinme"?  <Spin className="spinner" /> :<Table size="small" scroll={{ x: 1200, y: 1000 }} dataSource={projectData} columns={columns} style={{margin: '15px'}}></Table> }
     </div>
     )
 }

@@ -17,7 +17,7 @@ const Study = () => {
     const userObj = useSelector(state => state.user)
 
     const [userData, setUserData] = useState([])
-    const [study, setStudy] = useState({title: "", projectName: projectObj.PROJECT.projectName, deadline:"",assignee:"", budget: "", user: userObj.USER.name})
+    const [study, setStudy] = useState({title: "", projectName: projectObj.PROJECT.projectName, deadline:"", startDate: "" ,assignee:[], budget: "", user: userObj.USER.name})
     const [forProps, setForProps] = useState()
     const [isModalVisible, setIsModalVisible] = useState(false);
     
@@ -39,6 +39,7 @@ const Study = () => {
     
       const handleCancel = () => {
         setIsModalVisible(false);
+        setStudy({...study, assignee: [], title: "", deadline: "", budget: ""})
       };
       
     
@@ -69,17 +70,20 @@ const Study = () => {
         try {
            let result =  await onStudyCreate(study) 
            notif("success",result.data.message)
-           setStudy({title: "  ", projectName:" ", deadline:" ",assignee:" "})
            setForProps(result.data.newStudy)
-           //prompt study number and send email to those who are asigned to this project 
+           setStudy({title: "  ", projectName:" ", deadline:"",assignee:[]})
         } catch (error) {
-            notif("error", error.response.data.message)
+            notif("error", error)
         }
+    }
+
+    function onChangeStartDate(date) {
+        setStudy({...study, startDate: date})
     }
 
     function onChange(date) {
         setStudy({...study, deadline: date})
-      }
+    }
 
     
     return (
@@ -104,7 +108,7 @@ const Study = () => {
                     <Modal title="Add Study" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                         <Form >
                         <h1 style={{fontFamily: "Montserrat", fontWeight: "bolder"}}>CREATE STUDY</h1>
-                            <Form.Item 
+                            <Form.Item label="Study Title"
                             rules={[
                                 {
                                 required: true,
@@ -113,36 +117,45 @@ const Study = () => {
                             ]}>
                                 <Input placeholder="Enter Title" onChange={e => setStudy({...study, title: e.target.value})} value={study.title}></Input>
                             </Form.Item>
-                            <Form.Item  
+                            <Form.Item  label="Budget"
                                     rules={[
                                     {
                                         required: true,
                                         message: 'Please enter budget!',
                                     },
                                     ]}>
-                                <label style={{fontWeight:'bolder'}}>Budget: </label>
                                 <Input type="number" placeholder="Enter budget" onChange={(e)=> setStudy({...study, budget: e.target.value})} value={study.budget}/>
                             </Form.Item>
-                            <Form.Item  
+                            <Form.Item  label="Start Date"
+                                    rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input start date of study!',
+                                    },
+                                    ]}>
+                                <Space direction="vertical">
+                                <DatePicker value={study.startDate} onChange={onChangeStartDate}/>
+                                </Space>
+                            </Form.Item>
+                            <Form.Item  label="Deadline"
                                     rules={[
                                     {
                                         required: true,
                                         message: 'Please input deadline of study!',
                                     },
                                     ]}>
-                                <label style={{fontWeight:'bolder'}}>Deadline: </label>
                                 <Space direction="vertical">
-                                <DatePicker onChange={onChange}/>
+                                <DatePicker value={study.deadline} onChange={onChange}/>
                                 </Space>
                             </Form.Item>
-                            <Form.Item 
+                            <Form.Item label="Assignee"
                                     rules={[
                                     {
                                         required: true,
                                         message: 'Please assign the study!',
                                     },
                                     ]}>
-                                <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} placeholder="Assign Study">
+                                <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} value={study.assignee} placeholder="Assign Study">
                                 {userData.map(user => (
                                     <Option key={user.key} value={user.value}>{user.name}</Option>
                                 ))}

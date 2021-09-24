@@ -3,7 +3,7 @@ import {Editor, EditorState} from 'draft-js';
 import { useSelector } from 'react-redux';
 import { onGetStudyForDoc, onUpdateSummary } from '../services/studyAPI';
 import moment from 'moment';
-import { Button, Spin, Input, notification } from 'antd';
+import { Button, Spin, Input, notification, List } from 'antd';
 import { convertToRaw, convertFromRaw } from 'draft-js';
 import { LoadingOutlined } from '@ant-design/icons';
 import '../styles/CSS/Userdash.css'
@@ -61,20 +61,12 @@ const Summary = () => {
                 let result = await onGetStudyForDoc({studyID: studyObj.STUDY.studyID})
                 setLoading(false)
                 setStudy(result.data.study[0]) //study data
-                    let xAssignee = [result.data.study[0]] //for displaying assignee
-                    let tempAssignee = []
-                for (let i = 0; i < xAssignee.length; i++) {
-                    tempAssignee.push({
-                        key: xAssignee[i],
-                        assignee:  xAssignee[i].assignee
-                    })
-                }
-                setAssignees(tempAssignee) 
+                setAssignees(result.data.study[0].assignee) 
                 const contentState = convertFromRaw(JSON.parse(result.data.study[0].summary)); //displaying summary
                 setEditorState(EditorState.createWithContent(contentState))
                 
             } catch (error) {
-               // notif('error', 'Error in getting data!')
+                notif('error', 'Error in getting data!')
             }
         }
 
@@ -106,11 +98,15 @@ const Summary = () => {
             </div>
             <div className="div-flex">
                 <label style={{fontWeight:'bolder'}}>Duration: </label>
-                <p>{moment(study.dateCreated).format("MM-DD-YYYY")} to {moment(study.deadline).format("MM-DD-YYYY")}</p>
+                <p>{moment(study.startDate).format("MM-DD-YYYY")} to {moment(study.deadline).format("MM-DD-YYYY")}</p>
             </div>
             <div className="div-flex">
-                <label style={{fontWeight:'bolder'}}>Person Involved: </label>
-                {assignees.map( assign => (<p key={assign.key}>{assign.assignee}</p>))}
+                <label style={{fontWeight:'bolder', marginTop: '7px'}}>Person Involved: </label>
+                <List size="small"
+                    dataSource={assignees}
+                    renderItem={item => <List.Item>{item}</List.Item>}
+                    >
+                </List>
             </div>
             <div style={{display:'flex', justifyContent:'flex-end', lineHeight: '20px', gap:'5px'}}>
                 <Button type='primary' onClick={updateSummary}>Save</Button>

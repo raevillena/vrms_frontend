@@ -24,7 +24,6 @@ const DisplayComment = (props) => {
    async function getAllComments(){
       setLoading(true)
       let result = await onGetALlComment({taskId: props.data.task})
-      console.log('res com', result)
       let tempCommentData = []
       let commentLoop = result.data.comments
       for(let i = 0; i < commentLoop.length; i++){ 
@@ -73,7 +72,7 @@ const DisplayComment = (props) => {
     }
     return (
         <div>
-          {loading? <Spin indicator={antIcon} className="spinner" /> :
+          {props.typing === false && loading ? <Spin indicator={antIcon} className="spinner" /> :
         <div > 
             {comments.slice(0,length).map(comment =>(
               <Comment

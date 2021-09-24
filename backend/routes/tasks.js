@@ -219,7 +219,6 @@ router.post('/onUpdateTaskUser', auth, async(req, res) => {
             if(err){
                 logger.log('error', 'Error: /onUpdateTaskUser')
             }else{
-                console.log('task', task)
                 res.status(201).json({
                     task,
                     message: 'Task Submitted!'

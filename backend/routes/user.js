@@ -20,7 +20,6 @@ router.route('/secretcreateuser').post(async (req, res) => {
     const users = new User({
         name: req.body.name,
         email: req.body.email,
-        project: req.body.project,
         title: req.body.title,
         password: password,
         category: req.body.category
@@ -47,7 +46,6 @@ router.route('/secretcreateuser').post(async (req, res) => {
               logger.log('error', 'Error: email sending')
             } else {
               res.status(201).json({message: "Email was sent to the user!", user: newUser})
-              console.log('Email sent: ' + info.response);
             }
           });
         const newUser =  await users.save()
@@ -118,11 +116,12 @@ router.route('/secretcreateuser').post(async (req, res) => {
       transporter.sendMail(mailOptions, function(error, info){
         if (error) {
           logger.log('error', `Error: /email sending forgot password - ${error}`)
+          res.status(401).json({ message: `Error in sending email`})
         } else {
           console.log('Email sent: ' + info.response);
+          res.status(200).json({payload, token, message: 'Email sent to the user!'})
         }
       });
-      res.status(200).json({payload, token, message: 'Email sent to the user!'})
     }
   } catch (error) {
     res.status(500).json({message: error.message})  

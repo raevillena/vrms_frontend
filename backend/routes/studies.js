@@ -41,6 +41,7 @@ router.post('/createstudy', auth, async(req, res) => {
         dateCreated: Date.now(),
         createdBy: req.body.user,
         dateUpdated: Date.now(),
+        startDate: req.body.startDate,
         updatedBy: req.body.user,
         studyTitle: req.body.title,
         studyID: studyID,
@@ -287,7 +288,6 @@ router.post('/updateConclusion', auth, async(req, res) => {
 
 //get data for documentation
 router.get('/getDocumentation/:studyID', auth, async(req, res) => {
-    console.log(req.params)
     try {
        await Documentation.findOne({"studyID": req.params.studyID}, function(err, docs) {
                if(err){
@@ -370,7 +370,6 @@ router.get('/editDataGrid/:tableID', auth, async(req, res) => {
 
 //delete datagrid/table
 router.post('/deleteDataGrid', auth, async(req, res) => {
-    console.log(req.body)
     try {
       await  Datagrid.findOneAndUpdate({"_id": req.body._id}, {"active": false}, function(err) {
             if(err){
@@ -412,7 +411,6 @@ router.post('/updateDataGrid', auth, async(req, res) => {
 
 //download history 
 router.post('/downloadHistory', auth,  async(req, res) => {
-    console.log('his', req.body)
     try {
     const download = new Download({
         downloadDate: Date.now(),
@@ -462,7 +460,6 @@ router.get('/studyForProject/:projectName', auth, async(req, res) => {
 
 //delete study
 router.post("/deleteStudy", auth, async(req,res) => {
-    console.log(req.body)
     try {
       await Studies.findOneAndUpdate({"_id": req.body._id},{"active": false}, function(err, study) {
         if(err){

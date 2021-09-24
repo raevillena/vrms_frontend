@@ -17,7 +17,7 @@ const Userdash = () => {
   const dispatch = useDispatch()
   let history= useHistory();
   const userObj = useSelector(state => state.user)
-  const [studyData, setStudyData]= useState([])
+  const [studyData, setStudyData]= useState(["spinme"])
 
 
  
@@ -140,7 +140,7 @@ return (
           <MobileHeader/>
         </div>
       <Content style={{  height: '100%', width: '100%', background:'#f2f2f2' }} >          
-          {studyData && studyData.constructor === Array && studyData.length === 0?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
+          {studyData[0] ==="spinme" ?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
         </Content> 
       </Layout>      
     </Layout>: 

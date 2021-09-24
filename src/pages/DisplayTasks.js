@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Button, Collapse, Spin, Empty, Popconfirm, notification } from 'antd'
+import {Button, Collapse, Spin, Empty, Popconfirm, notification, List } from 'antd'
 import { onGetAllTask,  onUpdateTaskUser } from '../services/taskAPI';
 import { useSelector} from 'react-redux';
 import moment from 'moment';
@@ -111,7 +111,11 @@ return (
                         </div>
                         <div style={{display: 'flex', gap: '5px',lineHeight:'2px'}}>
                             <label style={{fontWeight:'bold'}}>Assignee:</label>
-                            <p>{tasks.assignee}</p>
+                            <List size="small"
+                                dataSource={task.assignee}
+                                renderItem={item => <List.Item>{item}</List.Item>}
+                            >
+                            </List>
                         </div>
                         <div style={{display: 'flex', gap: '5px', lineHeight:'2px'}}>
                             <label style={{fontWeight:'bold'}}>Adviser:</label>

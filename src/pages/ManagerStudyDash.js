@@ -11,7 +11,7 @@ const ManagerStudyDash = (props) => {
   const dispatch = useDispatch()
   let history= useHistory();
   const projectObj = useSelector(state => state.project)
-  const [studyData, setStudyData]= useState([])
+  const [studyData, setStudyData]= useState(["spinme"])
 
   const notif = (type, message) => {
     notification[type]({
@@ -150,7 +150,7 @@ const handleRemove = (key) => { //deleting datasheet
 
       <Popconfirm title="Sure to delete?" onConfirm = {
         async (key) => {
-             let id ={_id: record.key._id}
+             let id ={_id: record.key}
             let result = await onDeleteStudy(id)
              await handleRemove(record.key)
              notif("error", result.data.message)
@@ -165,7 +165,7 @@ const handleRemove = (key) => { //deleting datasheet
 
 return (
   <div>
-        {studyData && studyData.constructor === Array && studyData.length === 0?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
+        {studyData[0]==="spinme" ?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 1500, y: 1000 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
   </div>
     )
 }

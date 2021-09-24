@@ -29,8 +29,8 @@ const ChangePassword = () => {
             if(password.newPassword !== password.confrimPassword){
              notif('error', 'Password does not match!')
             }else{
-               await onChangePassword(data)
-               notif('success', 'Password Updated!')
+               let result = await onChangePassword(data)
+               notif('success', result.data.message)
                setPassword({oldPassword: "", newPassword: "", confrimPassword: ""})
            }
         } catch (error) {
@@ -41,7 +41,7 @@ const ChangePassword = () => {
   return (
     <Form style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat", display: 'grid', justifyItems: 'center'}} onFinish={onSubmit}>
       <Title level={3}>Change Password</Title>
-        <Form.Item  style={{maxWidth:"50%", margin:'0px'}}
+        <Form.Item name="cpassword"  label="Current Password"
           rules={[
             {
               required: true,
@@ -49,23 +49,25 @@ const ChangePassword = () => {
             },
             ]}
         >
-          <label>Current Password</label>
           <Input.Password placeholder="Current Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
             onChange={e => setPassword({...password, oldPassword: e.target.value})} value={password.oldPassword}/>
         </Form.Item>
-        <Form.Item  style={{maxWidth:"50%", margin:'0px'}}
+        <Form.Item name="npassword"  label="New Password"
             rules={[
             {
               required: true,
               message: 'Please input your new password!',
             },
+            {
+              min: 8,
+              message: 'Password cannot be less than 8 characters'
+            }
           ]}
         >
-          <label>New Password</label>
           <Input.Password placeholder="New Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
             onChange={e => setPassword({...password, newPassword: e.target.value})} value={password.newPassword}/>
         </Form.Item>
-        <Form.Item   style={{maxWidth:"50%", marginTop:'0px'}}
+        <Form.Item name='ccpassword' label="Confirm Password"
             rules={[
               {
                 required: true,
@@ -73,7 +75,6 @@ const ChangePassword = () => {
               },
             ]}
         >
-          <label>Confirm Password</label>
           <Input.Password placeholder="Confirm New Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
           onChange={e => setPassword({...password, confrimPassword: e.target.value})} value={password.confrimPassword}
         />

@@ -15,7 +15,7 @@ const Project = () => {
     const userObj = useSelector(state => state.user)
 
     const [userData, setUserData] = useState([])
-    const [project, setProject] = useState({projectName: '', assignee: '', user: userObj.USER.name});
+    const [project, setProject] = useState({projectName: '', assignee: [], user: userObj.USER.name});
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [forProps, setForProps] = useState()
 
@@ -41,6 +41,7 @@ const Project = () => {
     
       const handleCancel = () => {
         setIsModalVisible(false);
+        setProject({...project, projectName: '', assignee: ''})
       };
 
     useEffect(() => {
@@ -66,6 +67,7 @@ const Project = () => {
           notif("success",result.data.message)
           setProject({projectName: "", assignee: ""})
           setForProps(result.data.newProject)
+          setProject({...project, projectName: '', assignee: ''})
         } catch (error) {
            notif("error",error.response.data.message)
         }
@@ -93,7 +95,7 @@ const Project = () => {
                     <Modal title="Add Project" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                     <Row justify="center">
                         <Form onFinish={onSubmit}>
-                            <Form.Item  
+                            <Form.Item  label="Project Name"
                             rules={[
                                 {
                                 required: true,
@@ -102,14 +104,14 @@ const Project = () => {
                             ]}>
                                 <Input placeholder="Enter Project Name" onChange={e => setProject({...project, projectName: e.target.value})} value={project.projectName}></Input>
                             </Form.Item>
-                            <Form.Item 
+                            <Form.Item  label="Assignee"
                                     rules={[
                                     {
                                         required: true,
                                         message: 'Please assign the project!',
                                     },
                                     ]}>
-                                <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} placeholder="Assign Project">
+                                <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} value={project.assignee} placeholder="Assign Project">
                                 {userData.map(user => (
                                     <Option key={user.key} value={user.value}>{user.name}</Option>
                                 ))}

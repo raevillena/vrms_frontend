@@ -17,11 +17,6 @@ const UserSchema = new mongoose.Schema({
         minlength:1,
         unique: true,
     },
-    project:{
-        type: String,
-        required: true,
-        minlength:1
-    },
     title:{
         type: String,
         required: true,

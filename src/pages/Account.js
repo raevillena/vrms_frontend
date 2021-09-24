@@ -148,7 +148,9 @@ const Account = () => {
                     </Col>
                   </Row>
                 </Col>
-                <Col span={12}><ChangePassword/></Col>
+                <Col span={12} >
+                  <ChangePassword/>
+                </Col>
               </Row>
             </div>
           </Content>

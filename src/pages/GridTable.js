@@ -7,6 +7,7 @@ import moment from 'moment';
 import EditDatagrid from './EditDatagrid'
 import '../styles/CSS/Userdash.css'
 import { notif, downloadCSVonGrid } from '../functions/datagrid';
+import { join } from '../services/socket';
 
 
 const GridTable = (props) => {
@@ -19,8 +20,6 @@ const GridTable = (props) => {
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [history, setHistory] = useState([])
     const [loadingModal, setLoadingModal] = useState(false)
-    const socketObj = useSelector(state => state.socket)
-    let socket = socketObj.SOCKET
 
     const handleRemove = (key) => { //deleting datasheet
         let newData = tableData.filter((tempData) => {
@@ -85,7 +84,7 @@ const GridTable = (props) => {
 
   const handleCancelEdit = () => {
     setIsEditModalVisible(false)
-    socket.off('receive-datagrid')
+    //disconnect to joining
   };
 
 
@@ -197,8 +196,7 @@ const GridTable = (props) => {
            async (e) => {
                 let id ={tableID: record.tableID}
                 setEditData({id:id})
-                console.log('room id', record.tableID)
-                socket.emit('join-table', {room: record.tableID, user: userObj.USER.name})
+                join(record.tableID, userObj.USER.name)
                 showModalEdit()
             }
           }   icon={<EditFilled />}></Button>

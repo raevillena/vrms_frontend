@@ -7,8 +7,7 @@ import { onEditDatagrid } from '../services/studyAPI';
 import '../styles/CSS/Userdash.css'
 import { notif, downloadCSV, updateDB} from '../functions/datagrid'
 import { onUploadDataGrid } from '../services/uploadAPI';
-
-
+import { socket , changeColumns, columnDelete, emitDatagridChange } from '../services/socket';
 
 
 const EditDataGrid = (props) => {
@@ -17,8 +16,7 @@ const EditDataGrid = (props) => {
   //redux states
   const studyObj = useSelector(state => state.study)
   const userObj = useSelector(state => state.user)
-  const socketObj = useSelector(state => state.socket)
-  let socket = socketObj.SOCKET
+
 
   //declaring initial states
   const [state, setState] = useState({
@@ -74,7 +72,6 @@ const EditDataGrid = (props) => {
 
   function update(){
     clearTimeout(timer)
-    console.log('update', dataToSend)
     updateDB(dataToSend)
   }
 
@@ -155,9 +152,9 @@ const runTimer = () => {
         if (msg === "allow-edit"){
           setDivDisabled(false)
         }else if (msg === "view-only"){
-            setDivDisabled(true)
+          setDivDisabled(true)
         }
-      })
+    }) 
       async function getEditData(){ //edit data
         let resultDB =  await onEditDatagrid(props.data.id)
         let result = resultDB.data
@@ -198,13 +195,7 @@ const runTimer = () => {
       type: 'text'
     }])
     setAddColumn('')
-    if(socket === null || datagridData === null) return
-      socket.emit("send-changes-columns",
-      {
-        type: 'text', 
-        title: addColumn, 
-        room: props.data.id.tableID
-      })
+    changeColumns( 'text' , addColumn, props.data.id.tableID)
   }
 
   const addCheckboxColumn = () => {
@@ -214,13 +205,7 @@ const runTimer = () => {
       type: 'Checkbox'
     }])
     setAddColumn('')
-    if(socket === null || datagridData === null) return
-      socket.emit("send-changes-columns",
-      {
-        type: 'Checkbox',
-        title: addColumn, 
-        room: props.data.id.tableID
-      })
+    changeColumns( 'Checkbox' , addColumn, props.data.id.tableID)
   }
 
   const addCameraColumn = () => {
@@ -230,13 +215,7 @@ const runTimer = () => {
       type: 'camera'
     }])
     setAddColumn('')
-    if(socket === null || datagridData === null) return
-      socket.emit("send-changes-columns", 
-      {
-        type: 'camera', 
-        title: addColumn, 
-        room: props.data.id.tableID
-      })
+    changeColumns( 'camera' , addColumn, props.data.id.tableID)
   }
 
   const removeColumn = (key) => { //removing column
@@ -245,47 +224,47 @@ const runTimer = () => {
     let newColumn = editCol.filter(value => !key.includes(value.title));
     setTempCol(newColumn)
     datagridData.forEach((element) => delete element[key])
-    if(socket === null || datagridData === null) return
-    socket.emit("send-changes-columns-delete", {data: newColumn, room: props.data.id.tableID})
+    columnDelete(newColumn, props.data.id.tableID)
    } catch (error) {
      notif('error', error)
    }
   }
 
   useEffect(() => {
-      async function updateCol(){
-        socket.on('receive-columns', msg => {
-          try {
-            if(msg === null|| msg=== undefined || msg === '') return
-            let result  = checkColumnType(msg.type, msg.title)
-             setTempCol([...tempCol, result])
-          } catch (error) {
-            notif('error', error)
-          }
-        socket.off('receive-columns')
-        })
-        socket.on('receive-columns-delete', msg => {
-          try {
-            if(msg === null|| msg=== undefined || msg === '') return
-            //setTempCol(msg)
-            let result = msg
-            console.log(result)
-            let tempCols=[]
-            for(let j = 0; j < result.length ; j++) {
-              tempCols.push(checkColumnType(result[j].type, result[j].title))
-            }
-            setTempCol(tempCols)
-          } catch (error) {
-            notif('error', error)
-          }})
+    socket.on('receive-columns', msg => {
+      try {
+        if(msg === null|| msg=== undefined || msg === ''){
+            return
+        } else{
+          let result  = checkColumnType(msg.type, msg.title)
+          setTempCol([...tempCol, result])
+        } 
+      } catch (error) {
+        notif('error', error)
       }
-      updateCol()
+      socket.off('receive-columns')
+    })
+    socket.on('receive-columns-delete', msg => {
+      try {
+        if(msg === null|| msg=== undefined || msg === ''){
+            return
+        } else{
+          let tempCols =[]
+          for(let j = 0; j < msg.length ; j++) {
+            tempCols.push(checkColumnType(msg[j].type, msg[j].title))
+          }
+          setTempCol(tempCols)
+        }
+      } catch (error) {
+        notif('error', error)
+    }}) 
+
   }, [tempCol])
 
 
   useEffect(() => {
     if(divDisabled === false){
-      socket.emit('send-changes', {data: datagridData, room: props.data.id.tableID})
+      emitDatagridChange(datagridData, props.data.id.tableID)
     }
     clearTimeout(timer)
   }, [datagridData])
@@ -296,12 +275,6 @@ const runTimer = () => {
     })
   }, [])
 
-
-  useEffect(() => {       
-    return () => { 
-  	   console.log("unmounting")
-    }  
-  }, []);  
 
   function handleColumnToDelete(value) { //setting column to delete
     setState({...state, toRemoveColumn: value})

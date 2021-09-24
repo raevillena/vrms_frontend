@@ -14,7 +14,6 @@ import '../styles/CSS/Userdash.css'
 const ResultsAndDiscussion = () => {
     const studyObj = useSelector(state => state.study) //study reducer
     const userObj = useSelector(state => state.user)
-    const AUTOSAVE_INTERVAL = 3000;
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
     const [editorState, setEditorState] = useState(EditorState.createEmpty())
@@ -82,13 +81,6 @@ const ResultsAndDiscussion = () => {
             notif('error', "Error in saving document!")
         }
     }
-
-    useEffect(() => {
-        const timer = setTimeout(()=>{
-        updateDB()
-        }, AUTOSAVE_INTERVAL)
-        return () => clearTimeout(timer);
-      }, [editorState ])
 
       useEffect(() => {
         async function getDataFromDB(){

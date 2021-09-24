@@ -48,7 +48,6 @@ const DataGrid = () => {
 
   const showImage = () => { //for viewing image
     setstate({...state, isModalImage: true})
-    console.log(state)
   };
 
   const handleCancel = () => {//modal
@@ -124,7 +123,6 @@ const DataGrid = () => {
           });
         }
       setstate({...state, columnsData: tempColumns})
-      console.log('tempCol', state)
   }
     getColumns()
   }, [state.tempCol, columns])
