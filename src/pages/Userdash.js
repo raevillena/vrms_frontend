@@ -29,9 +29,6 @@ const Userdash = () => {
       setLoading(true)
       let result = await onGetStudyForUser(userObj.USER)
       console.log(result)
-      if(result === undefined || result === null || result === ''){
-        return
-      }else{
         let x = result.data
       let tempStudyData = []
       for(let i = 0; i < x.length; i++){ 
@@ -48,9 +45,7 @@ const Userdash = () => {
         });
       }
       setStudyData(tempStudyData)
-      setLoading(false)
-      }
- 
+      setLoading(false) 
     }
       if(accessToken === '' || refreshToken === ''|| userObj.USER === ''){
         return
