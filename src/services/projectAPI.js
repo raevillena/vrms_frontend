@@ -1,21 +1,8 @@
 import axios from 'axios'
-const accessToken = localStorage.getItem("accessToken")
-const refreshToken = localStorage.getItem("refreshToken")
 
 export async function onProjectCreate(body) {
     try {
-        if (!accessToken || !refreshToken) {
-            return {
-                status: 'false',
-                error: 'Access Token / Refresh Token is missing'
-            }
-        }
-        return axios.post("/v1/project/createproject", body, {
-            headers: {
-                        'Authorization' : `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json',
-                    } 
-        });
+        return axios.post("/v1/project/createproject", body, tokenConfig())
     } catch (error) {
         return {
             status: 'false',
@@ -27,11 +14,7 @@ export async function onProjectCreate(body) {
 
 export async function onGetAllProject() {
     try {
-        return axios.get(`/v1/project/getAllProject`, {
-            headers: {
-                        'Content-Type': 'application/json',
-                    } 
-        });
+        return axios.get(`/v1/project/getAllProject`, tokenConfig())
     } catch (error) {
         console.log('error', error)
     }
@@ -39,18 +22,7 @@ export async function onGetAllProject() {
 
 export async function onGetProjectforManager(body) {
     try {
-        if (!accessToken || !refreshToken) {
-            return {
-                status: 'false',
-                error: 'Access Token / Refresh Token is missing'
-            }
-        }
-        return axios.get(`/v1/project/getProjectforManager/${body.user}`, {
-            headers: {
-                        'Authorization' : `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json',
-                    } 
-        });
+        return axios.get(`/v1/project/getProjectforManager/${body.user}`, tokenConfig())
     } catch (error) {
         return {
             status: 'false',
@@ -62,22 +34,31 @@ export async function onGetProjectforManager(body) {
 
 export async function onDeleteProject(body) {
     try {
-        if (!accessToken || !refreshToken) {
-            return {
-                status: 'false',
-                error: 'Access Token / Refresh Token is missing'
-            }
-        }
-        return axios.post(`/v1/project/deleteProject`, body, {
-            headers: {
-                        'Authorization' : `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json',
-                    } 
-        });
+        return axios.post(`/v1/project/deleteProject`, body, tokenConfig())
     } catch (error) {
         return {
             status: 'false',
             error: error
         }
     }
+}
+
+//set up config with token, helper function
+export const tokenConfig = () => {
+
+    //get token from state
+    const accessToken = localStorage.getItem("accessToken")
+
+    //headers
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    //if token, add headers to config
+    if (accessToken) {
+        config.headers['Authorization'] = `Bearer ${accessToken}`
+    }
+    return config
 }

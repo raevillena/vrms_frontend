@@ -45,8 +45,11 @@ router.post('/login', async (req, res) => {
 
 //Verify authentication
 router.get('/verify',auth, async (req, res) =>{
+    //access token must be passed as a parameter to be checked if expired or valid,
+    //if valid, user must be returned since the localStorage does not store the user.
+    //result of this function should be the basis of the renewal of token along with any known errors
     try {
-        res.status(200).json({status: true})
+        res.status(200).json({status: true})//looks like it does not perform any verification here
     } catch (error) {
         logger.log('error', `message: ${error}`)
         res.status(500).json(error)

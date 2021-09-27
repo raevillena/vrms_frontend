@@ -16,19 +16,16 @@ const { Header, Content, Sider } = Layout;
 const Userdash = () => {
   const dispatch = useDispatch()
   let history= useHistory();
-  const userObj = useSelector(state => state.user)
+  let userObj = useSelector(state => state.user)
   const [studyData, setStudyData]= useState()
-  const [loading, setLoading] = useState(false)
-
-  const accessToken = localStorage.getItem("accessToken")
-  const refreshToken = localStorage.getItem("refreshToken")
+  const [loading, setLoading] = useState(true)
   
-    
   useEffect(() => {
-    async function getStudies(){
+    const accessToken = localStorage.getItem("accessToken")
+    const refreshToken = localStorage.getItem("refreshToken")
+    async function getStudies(user){
       setLoading(true)
-      let result = await onGetStudyForUser(userObj.USER)
-      console.log(result)
+      let result = await onGetStudyForUser(user)
         let x = result.data
       let tempStudyData = []
       for(let i = 0; i < x.length; i++){ 
@@ -47,12 +44,12 @@ const Userdash = () => {
       setStudyData(tempStudyData)
       setLoading(false) 
     }
-      if(accessToken === '' || refreshToken === ''|| userObj.USER === ''){
-        return
-      }else{
-        getStudies()
-      }
-}, [userObj.USER])
+    if(accessToken === null || refreshToken === null || userObj.USER === ""){
+      return
+    }else{
+      getStudies(userObj.USER)
+    }
+}, [])
 
   const columns = [
     {
@@ -133,10 +130,8 @@ const Userdash = () => {
     },
   ];
   
-
 return (
   <div>
-    {console.log('studyData',studyData)}
     {userObj.USER.category === "user"? 
     <Layout  > 
         <Sider  className="sidebar" >

@@ -1,7 +1,5 @@
 import axios from 'axios'
 
-
-
 export async function onUserLogin(body, dispatch) {
     try {
         return axios.post("/v1/auth/login", body, {
@@ -20,17 +18,15 @@ export async function onUserLogin(body, dispatch) {
 }
 
 //for authentication
-export async function verifyAuth(dispatch) {
+export async function verifyAuth( accessToken, refreshToken, dispatch) {
     try {
-        const accessToken = localStorage.getItem("accessToken")
-        const refreshToken = localStorage.getItem("refreshToken")
-
+    
         if (accessToken === '' || refreshToken === '') {
             console.log('empty token')
         }else{
             return axios.get("/v1/auth/verify", {
                 headers: {
-                             'Authorization' : `Bearer ${accessToken}`,
+                            'Authorization' : `Bearer ${accessToken}`,
                             'Content-Type': 'application/json',
                         } 
             })
@@ -50,8 +46,6 @@ export async function verifyAuth(dispatch) {
         }
     }
 }
-
-
 
 
 export async function onUserLogout(body, dispatch) {
@@ -81,4 +75,3 @@ export async function onRenewToken(body, dispatch) {
         })
     }
 }
-

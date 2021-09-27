@@ -15,6 +15,7 @@ const Study = () => {
     const { Option } = Select;
     const projectObj = useSelector(state => state.project) //redux for project
     const userObj = useSelector(state => state.user)
+    const authObj = useSelector(state => state.auth)
 
     const [userData, setUserData] = useState([])
     const [study, setStudy] = useState({title: "", projectName: projectObj.PROJECT.projectName, deadline:"", startDate: "" ,assignee:[], budget: "", user: userObj.USER.name})
@@ -68,7 +69,7 @@ const Study = () => {
 
     async function onSubmit(){
         try {
-           let result =  await onStudyCreate(study) 
+           let result = await onStudyCreate(study, authObj.accessToken, authObj.refreshToken) 
            notif("success",result.data.message)
            setForProps(result.data.newStudy)
            setStudy({title: "  ", projectName:" ", deadline:"",assignee:[]})

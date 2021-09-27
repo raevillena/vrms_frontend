@@ -3,7 +3,7 @@ import { Input, Button, Form, Row, Col, Typography, Spin, notification} from 'an
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined} from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
-import {onUserLogin } from '@services/authAPI';
+import { onUserLogin } from '@services/authAPI';
 import { useDispatch } from 'react-redux';
 import '../styles/CSS/Userdash.css'
 
@@ -32,25 +32,35 @@ function Login() {
     }
     try {
       setLoading(true)
+      dispatch({
+        type: "LOGIN_LOADING",
+        LOADING: true
+      })
       let result = await onUserLogin(getUser)
       dispatch({
         type: "SET_USER",
-        value: result.data.data
-     })
-      
-      dispatch({
-        type: "VERIFIED_AUTHENTICATION",
-        value: true
-     })
+        value: result.data.data,
+      })
+      console.log("setting user in redux")
 
-     dispatch({
-      type: "LOGIN_SUCCESS"
-   })
-   localStorage.setItem("accessToken", result.data.accessToken);
-   localStorage.setItem("refreshToken", result.data.token.refreshToken);
-   localStorage.setItem("avatarFilename", result.data.data.avatarFilename);
-   
-     history.push('/')
+      //better if tokens where set in the reducers to ensure that the localstorage and redux is in sync
+      localStorage.setItem("accessToken", result.data.accessToken);
+      localStorage.setItem("refreshToken", result.data.token.refreshToken);
+      localStorage.setItem("avatarFilename", result.data.data.avatarFilename);
+      console.log("tokens saved in local storate")
+
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        value: true,
+        accessToken: result.data.accessToken,
+        refreshToken:result.data.token.refreshToken,
+        avatarFilename: result.data.data.avatarFilename,
+        LOADING: false
+      })
+
+      console.log("login success fired in redux")
+
+      history.push('/')
     
     } catch (error) {
       setLoading(false)

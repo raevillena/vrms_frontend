@@ -8,7 +8,15 @@ import {Provider} from 'react-redux'
 import { createStore} from 'redux';
 import rootReducer from './reducers/index'
 import { composeWithDevTools } from 'redux-devtools-extension'
+
+
 const store = createStore(rootReducer, composeWithDevTools())
+
+
+//this updates the localStorage whenever the auth access token is changed or updated
+store.subscribe(() =>{
+  localStorage.setItem("accessToken", store.getState().auth.accessToken);
+})
 
 ReactDOM.render(
   <React.StrictMode>
@@ -18,7 +26,6 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
-
 
 
 

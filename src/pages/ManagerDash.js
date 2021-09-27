@@ -23,8 +23,11 @@ const ManagerDash = (props) => {
   };
 
   useEffect(() => {
+    console.log("entering useffect for manager...")
     async function getProjects(){
-        let result = await onGetProjectforManager({user: userObj.USER.name})
+        console.log("USER on MANAGER: ", userObj.USER)
+        let result = await onGetProjectforManager({user: userObj.USER.name})//CHANGE TO ID
+        console.log("RES for projects: ", result)
         let projectResult = result.data
         let tempProjectData = []
         for(let i = 0; i < projectResult.length; i++){ 
@@ -41,7 +44,9 @@ const ManagerDash = (props) => {
             
           }
         setProjectData(tempProjectData)
+        console.log("exiting useffect for manager...")
     }
+      console.log("get project functions get fired...")
       getProjects()
 }, [userObj.USER.name])
 

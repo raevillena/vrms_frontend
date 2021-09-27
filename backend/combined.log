@@ -286,3 +286,7 @@
 2021-09-24T07:07:26.319Z [info]: server started at port: 3001
 2021-09-24T07:11:42.872Z [info]: server started at port: 3001
 2021-09-24T08:09:53.264Z [info]: server started at port: 3001
+2021-09-24T21:29:28.980Z [info]: server started at port: 3001
+2021-09-25T13:19:19.824Z [error]: connect EACCES 35.247.131.114:27017
+2021-09-25T14:33:27.441Z [error]: connect EACCES 35.247.131.114:27017
+2021-09-25T22:57:43.249Z [info]: server started at port: 3001

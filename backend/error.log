@@ -18,3 +18,5 @@
 2021-09-21T13:47:23.750Z [error]: Error: /downloadHistory - ValidationError: downloadedBy: Path `downloadedBy` is required., tableID: Path `tableID` is required.
 2021-09-21T16:02:05.615Z [error]: message: ValidationError: refreshTokenDuration: Cast to Number failed for value "24h" (type string) at path "refreshTokenDuration"
 2021-09-22T07:14:12.703Z [error]: Error: /downloadHistory - ValidationError: tableID: Path `tableID` is required.
+2021-09-25T13:19:19.824Z [error]: connect EACCES 35.247.131.114:27017
+2021-09-25T14:33:27.441Z [error]: connect EACCES 35.247.131.114:27017
