@@ -46,6 +46,7 @@ router.post('/createstudy', auth, async(req, res) => {
         studyTitle: req.body.title,
         studyID: studyID,
         assignee: req.body.assignee,
+        assigneeName: req.body.assigneeName,
         status: "ONGOING",
         progress: 0,
         projectName: req.body.projectName,

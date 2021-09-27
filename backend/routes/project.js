@@ -39,6 +39,7 @@ router.route('/createproject').post(async (req, res) => {
         projectName: req.body.projectName,
         projectID: projectID,
         assignee: req.body.assignee,
+        assigneeName: req.body.assigneeName,
         active: true,
         status: 'ONGOING'
     })

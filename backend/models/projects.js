@@ -31,6 +31,10 @@ const ProjectSchema = new mongoose.Schema({
         type: Array,
         required: true
     },
+    assigneeName:{
+        type: Array,
+        required: true
+    },
     active:{
         type: Boolean
     },

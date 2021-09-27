@@ -23,18 +23,15 @@ const ManagerDash = (props) => {
   };
 
   useEffect(() => {
-    console.log("entering useffect for manager...")
     async function getProjects(){
-        console.log("USER on MANAGER: ", userObj.USER)
-        let result = await onGetProjectforManager({user: userObj.USER.name})//CHANGE TO ID
-        console.log("RES for projects: ", result)
+        let result = await onGetProjectforManager({user: userObj.USER._id})//CHANGE TO ID
         let projectResult = result.data
         let tempProjectData = []
         for(let i = 0; i < projectResult.length; i++){ 
             tempProjectData.push({
                 key:  projectResult[i]._id,
                 projectID:  projectResult[i].projectID,
-                projectLeader:  [projectResult[i].assignee],
+                projectLeader:  projectResult[i].assigneeName,
                 projectName:  projectResult[i].projectName,
                 dateCreated: moment( projectResult[i].dateCreated).format('MM-DD-YYYY'),
                 dateUpdated: moment( projectResult[i].dateUpdated).format('MM-DD-YYYY'),
@@ -44,9 +41,7 @@ const ManagerDash = (props) => {
             
           }
         setProjectData(tempProjectData)
-        console.log("exiting useffect for manager...")
     }
-      console.log("get project functions get fired...")
       getProjects()
 }, [userObj.USER.name])
 
@@ -58,7 +53,7 @@ useEffect(() => {
       if(cancel) return
     setProjectData([...projectData, {key: projectData.length + 1,
         projectID:props.data.projectID,
-        projectLeader: [props.data.assignee],
+        projectLeader: props.data.assigneeName,
         projectName: props.data.projectName,
         dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
         dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
@@ -97,7 +92,7 @@ const handleRemove = (key) => { //deleting datasheet
       key: 'projectLeader',
       width: '15%',
       render: (leader) => <List size="small"
-      dataSource={leader[0]}
+      dataSource={leader}
       renderItem={item => <List.Item>{item}</List.Item>}
       >
       </List>

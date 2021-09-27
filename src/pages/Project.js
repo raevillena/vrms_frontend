@@ -8,6 +8,7 @@ import MobileHeader from '../components/components/ManagerHeaderMobile';
 import ManagerDash from './ManagerDash.js';
 import { useSelector } from 'react-redux';
 
+
 const { Header, Content, Sider } = Layout;
 
 const Project = () => {
@@ -15,12 +16,20 @@ const Project = () => {
     const userObj = useSelector(state => state.user)
 
     const [userData, setUserData] = useState([])
-    const [project, setProject] = useState({projectName: '', assignee: [], user: userObj.USER.name});
+    const [project, setProject] = useState({projectName: '', assignee: [], assigneeName: [], user: userObj.USER.name});
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [forProps, setForProps] = useState()
 
     function handleChange(value) {   //for assigning user
-        setProject({...project, assignee: value})
+        let tempArray =[]
+        value.forEach(id => {
+            userData.forEach(user => {
+                if(user.value === id){
+                   tempArray.push(user.name)
+                }
+            });
+        });
+        setProject({...project, assignee: value, assigneeName: tempArray})
     }
 
     const notif = (type, message) => {
@@ -41,7 +50,7 @@ const Project = () => {
     
       const handleCancel = () => {
         setIsModalVisible(false);
-        setProject({...project, projectName: '', assignee: ''})
+        setProject({...project, projectName: '', assignee: []})
       };
 
     useEffect(() => {
@@ -53,7 +62,7 @@ const Project = () => {
                 tempUserData.push({
                     key: x[i].name,
                     name:  x[i].name,
-                    value:  x[i].name,
+                    value: x[i]._id
                 })
             }
             setUserData(tempUserData)
@@ -63,11 +72,12 @@ const Project = () => {
 
     async function onSubmit(){
         try {
-          let result =  await onProjectCreate(project) 
+          let result =  await onProjectCreate(project)
+          const data = result.data.newProject
           notif("success",result.data.message)
           setProject({projectName: "", assignee: ""})
-          setForProps(result.data.newProject)
-          setProject({...project, projectName: '', assignee: ''})
+          setForProps(data)
+          setProject({...project, projectName: '', assignee: []})
         } catch (error) {
            notif("error",error.response.data.message)
         }

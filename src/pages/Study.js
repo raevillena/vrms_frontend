@@ -18,7 +18,7 @@ const Study = () => {
     const authObj = useSelector(state => state.auth)
 
     const [userData, setUserData] = useState([])
-    const [study, setStudy] = useState({title: "", projectName: projectObj.PROJECT.projectName, deadline:"", startDate: "" ,assignee:[], budget: "", user: userObj.USER.name})
+    const [study, setStudy] = useState({title: "", projectName: projectObj.PROJECT.projectName, deadline:"", startDate: "" ,assignee:[], assigneeName:[], budget: "", user: userObj.USER.name})
     const [forProps, setForProps] = useState()
     const [isModalVisible, setIsModalVisible] = useState(false);
     
@@ -43,6 +43,18 @@ const Study = () => {
         setStudy({...study, assignee: [], title: "", deadline: "", budget: ""})
       };
       
+      function handleChange(value) {   //for assigning user
+        let tempArray =[]
+        value.forEach(id => {
+            userData.forEach(user => {
+                if(user.value === id){
+                   tempArray.push(user.name)
+                }
+            });
+        });
+        setStudy({...study, assignee: value, assigneeName: tempArray})
+    }
+
     
     useEffect(() => {
         async function getUsers(){
@@ -53,7 +65,7 @@ const Study = () => {
                 tempUserData.push({
                     key: x[i].name,
                     name:  x[i].name,
-                    value:  x[i].name,
+                    value:  x[i]._id,
                 })
             }
             setUserData(tempUserData)
@@ -62,9 +74,6 @@ const Study = () => {
     }, [])
     
 
-    function handleChange(value) {   //for assigning user
-        setStudy({...study, assignee: value})
-    }
 
 
     async function onSubmit(){

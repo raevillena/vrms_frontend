@@ -186,7 +186,7 @@ router.get("/getAllUser", async(req,res) => {
 
 router.get("/getAllManager", async(req,res) => {
   try {
-     User.find({"category": "manager"}, {"name": 1, _id: 0}, function(err, users) {
+     User.find({"category": "manager"}, {password:0, avatarFilename: 0}, function(err, users) {
       res.send(users);  
     });
   } catch (error) {

@@ -49,6 +49,10 @@ const StudiesSchema = new mongoose.Schema({
         type: Array,
         required: true
     },
+    assigneeName:{
+        type: Array,
+        required: true
+    },
     budget: {
         type: Number,
         required: true
