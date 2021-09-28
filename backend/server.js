@@ -3,7 +3,7 @@ require('dotenv').config()
 const express =require('express')
 const app = express()
 const mongoose = require('mongoose')
-const bodyparser = require("body-parser")
+const mode = process.env.NODE_ENV
 
 
 
@@ -61,12 +61,15 @@ io.on("connection", socket => {
     })
 
     socket.on("send-changes-columns-delete", state => { //changes in columns during delete
-        console.log(state.data)
         socket.in(state.room).emit("receive-columns-delete", state.data)
     })
 
     socket.on("send-changes", editorState => { //changes in data
         socket.to(editorState.room).emit("receive-datagrid", editorState.data)
+    })
+
+    socket.on("send-undo", state => { //changes during undo
+        socket.to(state.room).emit("receive-undo", state.data)
     })
     
     socket.on("disconnect", () => console.log("Client disconnected"));

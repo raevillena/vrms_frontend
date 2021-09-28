@@ -1,6 +1,7 @@
 import {io} from 'socket.io-client'
+//const mode = process.env.NODE_ENV
 
-export const socket = io("http://nberic.org:3002")
+ export const socket = io("http://nberic.org:3002")
 
 export const join = (id, user, join) =>{
     socket.emit('join-table', {room: id, user: user, join: join})
@@ -22,4 +23,8 @@ export const columnDelete = (data, id) =>{
 
 export const emitDatagridChange = (data, id) =>{
     socket.emit('send-changes', {data: data, room: id})
+}
+
+export const emitUndo = (data, id) =>{
+  socket.emit('send-undo', {data: data, room: id})
 }

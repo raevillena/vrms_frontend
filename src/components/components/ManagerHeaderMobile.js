@@ -1,5 +1,5 @@
 import React from 'react'
-import {  Menu, notification } from 'antd'
+import {  Menu } from 'antd'
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { onUserLogout } from '../../services/authAPI';
@@ -14,33 +14,25 @@ const ManagerHeaderMobile = () => {
 
     const {SubMenu}= Menu
 
-    const notif = (type, message) => {
-      notification[type]({
-        message: 'Notification',
-        description:
-          message,
-      });
-    };
-
     const handleLogout = async () => { 
-        try {
-          const tokens = {
-            refreshToken: localStorage.getItem("refreshToken"),
-            accessToken: localStorage.getItem("accessToken")
-          }
-          
-          onUserLogout(tokens)
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          dispatch({
-            type: "VERIFIED_AUTHENTICATION",
-            value: false
-         })
-          history.push('/login')
-        } catch (error) {
-          notif('error',error.response.data.error);
+      try {
+        const tokens = {
+          refreshToken: localStorage.getItem("refreshToken"),
+          accessToken: localStorage.getItem("accessToken")
         }
-      };
+        //there should also be logout loading dispatch here for reference of notifications
+        //user must be at least when logout is successful
+        onUserLogout(tokens)
+        dispatch({
+          type: "LOGOUT_SUCCESS",
+          value: false
+       })
+        history.push('/')
+      } catch (error) {
+        console.error(error)
+        alert(error.response.data.error);
+      }
+    };
 
       const studies = async() => {
         history.push('/')

@@ -4,6 +4,7 @@ const Studies = require('../models/studies')
 const Datagrid = require('../models/datagrid')
 const Projects = require('../models/projects')
 const Download = require('../models/download')
+const Editlog = require('../models/editlog')
 const Documentation = require('../models/documentation')
 const mongoose = require('mongoose')
 const shortid = require('shortid')
@@ -426,6 +427,23 @@ router.post('/downloadHistory', auth,  async(req, res) => {
     }
 })
 
+//edit log
+router.post('/editlog', auth,  async(req, res) => {
+    console.log(req.body)
+    try {
+    const edit = new Editlog({
+        editDate: Date.now(),
+        editedBy: req.body.user,
+        tableID: req.body.id
+    })
+    await edit.save()
+    res.status(200).json({ message: "Edit Recorded"})
+    } catch (error) {
+        logger.log('error', `Error: /editlog - ${error}`) 
+        res.status(400).json({message: error.message})
+    }
+})
+
 //get download history
 router.get('/getdownloadHistory/:tableID', auth,  async(req, res) => {
     try {
@@ -439,6 +457,23 @@ router.get('/getdownloadHistory/:tableID', auth,  async(req, res) => {
     })
     } catch (error) {
         logger.log('error', 'Error: /getdownloadhistory') 
+        res.status(400).json({message: error.message})
+    }
+})
+
+//get edit history
+router.get('/getEditlog/:tableID', auth,  async(req, res) => {
+    try {
+    Editlog.find({"tableID": req.params.tableID}, function(err, history){
+        if(err){
+            logger.log('error', 'Error: /getEditlog')
+        }
+        res.status(200).json({
+            history: history
+        })
+    })
+    } catch (error) {
+        logger.log('error', 'Error: /getEditlog') 
         res.status(400).json({message: error.message})
     }
 })

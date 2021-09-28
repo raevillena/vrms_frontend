@@ -167,6 +167,16 @@ export async function onDownloadHistory(body) {
     }
 }
 
+export async function onEditLog(body) {
+    try {
+        return axios.post('/v1/studies/editlog', body, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
 export async function onGetDownloadHistory(body) {
     try {
         return axios.get(`/v1/studies/getdownloadHistory/${body.tableID}`, tokenConfig())
@@ -177,6 +187,15 @@ export async function onGetDownloadHistory(body) {
     }
 }
 
+export async function onGetEditHistory(body) {
+    try {
+        return axios.get(`/v1/studies/getEditlog/${body.tableID}`, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
 export async function onDeleteStudy(body) {
     try {
         return axios.post('/v1/studies/deleteStudy', body, tokenConfig())

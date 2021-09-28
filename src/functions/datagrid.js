@@ -1,4 +1,4 @@
-import { onDownloadHistory, onUpdateDatagrid } from '../services/studyAPI';
+import { onDownloadHistory, onEditLog, onUpdateDatagrid } from '../services/studyAPI';
 import { notification } from 'antd';
 
 export const notif = (type, message) => {
@@ -91,7 +91,9 @@ export async function downloadCSVonCreate(data, title){
       element.click()
   }
 
-  export async function updateDB(data){
+  export async function updateDB(data, id, user){
     let result = await onUpdateDatagrid(data)
     notif('success', result.data.message)
+    let resultedit = await onEditLog({user: user , id})
+    notif('success', resultedit.data.message)
   }

@@ -8,14 +8,17 @@ import {Provider} from 'react-redux'
 import { createStore} from 'redux';
 import rootReducer from './reducers/index'
 import { composeWithDevTools } from 'redux-devtools-extension'
+import {loadState, saveState} from './services/localStorage'
 
-
-const store = createStore(rootReducer, composeWithDevTools())
-
+const persistedState = loadState()
+const store = createStore(rootReducer, persistedState, composeWithDevTools())
 
 //this updates the localStorage whenever the auth access token is changed or updated
 store.subscribe(() =>{
   localStorage.setItem("accessToken", store.getState().auth.accessToken);
+  saveState({project: store.getState().project,
+    study : store.getState().study
+  })
 })
 
 ReactDOM.render(

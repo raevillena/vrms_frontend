@@ -1,21 +1,24 @@
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import {Button, Input, Select, Spin, Tooltip, Image } from 'antd'
-import { useSelector} from 'react-redux';
+import { useSelector, useDispatch} from 'react-redux';
 import { DynamicDataSheetGrid, checkboxColumn,keyColumn} from 'react-datasheet-grid';
-import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined,  LoadingOutlined } from '@ant-design/icons';
+import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined,  LoadingOutlined, UndoOutlined, RedoOutlined } from '@ant-design/icons';
 import { onEditDatagrid } from '../services/studyAPI';
 import '../styles/CSS/Userdash.css'
 import { notif, downloadCSV, updateDB} from '../functions/datagrid'
 import { onUploadDataGrid } from '../services/uploadAPI';
-import { socket , changeColumns, columnDelete, emitDatagridChange } from '../services/socket';
+import { socket , changeColumns, columnDelete, emitDatagridChange, emitUndo } from '../services/socket';
 
 
 const EditDataGrid = (props) => {
 
   const { Option } = Select
+  const dispatch = useDispatch();
   //redux states
   const studyObj = useSelector(state => state.study)
   const userObj = useSelector(state => state.user)
+  const undoObj = useSelector(state => state.undo)
+  const redoObj = useSelector(state => state.redo)
 
 
   //declaring initial states
@@ -25,7 +28,7 @@ const EditDataGrid = (props) => {
     isLoading: true, 
     deleteColumn: [], 
     disabledColumn: true,
-    toRemoveColumn: '',
+    toRemoveColumn: [],
     imageFilename: '',
     ID: '',
     mode: '' //state of mode in terms od editing
@@ -34,12 +37,15 @@ const EditDataGrid = (props) => {
   const [tempCol, setTempCol] = useState([])
   const [divDisabled, setDivDisabled] = useState(true)
   const [addColumn, setAddColumn] = useState('')//add column data
+  //const [undo, setUndo] = useState({column: [], data: []})
+  //const [redo, setRedo] = useState({column: [], data: []})
 
   //declaring icon
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
   //declaring memoise and callbacks
   const columns = useMemo(() => tempCol, [tempCol]) //setting columns 
+  const data = useMemo(() => datagridData, [datagridData])
   const createRow = useCallback(() => ({}), []) //create row
 
   //decalaring data to send backend
@@ -72,7 +78,7 @@ const EditDataGrid = (props) => {
 
   function update(){
     clearTimeout(timer)
-    updateDB(dataToSend)
+    updateDB(dataToSend, props.data.id.tableID ,userObj.USER.name)
   }
 
   let timer;
@@ -83,8 +89,6 @@ const runTimer = () => {
       document.getElementById('save').click()
     }, 5000);
 }
-
-
 
  const TextComponent = React.memo(
     ({ rowData, setRowData, active}) => {
@@ -194,6 +198,10 @@ const runTimer = () => {
       title: addColumn,
       type: 'text'
     }])
+    dispatch({
+      type: "SET_UNDO",
+      column: tempCol,
+    })
     setAddColumn('')
     changeColumns( 'text' , addColumn, props.data.id.tableID)
   }
@@ -204,6 +212,10 @@ const runTimer = () => {
       title: addColumn,
       type: 'Checkbox'
     }])
+    dispatch({
+      type: "SET_UNDO",
+      column: tempCol,
+    })
     setAddColumn('')
     changeColumns( 'Checkbox' , addColumn, props.data.id.tableID)
   }
@@ -214,17 +226,31 @@ const runTimer = () => {
       title: addColumn,
       type: 'camera'
     }])
+    dispatch({
+      type: "SET_UNDO",
+      column: tempCol,
+    })
     setAddColumn('')
     changeColumns( 'camera' , addColumn, props.data.id.tableID)
   }
 
-  const removeColumn = (key) => { //removing column
+  const removeColumn = (key, dat) => { //removing column
+    console.log('datagrid', dat)
+    console.log('data', data)
    try {
     let editCol = tempCol
+    //let editData = data
+    // console.log('edit data for undo', editData)
+    dispatch({
+      type: "SET_UNDO",
+      column: editCol,
+      data: datagridData
+    })
+    datagridData.forEach((element) => delete element[key])
     let newColumn = editCol.filter(value => !key.includes(value.title));
     setTempCol(newColumn)
-    datagridData.forEach((element) => delete element[key])
     columnDelete(newColumn, props.data.id.tableID)
+    setState({...state, toRemoveColumn: []})
    } catch (error) {
      notif('error', error)
    }
@@ -273,15 +299,69 @@ const runTimer = () => {
     socket.on('receive-datagrid', msg => {
       setDatagridData(msg)
     })
+    socket.on('receive-undo', msg => {
+      console.log('receive-undo', msg)
+      let tempCols =[]
+      let change = msg.column
+      for(let j = 0; j < change.length ; j++) {
+        tempCols.push(checkColumnType(change[j].type, change[j].title))
+      }
+      setTempCol(tempCols)
+      setDatagridData(msg.data)
+    })
   }, [])
 
 
   function handleColumnToDelete(value) { //setting column to delete
+    console.log("from handleColumn to Delete Function", )
     setState({...state, toRemoveColumn: value})
   }
 
   function download(){
     downloadCSV(datagridData, state.ID, state.title, userObj.USER.name)
+  }
+
+  const undoFunction = () => {
+    try {
+      let col = undoObj.column
+      let tempCols =[]
+      console.log('edit data for undofunction', datagridData)
+      for(let j = 0; j < col.length ; j++) {
+        tempCols.push(checkColumnType(col[j].type, col[j].title))
+      }
+      dispatch({
+        type: "SET_REDO",
+        column: tempCol,
+        data: datagridData
+      })
+      setTempCol(tempCols)
+      setDatagridData(undoObj.data)
+      emitUndo(undoObj, props.data.id.tableID)
+    } catch (error) {
+      notif('error', error)
+    }
+  }
+  
+  
+  const redoFunction = () => {
+    try {
+      //console.log(redo.data)
+      let col = redoObj.column
+      let tempCols =[]
+      for(let j = 0; j < col.length ; j++) {
+        tempCols.push(checkColumnType(col[j].type, col[j].title))
+      }
+      dispatch({
+        type: "SET_UNDO",
+        column: undoObj.column,
+        data: undoObj.data
+      })
+      setTempCol(tempCols)
+      setDatagridData(redoObj.data)
+      emitUndo(redoObj, props.data.id.tableID)
+    } catch (error) {
+      notif('error', error)
+    }
   }
 
   return (
@@ -324,6 +404,7 @@ const runTimer = () => {
                       <CameraFilled />
                     </Button>
                   </Tooltip>
+                  
               </div>
           </div>
           <div style={{display:'grid'}}>
@@ -331,19 +412,29 @@ const runTimer = () => {
               Delete Column 
             </label>
             <div style={{display:'flex', flexDirection:'row', gap:'5px', width:'300px'}}>
-                <Select placeholder="Select column title to delete" onChange={handleColumnToDelete} mode="tags" tokenSeparators={[',']} style={{ width: '100%' }}>
+                <Select placeholder="Select column title to delete" onChange={handleColumnToDelete} value={state.toRemoveColumn} mode="tags" tokenSeparators={[',']} style={{ width: '100%' }}>
                   {tempCol.map(column => (
                     <Option key={column.title} value={column.title}>{column.title}</Option>
                   ))}
                 </Select>
                 <Tooltip placement='top' title='Delete Selected Column'> 
-                  <Button danger onClick={() => removeColumn(state.toRemoveColumn)}>
+                  <Button danger onClick={() => removeColumn(state.toRemoveColumn, datagridData)}>
                     <DeleteFilled/>
                   </Button> 
                 </Tooltip>
                 <Tooltip placement='top' title='Download table in CSV'> 
                   <Button  onClick={download}>
                     <DownloadOutlined/>
+                  </Button>
+                </Tooltip>
+                <Tooltip placement='top' title='Undo'> 
+                  <Button onClick={() => undoFunction()} >
+                      <UndoOutlined />
+                  </Button>
+                </Tooltip>
+                <Tooltip placement='top' title='Redo'> 
+                  <Button onClick={()=> redoFunction()}>
+                      <RedoOutlined />
                   </Button>
                 </Tooltip>
             </div>
@@ -353,7 +444,7 @@ const runTimer = () => {
           {datagridData && datagridData.constructor === Array && datagridData.length === 0 ?  <div className="spinner"><Spin indicator={antIcon}/> </div>: 
             <div >
                 <DynamicDataSheetGrid
-                    data={datagridData}
+                    data={data}
                     onChange={setDatagridData}
                     columns={columns}
                     createRow={createRow}

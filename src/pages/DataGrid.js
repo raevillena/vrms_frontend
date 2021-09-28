@@ -91,7 +91,6 @@ const DataGrid = () => {
       tempCol: [...columns, {
       ...keyColumn(state.addColumn, textColumn),
       title: state.addColumn,
-      disabled: ({ rowData }) => !rowData.Checkbox,
       type: 'text'
     }]})
   }

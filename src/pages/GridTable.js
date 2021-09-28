@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useMemo} from 'react';
 import { Table, Button, Popconfirm, Form, Spin, Tooltip, Modal, Empty } from 'antd';
 import { DeleteFilled, EditFilled, DownloadOutlined, InfoCircleFilled } from '@ant-design/icons';
-import { onDeleteDatagrid, onDownloadHistory, onEditDatagrid, onGetDatagrid, onGetDownloadHistory } from '../services/studyAPI';
+import { onDeleteDatagrid, onDownloadHistory, onEditDatagrid, onGetDatagrid, onGetDownloadHistory, onGetEditHistory } from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import moment from 'moment';
 import EditDatagrid from './EditDatagrid'
@@ -18,7 +18,9 @@ const GridTable = (props) => {
     const [editData, setEditData] = useState()
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+    const [isEditHisModalVisible, setIsEditHisModalVisible] = useState(false);
     const [history, setHistory] = useState([])
+    const [editHistory, setEditHistory] = useState([])
     const [loadingModal, setLoadingModal] = useState(false)
 
     const handleRemove = (key) => { //deleting datasheet
@@ -70,12 +72,37 @@ const GridTable = (props) => {
     setLoadingModal(false)
   };
 
+  const showModalEditHis = async(id) => {
+    setLoadingModal(true)
+    let result = await onGetEditHistory({tableID: id.tableID})
+    let history = result.data.history
+    let tempHistory = []
+        for(let i = 0; i < history.length; i++){ 
+          tempHistory.push({
+            key: history[i]._id,
+            editedBy: history[i].editedBy,
+            editDate: moment(history[i].editedDate).format('YYYY-MM-DD HH:mm:ss'),
+          });
+        }
+        setEditHistory(tempHistory)
+   setIsEditHisModalVisible(true)
+    setLoadingModal(false)
+  };
+
   const handleOk = () => {
     setIsModalVisible(false);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
+  };
+
+  const handleOkEditHistoy = () => {
+    setIsEditHisModalVisible(false);
+  };
+
+  const handleCancelEditHistory = () => {
+    setIsEditHisModalVisible(false);
   };
 
   const showModalEdit = () => {
@@ -135,6 +162,21 @@ const GridTable = (props) => {
       width: '50%',
       dataIndex: 'downloadDate',
       key: 'downloadDate',
+    }
+  ]
+
+  const editHistoryColumns=[
+    {
+      title: 'Editor',
+      width: '50%',
+      dataIndex: 'editedBy',
+      key: 'editedBy',
+    },
+    {
+      title: 'Edit Date',
+      width: '50%',
+      dataIndex: 'editDate',
+      key: 'editDate',
     }
   ]
 
@@ -218,6 +260,11 @@ const GridTable = (props) => {
             let id ={tableID: record.tableID}
             showModal(id)}} icon={<InfoCircleFilled />}/>
         </Tooltip>
+        <Tooltip title='View Edit History' placement='rightTop'>
+          <Button onClick={()=>{
+            let id ={tableID: record.tableID}
+            showModalEditHis(id)}} icon={<InfoCircleFilled />}/>
+        </Tooltip>
         </Form>,
                     
         },
@@ -232,11 +279,21 @@ const GridTable = (props) => {
             <Modal visible={isEditModalVisible} footer={null} onCancel={handleCancelEdit} width={1000} title="Edit Table">
                 <EditDatagrid data={editData}/>
             </Modal>
-            <Modal title="Add Study" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title="Download History" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
               {loadingModal? <div className="spinner"><Spin /> </div> : <div>
                 {history.length === 0 ? <Empty/> : 
                 <div style={{justifyContent: 'center', alignItems: 'center'}}> 
                   <Table pagination={false} scroll={{y: 500}} columns={historyColumns} dataSource={history} />
+                </div>
+                }
+                </div>}
+            </Modal>
+
+            <Modal title="Edit History" visible={isEditHisModalVisible} onOk={handleOkEditHistoy} onCancel={handleCancelEditHistory}>
+              {loadingModal? <div className="spinner"><Spin /> </div> : <div>
+                {editHistory.length === 0 ? <Empty/> : 
+                <div style={{justifyContent: 'center', alignItems: 'center'}}> 
+                  <Table pagination={false} scroll={{y: 500}} columns={editHistoryColumns} dataSource={editHistory} />
                 </div>
                 }
                 </div>}
