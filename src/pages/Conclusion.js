@@ -84,16 +84,11 @@ const Conclusion = () => {
 
       useEffect(() => {
         async function getDataFromDB(){
-          try {
             setLoading(true)
               let result = await onGetDocumentation({studyID: studyObj.STUDY.studyID})
               setLoading(false)
               const contentState = convertFromRaw(JSON.parse(result.data.docs.conclusion)); //displaying data
               setEditorState(EditorState.createWithContent(contentState))
-              
-          } catch (error) {
-              notif('error', 'Error in displaying data!')
-          }
       }
         getDataFromDB()
       }, [studyObj.STUDY.studyID])
