@@ -61,16 +61,22 @@ const Summary = () => {
                 let result = await onGetStudyForDoc({studyID: studyObj.STUDY.studyID})
                 setLoading(false)
                 setStudy(result.data.study[0]) //study data
-                setAssignees(result.data.study[0].assignee) 
-                const contentState = convertFromRaw(JSON.parse(result.data.study[0].summary)); //displaying summary
+                setAssignees(result.data.study[0].assignee)
+                let contentState = null
+                if(result.data.study[0].summary){
+                    contentState = convertFromRaw(JSON.parse(result.data.study[0].summary))//displaying summary
+                }else{
+                    contentState = convertFromRaw(JSON.parse("{\"blocks\":[{\"key\":\"11i2s\",\"text\":\"\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"))
+                }
                 setEditorState(EditorState.createWithContent(contentState))
-                
             } catch (error) {
+                console.log("error in get study data function:", error)
                 notif('error', 'Error in getting data!')
             }
         }
 
           getStudyData()
+          return () => console.log("unmounting from summary")
       }, [studyObj.STUDY.studyID])
 
     return (

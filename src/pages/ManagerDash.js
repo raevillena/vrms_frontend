@@ -83,7 +83,6 @@ const handleRemove = (key) => { //deleting datasheet
       key: 'projectID',
       width: '10%',
       defaultSortOrder: 'descend',
-      fixed: 'left',
       sorter: (a, b) => a.studyno - b.studyno,
     },
     {

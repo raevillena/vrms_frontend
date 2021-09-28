@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useMemo} from 'react';
 import { Table, Button, Popconfirm, Form, Spin, Tooltip, Modal, Empty } from 'antd';
-import { DeleteFilled, EditFilled, DownloadOutlined, InfoCircleFilled } from '@ant-design/icons';
+import { DeleteFilled, EditFilled, DownloadOutlined, InfoCircleFilled, HistoryOutlined, EyeOutlined } from '@ant-design/icons';
 import { onDeleteDatagrid, onDownloadHistory, onEditDatagrid, onGetDatagrid, onGetDownloadHistory, onGetEditHistory } from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import moment from 'moment';
@@ -8,6 +8,7 @@ import EditDatagrid from './EditDatagrid'
 import '../styles/CSS/Userdash.css'
 import { notif, downloadCSVonGrid } from '../functions/datagrid';
 import { join } from '../services/socket';
+import ViewDatagrid from './ViewDatagrid';
 
 
 const GridTable = (props) => {
@@ -17,11 +18,13 @@ const GridTable = (props) => {
     const [loading, setLoading] = useState(false)
     const [editData, setEditData] = useState()
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isViewModalVisible, setIsViewModalVisible] = useState(false);
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [isEditHisModalVisible, setIsEditHisModalVisible] = useState(false);
     const [history, setHistory] = useState([])
     const [editHistory, setEditHistory] = useState([])
     const [loadingModal, setLoadingModal] = useState(false)
+
 
     const handleRemove = (key) => { //deleting datasheet
         let newData = tableData.filter((tempData) => {
@@ -114,6 +117,14 @@ const GridTable = (props) => {
     join(editData.id.tableID, userObj.USER.name, false)
   };
 
+  const showModalView = () => {
+    setIsViewModalVisible(true)
+  };
+
+const handleCancelView = () => {
+  setIsViewModalVisible(false)
+};
+
 
 
   useEffect(() => { //displaying the added table
@@ -185,7 +196,6 @@ const GridTable = (props) => {
           title: 'Table ID',
           width: '10%',
           dataIndex: 'tableID',
-          fixed: 'left',
           key: 'tableID',
         },
         {
@@ -222,7 +232,7 @@ const GridTable = (props) => {
           render: (text, record, index) => 
             <Form style={{display:'flex', gap:'5px'}}>
               <div>
-                <Tooltip title='Download table in CSV' placement='rightTop'>
+                <Tooltip title='Download table in CSV' placement='top'>
                 <Button  onClick={async (e) => {
                     let id ={tableID: record.tableID}
                     let result = await onEditDatagrid(id)
@@ -233,38 +243,58 @@ const GridTable = (props) => {
                 }} icon={<DownloadOutlined/>}></Button>
                 </Tooltip>
               </div>
-              <Tooltip title='Edit table' placement='rightTop'>
-          <Button onClick = {
-           async (e) => {
-                let id ={tableID: record.tableID}
-                setEditData({id:id})
-                join(record.tableID, userObj.USER.name, true)
-                showModalEdit()
-            }
-          }   icon={<EditFilled />}></Button>
-          </Tooltip>
-          <Tooltip title='Delete table' placement='rightTop'>
-          <Popconfirm title="Sure to delete?" onConfirm = {
-           async (key) => {
-                let id ={_id: record.key}
-                await onDeleteDatagrid(id)
-                await handleRemove(record.key)
-                notif("error", "Deleted")
-            }
-          }>
-          <Button danger icon={<DeleteFilled />}></Button>
-        </Popconfirm>
-        </Tooltip>
-        <Tooltip title='View Download History' placement='rightTop'>
-          <Button onClick={()=>{
-            let id ={tableID: record.tableID}
-            showModal(id)}} icon={<InfoCircleFilled />}/>
-        </Tooltip>
-        <Tooltip title='View Edit History' placement='rightTop'>
-          <Button onClick={()=>{
-            let id ={tableID: record.tableID}
-            showModalEditHis(id)}} icon={<InfoCircleFilled />}/>
-        </Tooltip>
+              <div>
+              <Tooltip title='Edit table' placement='top'>
+                <Button onClick = {
+                  async (e) => {
+                      let id ={tableID: record.tableID}
+                      setEditData({id:id})
+                      join(record.tableID, userObj.USER.name, true)
+                      showModalEdit()
+                  }
+                }   icon={<EditFilled />}></Button>
+              </Tooltip>
+            </div>
+            <div>
+              <Tooltip title='View table' placement='top'>
+                <Button onClick = {
+                  async (e) => {
+                      let id ={tableID: record.tableID}
+                      join(record.tableID, userObj.USER.name, true)
+                      setEditData({id:id})
+                      showModalView(true)
+                  }
+                }   icon={<EyeOutlined />}></Button>
+              </Tooltip>
+            </div>
+            <div>
+              <Tooltip title='View Download History' placement='top'>
+                <Button onClick={()=>{
+                  let id ={tableID: record.tableID}
+                  showModal(id)}} icon={<InfoCircleFilled />}/>
+              </Tooltip>
+            </div>
+            <div>
+              <Tooltip title='View Edit History' placement='top'>
+                <Button onClick={()=>{
+                  let id ={tableID: record.tableID}
+                  showModalEditHis(id)}} icon={<HistoryOutlined />}/>
+              </Tooltip>
+            </div>
+            <div>
+              <Tooltip title='Delete table' placement='top'>
+                <Popconfirm title="Sure to delete?" onConfirm = {
+                  async (key) => {
+                        let id ={_id: record.key}
+                        await onDeleteDatagrid(id)
+                        await handleRemove(record.key)
+                        notif("error", "Deleted")
+                    }
+                  }>
+                  <Button danger icon={<DeleteFilled />}></Button>
+                </Popconfirm>
+              </Tooltip>
+            </div>
         </Form>,
                     
         },
@@ -278,6 +308,10 @@ const GridTable = (props) => {
            }
             <Modal visible={isEditModalVisible} footer={null} onCancel={handleCancelEdit} width={1000} title="Edit Table">
                 <EditDatagrid data={editData}/>
+            </Modal>
+
+            <Modal visible={isViewModalVisible} footer={null} onCancel={handleCancelView} width={1000} title="View Table">
+                <ViewDatagrid data={editData}/>
             </Modal>
             <Modal title="Download History" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
               {loadingModal? <div className="spinner"><Spin /> </div> : <div>

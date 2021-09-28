@@ -56,7 +56,6 @@ const Userdash = () => {
       title: 'Study ID',
       dataIndex: 'studyID',
       key: 'studyID',
-      fixed: 'left',
       width: '10%',
       defaultSortOrder: 'descend',
       sorter: (a, b) => a.studyno - b.studyno,
@@ -144,7 +143,7 @@ return (
         <div className="mobile-header">
           <MobileHeader/>
         </div>
-      <Content style={{  height: '100%', width: '100%', background:'#f2f2f2' }} >          
+      <Content style={{  height: '100vh', width: '100%', background:'#f2f2f2' }} >          
           {loading ?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
         </Content> 
       </Layout>      
