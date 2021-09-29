@@ -14,7 +14,7 @@ const AddTask = () => {
 
 
     const { Option } = Select;
-    const [task, setTask] = useState({title: "", description:"", deadline: "", assignee:[], projectName:  projectObj.PROJECT.projectName, studyName: studyObj.STUDY.title, user: userObj.USER.name})
+    const [task, setTask] = useState({title: "", description:"", deadline: "", assignee:[], assigneeName: [], projectName:  projectObj.PROJECT.projectName, studyName: studyObj.STUDY.title, user: userObj.USER.name})
     const [userData, setUserData] = useState([])
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [forProps, setForProps] =useState()
@@ -48,8 +48,16 @@ const AddTask = () => {
         setTask({...task, deadline: date})
     }
 
-    function assignee(value) {   //for assigning user
-        setTask({...task, assignee: value})
+    const assignee = (value) => {   //for assigning user
+        let tempArray =[]
+        value.forEach(id => {
+            userData.forEach(user => {
+                if(user.value === id){
+                   tempArray.push(user.name)
+                }
+            });
+        })
+        setTask({...task, assignee: value, assigneeName: tempArray})
     }
 
   
@@ -58,14 +66,13 @@ const AddTask = () => {
     useEffect(() => {
         async function onGetUser(){
             let resultUsers = await onGetUserForTask({study: studyObj.STUDY.title})
-            let x = resultUsers.data.studies[0].assignee
-            console.log(x)
+            let x = resultUsers.data.studies
             let tempUserData = []
             for(let i = 0; i < x.length; i++){ 
                 tempUserData.push({
-                    key: x[i],
-                    name:  x[i],
-                    value:  x[i],
+                    key: x[i].assigneeName,
+                    name:  x[i].assigneeName,
+                    value:  x[i].assignee,
                 })
             }
             setUserData(tempUserData)

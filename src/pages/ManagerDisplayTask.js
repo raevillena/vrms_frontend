@@ -48,7 +48,7 @@ const ManagerDisplayTask = (props) => {
                  deadline: moment(loopTask[i].deadline).format('MM-DD-YYYY HH:MM:SS'),
                  taskTitle: loopTask[i].tasksTitle,
                  taskDescription: loopTask[i].tasksDescription,
-                 assignee: loopTask[i].assignee,
+                 assignee: loopTask[i].assigneeName,
                  status: loopTask[i].status
                });
              }
@@ -72,7 +72,7 @@ const ManagerDisplayTask = (props) => {
            deadline: moment(newTask.deadline).format('MM-DD-YYYY HH:MM:SS'),
            taskTitle: newTask.tasksTitle,
            taskDescription: newTask.tasksDescription,
-           assignee: newTask.assignee,
+           assignee: newTask.assigneeName,
            status: newTask.status
        }])}
 
@@ -92,7 +92,7 @@ const ManagerDisplayTask = (props) => {
              deadline: moment(loopTask[i].deadline).format('MM-DD-YYYY HH:MM:SS'),
              taskTitle: loopTask[i].tasksTitle,
              taskDescription: loopTask[i].tasksDescription,
-             assignee: loopTask[i].assignee,
+             assignee: loopTask[i].assigneeName,
              status: loopTask[i].status
            });
          }

@@ -30,13 +30,12 @@ const DisplayTasks = () => {
 
     useEffect(() => {
         async function getAllTask (){
+            setloading(true)
             const forBackend = {
                 studyName: studyObj.STUDY.title,
-                assignee: userObj.USER.name
+                assignee: userObj.USER._id
             }        
-            setloading(true)
             let resultTask = await onGetAllTask(forBackend)
-            console.log('result', resultTask)
             let loopTask = resultTask.data.tasks
             let tempTaskData = []
              for(let i = 0; i < loopTask.length; i++){ 
@@ -49,7 +48,7 @@ const DisplayTasks = () => {
                  deadline: moment(loopTask[i].deadline).format('MM-DD-YYYY HH:MM:SS'),
                  taskTitle: loopTask[i].tasksTitle,
                  taskDescription: loopTask[i].tasksDescription,
-                 assignee: [loopTask[i].assignee],
+                 assignee: [loopTask[i].assigneeName],
                  status: loopTask[i].status
                });
              }
@@ -57,7 +56,7 @@ const DisplayTasks = () => {
              setloading(false)
         }
         getAllTask()
-    }, [studyObj.STUDY.title, userObj.USER.name])
+    }, [])
 
     async function callback(key) {
             setData(task[key||0].id)

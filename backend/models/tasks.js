@@ -34,6 +34,10 @@ const TasksSchema = new mongoose.Schema({
         type: Array,
         required:  true,
     },
+    assigneeName: {
+        type: Array,
+        required:  true,
+    },
     status: {
         type: String,
         required:  true,

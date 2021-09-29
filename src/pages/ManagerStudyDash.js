@@ -192,7 +192,7 @@ return (
   <div>
         {studyData[0]==="spinme" ?  <Spin className="spinner" /> : 
         <div > 
-          <div style={{width: '20%', float: 'right'}}>
+          <div style={{width: '20%', float: 'right', margin: '0 5px 5px 0'}}>
           <Input.Search placeholder="Search Title" value={value}
               onChange={e => {
                 const currValue = e.target.value;
@@ -203,10 +203,10 @@ return (
               allowClear
             />
           </div>
-          <Table size="small" scroll={{ x: 1500, y: 1000 }} dataSource={studyData} columns={columns} ></Table>
+          <Table size="small" scroll={{ x: 1500, y: 1000 }} style={{margin: '15px'}} dataSource={studyData} columns={columns} ></Table>
         </div>
          }
-  </div>
+  </div> 
     )
 }
 

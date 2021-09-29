@@ -40,6 +40,7 @@ router.post('/createtask', auth, async(req, res) => {
         tasksTitle: req.body.title,
         tasksDescription: req.body.description,
         assignee: req.body.assignee,
+        assigneeName: req.body.assigneeName,
         status: "ONGOING",
         studyName: req.body.studyName,
         projectName: req.body.projectName,

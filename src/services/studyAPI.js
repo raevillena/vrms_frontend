@@ -14,7 +14,7 @@ export async function onStudyCreate(body) {
 export async function onGetStudyForUser(body) {
 
     try {
-        return axios.get(`/v1/studies/getStudyForUser/${body.name}`, tokenConfig())
+        return axios.get(`/v1/studies/getStudyForUser/${body._id}`, tokenConfig())
     } catch (error) {
         return {
             error: error

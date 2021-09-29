@@ -203,7 +203,7 @@ const onSearch = value =>{
     return (
     <div style={{  width: '100%', background:'#f2f2f2' }}>   
       <div > 
-            <div style={{width: '20%', float: 'right'}}>
+            <div style={{width: '20%', float: 'right', margin: '0 5px 5px 0'}}>
             <Input.Search placeholder="Search Title" value={value}
                 onChange={e => {
                   const currValue = e.target.value;

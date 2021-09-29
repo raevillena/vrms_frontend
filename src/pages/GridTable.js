@@ -198,7 +198,7 @@ const handleCancelView = () => {
     const columns = [
         {
           title: 'Table ID',
-          width: '5%',
+          width: '10%',
           dataIndex: 'id',
           key: 'id',
           sorter: (a, b) => a.id - b.id,
@@ -222,12 +222,40 @@ const handleCancelView = () => {
             width: '10%',
             dataIndex: 'dateCreated',
             key: 'dateCreated',
+            filters: [{text: 'January', value: '01'},
+              {text: 'February', value: '02'},
+              {text: 'March', value: '03'},
+              {text: 'April', value: '04'},
+              {text: 'May', value: '05'},
+              {text: 'June', value: '06'},
+              {text: 'July', value: '07'},
+              {text: 'August', value: '08'},
+              {text: 'September', value: '09'},
+              {text: 'October', value: '10'},
+              {text: 'November', value: '11'},
+              {text: 'December', value: '12'}
+          ],
+            onFilter: (value, record) => record.dateCreated.indexOf(value) === 0
         },
         {
             title: 'Date Updated',
             width: '10%',
             dataIndex: 'dateUpdated',
             key: 'dateUpdated',
+            filters: [{text: 'January', value: '01'},
+              {text: 'February', value: '02'},
+              {text: 'March', value: '03'},
+              {text: 'April', value: '04'},
+              {text: 'May', value: '05'},
+              {text: 'June', value: '06'},
+              {text: 'July', value: '07'},
+              {text: 'August', value: '08'},
+              {text: 'September', value: '09'},
+              {text: 'October', value: '10'},
+              {text: 'November', value: '11'},
+              {text: 'December', value: '12'}
+          ],
+            onFilter: (value, record) => record.dateUpdated.indexOf(value) === 0
         },
         {
           title: 'Action',

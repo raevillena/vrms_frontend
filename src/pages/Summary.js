@@ -61,7 +61,7 @@ const Summary = () => {
                 let result = await onGetStudyForDoc({studyID: studyObj.STUDY.studyID})
                 setLoading(false)
                 setStudy(result.data.study[0]) //study data
-                setAssignees(result.data.study[0].assignee)
+                setAssignees(result.data.study[0].assigneeName)
                 let contentState = null
                 if(result.data.study[0].summary){
                     contentState = convertFromRaw(JSON.parse(result.data.study[0].summary))//displaying summary
