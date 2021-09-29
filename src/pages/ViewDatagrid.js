@@ -135,7 +135,9 @@ const CameraComponent = React.memo(
     socket.on('receive-datagrid', msg => {
         setDatagridData(msg)
     })
+  }, [])
 
+  useEffect(() => {
     socket.on('receive-columns', msg => {
         try {
           if(msg === null|| msg=== undefined || msg === ''){
@@ -163,14 +165,12 @@ const CameraComponent = React.memo(
         } catch (error) {
           notif('error', error)
       }})
-  }, [])
+  }, [tempCol])
 
  
 
   return (
-    <div style={{
-      pointerEvents:  "none" 
-      }}>
+    <div>
           {loading ?  <div className="spinner"><Spin /> </div>  : 
         <DynamicDataSheetGrid
             data={data}

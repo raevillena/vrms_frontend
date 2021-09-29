@@ -56,20 +56,25 @@ io.on("connection", socket => {
         }
     })
 
+    socket.on("view-table", data => { 
+        socket.join(data.room)
+       // console.log('joining table for viewing')
+    })
+
     socket.on("send-changes-columns", editorState => { //chnges in columns
-        socket.in(editorState.room).emit('receive-columns', editorState)
+        socket.to(editorState.room).to(`${editorState.room}-viewing`).emit('receive-columns', editorState)
     })
 
     socket.on("send-changes-columns-delete", state => { //changes in columns during delete
-        socket.in(state.room).emit("receive-columns-delete", state.data)
+        socket.to(state.room).to(`${state.room}-viewing`).emit("receive-columns-delete", state.data)
     })
 
     socket.on("send-changes", editorState => { //changes in data
-        socket.to(editorState.room).emit("receive-datagrid", editorState.data)
+        socket.to(editorState.room).to(`${editorState.room}-viewing`).emit("receive-datagrid", editorState.data)
     })
 
     socket.on("send-undo", state => { //changes during undo
-        socket.to(state.room).emit("receive-undo", state.data)
+        socket.to(state.room).to(`${state.room}-viewing`).emit("receive-undo", state.data)
     })
     
     socket.on("disconnect", () => console.log("Client disconnected"));

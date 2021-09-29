@@ -7,6 +7,10 @@ export const join = (id, user, join) =>{
     socket.emit('join-table', {room: id, user: user, join: join})
 }
 
+export const view = (id, user) =>{
+  socket.emit('view-table', {room: `${id}-viewing`, user: user})
+}
+
 export const changeColumns = (type, title, id) => {
     socket.emit("send-changes-columns",
       {
