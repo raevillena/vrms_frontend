@@ -77,7 +77,7 @@ const onSearch = value =>{
   return filteredData   
 }
 
-/*const Filter = (
+const Filter  = (
   <Input.Search
     placeholder="Search Title"
     value={value}
@@ -88,7 +88,7 @@ const onSearch = value =>{
     }}
     onSearch={onSearch}
   />
-);*/
+);
 
 
 
@@ -119,7 +119,7 @@ const onSearch = value =>{
       dataIndex: 'title',
       key: 'title',
       width: '25%',
-      ellipsis: true
+      ellipsis: true,
     },
     {
       title: 'Progress',

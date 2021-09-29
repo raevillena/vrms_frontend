@@ -7,7 +7,7 @@ import moment from 'moment';
 import EditDatagrid from './EditDatagrid'
 import '../styles/CSS/Userdash.css'
 import { notif, downloadCSVonGrid } from '../functions/datagrid';
-import { join } from '../services/socket';
+import { join, view } from '../services/socket';
 import ViewDatagrid from './ViewDatagrid';
 
 
@@ -124,6 +124,7 @@ const GridTable = (props) => {
 
 const handleCancelView = () => {
   setIsViewModalVisible(false)
+  join(editData.id.tableID, userObj.USER.name, false)
 };
 
 
@@ -263,7 +264,7 @@ const handleCancelView = () => {
                 <Button onClick = {
                   async (e) => {
                       let id ={tableID: record.tableID}
-                      join(record.tableID, userObj.USER.name, true)
+                      view(record.tableID, userObj.USER.name)
                       setEditData({id:id})
                       showModalView(true)
                   }
