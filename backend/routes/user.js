@@ -176,7 +176,7 @@ router.post('/reset-password/:token' , async(req, res) => {
 
 router.get("/getAllUser", async(req,res) => {
   try {
-     User.find({"category": "user"}, {"name": 1, _id: 0}, function(err, users) {
+     User.find({"category": "user"}, {password:0, avatarFilename: 0}, function(err, users) {
       res.send(users);  
     });
   } catch (error) {

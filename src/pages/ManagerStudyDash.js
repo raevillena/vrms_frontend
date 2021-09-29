@@ -13,6 +13,7 @@ const ManagerStudyDash = (props) => {
   const projectObj = useSelector(state => state.project)
   const [studyData, setStudyData]= useState(["spinme"])
   const [value, setValue] = useState('');
+  const [searchData, setSearchData] = useState([])
 
   const notif = (type, message) => {
     notification[type]({
@@ -43,6 +44,7 @@ const ManagerStudyDash = (props) => {
           });
         }
       setStudyData(tempStudyData)
+      setSearchData(tempStudyData)
       }
       getStudies()
 }, [projectObj.PROJECT])
@@ -60,6 +62,15 @@ useEffect(() => {
         status: [props.data.status],
         progress: props.data.progress,
     }])
+    setSearchData([...studyData, {key: studyData.length + 1,
+      id: studyData.length + 1,
+      studyID:props.data.studyID,
+      title: props.data.studyTitle,
+      dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
+      dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
+      status: [props.data.status],
+      progress: props.data.progress,
+  }])
     }
 }, [props.data])
 
@@ -71,26 +82,16 @@ const handleRemove = (key) => { //deleting datasheet
 }
 
 const onSearch = value =>{
-  const filteredData = studyData.filter(entry =>
-    entry.title.includes(value)
+  console.log(value)
+  if(value === ''){
+    setStudyData(searchData)
+  }else{
+    const filteredData = studyData.filter(entry =>
+      entry.title.includes(value)
   );
-  return filteredData   
+    setStudyData(filteredData)
+  } 
 }
-
-const Filter  = (
-  <Input.Search
-    placeholder="Search Title"
-    value={value}
-    onChange={e => {
-      const currValue = e.target.value;
-      setValue(currValue);
-      onSearch(currValue)
-    }}
-    onSearch={onSearch}
-  />
-);
-
-
 
   const columns = [
     {
@@ -99,7 +100,7 @@ const Filter  = (
       key: 'id',
       width: '10%',
       defaultSortOrder: 'descend',
-      sorter: (a, b) => a.studyno - b.studyno,
+      sorter: (a, b) => a.id - b.id,
     },
     {
       title: 'Date Created',
@@ -119,7 +120,7 @@ const Filter  = (
       dataIndex: 'title',
       key: 'title',
       width: '25%',
-      ellipsis: true,
+      ellipsis: true
     },
     {
       title: 'Progress',
@@ -190,7 +191,18 @@ const Filter  = (
 return (
   <div>
         {studyData[0]==="spinme" ?  <Spin className="spinner" /> : 
-        <div style={{margin: '15px'}}> 
+        <div > 
+          <div style={{width: '20%', float: 'right'}}>
+          <Input.Search placeholder="Search Title" value={value}
+              onChange={e => {
+                const currValue = e.target.value;
+                setValue(currValue);
+                onSearch(currValue)
+              }}
+              onSearch={onSearch}
+              allowClear
+            />
+          </div>
           <Table size="small" scroll={{ x: 1500, y: 1000 }} dataSource={studyData} columns={columns} ></Table>
         </div>
          }

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Layout,Button, Table,Progress, Tag, Spin } from 'antd'
+import { Layout,Button, Table,Progress, Tag, Spin, Input } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import Sidebar from '../components/components/Sidebar'
@@ -10,6 +10,7 @@ import moment from 'moment';
 import MobileHeader from '../components/components/MobileHeader';
 import Project from './Project';
 
+
 const { Header, Content, Sider } = Layout;
 
 
@@ -19,6 +20,8 @@ const Userdash = () => {
   let userObj = useSelector(state => state.user)
   const [studyData, setStudyData]= useState()
   const [loading, setLoading] = useState(true)
+  const [value, setValue] = useState('');
+  const [searchData, setSearchData] = useState([])
   
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken")
@@ -43,6 +46,7 @@ const Userdash = () => {
         });
       }
       setStudyData(tempStudyData)
+      setSearchData(tempStudyData)
       setLoading(false) 
     }
     if(accessToken === null || refreshToken === null || userObj.USER === ""){
@@ -52,6 +56,18 @@ const Userdash = () => {
     }
 }, [])
 
+const onSearch = value =>{
+  console.log(value)
+  if(value === ''){
+    setStudyData(searchData)
+  }else{
+    const filteredData = studyData.filter(entry =>
+      entry.title.includes(value)
+  );
+    setStudyData(filteredData)
+  } 
+}
+
   const columns = [
     {
       title: 'Study ID',
@@ -59,7 +75,7 @@ const Userdash = () => {
       key: 'id',
       width: '5%',
       defaultSortOrder: 'descend',
-      sorter: (a, b) => a.studyno - b.studyno,
+      sorter: (a, b) => a.id - b.id,
     },
     {
       title: 'Date Created',
@@ -79,7 +95,7 @@ const Userdash = () => {
       dataIndex: 'title',
       key: 'title',
       width: '25%',
-      ellipsis: true
+      ellipsis: true,
     },
     {
       title: 'Progress',
@@ -145,7 +161,22 @@ return (
           <MobileHeader/>
         </div>
       <Content style={{  height: '100vh', width: '100%', background:'#f2f2f2' }} >          
-          {loading ?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
+          {loading ?  <Spin className="spinner" /> : 
+           <div > 
+           <div style={{width: '20%', float: 'right', margin: '0 5px 5px 0'}}>
+           <Input.Search placeholder="Search Title" value={value}
+               onChange={e => {
+                 const currValue = e.target.value;
+                 setValue(currValue);
+                 onSearch(currValue)
+               }}
+               onSearch={onSearch}
+               allowClear
+             />
+           </div>
+          <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> 
+          </div>
+          }
         </Content> 
       </Layout>      
     </Layout>: 

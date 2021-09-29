@@ -53,6 +53,7 @@ const Study = () => {
             });
         });
         setStudy({...study, assignee: value, assigneeName: tempArray})
+        console.log('tempArr', tempArray)
     }
 
     

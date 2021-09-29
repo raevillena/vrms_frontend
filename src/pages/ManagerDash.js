@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Table,Progress, Spin, Popconfirm, notification, List, Tag } from 'antd'
+import { Button, Table,Progress, Spin, Popconfirm, notification, List, Tag, Input } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,11 +8,14 @@ import { onDeleteProject, onGetProjectforManager } from '../services/projectAPI'
 
 
 
+
 const ManagerDash = (props) => {
   const dispatch = useDispatch()
   let history= useHistory();
   const userObj = useSelector(state => state.user)
   const [projectData, setProjectData]= useState(["spinme"])
+  const [value, setValue] = useState('');
+  const [searchData, setSearchData] = useState([])
  
   const notif = (type, message) => {
     notification[type]({
@@ -42,6 +45,7 @@ const ManagerDash = (props) => {
             
           }
         setProjectData(tempProjectData)
+        setSearchData(tempProjectData)
     }
       getProjects()
 }, [userObj.USER.name])
@@ -62,6 +66,16 @@ useEffect(() => {
         progress: props.data.progress,
         status:  [props.data.status]
     }])
+    setSearchData([...projectData, {key: projectData.length + 1,
+      id: projectData.length + 1,
+      projectID:props.data.projectID,
+      projectLeader: props.data.assigneeName,
+      projectName: props.data.projectName,
+      dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
+      dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
+      progress: props.data.progress,
+      status:  [props.data.status]
+  }])
     }
     return () => { 
       cancel = true;
@@ -76,6 +90,17 @@ const handleRemove = (key) => { //deleting datasheet
   setProjectData(newData)
 }
 
+const onSearch = value =>{
+  console.log(value)
+  if(value === ''){
+    setProjectData(searchData)
+  }else{
+    const filteredData = projectData.filter(entry =>
+      entry.projectName.includes(value)
+  );
+    setProjectData(filteredData)
+  } 
+}
 
 
   const columns = [
@@ -86,7 +111,7 @@ const handleRemove = (key) => { //deleting datasheet
       width: '5%',
       defaultSortOrder: 'descend',
 
-      sorter: (a, b) => a.studyno - b.studyno,
+      sorter: (a, b) => a.id - b.id,
     },
     {
       title: 'Project Leader',
@@ -176,8 +201,21 @@ const handleRemove = (key) => { //deleting datasheet
   ];
 
     return (
-    <div style={{  width: '100%', background:'#f2f2f2' }}>      
-        {projectData[0]==="spinme"?  <Spin className="spinner" /> :<Table size="small" scroll={{ x: 1200, y: 1000 }} dataSource={projectData} columns={columns} style={{margin: '15px'}}></Table> }
+    <div style={{  width: '100%', background:'#f2f2f2' }}>   
+      <div > 
+            <div style={{width: '20%', float: 'right'}}>
+            <Input.Search placeholder="Search Title" value={value}
+                onChange={e => {
+                  const currValue = e.target.value;
+                  setValue(currValue);
+                  onSearch(currValue)
+                }}
+                onSearch={onSearch}
+                allowClear
+              />
+            </div>   
+          {projectData[0]==="spinme"?  <Spin className="spinner" /> :<Table size="small" scroll={{ x: 1200, y: 1000 }} dataSource={projectData} columns={columns} style={{margin: '15px'}}></Table> }
+        </div>
     </div>
     )
 }

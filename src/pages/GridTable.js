@@ -201,6 +201,7 @@ const handleCancelView = () => {
           width: '5%',
           dataIndex: 'id',
           key: 'id',
+          sorter: (a, b) => a.id - b.id,
         },
         {
           title: 'Title',

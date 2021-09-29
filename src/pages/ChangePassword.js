@@ -7,7 +7,7 @@ import '../styles/CSS/Account.css'
 
 const ChangePassword = () => {
     const userObj = useSelector(state => state.user) //reducer for user data
-    const [password, setPassword] = useState({oldPassword: "", newPassword: "", confrimPassword: ""}) //for changepassword
+    const [password, setPassword] = useState({oldPassword: " ", newPassword: " ", confrimPassword: " "}) //for changepassword
     const { Title } = Typography;
 
     const notif = (type, message) => {
@@ -31,7 +31,7 @@ const ChangePassword = () => {
             }else{
                let result = await onChangePassword(data)
                notif('success', result.data.message)
-               setPassword({oldPassword: "", newPassword: "", confrimPassword: ""})
+               setPassword({oldPassword: " ", newPassword: " ", confrimPassword: " "})
            }
         } catch (error) {
            notif('error', 'Invalid Password!')
