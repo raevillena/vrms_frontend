@@ -13,7 +13,7 @@ db.once('open', () => console.log('connected to database'))
 
 const io = require("socket.io")(3002, {
     cors: {
-        origin: "http://localhost:3000", 
+        origin: "http://nberic.org", 
         methods: ["GET", "POST"]
     }
 })
