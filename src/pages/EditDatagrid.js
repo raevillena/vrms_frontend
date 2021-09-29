@@ -75,20 +75,19 @@ const EditDataGrid = (props) => {
   }
 
   
-
+  let timer;
   function update(){
+    console.log("Save button pressed")
     clearTimeout(timer)
     updateDB(dataToSend, props.data.id.tableID ,userObj.USER.name)
   }
 
-  let timer;
-
-const runTimer = () => {
-  timer = window.setTimeout(
-    () => {
-      document.getElementById('save').click()
-    }, 5000);
-}
+  const runTimer = () => {
+    timer = window.setTimeout(
+      () => {
+        document.getElementById('save').click()
+      }, 5000);
+  }
 
  const TextComponent = React.memo(
     ({ rowData, setRowData, active}) => {
@@ -234,28 +233,34 @@ const runTimer = () => {
     changeColumns( 'camera' , addColumn, props.data.id.tableID)
   }
 
-  const removeColumn = (key, dat) => { //removing column
-    console.log('datagrid', dat)
-    console.log('data', data)
-   try {
-    let editCol = tempCol
-    //let editData = data
-    // console.log('edit data for undo', editData)
-    dispatch({
-      type: "SET_UNDO",
-      column: editCol,
-      data: datagridData
-    })
-    datagridData.forEach((element) => delete element[key])
-    let newColumn = editCol.filter(value => !key.includes(value.title));
-    setTempCol(newColumn)
-    columnDelete(newColumn, props.data.id.tableID)
-    setState({...state, toRemoveColumn: []})
-   } catch (error) {
-     notif('error', error)
-   }
-  }
+  const removeColumn = (key) => { //removing column
+    try{
+      let editCol = tempCol
+      let undo_arr = []
+      
+      datagridData.forEach((element) => {
+        undo_arr = [...undo_arr, Object.assign({},element)]
+        delete element[key]
+      })
 
+      let newColumn = editCol.filter(value => !key.includes(value.title));
+      setTempCol(newColumn)
+      columnDelete(newColumn, props.data.id.tableID)
+      setState({...state, toRemoveColumn: []})
+
+      dispatch({
+        type: "DELETE_COL",
+        column: editCol,
+        data: undo_arr
+      })
+      dispatch({
+        type: "PRESS_REDO"
+      })
+    }catch(error){
+      notif('error', error)
+    }
+  }
+  
   useEffect(() => {
     socket.on('receive-columns', msg => {
       try {
@@ -330,10 +335,11 @@ const runTimer = () => {
         tempCols.push(checkColumnType(col[j].type, col[j].title))
       }
       dispatch({
-        type: "SET_REDO",
+        type: "PRESS_UNDO",
         column: tempCol,
         data: datagridData
       })
+
       setTempCol(tempCols)
       setDatagridData(undoObj.data)
       emitUndo(undoObj, props.data.id.tableID)
@@ -345,16 +351,15 @@ const runTimer = () => {
   
   const redoFunction = () => {
     try {
-      //console.log(redo.data)
       let col = redoObj.column
       let tempCols =[]
       for(let j = 0; j < col.length ; j++) {
         tempCols.push(checkColumnType(col[j].type, col[j].title))
       }
       dispatch({
-        type: "SET_UNDO",
+        type: "PRESS_REDO",
         column: undoObj.column,
-        data: undoObj.data
+        data: undoObj.datas
       })
       setTempCol(tempCols)
       setDatagridData(redoObj.data)
@@ -418,7 +423,7 @@ const runTimer = () => {
                   ))}
                 </Select>
                 <Tooltip placement='top' title='Delete Selected Column'> 
-                  <Button danger onClick={() => removeColumn(state.toRemoveColumn, datagridData)}>
+                  <Button danger onClick={() =>  removeColumn(state.toRemoveColumn)}>
                     <DeleteFilled/>
                   </Button> 
                 </Tooltip>
@@ -427,15 +432,30 @@ const runTimer = () => {
                     <DownloadOutlined/>
                   </Button>
                 </Tooltip>
+                
                 <Tooltip placement='top' title='Undo'> 
-                  <Button onClick={() => undoFunction()} >
+                  {undoObj.buttonEnable? (
+                    <Button onClick={() => undoFunction()}>
                       <UndoOutlined />
-                  </Button>
+                    </Button>
+                  ):(
+                    <Button disabled onClick={() => undoFunction()}>
+                      <UndoOutlined />
+                    </Button>
+                  )}
+
                 </Tooltip>
-                <Tooltip placement='top' title='Redo'> 
-                  <Button onClick={()=> redoFunction()}>
-                      <RedoOutlined />
-                  </Button>
+
+                <Tooltip placement='top' title='Redo'>
+                  {redoObj.buttonEnable? (
+                    <Button onClick={()=> redoFunction()}>
+                        <RedoOutlined />
+                    </Button>
+                  ):(
+                    <Button disabled onClick={()=> redoFunction()}>
+                        <RedoOutlined />
+                    </Button>
+                  )}
                 </Tooltip>
             </div>
           </div>

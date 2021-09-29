@@ -9,9 +9,6 @@ export const notif = (type, message) => {
     });
   };
 
-
-
-
 export async function downloadCSV(data, ID, title, user){
     let csv = ''
 
@@ -94,6 +91,5 @@ export async function downloadCSVonCreate(data, title){
   export async function updateDB(data, id, user){
     let result = await onUpdateDatagrid(data)
     notif('success', result.data.message)
-    let resultedit = await onEditLog({user: user , id})
-    notif('success', resultedit.data.message)
+    await onEditLog({user: user , id})
   }
