@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Table,Progress, Tag, Spin, Popconfirm, notification } from 'antd'
+import { Button, Table,Progress, Tag, Spin, Popconfirm, notification, Input } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,6 +12,7 @@ const ManagerStudyDash = (props) => {
   let history= useHistory();
   const projectObj = useSelector(state => state.project)
   const [studyData, setStudyData]= useState(["spinme"])
+  const [value, setValue] = useState('');
 
   const notif = (type, message) => {
     notification[type]({
@@ -30,6 +31,7 @@ const ManagerStudyDash = (props) => {
         for(let i = 0; i < x.length; i++){ 
           tempStudyData.push({
               key: x[i]._id,
+              id: [i],
               title: x[i].studyTitle,
               studyID: x[i].studyID,
               dateCreated: moment(x[i].dateCreated).format('MM-DD-YYYY'),
@@ -50,6 +52,7 @@ useEffect(() => {
         return
     }else{
     setStudyData([...studyData, {key: studyData.length + 1,
+        id: studyData.length + 1,
         studyID:props.data.studyID,
         title: props.data.studyTitle,
         dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
@@ -67,12 +70,33 @@ const handleRemove = (key) => { //deleting datasheet
   setStudyData(newData)
 }
 
+const onSearch = value =>{
+  const filteredData = studyData.filter(entry =>
+    entry.title.includes(value)
+  );
+  return filteredData   
+}
+
+/*const Filter = (
+  <Input.Search
+    placeholder="Search Title"
+    value={value}
+    onChange={e => {
+      const currValue = e.target.value;
+      setValue(currValue);
+      onSearch(currValue)
+    }}
+    onSearch={onSearch}
+  />
+);*/
+
+
 
   const columns = [
     {
       title: 'Study ID',
-      dataIndex: 'studyID',
-      key: 'studyID',
+      dataIndex: 'id',
+      key: 'id',
       width: '10%',
       defaultSortOrder: 'descend',
       sorter: (a, b) => a.studyno - b.studyno,
@@ -91,7 +115,7 @@ const handleRemove = (key) => { //deleting datasheet
       width: '15%',
     },
     {
-      title: 'Title',
+      title:  'Title',
       dataIndex: 'title',
       key: 'title',
       width: '25%',
@@ -162,9 +186,14 @@ const handleRemove = (key) => { //deleting datasheet
   ];
   
 
+
 return (
   <div>
-        {studyData[0]==="spinme" ?  <Spin className="spinner" /> :  <Table size="small" scroll={{ x: 1500, y: 1000 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> }
+        {studyData[0]==="spinme" ?  <Spin className="spinner" /> : 
+        <div style={{margin: '15px'}}> 
+          <Table size="small" scroll={{ x: 1500, y: 1000 }} dataSource={studyData} columns={columns} ></Table>
+        </div>
+         }
   </div>
     )
 }

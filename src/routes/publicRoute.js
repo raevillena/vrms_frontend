@@ -3,7 +3,6 @@ import React from 'react'
 import {Route, Redirect} from 'react-router-dom'
 
 function PublicRoute({component: Component, ...rest}) {
-    console.log("PUBLIC ROUTE aUTH PROP: ", rest.auth.AUTHENTICATED)
     return (
         <Route
             {...rest}

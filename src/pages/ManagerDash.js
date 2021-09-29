@@ -31,6 +31,7 @@ const ManagerDash = (props) => {
             tempProjectData.push({
                 key:  projectResult[i]._id,
                 projectID:  projectResult[i].projectID,
+                id: [i],
                 projectLeader:  projectResult[i].assigneeName,
                 projectName:  projectResult[i].projectName,
                 dateCreated: moment( projectResult[i].dateCreated).format('MM-DD-YYYY'),
@@ -52,6 +53,7 @@ useEffect(() => {
     }else{
       if(cancel) return
     setProjectData([...projectData, {key: projectData.length + 1,
+        id: projectData.length + 1,
         projectID:props.data.projectID,
         projectLeader: props.data.assigneeName,
         projectName: props.data.projectName,
@@ -79,10 +81,11 @@ const handleRemove = (key) => { //deleting datasheet
   const columns = [
     {
       title: 'Project ID',
-      dataIndex: 'projectID',
-      key: 'projectID',
-      width: '10%',
+      dataIndex: 'id',
+      key: 'id',
+      width: '5%',
       defaultSortOrder: 'descend',
+
       sorter: (a, b) => a.studyno - b.studyno,
     },
     {

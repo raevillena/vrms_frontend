@@ -31,6 +31,7 @@ const Userdash = () => {
       for(let i = 0; i < x.length; i++){ 
         tempStudyData.push({
             key: x[i]._id,
+            id: [i],
             title: x[i].studyTitle,
             studyID: x[i].studyID,
             dateCreated: moment(x[i].dateCreated).format('MM-DD-YYYY'),
@@ -54,9 +55,9 @@ const Userdash = () => {
   const columns = [
     {
       title: 'Study ID',
-      dataIndex: 'studyID',
-      key: 'studyID',
-      width: '10%',
+      dataIndex: 'id',
+      key: 'id',
+      width: '5%',
       defaultSortOrder: 'descend',
       sorter: (a, b) => a.studyno - b.studyno,
     },

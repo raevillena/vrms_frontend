@@ -45,6 +45,7 @@ const GridTable = (props) => {
         for(let i = 0; i < x.length; i++){ 
           tempTableData.push({
             key: x[i]._id,
+            id: [i],
             tableID: x[i].tableID,
             title: x[i].title,
             description: x[i].description,
@@ -132,6 +133,7 @@ const handleCancelView = () => {
         return
     }else{
     setTableData([...tableData, {key: tableData.length + 1,
+        id: tableData.length + 1,
         tableID:props.data.tableID,
         title: props.data.title,
         description: props.data.description,
@@ -147,6 +149,7 @@ const handleCancelView = () => {
         for(let i = 0; i < x.length; i++){ 
           tempTableData.push({
             key: x[i]._id,
+            id: [i],
             tableID: x[i].tableID,
             title: x[i].title,
             description: x[i].description,
@@ -194,9 +197,9 @@ const handleCancelView = () => {
     const columns = [
         {
           title: 'Table ID',
-          width: '10%',
-          dataIndex: 'tableID',
-          key: 'tableID',
+          width: '5%',
+          dataIndex: 'id',
+          key: 'id',
         },
         {
           title: 'Title',

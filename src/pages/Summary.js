@@ -116,7 +116,7 @@ const Summary = () => {
             </div>
             <div style={{display:'flex', justifyContent:'flex-end', lineHeight: '20px', gap:'5px'}}>
                 <Button type='primary' onClick={updateSummary}>Save</Button>
-                <Button type='primary' onClick={onUpdate}>Update</Button>
+                <Button type='primary' onClick={onUpdate}>Edit</Button>
             </div> </div>}
         </div>
     )
