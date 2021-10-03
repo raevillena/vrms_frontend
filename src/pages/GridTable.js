@@ -85,7 +85,7 @@ const GridTable = (props) => {
           tempHistory.push({
             key: history[i]._id,
             editedBy: history[i].editedBy,
-            editDate: moment(history[i].editedDate).format('YYYY-MM-DD HH:mm:ss'),
+            editDate: moment(history[i].editDate).format('YYYY-MM-DD HH:mm:ss'),
           });
         }
         setEditHistory(tempHistory)

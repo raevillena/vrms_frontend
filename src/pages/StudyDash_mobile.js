@@ -10,6 +10,7 @@ import MobileHeader from '../components/components/MobileHeader';
 import '../styles/CSS/Userdash.css'
 import ManagerHeaderMobile from '../components/components/ManagerHeaderMobile';
 import { useSelector } from 'react-redux';
+import StudyGallery from './StudyGallery';
 
 
 
@@ -36,10 +37,20 @@ const StudyDash_Mobile = () => {
                     <Content style={{width: '100%', background: '#f2f2f2', height: '100%'}}>
                         <Label/>
                         <div style={{marginTop: '5px',marginLeft:'10px', marginRight: '10px'}}>
-                            <Documentation/>
-                            <Title level={2}>Tasks</Title>
-                            <Tasks/>
-                            <DataGrid/>
+                            <div>
+                                <Documentation/>
+                            </div>
+                            <div className='div-gap'>
+                                <Title level={2}>Tasks</Title>
+                                <Tasks/>
+                            </div>
+                            <div style={{marginTop: '20px'}}>
+                                <Title level={2}>Gallery</Title>
+                                <StudyGallery/>
+                            </div>
+                            <div className='div-gap'>
+                                <DataGrid/>
+                            </div>
                         </div>
                     </Content>
                </Layout>

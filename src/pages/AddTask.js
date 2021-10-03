@@ -14,7 +14,7 @@ const AddTask = () => {
 
 
     const { Option } = Select;
-    const [task, setTask] = useState({title: "", description:"", deadline: "", assignee:[], assigneeName: [], projectName:  projectObj.PROJECT.projectName, studyName: studyObj.STUDY.title, user: userObj.USER.name})
+    const [task, setTask] = useState({title: "", description:"", deadline: "", assignee:'', assigneeName: '', projectName:  projectObj.PROJECT.projectName, studyName: studyObj.STUDY.title, user: userObj.USER.name})
     const [userData, setUserData] = useState([])
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [forProps, setForProps] =useState()
@@ -98,8 +98,8 @@ const AddTask = () => {
                 <Button style={{background: '#A0BF85', borderRadius: '50%', float: 'right', height:'40px', marginTop: '10px'}} onClick={showModal}>+</Button>
             </Tooltip>
             <Modal title="Add Task" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                <Form onFinish={onSubmit}> 
-                    <Form.Item label="Task title"
+                <Form onFinish={onSubmit} > 
+                    <Form.Item  label="Task title"
                         rules={[
                             {
                             required: true,
@@ -108,7 +108,7 @@ const AddTask = () => {
                         ]}>
                             <Input placeholder="Enter Task Title" onChange={e => setTask({...task, title: e.target.value})} value={task.title}></Input>
                     </Form.Item>
-                    <Form.Item  label="Task Description"
+                    <Form.Item   label="Task Description"
                         rules={[
                             {
                             required: true,
@@ -117,7 +117,7 @@ const AddTask = () => {
                         ]}>
                             <Input placeholder="Enter Task Description" onChange={e => setTask({...task, description: e.target.value})} value={task.description}></Input>
                     </Form.Item>
-                    <Form.Item label="Deadline"
+                    <Form.Item  label="Deadline"
                                 rules={[
                                 {
                                     required: true,

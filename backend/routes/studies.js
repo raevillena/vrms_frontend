@@ -10,7 +10,7 @@ const mongoose = require('mongoose')
 const shortid = require('shortid')
 const logger = require('../logger')
 const jwt = require('jsonwebtoken')
-const Token = require('../models/token')
+const Gallery = require('../models/gallery')
 
 async function auth(req, res, next){
     try {
@@ -508,5 +508,21 @@ router.post("/deleteStudy", auth, async(req,res) => {
       logger.log('error', 'Studies delete error')  
     }
   })
+
+//get gallery
+router.get('/studyGallery/:studyID', auth, async(req, res) => {
+    try {
+        await Gallery.find({"studyID": req.params.studyID}, function(err, gallery) {
+            if(err){
+                logger.log('error', 'Error: /studyGallery')
+            } else{
+                res.send(gallery)
+            }
+          });
+    } catch (error) {
+        logger.log('error', 'Error: /studyGallery')
+    }
+})
+  
 
 module.exports = router

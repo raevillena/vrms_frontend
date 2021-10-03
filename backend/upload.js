@@ -2,8 +2,10 @@ const express = require("express")
 const router = express.Router()
 const multer = require("multer")
 const User = require('./models/user')
+const Gallery = require('./models/gallery')
  const logger = require('./logger')
  const jwt = require('jsonwebtoken')
+const gallery = require("./models/gallery")
 
 
  async function auth(req, res, next){
@@ -55,9 +57,19 @@ const storage2 = multer.diskStorage({
   }
 });
 
+const storage3 = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, __dirname + '/uploads/gallery')
+  },
+  filename: function (req, file, cb) {
+      cb(null, Math.random() * 1000 + file.originalname)
+  }
+});
+
 var upload = multer({storage: storage})
 var upload1 = multer({storage: storage1})
 var upload2 = multer({storage: storage2})
+var upload3 = multer({storage: storage3})
 
 router.post("/avatar", upload.single("file"), auth, async (req, res, next) => {
   try {
@@ -105,6 +117,25 @@ router.post("/documentation", upload2.single("file"), auth, async (req, res, nex
       message: "Upload successful",
     });
   } catch (error) {
+    logger.log('error', error)
+    res.status(500).json({message: error.message})
+  }
+});
+
+
+router.post("/gallery", upload3.single("file"), auth, async (req, res, next) => {
+  try {
+      const gallery = new Gallery({
+        studyID: req.body.study,
+        images: req.file.filename
+      })
+      const newGallery =  await gallery.save()
+      res.status(201).json({
+        message: `Image sucessfully uploaded!`,
+        newGallery
+      })
+  } catch (error) {
+    logger.log('error', error)
     res.status(500).json({message: error.message})
   }
 });

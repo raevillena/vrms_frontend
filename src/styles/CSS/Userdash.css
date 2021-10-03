@@ -5,12 +5,12 @@
 
 .sidebar {
     padding: 5px 5px;
-    min-height: 100vh;
     font-family: Montserrat;
     font-style: normal;
     color: #393550;
     background: #FFFFFF;
 }
+
 
 .header{
     font-family: Montserrat;

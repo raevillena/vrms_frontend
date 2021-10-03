@@ -57,7 +57,6 @@ const Userdash = () => {
 }, [])
 
 const onSearch = value =>{
-  console.log(value)
   if(value === ''){
     setStudyData(searchData)
   }else{
@@ -149,7 +148,7 @@ const onSearch = value =>{
 return (
   <div>
     {userObj.USER.category === "user"? 
-    <Layout  > 
+    <Layout style={{height: '100vh'}} > 
         <Sider  className="sidebar" >
             <Sidebar/>
         </Sider>
@@ -160,10 +159,10 @@ return (
         <div className="mobile-header">
           <MobileHeader/>
         </div>
-      <Content style={{  height: '100vh', width: '100%', background:'#f2f2f2' }} >          
+      <Content style={{height: '100%', width: '100%', background:'#f2f2f2' }} >          
           {loading ?  <Spin className="spinner" /> : 
            <div > 
-           <div style={{width: '20%', float: 'right', margin: '0 5px 5px 0'}}>
+           <div style={{width: '200px', float: 'right', margin: '0 5px 5px 0'}}>
            <Input.Search placeholder="Search Title" value={value}
                onChange={e => {
                  const currValue = e.target.value;

@@ -82,7 +82,6 @@ const handleRemove = (key) => { //deleting datasheet
 }
 
 const onSearch = value =>{
-  console.log(value)
   if(value === ''){
     setStudyData(searchData)
   }else{
@@ -192,7 +191,7 @@ return (
   <div>
         {studyData[0]==="spinme" ?  <Spin className="spinner" /> : 
         <div > 
-          <div style={{width: '20%', float: 'right', margin: '0 5px 5px 0'}}>
+          <div style={{width: '200px', float: 'right', margin: '0 5px 5px 0'}}>
           <Input.Search placeholder="Search Title" value={value}
               onChange={e => {
                 const currValue = e.target.value;

@@ -12,7 +12,7 @@ import ManagerHeaderMobile from '../components/components/ManagerHeaderMobile';
 import '../styles/CSS/Userdash.css'
 import Mobiledash from './StudyDash_mobile';
 import { useSelector } from 'react-redux';
-//import StudyGallery from './StudyGallery';
+import StudyGallery from './StudyGallery';
 
 
 const { Title } = Typography;
@@ -37,19 +37,19 @@ const StudyDash = () => {
                 </div>
                     <Content style={{height: '100%', width:'100%'}}>
                         <Label/>
-                        <Row gutter={16} style={{ width: '100%'}}>
-                            <Col span={12}>
+                        <Row gutter={16} style={{marginRight: '0px'}}>
+                            <Col span={12} >
                                 <Documentation/>
                             </Col>
-                            <Col span={12}>
+                            <Col span={12} >
                             <Row gutter={16} >
-                                <Col span={24}>
+                                <Col span={24} >
                                     <Title level={2}>Tasks</Title>
                                     <Tasks/>
                                 </Col>
                                 <Col span={24}>
                                     <Title level={2}>Gallery</Title>
-                                   
+                                    <StudyGallery/>
                                 </Col>
                               </Row>  
                             </Col>

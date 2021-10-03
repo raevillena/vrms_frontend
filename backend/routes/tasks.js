@@ -104,7 +104,7 @@ router.get('/getUserForTask/:study', auth, async(req, res) => {
 //get all task for the study (user)
 router.get('/getAllTask/:studyName/:assignee', auth, async(req, res) => {
     try {
-      await Tasks.find({"assignee": req.params.assignee, "studyName": req.params.studyName, "active": true}, function(err, tasks){
+      await Tasks.find({ "studyName": req.params.studyName, "active": true}, function(err, tasks){
             if(err){
                 logger.log('error', 'Error: /getAllTask')
             }else{

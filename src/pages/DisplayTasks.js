@@ -37,18 +37,19 @@ const DisplayTasks = () => {
             }        
             let resultTask = await onGetAllTask(forBackend)
             let loopTask = resultTask.data.tasks
+            console.log('result task',loopTask)
             let tempTaskData = []
              for(let i = 0; i < loopTask.length; i++){ 
                tempTaskData.push({
                  key: [i],
                  id: loopTask[i]._id,
                  createdBy: loopTask[i].createdBy,
-                 dateCreated: moment(loopTask[i].dateCreated).format('MM-DD-YYYY HH:MM:SS'),
-                 lastUpdated: moment(loopTask[i].lastUpdated).format('MM-DD-YYYY HH:MM:SS'),
-                 deadline: moment(loopTask[i].deadline).format('MM-DD-YYYY HH:MM:SS'),
+                 dateCreated: moment(loopTask[i].dateCreated).format('MM-DD-YYYY'),
+                 lastUpdated: moment(loopTask[i].lastUpdated).format('MM-DD-YYYY'),
+                 deadline: moment(loopTask[i].deadline).format('MM-DD-YYYY'),
                  taskTitle: loopTask[i].tasksTitle,
                  taskDescription: loopTask[i].tasksDescription,
-                 assignee: [loopTask[i].assigneeName],
+                 assignee: loopTask[i].assigneeName,
                  status: loopTask[i].status
                });
              }
@@ -75,7 +76,7 @@ const DisplayTasks = () => {
     }
 
 return (
-    <div>
+    <div style={{maxHeight: '300px', overflowY: 'scroll'}}>
         {userObj.USER.category === "manager" ? <AddTask/> : 
         <div >
             {loading?  <div className="spinner"><Spin /> </div> : task.length===0 ? <Empty/> :
@@ -112,7 +113,7 @@ return (
                         <div style={{display: 'flex', gap: '5px',lineHeight:'2px'}}>
                             <label style={{fontWeight:'bold'}}>Assignee:</label>
                             <List size="small"
-                                dataSource={task.assignee}
+                                dataSource={tasks.assignee}
                                 renderItem={item => <List.Item>{item}</List.Item>}
                             >
                             </List>

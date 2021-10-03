@@ -205,3 +205,13 @@ export async function onDeleteStudy(body) {
         }
     }
 }
+
+export async function onGetGallery(body) {
+    try {
+        return axios.get(`/v1/studies/studyGallery/${body}`, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
