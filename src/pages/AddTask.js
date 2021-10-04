@@ -12,12 +12,15 @@ const AddTask = () => {
     const studyObj = useSelector(state => state.study)
     const userObj = useSelector(state => state.user)
 
+    const [form] = Form.useForm();
 
     const { Option } = Select;
     const [task, setTask] = useState({title: "", description:"", deadline: "", assignee:'', assigneeName: '', projectName:  projectObj.PROJECT.projectName, studyName: studyObj.STUDY.title, user: userObj.USER.name})
     const [userData, setUserData] = useState([])
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [forProps, setForProps] =useState()
+
+    const initialValues = {title: "", description:"", deadline: "", assignee:'', assigneeName: ''}
 
     const notif = (type, message) => {
         notification[type]({
@@ -33,12 +36,14 @@ const AddTask = () => {
     
       const handleOk = () => {
         setIsModalVisible(false);
+        form.resetFields()
         setTask({...task, deadline: '', description: '', title: '', assignee: []})
   
       };
     
       const handleCancel = () => {
         setIsModalVisible(false);
+        form.resetFields()
         setTask({...task, deadline: '', description: '', title: '', assignee:[]})
    
       };
@@ -84,6 +89,7 @@ const AddTask = () => {
         try {
         let newTask = await onTaskCreate(task)
         notif('info', newTask.data.message)
+        form.resetFields()
         setTask({...task, title: "", description:"", deadline: "", assignee: []}) 
         setForProps(newTask.data)
         } catch (error) {
@@ -98,8 +104,8 @@ const AddTask = () => {
                 <Button style={{background: '#A0BF85', borderRadius: '50%', float: 'right', height:'40px', marginTop: '10px'}} onClick={showModal}>+</Button>
             </Tooltip>
             <Modal title="Add Task" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                <Form onFinish={onSubmit} > 
-                    <Form.Item  label="Task title"
+                <Form onFinish={onSubmit} form={form}  initialValues={initialValues}> 
+                    <Form.Item name='title' label="Task title"
                         rules={[
                             {
                             required: true,
@@ -108,7 +114,7 @@ const AddTask = () => {
                         ]}>
                             <Input placeholder="Enter Task Title" onChange={e => setTask({...task, title: e.target.value})} value={task.title}></Input>
                     </Form.Item>
-                    <Form.Item   label="Task Description"
+                    <Form.Item name='description'   label="Task Description"
                         rules={[
                             {
                             required: true,
@@ -128,7 +134,7 @@ const AddTask = () => {
                             <DatePicker value={task.deadline} onChange={deadline}/>
                             </Space>
                     </Form.Item>
-                    <Form.Item label="Assign Task"
+                    <Form.Item name='assign' label="Assign Task"
                                 rules={[
                                 {
                                     required: true,

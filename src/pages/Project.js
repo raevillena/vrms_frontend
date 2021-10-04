@@ -20,6 +20,8 @@ const Project = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [forProps, setForProps] = useState()
 
+    const initialValues = {projectName: '', assignee: [], assigneeName: []}
+
     function handleChange(value) {   //for assigning user
         let tempArray =[]
         value.forEach(id => {
@@ -31,6 +33,8 @@ const Project = () => {
         });
         setProject({...project, assignee: value, assigneeName: tempArray})
     }
+
+    const [form] = Form.useForm();
 
     const notif = (type, message) => {
         notification[type]({
@@ -45,11 +49,13 @@ const Project = () => {
       };
     
       const handleOk = () => {
+        form.resetFields()
         setIsModalVisible(false);
       };
     
       const handleCancel = () => {
         setIsModalVisible(false);
+        form.resetFields()
         setProject({...project, projectName: '', assignee: []})
       };
 
@@ -75,6 +81,7 @@ const Project = () => {
           let result =  await onProjectCreate(project)
           const data = result.data.newProject
           notif("success",result.data.message)
+          form.resetFields()
           setProject({projectName: "", assignee: ""})
           setForProps(data)
           setProject({...project, projectName: '', assignee: []})
@@ -104,8 +111,8 @@ const Project = () => {
                     </Tooltip>
                     <Modal title="Add Project" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                     <Row justify="center">
-                        <Form onFinish={onSubmit}>
-                            <Form.Item  label="Project Name"
+                        <Form onFinish={onSubmit} form={form} initialValues={initialValues}>
+                            <Form.Item name='projectName' label="Project Name"
                             rules={[
                                 {
                                 required: true,
@@ -114,7 +121,7 @@ const Project = () => {
                             ]}>
                                 <Input placeholder="Enter Project Name" onChange={e => setProject({...project, projectName: e.target.value})} value={project.projectName}></Input>
                             </Form.Item>
-                            <Form.Item  label="Assignee"
+                            <Form.Item name='assignee'  label="Assignee"
                                     rules={[
                                     {
                                         required: true,

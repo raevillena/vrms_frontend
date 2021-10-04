@@ -41,13 +41,11 @@ function Login() {
         type: "SET_USER",
         value: result.data.data,
       })
-      console.log("setting user in redux")
 
       //better if tokens where set in the reducers to ensure that the localstorage and redux is in sync
       localStorage.setItem("accessToken", result.data.accessToken);
       localStorage.setItem("refreshToken", result.data.token.refreshToken);
       localStorage.setItem("avatarFilename", result.data.data.avatarFilename);
-      console.log("tokens saved in local storate")
 
       dispatch({
         type: "LOGIN_SUCCESS",
@@ -57,9 +55,6 @@ function Login() {
         avatarFilename: result.data.data.avatarFilename,
         LOADING: false
       })
-
-      console.log("login success fired in redux")
-
       history.push('/')
     
     } catch (error) {

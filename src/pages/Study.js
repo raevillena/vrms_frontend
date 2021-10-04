@@ -21,6 +21,10 @@ const Study = () => {
     const [study, setStudy] = useState({title: "", projectName: projectObj.PROJECT.projectName, deadline:"", startDate: "" ,assignee:[], assigneeName:[], budget: "", user: userObj.USER.name})
     const [forProps, setForProps] = useState()
     const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const initialValues = {title: "", deadline:"", startDate: "" ,assignee:[], assigneeName:[], budget: ""}
+
+    const [form] = Form.useForm();
     
     const notif = (type, message) => {
         notification[type]({
@@ -36,11 +40,13 @@ const Study = () => {
     
       const handleOk = () => {
         setIsModalVisible(false);
+        form.resetFields()
       };
     
       const handleCancel = () => {
         setIsModalVisible(false);
-        setStudy({...study, assignee: [], title: "", deadline: "", budget: ""})
+        form.resetFields()
+        setStudy({...study, assignee: [], title: "", deadline: "", budget: "" ,startDate: ''})
       };
       
       function handleChange(value) {   //for assigning user
@@ -53,7 +59,6 @@ const Study = () => {
             });
         });
         setStudy({...study, assignee: value, assigneeName: tempArray})
-        console.log('tempArr', tempArray)
     }
 
     
@@ -81,8 +86,9 @@ const Study = () => {
         try {
            let result = await onStudyCreate(study, authObj.accessToken, authObj.refreshToken) 
            notif("success",result.data.message)
+           form.resetFields()
            setForProps(result.data.newStudy)
-           setStudy({title: "  ", projectName:" ", deadline:"",assignee:[]})
+           setStudy({title: " ", projectName:" ", deadline:"",assignee:[], startDate:''})
         } catch (error) {
             notif("error", error)
         }
@@ -117,9 +123,9 @@ const Study = () => {
                     <Button className="add-button" onClick={showModal}>+</Button>
                 </Tooltip>
                     <Modal title="Add Study" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                        <Form >
+                        <Form initialValues={initialValues} form={form} onFinish={onSubmit}>
                         <h1 style={{fontFamily: "Montserrat", fontWeight: "bolder"}}>CREATE STUDY</h1>
-                            <Form.Item label="Study Title"
+                            <Form.Item name='title' label="Study Title"
                             rules={[
                                 {
                                 required: true,
@@ -128,7 +134,7 @@ const Study = () => {
                             ]}>
                                 <Input placeholder="Enter Title" onChange={e => setStudy({...study, title: e.target.value})} value={study.title}></Input>
                             </Form.Item>
-                            <Form.Item  label="Budget"
+                            <Form.Item name='budget'  label="Budget"
                                     rules={[
                                     {
                                         required: true,
@@ -137,7 +143,7 @@ const Study = () => {
                                     ]}>
                                 <Input type="number" placeholder="Enter budget" onChange={(e)=> setStudy({...study, budget: e.target.value})} value={study.budget}/>
                             </Form.Item>
-                            <Form.Item  label="Start Date"
+                            <Form.Item   label="Start Date"
                                     rules={[
                                     {
                                         required: true,
@@ -148,7 +154,7 @@ const Study = () => {
                                 <DatePicker value={study.startDate} onChange={onChangeStartDate}/>
                                 </Space>
                             </Form.Item>
-                            <Form.Item  label="Deadline"
+                            <Form.Item   label="Deadline"
                                     rules={[
                                     {
                                         required: true,
@@ -159,7 +165,7 @@ const Study = () => {
                                 <DatePicker value={study.deadline} onChange={onChange}/>
                                 </Space>
                             </Form.Item>
-                            <Form.Item label="Assignee"
+                            <Form.Item name='assignee' label="Assignee"
                                     rules={[
                                     {
                                         required: true,
@@ -172,7 +178,7 @@ const Study = () => {
                                 ))}
                                 </Select>
                             </Form.Item>
-                            <Button onClick={onSubmit} style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE STUDY</Button>
+                            <Button htmlType='submit' style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE STUDY</Button>
                         </Form>
                     </Modal>
             </Content> 

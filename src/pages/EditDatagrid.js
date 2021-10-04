@@ -77,7 +77,6 @@ const EditDataGrid = (props) => {
   
   let timer;
   function update(){
-    console.log("Save button pressed")
     clearTimeout(timer)
     updateDB(dataToSend, props.data.id.tableID ,userObj.USER.name)
   }
@@ -305,7 +304,6 @@ const EditDataGrid = (props) => {
       setDatagridData(msg)
     })
     socket.on('receive-undo', msg => {
-      console.log('receive-undo', msg)
       let tempCols =[]
       let change = msg.column
       for(let j = 0; j < change.length ; j++) {
@@ -318,7 +316,6 @@ const EditDataGrid = (props) => {
 
 
   function handleColumnToDelete(value) { //setting column to delete
-    console.log("from handleColumn to Delete Function", )
     setState({...state, toRemoveColumn: value})
   }
 
@@ -330,7 +327,6 @@ const EditDataGrid = (props) => {
     try {
       let col = undoObj.column
       let tempCols =[]
-      console.log('edit data for undofunction', datagridData)
       for(let j = 0; j < col.length ; j++) {
         tempCols.push(checkColumnType(col[j].type, col[j].title))
       }

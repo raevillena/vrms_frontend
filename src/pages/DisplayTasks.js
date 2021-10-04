@@ -37,7 +37,6 @@ const DisplayTasks = () => {
             }        
             let resultTask = await onGetAllTask(forBackend)
             let loopTask = resultTask.data.tasks
-            console.log('result task',loopTask)
             let tempTaskData = []
              for(let i = 0; i < loopTask.length; i++){ 
                tempTaskData.push({

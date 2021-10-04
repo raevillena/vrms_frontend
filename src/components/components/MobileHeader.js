@@ -27,7 +27,7 @@ const MobileHeader = () => {
           type: "LOGOUT_SUCCESS",
           value: false
        })
-        history.push('/')
+        history.push('/login')
       } catch (error) {
         console.error(error)
         alert(error.response.data.error);

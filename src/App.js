@@ -49,7 +49,6 @@ function App() {
   
   //to renew acesstoken
   useEffect(()=>{
-    console.log("entering renew...")
     async function renew(){
       let token = {refreshToken : localStorage.getItem("refreshToken")}
       dispatch({

@@ -70,7 +70,6 @@ const Summary = () => {
                 }
                 setEditorState(EditorState.createWithContent(contentState))
             } catch (error) {
-                console.log("error in get study data function:", error)
                 notif('error', 'Error in getting data!')
             }
         }

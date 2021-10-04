@@ -10,24 +10,23 @@ const HeaderManager = () => {
     const dispatch = useDispatch();
 
     const handleLogout = async () => { 
-        try {
-          const tokens = {
-            refreshToken: localStorage.getItem("refreshToken"),
-            accessToken: localStorage.getItem("accessToken")
-          }
-          
-          onUserLogout(tokens)
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          dispatch({
-            type: "VERIFIED_AUTHENTICATION",
-            value: false
-         })
-          history.push('/')
-        } catch (error) {
-          console.error(error)
-          alert(error.response.data.error);
+      try {
+        const tokens = {
+          refreshToken: localStorage.getItem("refreshToken"),
+          accessToken: localStorage.getItem("accessToken")
         }
+        //there should also be logout loading dispatch here for reference of notifications
+        //user must be at least when logout is successful
+        onUserLogout(tokens)
+        dispatch({
+          type: "LOGOUT_SUCCESS",
+          value: false
+       })
+        history.push('/login')
+      } catch (error) {
+        console.error(error)
+        alert(error.response.data.error);
+      }
       };
 
 

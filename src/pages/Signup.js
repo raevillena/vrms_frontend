@@ -8,6 +8,10 @@ import { onUserCreate } from '../services/userAPI';
 const Signup = () => {
     const [user, setUser] = useState({name: "", email:"", project:"", title:"",password:"", category: ""})
 
+    const [form] = Form.useForm();
+
+    const initialValues = {name: "", email:"", project:"", title:"",password:"", category: ""}
+
     const notif = (type, message) => {
         notification[type]({
           message: 'Notification',
@@ -19,7 +23,8 @@ const Signup = () => {
     async function onSubmit(){
         try {
            let res = await onUserCreate(user) 
-           setUser({name: "", email:"", title:"",password:"", category: ''})
+           form.resetFields()
+           setUser({name: " ", email:" ", title:" ",password:" ", category: ' '})
             notif('success', res.data.message)
         } catch (error) {
             notif('error',error.response.data)
@@ -27,9 +32,9 @@ const Signup = () => {
     }
 
     return (
-        <div>
-            <Row justify="center" style={{height: '100vh', width: '100%', background: '#f2f2f2'}}>
-                <Form >
+        <div style={{background: '#f2f2f2', height: "100vh"}}>
+            <Row justify="center">
+                <Form style={{marginTop: "10%"}} initialValues={initialValues} form={form}>
                 <h1 style={{fontFamily: "Montserrat", fontWeight: "bolder"}}>Create User</h1>
                     <Form.Item name="Name" label="Name"
                     rules={[

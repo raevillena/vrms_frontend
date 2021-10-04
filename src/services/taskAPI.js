@@ -60,7 +60,6 @@ export async function onAddComment(body) {
 //displaying all comment
 
 export async function onGetALlComment(body) {
-    console.log(body)
     try {
         return axios.get(`/v1/tasks/getAllComment/${body.taskId}`, tokenConfig());
     } catch (error) {
