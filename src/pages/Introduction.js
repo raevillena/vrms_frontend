@@ -117,7 +117,7 @@ const Introduction = () => {
     <div>
       {loading? <Spin indicator={antIcon} className="spinner" /> :
       <div style={{justifyContent:'space-between', flexDirection:'column', display:'flex'}}>
-          <div style={{lineHeight: '20px'}}>
+          <div style={{lineHeight: '20px', pointerEvents: userObj.USER.category === 'director' ? 'none' : 'initial'}}>
               <Editor editorState={editorState}
                     toolbarClassName="toolbarClassName"
                     wrapperClassName="wrapperClassName"
@@ -134,7 +134,7 @@ const Introduction = () => {
               />
           </div>
           <div style={{display:'flex', justifyContent:'flex-end', lineHeight: '20px', gap:'5px'}}>
-          <Button type='primary' onClick={updateDB}>Save</Button>
+          <Button type='primary' style={{display: userObj.USER.category === 'director' ? 'none' : 'initial'}} onClick={updateDB}>Save</Button>
           <Button type='primary' onClick={download}>Download</Button>
           </div>
       </div>}

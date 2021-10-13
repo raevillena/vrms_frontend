@@ -215,3 +215,55 @@ export async function onGetGallery(body) {
         }
     }
 }
+
+export async function onGetDatagridCol(body) {
+    try {
+        return axios.get(`/v1/studies/getStudyCol/${body.study}`, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+
+export async function onUpdateCurrentEditing(body) {
+    try {
+        return axios.post(`/v1/studies/updateCurrentEditing`, body, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onGetCurrentEditing(body) {
+    try {
+        return axios.get(`/v1/studies/getCurrentEditing/${body.tableID}`, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+
+export async function onViewLog(body) {
+    try {
+        return axios.post('/v1/studies/viewlog', body, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onGetViewHistory(body) {
+    try {
+        return axios.get(`/v1/studies/getViewlog/${body.tableID}`, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}

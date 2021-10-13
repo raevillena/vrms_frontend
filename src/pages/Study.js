@@ -37,11 +37,7 @@ const Study = () => {
       const showModal = () => {
         setIsModalVisible(true);
       };
-    
-      const handleOk = () => {
-        setIsModalVisible(false);
-        form.resetFields()
-      };
+
     
       const handleCancel = () => {
         setIsModalVisible(false);
@@ -122,7 +118,7 @@ const Study = () => {
                 <Tooltip placement="top" title="Add Study">
                     <Button className="add-button" onClick={showModal}>+</Button>
                 </Tooltip>
-                    <Modal title="Add Study" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                    <Modal title="Add Study" visible={isModalVisible} footer={null} onCancel={handleCancel}>
                         <Form initialValues={initialValues} form={form} onFinish={onSubmit}>
                         <h1 style={{fontFamily: "Montserrat", fontWeight: "bolder"}}>CREATE STUDY</h1>
                             <Form.Item name='title' label="Study Title"

@@ -1,14 +1,14 @@
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
-import {Button, Input, Select, Spin, Tooltip, Image } from 'antd'
+import {Button, Input, Select, Spin, Tooltip, Image, Avatar } from 'antd'
 import { useSelector, useDispatch} from 'react-redux';
 import { DynamicDataSheetGrid, checkboxColumn,keyColumn} from 'react-datasheet-grid';
-import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined,  LoadingOutlined, UndoOutlined, RedoOutlined } from '@ant-design/icons';
-import { onEditDatagrid } from '../services/studyAPI';
+import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined,  LoadingOutlined, UndoOutlined, RedoOutlined, RetweetOutlined } from '@ant-design/icons';
+import { onEditDatagrid, onGetCurrentEditing } from '../services/studyAPI';
 import '../styles/CSS/Userdash.css'
 import { notif, downloadCSV, updateDB} from '../functions/datagrid'
 import { onUploadDataGrid } from '../services/uploadAPI';
-import { socket , changeColumns, columnDelete, emitDatagridChange, emitUndo } from '../services/socket';
-
+import { socket , changeColumns, columnDelete, emitDatagridChange, emitUndo, emitReplaceCol } from '../services/socket';
+import {onUpdateCurrentEditing} from '../services/studyAPI'
 
 const EditDataGrid = (props) => {
 
@@ -37,8 +37,9 @@ const EditDataGrid = (props) => {
   const [tempCol, setTempCol] = useState([])
   const [divDisabled, setDivDisabled] = useState(true)
   const [addColumn, setAddColumn] = useState('')//add column data
-  //const [undo, setUndo] = useState({column: [], data: []})
-  //const [redo, setRedo] = useState({column: [], data: []})
+  const [col, setCol] = useState({newCol: '', replaceCol: []})
+  const [currentEditing, setCurrentEditing] = useState({avatar: '', username: ''})
+
 
   //declaring icon
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
@@ -58,7 +59,7 @@ const EditDataGrid = (props) => {
     columns: columns
   }
 
-  
+
  // let timer = null
 
   const checkColumnType= (key,title) => {
@@ -148,12 +149,22 @@ const EditDataGrid = (props) => {
     copyValue: ({ rowData }) => rowData,
     pasteValue: ({ value }) => value,
   }
+
   useEffect(()=> { //getting data
     try {
       socket.on(props.data.id.tableID, msg =>{
-        if (msg === "allow-edit"){
+        if (msg.msg === "allow-edit"){
+          setCurrentEditing({avatar: localStorage.getItem("avatarFilename"), username: userObj.USER.name})
+          onUpdateCurrentEditing({avatar: localStorage.getItem("avatarFilename"), username: userObj.USER.name, tableID: props.data.id.tableID })
           setDivDisabled(false)
-        }else if (msg === "view-only"){
+        }else if (msg.msg === "view-only"){
+          //alert(msg.user)
+          let res;
+          async function getEditing(){
+             res = await onGetCurrentEditing({tableID: props.data.id.tableID})
+             setCurrentEditing({avatar: res.data[0].currentEditingAvatar, username: res.data[0].currentEditingName})
+          }
+          getEditing()
           setDivDisabled(true)
         }
     }) 
@@ -272,7 +283,6 @@ const EditDataGrid = (props) => {
       } catch (error) {
         notif('error', error)
       }
-      socket.off('receive-columns')
     })
     socket.on('receive-columns-delete', msg => {
       try {
@@ -284,6 +294,22 @@ const EditDataGrid = (props) => {
             tempCols.push(checkColumnType(msg[j].type, msg[j].title))
           }
           setTempCol(tempCols)
+        }
+      } catch (error) {
+        notif('error', error)
+    }}) 
+    socket.on('receive-replace-col', msg => {
+      try {
+        if(msg === null|| msg=== undefined || msg === ''){
+            return
+        } else{
+          let tempCols =[]
+          let msgCol = msg.columns
+          for(let j = 0; j < msgCol.length ; j++) {
+            tempCols.push(checkColumnType(msgCol[j].type, msgCol[j].title))
+          }
+          setTempCol(tempCols)
+          setDatagridData(msg.data)
         }
       } catch (error) {
         notif('error', error)
@@ -319,6 +345,10 @@ const EditDataGrid = (props) => {
     setState({...state, toRemoveColumn: value})
   }
 
+  function handleColumnToReplace(value) { //setting column to delete
+    setCol({...col, replaceCol: value})
+  }
+
   function download(){
     downloadCSV(datagridData, state.ID, state.title, userObj.USER.name)
   }
@@ -343,8 +373,7 @@ const EditDataGrid = (props) => {
       notif('error', error)
     }
   }
-  
-  
+
   const redoFunction = () => {
     try {
       let col = redoObj.column
@@ -363,6 +392,29 @@ const EditDataGrid = (props) => {
     } catch (error) {
       notif('error', error)
     }
+  }
+
+  const handleReplace = () =>{
+      if(col.newCol === ''){
+        notif('error', 'New column anme is empty!')
+        console.log('data', datagridData[0])
+      }else{
+        let arr = []
+
+        let index = tempCol.findIndex((obj => obj.title === col.replaceCol))
+        tempCol[index].title = col.newCol
+        tempCol.forEach((col) => {
+          arr.push(checkColumnType(col.type, col.title))
+        })
+        setTempCol(arr)
+        datagridData.forEach((element) => {
+          element[col.newCol] = element[col.replaceCol]
+          delete element[col.replaceCol]
+        })
+        emitReplaceCol({columns: tempCol, data: datagridData}, props.data.id.tableID)
+        setCol({...col, newCol: '', replaceCol: []})
+        
+      }
   }
 
   return (
@@ -389,7 +441,7 @@ const EditDataGrid = (props) => {
                 Column Title
               </label>
               <div style={{display:'flex', flexDirection:'row', gap:'3px'}}>
-                  <Input  placeholder="Enter Column title" onChange={(e)=> {setAddColumn( e.target.value)}} value={addColumn}/>
+                  <Input  placeholder="Enter Column title" onChange={(e)=> {setAddColumn( e.target.value)}} value={addColumn} />
                   <Tooltip placement='top' title='Text Column'>
                     <Button disabled={state.disabledColumn}  onClick={addTextColumn}>
                       <FontSizeOutlined />
@@ -405,15 +457,32 @@ const EditDataGrid = (props) => {
                       <CameraFilled />
                     </Button>
                   </Tooltip>
-                  
+              </div>
+          </div>
+          <div style={{display:'grid'}}>
+              <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>
+                Edit Column Title
+              </label>
+              <div style={{display:'flex', flexDirection:'row', gap:'3px'}}>
+                  <Input  placeholder="Enter New Column title" onChange={(e)=> {setCol({...col, newCol: e.target.value})}} value={col.newCol} />
+                  <Select placeholder="Column to Replace" onChange={handleColumnToReplace}  value={col.replaceCol}  >
+                  {tempCol.map(column => (
+                    <Option key={column.title} value={column.title}>{column.title}</Option>
+                  ))}
+                </Select>
+                  <Tooltip placement='top' title='Replace Column Title'>
+                    <Button onClick={handleReplace}>
+                      <RetweetOutlined />
+                    </Button>
+                  </Tooltip>
               </div>
           </div>
           <div style={{display:'grid'}}>
             <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>
               Delete Column 
             </label>
-            <div style={{display:'flex', flexDirection:'row', gap:'5px', width:'300px'}}>
-                <Select placeholder="Select column title to delete" onChange={handleColumnToDelete} value={state.toRemoveColumn} mode="tags" tokenSeparators={[',']} style={{ width: '100%' }}>
+            <div style={{display:'flex', flexDirection:'row', gap:'5px'}}>
+                <Select placeholder="Select column title to delete" onChange={handleColumnToDelete} value={state.toRemoveColumn} mode="tags" tokenSeparators={[',']} style={{width: 150}}>
                   {tempCol.map(column => (
                     <Option key={column.title} value={column.title}>{column.title}</Option>
                   ))}
@@ -465,7 +534,11 @@ const EditDataGrid = (props) => {
                     columns={columns}
                     createRow={createRow}
                 />
-                <div style={{marginTop: '20px', display:'flex', justifyContent:'flex-end'}}>
+                
+                <div style={{marginTop: '20px', display:'flex', justifyContent:'flex-end', gap: '10px'}}>
+                  <Tooltip title={currentEditing.username}>
+                    <Avatar src={`/avatar/${currentEditing.avatar}`}/>
+                  </Tooltip>
                   <Button type="primary" id='save' onClick={update} >Save</Button>
                 </div>
             </div> }

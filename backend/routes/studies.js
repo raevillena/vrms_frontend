@@ -5,6 +5,7 @@ const Datagrid = require('../models/datagrid')
 const Projects = require('../models/projects')
 const Download = require('../models/download')
 const Editlog = require('../models/editlog')
+const Viewlog = require('../models/viewlog')
 const Documentation = require('../models/documentation')
 const mongoose = require('mongoose')
 const shortid = require('shortid')
@@ -429,7 +430,6 @@ router.post('/downloadHistory', auth,  async(req, res) => {
 
 //edit log
 router.post('/editlog', auth,  async(req, res) => {
-    console.log(req.body)
     try {
     const edit = new Editlog({
         editDate: Date.now(),
@@ -523,6 +523,81 @@ router.get('/studyGallery/:studyID', auth, async(req, res) => {
         logger.log('error', 'Error: /studyGallery')
     }
 })
-  
+
+//duplicate study
+router.get('/getStudyCol/:studyID', auth, async(req, res) => {
+    try {
+        await Datagrid.find({"studyID": req.params.studyID, "active": true}, function(err, datagrid) {
+            if(err){
+                logger.log('error', 'Error: /getStudyCol')
+            } else{
+                res.send(datagrid)
+            }
+          });
+    } catch (error) {
+        logger.log('error', 'Error: /getStudyCol')
+    }
+})
+
+router.post('/updateCurrentEditing', auth, async(req, res) => {
+    try {
+        await Datagrid.findOneAndUpdate({"tableID": req.body.tableID, "active": true}, {"currentEditingAvatar": req.body.avatar, "currentEditingName": req.body.username}, function(err, datagrid) {
+            if(err){
+                logger.log('error', 'Error: /updateCurrentEditing')
+            } else{
+                res.send(datagrid)
+            }
+          });
+    } catch (error) {
+        logger.log('error', 'Error: /updateCurrentEditing')
+    }
+})
+
+router.get('/getCurrentEditing/:tableID', auth, async(req, res) => {
+    try {
+        await Datagrid.find({"tableID": req.params.tableID, "active": true}, function(err, user) {
+            if(err){
+                logger.log('error', 'Error: /getCurrentEditing')
+            } else{
+                res.send(user)
+            }
+          });
+    } catch (error) {
+        logger.log('error', 'Error: /getCurrentEditing')
+    }
+})
+
+//view log
+router.post('/viewlog', auth,  async(req, res) => {
+
+    try {
+    const view = new Viewlog({
+        viewDate: Date.now(),
+        viewBy: req.body.user,
+        tableID: req.body.id
+    })
+    await view.save()
+    res.status(200).json({ message: "View Recorded"})
+    } catch (error) {
+        logger.log('error', `Error: /viewlog - ${error}`) 
+        res.status(400).json({message: error.message})
+    }
+})
+
+router.get('/getViewlog/:tableID', auth,  async(req, res) => {
+    try {
+    Viewlog.find({"tableID": req.params.tableID}, function(err, history){
+        if(err){
+            logger.log('error', 'Error: /getViewlog')
+        }
+        res.status(200).json({
+            history: history
+        })
+    })
+    } catch (error) {
+        logger.log('error', 'Error: /getViewlog') 
+        res.status(400).json({message: error.message})
+    }
+})
 
 module.exports = router

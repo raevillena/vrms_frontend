@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useMemo} from 'react';
-import { Table, Button, Popconfirm, Form, Spin, Tooltip, Modal, Empty } from 'antd';
+import { Table, Button, Popconfirm, Form, Spin, Tooltip, Modal, Empty, Tabs } from 'antd';
 import { DeleteFilled, EditFilled, DownloadOutlined, InfoCircleFilled, HistoryOutlined, EyeOutlined } from '@ant-design/icons';
-import { onDeleteDatagrid, onDownloadHistory, onEditDatagrid, onGetDatagrid, onGetDownloadHistory, onGetEditHistory } from '../services/studyAPI';
+import { onDeleteDatagrid, onDownloadHistory, onEditDatagrid, onGetDatagrid, onGetDownloadHistory, onGetEditHistory, onGetViewHistory, onViewLog } from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import moment from 'moment';
 import EditDatagrid from './EditDatagrid'
@@ -10,6 +10,8 @@ import { notif, downloadCSVonGrid } from '../functions/datagrid';
 import { join, view } from '../services/socket';
 import ViewDatagrid from './ViewDatagrid';
 
+
+const { TabPane } = Tabs;
 
 const GridTable = (props) => {
     const studyObj = useSelector(state => state.study)
@@ -23,6 +25,7 @@ const GridTable = (props) => {
     const [isEditHisModalVisible, setIsEditHisModalVisible] = useState(false);
     const [history, setHistory] = useState([])
     const [editHistory, setEditHistory] = useState([])
+    const [viewHistory, setViewHistory] = useState([])
     const [loadingModal, setLoadingModal] = useState(false)
 
 
@@ -79,8 +82,11 @@ const GridTable = (props) => {
   const showModalEditHis = async(id) => {
     setLoadingModal(true)
     let result = await onGetEditHistory({tableID: id.tableID})
+    let resultView = await onGetViewHistory({tableID: id.tableID})
     let history = result.data.history
+    let historyView = resultView.data.history
     let tempHistory = []
+    let tempView = []
         for(let i = 0; i < history.length; i++){ 
           tempHistory.push({
             key: history[i]._id,
@@ -88,8 +94,16 @@ const GridTable = (props) => {
             editDate: moment(history[i].editDate).format('YYYY-MM-DD HH:mm:ss'),
           });
         }
-        setEditHistory(tempHistory)
-   setIsEditHisModalVisible(true)
+        for(let i = 0; i < historyView.length; i++){ 
+          tempView.push({
+            key: historyView[i]._id,
+            viewBy: historyView[i].viewBy,
+            viewDate: moment(historyView[i].viewDate).format('YYYY-MM-DD HH:mm:ss'),
+          });
+        }
+    setEditHistory(tempHistory)
+    setViewHistory(tempView)
+    setIsEditHisModalVisible(true)
     setLoadingModal(false)
   };
 
@@ -115,7 +129,7 @@ const GridTable = (props) => {
 
   const handleCancelEdit = () => {
     setIsEditModalVisible(false)
-    join(editData.id.tableID, userObj.USER.name, false)
+    join(editData.id.tableID, userObj.USER._id, false)
   };
 
   const showModalView = () => {
@@ -124,7 +138,7 @@ const GridTable = (props) => {
 
 const handleCancelView = () => {
   setIsViewModalVisible(false)
-  join(editData.id.tableID, userObj.USER.name, false)
+  join(editData.id.tableID, userObj.USER._id, false)
 };
 
 
@@ -192,6 +206,21 @@ const handleCancelView = () => {
       width: '50%',
       dataIndex: 'editDate',
       key: 'editDate',
+    }
+  ]
+
+  const viewHistoryColumns=[
+    {
+      title: 'Viewer',
+      width: '50%',
+      dataIndex: 'viewBy',
+      key: 'viewBy',
+    },
+    {
+      title: 'View Date',
+      width: '50%',
+      dataIndex: 'viewDate',
+      key: 'viewDate',
     }
   ]
 
@@ -278,11 +307,12 @@ const handleCancelView = () => {
               </div>
               <div>
               <Tooltip title='Edit table' placement='top'>
-                <Button onClick = {
+                <Button style={{display: userObj.USER.category === 'director' ? 'none' : 'initial'}}  onClick = {
                   async (e) => {
                       let id ={tableID: record.tableID}
                       setEditData({id:id})
-                      join(record.tableID, userObj.USER.name, true)
+                      onViewLog({user: userObj.USER.name, id: record.tableID })
+                      join(record.tableID, userObj.USER._id, true)
                       showModalEdit()
                   }
                 }   icon={<EditFilled />}></Button>
@@ -294,6 +324,7 @@ const handleCancelView = () => {
                   async (e) => {
                       let id ={tableID: record.tableID}
                       view(record.tableID, userObj.USER.name)
+                      onViewLog({user: userObj.USER.name, id: record.tableID })
                       setEditData({id:id})
                       showModalView(true)
                   }
@@ -308,7 +339,7 @@ const handleCancelView = () => {
               </Tooltip>
             </div>
             <div>
-              <Tooltip title='View Edit History' placement='top'>
+              <Tooltip title='View Access History' placement='top'>
                 <Button onClick={()=>{
                   let id ={tableID: record.tableID}
                   showModalEditHis(id)}} icon={<HistoryOutlined />}/>
@@ -324,7 +355,7 @@ const handleCancelView = () => {
                         notif("error", "Deleted")
                     }
                   }>
-                  <Button danger icon={<DeleteFilled />}></Button>
+                  <Button style={{display: userObj.USER.category === 'director' ? 'none' : 'initial'}} danger icon={<DeleteFilled />}></Button>
                 </Popconfirm>
               </Tooltip>
             </div>
@@ -339,11 +370,11 @@ const handleCancelView = () => {
             <Table scroll={{ x: 1000, y: 500 }} columns={columns} dataSource={finaldata} /> 
             </div>
            }
-            <Modal visible={isEditModalVisible} footer={null} onCancel={handleCancelEdit} width={1000} title="Edit Table">
+            <Modal visible={isEditModalVisible} footer={null} onCancel={handleCancelEdit} width={1500} title="Edit Table">
                 <EditDatagrid data={editData}/>
             </Modal>
 
-            <Modal visible={isViewModalVisible} footer={null} onCancel={handleCancelView} width={1000} title="View Table">
+            <Modal visible={isViewModalVisible} footer={null} onCancel={handleCancelView} width={1500} title="View Table">
                 <ViewDatagrid data={editData}/>
             </Modal>
             <Modal title="Download History" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
@@ -356,14 +387,27 @@ const handleCancelView = () => {
                 </div>}
             </Modal>
 
-            <Modal title="Edit History" visible={isEditHisModalVisible} onOk={handleOkEditHistoy} onCancel={handleCancelEditHistory}>
-              {loadingModal? <div className="spinner"><Spin /> </div> : <div>
-                {editHistory.length === 0 ? <Empty/> : 
-                <div style={{justifyContent: 'center', alignItems: 'center'}}> 
-                  <Table pagination={false} scroll={{y: 500}} columns={editHistoryColumns} dataSource={editHistory} />
-                </div>
-                }
-                </div>}
+            <Modal title="Access History" visible={isEditHisModalVisible} onOk={handleOkEditHistoy} onCancel={handleCancelEditHistory}>
+              <Tabs>
+                <TabPane tab="Edit History" key="1">
+                  {loadingModal? <div className="spinner"><Spin /> </div> : <div>
+                    {editHistory.length === 0 ? <Empty/> : 
+                    <div style={{justifyContent: 'center', alignItems: 'center'}}> 
+                      <Table pagination={false} scroll={{y: 500}} columns={editHistoryColumns} dataSource={editHistory} />
+                    </div>
+                    }
+                    </div>}
+                </TabPane>
+                <TabPane tab="View History" key="2">
+                  {loadingModal? <div className="spinner"><Spin /> </div> : <div>
+                    {viewHistory.length === 0 ? <Empty/> : 
+                    <div style={{justifyContent: 'center', alignItems: 'center'}}> 
+                      <Table pagination={false} scroll={{y: 500}} columns={viewHistoryColumns} dataSource={viewHistory} />
+                    </div>
+                    }
+                    </div>}
+                </TabPane>
+              </Tabs>
             </Modal>
         </div>
     )

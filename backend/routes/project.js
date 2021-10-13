@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Project = require('../models/projects')
+const Program = require('../models/program')
 const mongoose = require('mongoose')
 const shortid = require('shortid')
 const logger = require('../logger')
@@ -29,6 +30,7 @@ async function auth(req, res, next){
 
 //create project
 router.route('/createproject').post(async (req, res) => {
+  console.log(req.body)
    try {
     const projectID = shortid.generate() 
     const project = new Project({
@@ -39,6 +41,7 @@ router.route('/createproject').post(async (req, res) => {
         projectName: req.body.projectName,
         projectID: projectID,
         assignee: req.body.assignee,
+        program: req.body.program,
         assigneeName: req.body.assigneeName,
         active: true,
         status: 'ONGOING'
@@ -59,6 +62,37 @@ router.route('/createproject').post(async (req, res) => {
  })
 
 
+ //create program
+router.route('/createprogram').post(async (req, res) => {
+  console.log(req.body)
+   try {
+    const programID = shortid.generate() 
+    const program = new Program({
+        dateCreated: Date.now(),
+        createdBy: req.body.user,
+        programName: req.body.programName,
+        programID: programID,
+        assignee: req.body.assignee,
+        assigneeName: req.body.assigneeName,
+        active: true,
+        status: 'ONGOING'
+    })
+    const doesExist = await Program.findOne({programName: req.body.programName, active: true})
+    if(doesExist){
+        res.status(400).json({message: "Program name already exist!"})
+    } else{
+          const newProgram =  await program.save()
+          res.status(201).json({
+              message1: `Program created with the id ${programID}`,
+              newProgram})
+          }
+   } catch (error) {
+    logger.log('error', 'Create project error!')
+    res.status(400).json({message: error.message})
+   }
+ })
+
+
  router.get("/getAllProject", async(req,res) => {
     try {
        Project.find({}, {"projectName": 1, _id: 0}, function(err, projects) {
@@ -69,11 +103,47 @@ router.route('/createproject').post(async (req, res) => {
     }
   })
 
-
-  //get all project assigned to the manager
-  router.get("/getProjectforManager/:user", auth, async(req,res) => {
+  router.get("/getAllPrograms", async(req,res) => {
     try {
-      await Project.find({"assignee": req.params.user, "active": true}, function(err, projects) {
+       Program.find({active: true}, function(err, programs) {
+        res.send(programs);  
+      });
+    } catch (error) {
+      logger.log('error', 'Get all project error!')  
+    }
+  })
+
+
+  router.get("/getProjectforDirector", async(req,res) => {
+    try {
+       Project.find({"active": true}, function(err, projects) {
+        res.send(projects);  
+      });
+    } catch (error) {
+      logger.log('error', 'Get all project error!')  
+    }
+  })
+
+
+  //get all project assigned to the manager with programs
+
+  router.get("/getProjectforManager/:user/:program", auth, async(req,res) => {
+    try {
+      await Project.find({"assignee": req.params.user, "program": req.params.program, "active": true}, function(err, projects) {
+        if(err){
+            logger.log('error', 'Project find error: /getProjectforManager')
+        } else{
+            res.send(projects)
+        }
+      });
+    } catch (error) {
+      logger.log('error', 'Project find error: /getProjectforManager')  
+    }
+  })
+
+  router.get("/getProgramforManager/:user", auth, async(req,res) => {
+    try {
+      await Program.find({"assignee": req.params.user, "active": true}, function(err, projects) {
         if(err){
             logger.log('error', 'Project find error: /getProjectforManager')
         } else{

@@ -44,6 +44,10 @@ const ProjectSchema = new mongoose.Schema({
     status:{
         type: String,
         required: true
+    },
+    program:{
+        type: String,
+        required: true
     }
 })
 

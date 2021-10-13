@@ -5,12 +5,14 @@ import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { onDeleteStudy, onGetAllStudyforProject } from '../services/studyAPI';
 import moment from 'moment';
+import DirectorStudyDash from './DirectorStudyDash';
 
 
-const ManagerStudyDash = (props) => {
+const ManagerStudyDash = () => {
   const dispatch = useDispatch()
   let history= useHistory();
   const projectObj = useSelector(state => state.project)
+  const userObj = useSelector(state => state.user)
   const [studyData, setStudyData]= useState(["spinme"])
   const [value, setValue] = useState('');
   const [searchData, setSearchData] = useState([])
@@ -49,30 +51,6 @@ const ManagerStudyDash = (props) => {
       getStudies()
 }, [projectObj.PROJECT])
 
-useEffect(() => {
-    if(props.data === null||props.data ===undefined||props.data === ''){
-        return
-    }else{
-    setStudyData([...studyData, {key: studyData.length + 1,
-        id: studyData.length + 1,
-        studyID:props.data.studyID,
-        title: props.data.studyTitle,
-        dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
-        dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
-        status: [props.data.status],
-        progress: props.data.progress,
-    }])
-    setSearchData([...studyData, {key: studyData.length + 1,
-      id: studyData.length + 1,
-      studyID:props.data.studyID,
-      title: props.data.studyTitle,
-      dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
-      dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
-      status: [props.data.status],
-      progress: props.data.progress,
-  }])
-    }
-}, [props.data])
 
 const handleRemove = (key) => { //deleting datasheet
   let newData = studyData.filter((tempData) => {
@@ -189,23 +167,26 @@ const onSearch = value =>{
 
 return (
   <div>
+      {userObj.USER.category === 'manager' ? 
+  <div>
         {studyData[0]==="spinme" ?  <Spin className="spinner" /> : 
         <div > 
-          <div style={{width: '200px', float: 'right', margin: '0 5px 5px 0'}}>
-          <Input.Search placeholder="Search Title" value={value}
-              onChange={e => {
-                const currValue = e.target.value;
-                setValue(currValue);
-                onSearch(currValue)
-              }}
-              onSearch={onSearch}
-              allowClear
-            />
-          </div>
-          <Table size="small" scroll={{ x: 1500, y: 1000 }} style={{margin: '15px'}} dataSource={studyData} columns={columns} ></Table>
+            <div style={{width: '200px', float: 'right', margin: '0 5px 5px 0'}}>
+            <Input.Search placeholder="Search Title" value={value}
+                onChange={e => {
+                  const currValue = e.target.value;
+                  setValue(currValue);
+                  onSearch(currValue)
+                }}
+                onSearch={onSearch}
+                allowClear
+              />
+            </div>
+            <Table size="small" scroll={{ x: 1500, y: 1000 }} style={{margin: '15px'}} dataSource={studyData} columns={columns} ></Table>
         </div>
          }
-  </div> 
+  </div> : <DirectorStudyDash/>}
+  </div>
     )
 }
 

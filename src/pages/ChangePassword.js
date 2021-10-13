@@ -10,6 +10,10 @@ const ChangePassword = () => {
     const [password, setPassword] = useState({oldPassword: "", newPassword: "", confrimPassword: ""}) //for changepassword
     const { Title } = Typography;
 
+    const [form] = Form.useForm();
+
+    const initialValues = {oldPassword: "", newPassword: "", confrimPassword: ""}
+
     const notif = (type, message) => {
       notification[type]({
         message: 'Notification',
@@ -30,6 +34,7 @@ const ChangePassword = () => {
              notif('error', 'Password does not match!')
             }else{
                let result = await onChangePassword(data)
+               form.resetFields()
                setPassword({oldPassword: "", newPassword: "", confrimPassword: ""})
                notif('success', result.data.message)
            }
@@ -39,7 +44,7 @@ const ChangePassword = () => {
      }
 
   return (
-    <Form style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat", display: 'grid', justifyItems: 'center'}} onFinish={onSubmit}>
+    <Form style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat", display: 'grid', justifyItems: 'center'}} onFinish={onSubmit} initialValues={initialValues} form={form}>
       <Title level={3}>Change Password</Title>
         <Form.Item name="cpassword"  label="Current Password"
           rules={[

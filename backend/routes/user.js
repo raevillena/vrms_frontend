@@ -49,6 +49,7 @@ router.route('/secretcreateuser').post(async (req, res) => {
             }
           });
         const newUser =  await users.save()
+        console.log(password)
         } 
     } catch(err){
       logger.log('error', `Error: /createUSer - ${err}`)

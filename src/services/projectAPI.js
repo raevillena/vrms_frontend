@@ -11,6 +11,17 @@ export async function onProjectCreate(body) {
     }
 }
 
+export async function onProgramCreate(body) {
+    try {
+        return axios.post("/v1/project/createprogram", body, tokenConfig())
+    } catch (error) {
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}
+
 
 export async function onGetAllProject() {
     try {
@@ -20,9 +31,29 @@ export async function onGetAllProject() {
     }
 }
 
+
+export async function onGetAllPrograms() {
+    try {
+        return axios.get(`/v1/project/getAllPrograms`, tokenConfig())
+    } catch (error) {
+        console.log('error', error)
+    }
+}
+
 export async function onGetProjectforManager(body) {
     try {
-        return axios.get(`/v1/project/getProjectforManager/${body.user}`, tokenConfig())
+        return axios.get(`/v1/project/getProjectforManager/${body.user}/${body.program}`, tokenConfig())
+    } catch (error) {
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}
+
+export async function onGetProgramforManager(body) {
+    try {
+        return axios.get(`/v1/project/getProgramforManager/${body.user}`, tokenConfig())
     } catch (error) {
         return {
             status: 'false',
@@ -35,6 +66,17 @@ export async function onGetProjectforManager(body) {
 export async function onDeleteProject(body) {
     try {
         return axios.post(`/v1/project/deleteProject`, body, tokenConfig())
+    } catch (error) {
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}
+
+export async function onGetProjectforDirector() {
+    try {
+        return axios.get(`/v1/project/getProjectforDirector`, tokenConfig())
     } catch (error) {
         return {
             status: 'false',

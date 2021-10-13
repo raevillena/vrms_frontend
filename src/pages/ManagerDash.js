@@ -4,7 +4,7 @@ import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
-import { onDeleteProject, onGetProjectforManager } from '../services/projectAPI';
+import { onDeleteProject, onGetProgramforManager, onGetProjectforManager } from '../services/projectAPI';
 
 
 
@@ -14,8 +14,10 @@ const ManagerDash = (props) => {
   let history= useHistory();
   const userObj = useSelector(state => state.user)
   const [projectData, setProjectData]= useState(["spinme"])
+  const [programData, setProgramData]= useState(["spinme"])
   const [value, setValue] = useState('');
   const [searchData, setSearchData] = useState([])
+  const [id, setId] = useState()
  
   const notif = (type, message) => {
     notification[type]({
@@ -27,25 +29,26 @@ const ManagerDash = (props) => {
 
   useEffect(() => {
     async function getProjects(){
-        let result = await onGetProjectforManager({user: userObj.USER._id})//CHANGE TO ID
-        let projectResult = result.data
-        let tempProjectData = []
-        for(let i = 0; i < projectResult.length; i++){ 
-            tempProjectData.push({
-                key:  projectResult[i]._id,
-                projectID:  projectResult[i].projectID,
-                id: [i],
-                projectLeader:  projectResult[i].assigneeName,
-                projectName:  projectResult[i].projectName,
-                dateCreated: moment( projectResult[i].dateCreated).format('MM-DD-YYYY'),
-                dateUpdated: moment( projectResult[i].dateUpdated).format('MM-DD-YYYY'),
-                progress:  projectResult[i].progress,
-                status: [projectResult[i].status]
+        let result1 = await onGetProgramforManager({user: userObj.USER._id})
+        let programResult = result1.data
+        let tempProgramData = []
+          for(let j = 0; j < programResult.length; j++){ 
+            tempProgramData.push({
+                key:  programResult[j].programID,
+                programID: programResult[j].programID,
+                programName: programResult[j].programName,
+                programLeader:  programResult[j].assigneeName,
+                dateCreated: moment( programResult[j].dateCreated).format('MM-DD-YYYY'),
             });
-            
           }
-        setProjectData(tempProjectData)
-        setSearchData(tempProjectData)
+          tempProgramData= [...tempProgramData, {
+                key:  'others',
+                programID: 'others',
+                programName: 'Others',
+                programLeader:  ['Others'],
+                dateCreated: moment( Date.now()).format('MM-DD-YYYY'),
+          }]
+        setProgramData(tempProgramData)
     }
       getProjects()
 }, [userObj.USER.name])
@@ -56,26 +59,28 @@ useEffect(() => {
         return
     }else{
       if(cancel) return
-    setProjectData([...projectData, {key: projectData.length + 1,
-        id: projectData.length + 1,
-        projectID:props.data.projectID,
-        projectLeader: props.data.assigneeName,
-        projectName: props.data.projectName,
-        dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
-        dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
-        progress: props.data.progress,
-        status:  [props.data.status]
-    }])
-    setSearchData([...projectData, {key: projectData.length + 1,
-      id: projectData.length + 1,
-      projectID:props.data.projectID,
-      projectLeader: props.data.assigneeName,
-      projectName: props.data.projectName,
-      dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
-      dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
-      progress: props.data.progress,
-      status:  [props.data.status]
-  }])
+    if(props.data.type === 'program'){
+    setProgramData([...programData, {key:  props.data.newProgram._id,
+      programID: props.data.newProgram.program,
+      programName: props.data.newProgram.programName,
+      programLeader:  props.data.newProgram.assigneeName,
+      dateCreated: moment( props.data.newProgram.dateCreated).format('MM-DD-YYYY')}])
+    }else{
+      if(props.data.data.program === id){
+        setProjectData([...projectData, {key: projectData.length + 1,
+          projectID:props.data.data.projectID,
+          projectLeader: props.data.data.assigneeName,
+          projectName: props.data.data.projectName,
+          programID: props.data.data.program,
+          dateCreated: moment(props.data.data.dateCreated).format('MM-DD-YYYY'),
+          dateUpdated: moment(props.data.data.dateUpdated).format('MM-DD-YYYY'),
+          progress: props.data.data.progress,
+          status:  [props.data.data.status]
+        }])
+      }else{
+        return
+      }
+    }
     }
     return () => { 
       cancel = true;
@@ -102,16 +107,49 @@ const onSearch = value =>{
 }
 
 
-  const columns = [
-    {
-      title: 'Project ID',
-      dataIndex: 'id',
-      key: 'id',
-      width: '5%',
-      defaultSortOrder: 'descend',
+const programColumns = [
+  {
+    title: 'Program Leader',
+    dataIndex: 'programLeader',
+    width: '25%',
+    key: 'programLeader',
+    render: (leader) => <List size="small"
+    dataSource={leader}
+    renderItem={item => <List.Item>{item}</List.Item>}
+    >
+    </List>
+  },
+  {
+    title: 'Program Name',
+    dataIndex: 'programName',
+    key: 'programName',
+    width: '40%',
+    ellipsis: true,
+  },
+  {
+    title: 'Date Created',
+    dataIndex: 'dateCreated',
+    key: 'dateCreated', 
+    width: '15%'
+  },
+  {
+    title: 'Action',
+    dataIndex: 'action',
+    width: '15%',
+    key: 'action',
+    fixed: 'right',
+    render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row', gap:'5px'}}>
+      <Button className="manageBtn">
+        Edit
+      </Button>
+    </div>
+  },
+];
 
-      sorter: (a, b) => a.id - b.id,
-    },
+const expandedRowRender = record => {
+  //console.log('programid', record)
+  //setId(programID)
+  const columns = [
     {
       title: 'Project Leader',
       dataIndex: 'projectLeader',
@@ -198,13 +236,48 @@ const onSearch = value =>{
       </div>
     },
   ];
+  
+  if(programData === ''){
+    return <Spin className="spinner" />
+  }else{
+    return <Table columns={columns} dataSource={projectData} pagination={false} scroll={{ x: 1200, y: 1000 }} />
+  }
+};
+
+useEffect(() => {
+  console.log('useEffect',id)
+  async function getProject (){
+    let result = await onGetProjectforManager({user: userObj.USER._id, program: id})//CHANGE TO ID
+    let projectResult = result.data
+    let tempProjectData = []
+    for(let i = 0; i < projectResult.length; i++){ 
+        tempProjectData.push({
+            key:  projectResult[i]._id,
+            projectID:  projectResult[i].projectID,
+            projectLeader:  projectResult[i].assigneeName,
+            programID: projectResult[i].program,
+            projectName:  projectResult[i].projectName,
+            dateCreated: moment( projectResult[i].dateCreated).format('MM-DD-YYYY'),
+            dateUpdated: moment( projectResult[i].dateUpdated).format('MM-DD-YYYY'),
+            progress:  projectResult[i].progress,
+            status: [projectResult[i].status]
+        });
+      }
+      setProjectData(tempProjectData)
+      setSearchData(tempProjectData)
+  }
+  getProject()
+  return () => {
+    console.log('unmounting')
+  }
+}, [id])
 
     return (
       <div > 
-        {projectData[0]==="spinme"?  <Spin className="spinner" /> :
+        {programData[0]==="spinme"?  <Spin className="spinner" /> :
          <div>  
             <div style={{width: '200px', float: 'right', margin: '0 5px 5px 0'}}>
-            <Input.Search placeholder="Search Title" value={value}
+            <Input.Search placeholder="Search Project Title" value={value}
                 onChange={e => {
                   const currValue = e.target.value;
                   setValue(currValue);
@@ -214,7 +287,8 @@ const onSearch = value =>{
                 allowClear
               />
             </div> 
-              <Table size="small" scroll={{ x: 1200, y: 1000 }} dataSource={projectData} columns={columns} style={{margin: '15px'}}/>
+              <Table size="small" className="components-table-demo-nested"  expandable={{ expandedRowRender }} onExpand={(isExpanded, record) =>
+                setId(isExpanded ? record.key : undefined)}scroll={{ x: 1200, y: 1000 }} dataSource={programData} columns={programColumns} style={{margin: '15px'}} />
             </div>
            }
       </div>

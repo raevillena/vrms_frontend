@@ -13,11 +13,10 @@ db.once('open', () => console.log('connected to database'))
 
 const io = require("socket.io")(3002, {
     cors: {
-        origin: "http://nberic.org", 
+        origin: "http://localhost:3000", 
         methods: ["GET", "POST"]
     }
 })
-
 
 io.on("connection", socket => {
     console.log('connected to socket.io')
@@ -32,10 +31,10 @@ io.on("connection", socket => {
                 console.log(data.room," count:", 0)
             }
             if(count == 1){
-                socket.emit(data.room, "allow-edit")
+                socket.emit(data.room, {msg: "allow-edit"})
             }
             else{
-                socket.emit(data.room, "view-only")
+                socket.emit(data.room, {msg: "view-only"})
             }
         }else if (data.join === false){
             socket.leave(data.room)
@@ -74,6 +73,10 @@ io.on("connection", socket => {
 
     socket.on("send-undo", state => { //changes during undo
         socket.to(state.room).to(`${state.room}-viewing`).emit("receive-undo", state.data)
+    })
+
+    socket.on("send-replace-col", state => { //changes during replace column
+        socket.to(state.room).to(`${state.room}-viewing`).emit("receive-replace-col", state.data)
     })
     
     socket.on("disconnect", () => console.log("Client disconnected"));

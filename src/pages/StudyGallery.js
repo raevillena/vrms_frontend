@@ -10,6 +10,7 @@ import '../styles/CSS/Userdash.css'
 const StudyGallery = () => {
 
     const studyObj = useSelector(state => state.study)
+    const userObj = useSelector(state => state.user)
     const [images, setImages] = useState([])
     const [loading, setLoading] = useState(true)
 
@@ -38,7 +39,7 @@ const StudyGallery = () => {
         <div style={{maxHeight: '320px', overflowY: 'auto'}}>
             {loading ? <Spin className="spinner" /> :
             <div>
-                <Button style={{background:'#A0BF85'}}>
+                <Button style={{background:'#A0BF85', display: userObj.USER.category === 'director' ? 'none' : 'initial'}}>
                     <label className="file_input_id">
                     <UploadOutlined/> Upload Image
                         <input type="file"  accept="image/*" onChange={async e => {
@@ -49,8 +50,8 @@ const StudyGallery = () => {
                             let result = await onUploadGallery(data)
                             let newImage = result.data.newGallery.images
                             setImages([...images, {
-                                src: `http://127.0.0.1:8080/gallery/${newImage}`,
-                                thumbnail: `http://127.0.0.1:8080/gallery/${newImage}`,
+                                src: `http://nberic.org/gallery/${newImage}`,
+                                thumbnail: `http://nberic.org/gallery/${newImage}`,
                                 thumbnailWidth: 110,
                                 thumbnailHeight: 70,
                                 }])

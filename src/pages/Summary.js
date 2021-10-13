@@ -114,9 +114,9 @@ const Summary = () => {
                 </List>
             </div>
             <div style={{display:'flex', justifyContent:'flex-end', lineHeight: '20px', gap:'5px'}}>
-                <Button type='primary' onClick={updateSummary}>Save</Button>
-                <Button type='primary' onClick={onUpdate}>Edit</Button>
-            </div> </div>}
+                <Button type='primary' style={{display: userObj.USER.category === 'director' ? 'none' : 'initial'}} onClick={updateSummary}>Save</Button>
+                <Button type='primary' style={{display: userObj.USER.category === 'director' ? 'none' : 'initial'}} onClick={onUpdate}>Edit</Button>
+            </div> </div>} 
         </div>
     )
 }

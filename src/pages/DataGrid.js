@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import {Button, Input, Select, notification, Modal, Image, Tooltip} from 'antd'
-import { onAddDatagrid} from '../services/studyAPI';
+import { onAddDatagrid, onGetDatagridCol} from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import { DynamicDataSheetGrid, 
   checkboxColumn,
@@ -33,7 +33,8 @@ const DataGrid = () => {
       type: 'Checkbox'
     }],
     isModalImage: false,
-    isModalAdd: false
+    isModalAdd: false,
+    dupCol : []
   })
   const [ data, setData ] = useState([])
 
@@ -95,6 +96,24 @@ const DataGrid = () => {
     }]})
   }
 
+  useEffect(() => {
+    const getCol = async() =>{
+      let res = await onGetDatagridCol({study: studyObj.STUDY.studyID})
+      console.log(res)
+      let col = res.data
+      let colArr = []
+      for (let index = 0; index < col.length; index++) {
+        colArr.push({
+        key : col[index].title,
+        value: col[index].columns,
+        title: col[index].title
+      })
+      }
+      setstate({...state, dupCol: colArr})
+    }
+    getCol()
+  }, [])
+
   useEffect(()=> { //getting column
       //adding columns
   const getColumns= () =>{
@@ -154,9 +173,33 @@ const DataGrid = () => {
     }
   }
 
+  const checkColumnType= (key,title) => {
+    switch(key) {
+        case 'Checkbox':
+          return { ...keyColumn(title, checkboxColumn), title: title, type: 'Checkbox'}
+        case 'text':
+          return { ...keyColumn(title, textColumn), title: title,  type: 'text'}
+        case 'camera':
+          return { ...keyColumn(title, cameraColumn), title: title,  type: 'camera'}
+        default:
+            return { ...keyColumn(title, textColumn), title: title,  type: 'text'}
+    }
+}
+
   function handleColumnToDelete(value) { //handling deleting column
     setstate({...state, removeCol: value})
   }
+
+  function handleDuplicateColumn(value) { //handling duplicating table
+    let arr = state.dupCol
+    let tempColArr = []
+    let obj = arr.find(o => o.title === value); 
+    for (let index = 0; index < obj.value.length; index++) {
+      tempColArr.push(checkColumnType(obj.value[index].type, obj.value[index].title))
+    }
+    setstate({...state, tempCol: tempColArr })
+  }
+
 
 
   async function saveToDB(){
@@ -233,7 +276,7 @@ const DataGrid = () => {
     <div>
        <div style={{marginTop: '20px'}} >
           <Tooltip placement="top" title="Add Table">
-            <Button style={{background: '#A0BF85', marginTop: '15px' }} onClick={showModalAdd} icon={<PlusSquareFilled/>}>
+            <Button style={{background: '#A0BF85', marginTop: '15px', display: userObj.USER.category === 'director' ? 'none' : 'initial' }} onClick={showModalAdd} icon={<PlusSquareFilled/>}>
               Add Table
             </Button>
           </Tooltip>
@@ -295,6 +338,20 @@ const DataGrid = () => {
                   </div>
                 </div>
               </div>
+              <div className="add-grid">
+              <div style={{display:'grid'}}>
+                  <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>
+                    Duplicate Table 
+                  </label>
+                  <div style={{display:'flex', flexDirection:'row', gap:'5px', width:'300px'}}>
+                    <Select placeholder="Select table to duplicate" onChange={handleDuplicateColumn}>
+                        {state.dupCol.map(column => (
+                          <Option key={column.title} value={column.title}>{column.title}</Option>
+                        ))}
+                     </Select>
+                  </div>
+                </div>
+                </div>
               <div style={{marginTop:'20px'}}>
                 <DynamicDataSheetGrid
                   data={data}

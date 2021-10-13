@@ -9,6 +9,7 @@ import { onGetStudyForUser } from '../services/studyAPI';
 import moment from 'moment';
 import MobileHeader from '../components/components/MobileHeader';
 import Project from './Project';
+import DirectorDash from './DirectorDash';
 
 
 const { Header, Content, Sider } = Layout;
@@ -178,8 +179,8 @@ return (
           }
         </Content> 
       </Layout>      
-    </Layout>: 
-    <Project/>}
+    </Layout>: userObj.USER.category === "manager" ?
+    <Project/> : <DirectorDash/>}
   </div>
     )
 }

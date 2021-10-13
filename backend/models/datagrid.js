@@ -45,6 +45,12 @@ const DatagridSchema = new mongoose.Schema({
     tableID:{
         type: String,
         require: true
+    },
+    currentEditingAvatar:{
+        type: String,
+    },
+    currentEditingName:{
+        type: String,
     }
 })
 

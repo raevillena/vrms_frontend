@@ -36,7 +36,8 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
       cb(null, Math.random() * 1000 + file.originalname)
-  }
+  }, 
+  limits: { fileSize: 1 * 1000 * 1000 }
 });
 
 const storage1 = multer.diskStorage({
@@ -45,7 +46,8 @@ const storage1 = multer.diskStorage({
   },
   filename: function (req, file, cb) {
       cb(null, Math.random() * 1000 + file.originalname)
-  }
+  },
+  limits: { fileSize: 1 * 1000 * 1000 }
 });
 
 const storage2 = multer.diskStorage({
@@ -54,7 +56,8 @@ const storage2 = multer.diskStorage({
   },
   filename: function (req, file, cb) {
       cb(null, Math.random() * 1000 + file.originalname)
-  }
+  },
+  limits: { fileSize: 1 * 1000 * 1000 }
 });
 
 const storage3 = multer.diskStorage({
@@ -63,7 +66,8 @@ const storage3 = multer.diskStorage({
   },
   filename: function (req, file, cb) {
       cb(null, Math.random() * 1000 + file.originalname)
-  }
+  },
+  limits: { fileSize: 1 * 1000 * 1000 }
 });
 
 var upload = multer({storage: storage})
@@ -135,7 +139,7 @@ router.post("/gallery", upload3.single("file"), auth, async (req, res, next) => 
         newGallery
       })
   } catch (error) {
-    logger.log('error', error)
+   // logger.log('error', error)
     res.status(500).json({message: error.message})
   }
 });
