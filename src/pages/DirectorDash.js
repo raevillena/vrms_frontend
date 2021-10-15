@@ -24,7 +24,6 @@ const DirectorDash = () => {
   useEffect(() => {
     async function getProjects(){
         let result = await onGetProjectforDirector()
-        console.log(result)
         let projectResult = result.data
         let tempProjectData = []
         for(let i = 0; i < projectResult.length; i++){ 

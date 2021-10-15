@@ -311,16 +311,11 @@ const pull_data = (data) => {
 }
 
 const edit_data = (data) => {
-  console.log('edit_data', data)
   let objIndex = projectData.findIndex((obj => obj.projectID === data.project.id));
-  console.log(projectData[objIndex], objIndex)
   if(projectData[objIndex].programID !== data.program){
-    console.log('here', objIndex)
     let arr = projectData
     arr.splice(objIndex,1);
     setProjectData([...arr])
-    console.log('newData', projectData)
-   //delete projectData[objIndex]
   }else{
     projectData[objIndex].projectLeaderID = data.assignee
     projectData[objIndex].projectLeader = data.assigneeName

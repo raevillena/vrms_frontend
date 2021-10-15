@@ -9,10 +9,6 @@ import ManagerDash from './ManagerDash.js';
 import { useSelector } from 'react-redux';
 
 
-
-
-
-
 const { Header, Content, Sider } = Layout;
 const { TabPane } = Tabs;
 
@@ -73,7 +69,6 @@ const Project = () => {
             let resultPrograms = await onGetProgramforManager({user: userObj.USER._id})
             let x = resultUsers.data
             let y = resultPrograms.data
-            console.log(y)
             let tempUserData = []
             let tempPrograms = []
             for(let i = 0; i < x.length; i++){ 

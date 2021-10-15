@@ -194,7 +194,6 @@ router.route('/createprogram').post(async (req, res) => {
         if(err){
             logger.log('error', 'Update Program')
         } else{
-          console.log(projects)
           res.send({message: "Project Updated"})
         }
       });

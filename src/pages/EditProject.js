@@ -18,7 +18,6 @@ const EditProject = (props) => {
     const initialValues = {projectName: props.data.record.projectName, assignee: props.data.record.projectLeaderID, assigneeName: props.data.record.projectLeader, program:props.data.programs.programID, programName:props.data.programs.programName }
    
     function handleChange(value) {   //for assigning user
-        console.log(value)
         let tempArray = []
         let assign = value
         value.forEach(id => {
@@ -32,12 +31,10 @@ const EditProject = (props) => {
     }
 
     function handleProgramChange(value) {
-        console.log(value)
         setProject({...project, program: value})
       }
 
     useEffect(() => {
-        console.log('props', props)
         async function getUsers(){
             let resultUsers = await onGetAllManagers()
             let resultPrograms = await onGetProgramforManager({user: userObj.USER._id})
