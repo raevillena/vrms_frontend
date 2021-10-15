@@ -85,6 +85,28 @@ export async function onGetProjectforDirector() {
     }
 }
 
+export async function onUpdateProgram(body) {
+    try {
+        return axios.post(`/v1/project/updateProgram`, body, tokenConfig())
+    } catch (error) {
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}
+
+export async function onUpdateProject(body) {
+    try {
+        return axios.post(`/v1/project/updateProject`, body, tokenConfig())
+    } catch (error) {
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}
+
 //set up config with token, helper function
 export const tokenConfig = () => {
 

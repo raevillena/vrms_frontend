@@ -51,7 +51,13 @@ const DatagridSchema = new mongoose.Schema({
     },
     currentEditingName:{
         type: String,
-    }
+    },
+    deletedDate: {
+        type: Date,
+    },
+    deletedBy:{
+        type: String,
+    },
 })
 
 

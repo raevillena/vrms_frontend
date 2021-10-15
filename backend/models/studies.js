@@ -62,8 +62,19 @@ const StudiesSchema = new mongoose.Schema({
     },
     active:{
         type: Boolean
+    },
+    deletedDate: {
+        type: Date,
+    },
+    deletedBy:{
+        type: String,
+    },
+    dateEdited: {
+        type: Date,
+    },
+    editedBy:{
+        type: String,
     }
-    
 })
 
 module.exports = mongoose.model('Studies', StudiesSchema)

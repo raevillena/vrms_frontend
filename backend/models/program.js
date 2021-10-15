@@ -36,7 +36,13 @@ const ProgramSchema = new mongoose.Schema({
     status:{
         type: String,
         required: true
-    }
+    },
+    dateEdited: {
+        type: Date,
+    },
+    editedBy:{
+        type: String,
+    },
 })
 
 module.exports = mongoose.model('Program', ProgramSchema)

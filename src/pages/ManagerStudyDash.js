@@ -147,17 +147,17 @@ const onSearch = value =>{
          })
          history.push('/editstudy')
         }
-      } className="manageBtn">MANAGE</Button>
+      } type='link'>MANAGE</Button>
 
       <Popconfirm title="Sure to delete?" onConfirm = {
         async (key) => {
-             let id ={_id: record.key}
+             let id ={_id: record.key, user: userObj.USER._id}
             let result = await onDeleteStudy(id)
              await handleRemove(record.key)
              notif("error", result.data.message)
          }
        }>
-   <Button danger>DELETE</Button>
+   <Button type='link' danger>DELETE</Button>
    </Popconfirm>
    </div>
     },

@@ -54,7 +54,12 @@ const TasksSchema = new mongoose.Schema({
         type: Boolean,
         required:  true,
     },
-    
+    deletedDate: {
+        type: Date,
+    },
+    deletedBy:{
+        type: String,
+    },
 
 })
 

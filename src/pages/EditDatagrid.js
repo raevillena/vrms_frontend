@@ -76,27 +76,30 @@ const EditDataGrid = (props) => {
   }
 
   
-  let timer;
-  function update(){
-    clearTimeout(timer)
-    updateDB(dataToSend, props.data.id.tableID ,userObj.USER.name)
-  }
-
+  var timer;
   const runTimer = () => {
     timer = window.setTimeout(
       () => {
-        document.getElementById('save').click()
+        //document.getElementById('save').click()
+        updateDB(dataToSend, props.data.id.tableID ,userObj.USER.name)
       }, 5000);
   }
+
+
+  function update(){
+    window.clearTimeout(timer)
+    updateDB(dataToSend, props.data.id.tableID ,userObj.USER.name)
+    window.clearTimeout(timer)
+  }
+
 
  const TextComponent = React.memo(
     ({ rowData, setRowData, active}) => {
       const handleOnChange = (e) =>{
-        clearTimeout(timer)
-        setRowData(e.target.value)
-        runTimer()  
+            window.clearTimeout(timer)
+            runTimer() 
+            setRowData(e.target.value)
       }
-      
       return (
         <input
           className="dsg-input"
@@ -120,6 +123,8 @@ const EditDataGrid = (props) => {
                       const data = new FormData()
                       data.append("file", file)
                       let result = await onUploadDataGrid(data) //uploading
+                      window.clearTimeout(timer)
+                      runTimer()
                       setRowData(result.data.filename)
                       notif('info', result.data.message)
                     }

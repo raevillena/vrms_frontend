@@ -48,6 +48,22 @@ const ProjectSchema = new mongoose.Schema({
     program:{
         type: String,
         required: true
+    },
+    programName:{
+        type: String,
+        required: true
+    },
+    deletedDate: {
+        type: Date,
+    },
+    deletedBy:{
+        type: String,
+    },
+    dateEdited: {
+        type: Date,
+    },
+    editedBy:{
+        type: String,
     }
 })
 

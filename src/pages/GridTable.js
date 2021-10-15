@@ -349,7 +349,7 @@ const handleCancelView = () => {
               <Tooltip title='Delete table' placement='top'>
                 <Popconfirm title="Sure to delete?" onConfirm = {
                   async (key) => {
-                        let id ={_id: record.key}
+                        let id ={_id: record.key, user: userObj.USER._id}
                         await onDeleteDatagrid(id)
                         await handleRemove(record.key)
                         notif("error", "Deleted")

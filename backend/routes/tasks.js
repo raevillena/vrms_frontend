@@ -234,7 +234,7 @@ router.post('/onUpdateTaskUser', auth, async(req, res) => {
 //delete task
 router.post('/onDeleteTask', auth, async(req, res) => {
     try {
-       await Tasks.findOneAndUpdate({"_id": req.body.taskId}, {"active": false,"dateUpdated": Date.now()}, async function(err, task){
+       await Tasks.findOneAndUpdate({"_id": req.body.taskId}, {"active": false,"deletedDate": Date.now(), 'deletedBy': req.body.user}, async function(err, task){
             if(err){
                 logger.log('error', 'Error: /onDeleteTask')
             }else{
@@ -245,7 +245,7 @@ router.post('/onDeleteTask', auth, async(req, res) => {
                 Studies.findOneAndUpdate({"studyTitle": studyName}, {"progress": progressStudy, "status": "ONGOING"}, function(err, studies){
                     if(err){
                         logger.log('error', 'Error: /onDeleteTask')
-                }
+                    }
                 })
                 let  completedStudy =  await Studies.find({"projectName": req.body.projectName, "active": true, "status": "COMPLETED"})
                 let allStudy = await Studies.find({"projectName": req.body.projectName, "active": true})

@@ -374,7 +374,7 @@ router.get('/editDataGrid/:tableID', auth, async(req, res) => {
 //delete datagrid/table
 router.post('/deleteDataGrid', auth, async(req, res) => {
     try {
-      await  Datagrid.findOneAndUpdate({"_id": req.body._id}, {"active": false}, function(err) {
+      await  Datagrid.findOneAndUpdate({"_id": req.body._id}, {"active": false, "deletedDate": Date.now(), 'deletedBy': req.body.user}, function(err) {
             if(err){
                 logger.log('error', 'Error: /deleteDatagrid')
             } else{
@@ -497,7 +497,7 @@ router.get('/studyForProject/:projectName', auth, async(req, res) => {
 //delete study
 router.post("/deleteStudy", auth, async(req,res) => {
     try {
-      await Studies.findOneAndUpdate({"_id": req.body._id},{"active": false}, function(err, study) {
+      await Studies.findOneAndUpdate({"_id": req.body._id},{"active": false, "deletedDate": Date.now(), 'deletedBy': req.body.user}, function(err, study) {
         if(err){
             logger.log('error', 'Project delete')
         } else{

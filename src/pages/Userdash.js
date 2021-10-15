@@ -142,7 +142,7 @@ const onSearch = value =>{
          })
          history.push('/editstudy')
         }
-      } className="manageBtn">MANAGE</Button>
+      } type='link'>MANAGE</Button>
     },
   ];
   

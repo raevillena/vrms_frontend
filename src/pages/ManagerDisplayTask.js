@@ -12,6 +12,7 @@ import { DeleteFilled } from '@ant-design/icons';
 const { Panel } = Collapse;
 const ManagerDisplayTask = (props) => {
     const studyObj = useSelector(state => state.study)
+    const userObj = useSelector(state => state.user)
     const projectObj = useSelector(state => state.project)
 
     const [task , setTask] = useState([])
@@ -134,7 +135,7 @@ const ManagerDisplayTask = (props) => {
 
     async function deleteTask(key){
         try {
-           let result =  await onDeleteTask({taskId: task[key||0].id, projectName: projectObj.PROJECT.projectName})
+           let result =  await onDeleteTask({taskId: task[key||0].id, projectName: projectObj.PROJECT.projectName, user: userObj.USER._id})
            handleRemove(key)
            notif('info', result.data.message)
         } catch (error) {

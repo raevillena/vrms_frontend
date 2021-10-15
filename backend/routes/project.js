@@ -159,7 +159,7 @@ router.route('/createprogram').post(async (req, res) => {
 
   router.post("/deleteProject", auth, async(req,res) => {
     try {
-      await Project.findOneAndUpdate({"_id": req.body._id},{"active": false}, function(err, projects) {
+      await Project.findOneAndUpdate({"_id": req.body._id},{"active": false, "deletedDate": Date.now(), 'deletedBy': req.body.user}, function(err, projects) {
         if(err){
             logger.log('error', 'Project delete')
         } else{
@@ -171,5 +171,36 @@ router.route('/createprogram').post(async (req, res) => {
     }
   })
 
+
+  router.post("/updateProgram", auth, async(req,res) => {
+    try {
+      await Program.findOneAndUpdate({"programID": req.body.program},{'editedBy': req.body.user, 'editedDate': Date.now(), 'programName': req.body.programName, 'assignee':req.body.assignee, 'assigneeName': req.body.assigneeName}, function(err, projects) {
+        if(err){
+            logger.log('error', 'Update Program')
+        } else{
+          res.send({message: "Program Updated"})
+        }
+      });
+    } catch (error) {
+      logger.log('error', 'Update program find error: /updateProgram')  
+    }
+  })
+  
+  router.post("/updateProject", auth, async(req,res) => {
+    try {
+      await Project.findOneAndUpdate({"projectID": req.body.id},{'editedBy': req.body.user, 'editedDate': Date.now(), 'program': req.body.program, 
+      'assignee':req.body.assignee, 'assigneeName': req.body.assigneeName, 'projectName': req.body.projectName
+    }, function(err, projects) {
+        if(err){
+            logger.log('error', 'Update Program')
+        } else{
+          console.log(projects)
+          res.send({message: "Project Updated"})
+        }
+      });
+    } catch (error) {
+      logger.log('error', 'Update project find error: /updateProject')  
+    }
+  })
 
  module.exports = router

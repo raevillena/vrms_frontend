@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Table,Progress, Spin, Popconfirm, notification, List, Tag, Input } from 'antd'
+import { Button, Table,Progress, Spin, Popconfirm, notification, List, Tag, Input, Modal } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { onDeleteProject, onGetProgramforManager, onGetProjectforManager } from '../services/projectAPI';
-
+import EditProgram from './EditProgram';
+import EditProject from './EditProject'
 
 
 
@@ -18,13 +19,34 @@ const ManagerDash = (props) => {
   const [value, setValue] = useState('');
   const [searchData, setSearchData] = useState([])
   const [id, setId] = useState()
- 
+  const [programProps, setProgramProps] = useState()
+  const [projectProps, setProjectProps] = useState()
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isProjectVisible, setIsProjectVisible] = useState(false);
+  const [expandedRow, setExpandedRow] = useState(false);
+
   const notif = (type, message) => {
     notification[type]({
       message: 'Notification',
       description:
         message,
     });
+  };
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const showModalProject = () => {
+    setIsProjectVisible(true)
+  };
+
+  const handleProjectCancel = () => {
+    setIsProjectVisible(false);
   };
 
   useEffect(() => {
@@ -34,15 +56,16 @@ const ManagerDash = (props) => {
         let tempProgramData = []
           for(let j = 0; j < programResult.length; j++){ 
             tempProgramData.push({
-                key:  programResult[j].programID,
+                key:  j,
                 programID: programResult[j].programID,
                 programName: programResult[j].programName,
                 programLeader:  programResult[j].assigneeName,
+                programLeaderID:  programResult[j].assignee,
                 dateCreated: moment( programResult[j].dateCreated).format('MM-DD-YYYY'),
             });
           }
           tempProgramData= [...tempProgramData, {
-                key:  'others',
+                key:  tempProgramData.length,
                 programID: 'others',
                 programName: 'Others',
                 programLeader:  ['Others'],
@@ -70,6 +93,7 @@ useEffect(() => {
         setProjectData([...projectData, {key: projectData.length + 1,
           projectID:props.data.data.projectID,
           projectLeader: props.data.data.assigneeName,
+          projectLeaderID: props.data.data.assignee,
           projectName: props.data.data.projectName,
           programID: props.data.data.program,
           dateCreated: moment(props.data.data.dateCreated).format('MM-DD-YYYY'),
@@ -139,16 +163,18 @@ const programColumns = [
     key: 'action',
     fixed: 'right',
     render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row', gap:'5px'}}>
-      <Button className="manageBtn">
+      <Button type='link' onClick={() =>{
+         let prop = {record, index}
+        setProgramProps(prop)
+        showModal()
+      }}>
         Edit
       </Button>
     </div>
   },
 ];
 
-const expandedRowRender = record => {
-  //console.log('programid', record)
-  //setId(programID)
+const expandedRowRender = programs => {
   const columns = [
     {
       title: 'Project Leader',
@@ -212,8 +238,8 @@ const expandedRowRender = record => {
       key: 'action',
       fixed: 'right',
       width: '15%',
-      render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row', gap:'5px'}}>
-        <Button onClick = {
+      render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row'}}>
+        <Button type='link' onClick = {
         (e) => {
           dispatch({
             type: "SET_PROJECT",
@@ -221,17 +247,22 @@ const expandedRowRender = record => {
          })
          history.push('/studies')
         }
-      } className="manageBtn">MANAGE</Button>
+      } >MANAGE</Button>
+
+        <Button type='link' onClick={() =>{
+          let prop = {record, index, programs}
+          setProjectProps(prop)
+          showModalProject()}} >EDIT</Button>
 
       <Popconfirm title="Sure to delete?" onConfirm = {
            async (key) => {
-                let id ={_id: record.key}
+                let id ={_id: record.key, user: userObj.USER._id}
                 let result = await onDeleteProject(id)
                 await handleRemove(record.key)
                 notif("error", result.data.message)
             }
           }>
-      <Button danger>DELETE</Button>
+      <Button type='link' danger>DELETE</Button>
       </Popconfirm>
       </div>
     },
@@ -245,7 +276,6 @@ const expandedRowRender = record => {
 };
 
 useEffect(() => {
-  console.log('useEffect',id)
   async function getProject (){
     let result = await onGetProjectforManager({user: userObj.USER._id, program: id})//CHANGE TO ID
     let projectResult = result.data
@@ -255,6 +285,7 @@ useEffect(() => {
             key:  projectResult[i]._id,
             projectID:  projectResult[i].projectID,
             projectLeader:  projectResult[i].assigneeName,
+            projectLeaderID:  projectResult[i].assignee,
             programID: projectResult[i].program,
             projectName:  projectResult[i].projectName,
             dateCreated: moment( projectResult[i].dateCreated).format('MM-DD-YYYY'),
@@ -272,6 +303,32 @@ useEffect(() => {
   }
 }, [id])
 
+const pull_data = (data) => {
+  let objIndex = programData.findIndex((obj => obj.programID === data.program));
+  programData[objIndex].programLeaderID = data.assignee
+  programData[objIndex].programLeader = data.assigneeName
+  programData[objIndex].programName = data.programName
+}
+
+const edit_data = (data) => {
+  console.log('edit_data', data)
+  let objIndex = projectData.findIndex((obj => obj.projectID === data.project.id));
+  console.log(projectData[objIndex], objIndex)
+  if(projectData[objIndex].programID !== data.program){
+    console.log('here', objIndex)
+    let arr = projectData
+    arr.splice(objIndex,1);
+    setProjectData([...arr])
+    console.log('newData', projectData)
+   //delete projectData[objIndex]
+  }else{
+    projectData[objIndex].projectLeaderID = data.assignee
+    projectData[objIndex].projectLeader = data.assigneeName
+    projectData[objIndex].projectName = data.programName
+    projectData[objIndex].programID = data.program
+  }
+}
+
     return (
       <div > 
         {programData[0]==="spinme"?  <Spin className="spinner" /> :
@@ -287,10 +344,18 @@ useEffect(() => {
                 allowClear
               />
             </div> 
-              <Table size="small" className="components-table-demo-nested"  expandable={{ expandedRowRender }} onExpand={(isExpanded, record) =>
-                setId(isExpanded ? record.key : undefined)}scroll={{ x: 1200, y: 1000 }} dataSource={programData} columns={programColumns} style={{margin: '15px'}} />
+              <Table size="small" className="components-table-demo-nested"  expandable={{ expandedRowRender }} onExpand={(isExpanded, record) =>{
+                setExpandedRow([record.key])
+                setId(isExpanded ? record.programID : undefined)}}scroll={{ x: 1200, y: 1000 }}  dataSource={programData} expandedRowKeys={expandedRow} columns={programColumns} style={{margin: '15px'}} 
+                />
             </div>
            }
+            <Modal title="Edit Program" visible={isModalVisible} footer={null} onCancel={handleCancel}>
+              <EditProgram data={programProps} func={pull_data}/>
+            </Modal>
+            <Modal title="Edit Project" visible={isProjectVisible} footer={null} onCancel={handleProjectCancel}>
+              <EditProject data={projectProps} func={edit_data}/>
+            </Modal>
       </div>
     )
 }
