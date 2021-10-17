@@ -19,7 +19,6 @@ const EditStudy = (props) => {
     assigneeName:props.data.record.assigneeName, budget: props.data.record.budget}
 
     useEffect(() => {
-        console.log(props)
         async function getUsers(){
             let resultUsers = await onGetAllUsers()
             let x = resultUsers.data
@@ -34,8 +33,8 @@ const EditStudy = (props) => {
             setUserData(tempUserData)
         }
         getUsers()
-        form.resetFields()
         setStudy({...study,title: props.data.record.title, assignee: props.data.record.assignee, assigneeName: props.data.record.assigneeName, budget: props.data.record.budget, deadline: moment( props.data.record.deadline)})
+        form.resetFields()
     }, [props.data])
 
     function handleChange(value) {   //for assigning user
@@ -51,8 +50,7 @@ const EditStudy = (props) => {
     }
 
     function onChange(date) {
-        console.log(date)
-        setStudy({...study, deadline: date})
+        setStudy({...study, deadline:moment( date)})
     }
 
     async function handleUpdate(){

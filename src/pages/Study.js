@@ -120,7 +120,6 @@ const Study = () => {
                 </Tooltip>
                     <Modal title="Add Study" visible={isModalVisible} footer={null} onCancel={handleCancel}>
                         <Form initialValues={initialValues} form={form} onFinish={onSubmit}>
-                        <h1 style={{fontFamily: "Montserrat", fontWeight: "bolder"}}>CREATE STUDY</h1>
                             <Form.Item name='title' label="Study Title"
                             rules={[
                                 {
@@ -174,7 +173,7 @@ const Study = () => {
                                 ))}
                                 </Select>
                             </Form.Item>
-                            <Button htmlType='submit' style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE STUDY</Button>
+                            <Button htmlType='submit' block style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE STUDY</Button>
                         </Form>
                     </Modal>
             </Content> 
