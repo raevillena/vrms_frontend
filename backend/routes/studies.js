@@ -600,4 +600,20 @@ router.get('/getViewlog/:tableID', auth,  async(req, res) => {
     }
 })
 
+router.post('/updateStudy', auth, async(req, res) => {
+    try {
+        await Studies.findOneAndUpdate({"studyID": req.body.studyID, "active": true}, {'editedBy': req.body.user, 'editedDate': Date.now(), 
+        'assignee':req.body.assignee, 'assigneeName': req.body.assigneeName, 'budget': req.body.budget, 'deadline': req.body.deadline, 'studyTitle': req.body.title}, 
+        function(err, study) {
+            if(err){
+                logger.log('error', 'Error: /updateCurrentEditing')
+            } else{
+                res.send({message: "Study Updated"})
+            }
+          });
+    } catch (error) {
+        logger.log('error', 'Error: /updateCurrentEditing')
+    }
+})
+
 module.exports = router

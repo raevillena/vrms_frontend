@@ -312,15 +312,16 @@ const pull_data = (data) => {
 
 const edit_data = (data) => {
   let objIndex = projectData.findIndex((obj => obj.projectID === data.project.id));
-  if(projectData[objIndex].programID !== data.program){
+  console.log(projectData[objIndex].programID, data.project.program)
+  if(projectData[objIndex].programID !== data.project.program){
     let arr = projectData
     arr.splice(objIndex,1);
     setProjectData([...arr])
   }else{
-    projectData[objIndex].projectLeaderID = data.assignee
-    projectData[objIndex].projectLeader = data.assigneeName
-    projectData[objIndex].projectName = data.programName
-    projectData[objIndex].programID = data.program
+    projectData[objIndex].projectLeaderID = data.project.assignee
+    projectData[objIndex].projectLeader = data.project.assigneeName
+    projectData[objIndex].projectName = data.project.projectName
+    projectData[objIndex].programID = data.project.program
   }
 }
 

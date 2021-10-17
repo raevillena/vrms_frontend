@@ -149,7 +149,7 @@ export async function onUpdateDatagrid(body) {
 
 export async function onGetAllStudyforProject(body) {
     try {
-        return axios.get(`/v1/studies/studyForProject/${body.projectName}`, tokenConfig())
+        return axios.get(`/v1/studies/studyForProject/${body.projectID}`, tokenConfig())
     } catch (error) {
         return {
             error: error
@@ -261,6 +261,16 @@ export async function onViewLog(body) {
 export async function onGetViewHistory(body) {
     try {
         return axios.get(`/v1/studies/getViewlog/${body.tableID}`, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onUpdateStudy(body) {
+    try {
+        return axios.post('/v1/studies/updateStudy', body, tokenConfig())
     } catch (error) {
         return {
             error: error

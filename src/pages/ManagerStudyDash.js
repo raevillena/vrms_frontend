@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Table,Progress, Tag, Spin, Popconfirm, notification, Input } from 'antd'
+import { Button, Table,Progress, Tag, Spin, Popconfirm, notification, Input, Modal } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { onDeleteStudy, onGetAllStudyforProject } from '../services/studyAPI';
 import moment from 'moment';
 import DirectorStudyDash from './DirectorStudyDash';
+import EditStudy from './EditStudy'
 
 
 const ManagerStudyDash = () => {
@@ -16,6 +17,16 @@ const ManagerStudyDash = () => {
   const [studyData, setStudyData]= useState(["spinme"])
   const [value, setValue] = useState('');
   const [searchData, setSearchData] = useState([])
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [studyProps, setStudyProps] = useState()
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
   const notif = (type, message) => {
     notification[type]({
@@ -38,6 +49,9 @@ const ManagerStudyDash = () => {
               title: x[i].studyTitle,
               studyID: x[i].studyID,
               dateCreated: moment(x[i].dateCreated).format('MM-DD-YYYY'),
+              assignee: x[i].assignee,
+              assigneeName: x[i].assigneeName,
+              budget: x[i].budget,
               dateUpdated: moment(x[i].dateUpdated).format('MM-DD-YYYY'),
               progress: x[i].progress,
               status: [x[i].status],
@@ -149,6 +163,12 @@ const onSearch = value =>{
         }
       } type='link'>MANAGE</Button>
 
+        <Button type='link' onClick={() =>{
+          let prop = {record, index, studyData}
+          setStudyProps(prop)
+          showModal()
+          }} >EDIT</Button>
+
       <Popconfirm title="Sure to delete?" onConfirm = {
         async (key) => {
              let id ={_id: record.key, user: userObj.USER._id}
@@ -163,7 +183,10 @@ const onSearch = value =>{
     },
   ];
   
-
+  const edit_data = (data) => {
+    let objIndex = studyData.findIndex((obj => obj.studyID === data.study.studyID));
+    studyData[objIndex].title = data.study.title
+  }
 
 return (
   <div>
@@ -186,6 +209,10 @@ return (
         </div>
          }
   </div> : <DirectorStudyDash/>}
+
+    <Modal title="Edit Study" visible={isModalVisible} footer={null} onCancel={handleCancel}>
+      <EditStudy data={studyProps} func={edit_data}/>
+    </Modal>
   </div>
     )
 }
