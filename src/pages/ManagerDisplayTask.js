@@ -27,7 +27,7 @@ const ManagerDisplayTask = (props) => {
     const [visible, setVisible] = useState(false); //modal2
     const [description, setDescription] = useState();
     const [obj, setObj] = useState() 
-    const [ fileDataDownload, setFileDataDownload ] = useState(); //download report
+    const [ fileDataDownload, setFileDataDownload ] = useState([]); //download report
 
     const [fileHeaders] = useState([
         {label: 'Task Title', key: 'title'},
@@ -56,48 +56,56 @@ const ManagerDisplayTask = (props) => {
       };
 
       useEffect(()=>{
-        const handleDataFetch = async() => {
-            const response = await onGetManagerCSV(studyObj.STUDY.studyID)
-            let x = response.data.tasks
-            let tempData = []
-            for (let i = 0; i < x.length; i++) {
-               tempData.push({
-                   title: x[i].tasksTitle,
-                   description:  x[i].tasksDescription,
-                   status:  x[i].status,
-                   objective:  x[i].objective,
-                   deadline: moment( x[i].deadline).format('YYYY-MM-DD'),
-                   assignee:  x[i].assigneeName.join(),
-               })
-            }
-            setFileDataDownload(tempData)
-          };
-        handleDataFetch();
+        try {
+            const handleDataFetch = async() => {
+                const response = await onGetManagerCSV(studyObj.STUDY.studyID)
+                let x = response.data.tasks
+                let tempData = []
+                for (let i = 0; i < x.length; i++) {
+                   tempData.push({
+                       title: x[i].tasksTitle,
+                       description:  x[i].tasksDescription,
+                       status:  x[i].status,
+                       objective:  x[i].objective,
+                       deadline: moment( x[i].deadline).format('YYYY-MM-DD'),
+                       assignee:  x[i].assigneeName.join(),
+                   })
+                }
+                setFileDataDownload(tempData)
+              };
+            handleDataFetch(); 
+        } catch (error) {
+            console.log(error)
+        }
       }, [])
 
       useEffect(() => {
-          if(props.data == null||undefined||''){
-            return
-        }else{
-        let newTask = props.data.newTask
-        if(obj === newTask.objective){
-            setTask([...task, {
-                key: newTask._id,
-                id: newTask._id,
-                createdBy: newTask.createdBy,
-                dateCreated: moment(newTask.dateCreated).format('MM-DD-YYYY'),
-                lastUpdated: moment(newTask.lastUpdated).format('MM-DD-YYYY'),
-                deadline: moment(newTask.deadline).format('MM-DD-YYYY'),
-                taskTitle: newTask.tasksTitle,
-                taskDescription: newTask.tasksDescription,
-                verification: newTask.verification,
-                assignee: newTask.assigneeName,
-                status: [newTask.status]
-            }])
-        }else{
-            return
-        }
-        } 
+         try {
+            if(props.data == null||undefined||''){
+                return
+            }else{
+            let newTask = props.data.newTask
+            if(obj === newTask.objective){
+                setTask([...task, {
+                    key: newTask._id,
+                    id: newTask._id,
+                    createdBy: newTask.createdBy,
+                    dateCreated: moment(newTask.dateCreated).format('MM-DD-YYYY'),
+                    lastUpdated: moment(newTask.lastUpdated).format('MM-DD-YYYY'),
+                    deadline: moment(newTask.deadline).format('MM-DD-YYYY'),
+                    taskTitle: newTask.tasksTitle,
+                    taskDescription: newTask.tasksDescription,
+                    verification: newTask.verification,
+                    assignee: newTask.assigneeName,
+                    status: [newTask.status]
+                }])
+            }else{
+                return
+            }
+            }
+         } catch (error) {
+             console.log(error)
+         } 
       }, [props.data])
     
     async function callback(key) {
