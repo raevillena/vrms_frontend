@@ -74,9 +74,9 @@ export async function onDeleteProject(body) {
     }
 }
 
-export async function onGetProjectforDirector() {
+export async function onGetProjectforDirector(body) {
     try {
-        return axios.get(`/v1/project/getProjectforDirector`, tokenConfig())
+        return axios.get(`/v1/project/getProjectforDirector/${body}`, tokenConfig())
     } catch (error) {
         return {
             status: 'false',

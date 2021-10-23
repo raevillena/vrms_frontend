@@ -43,7 +43,8 @@ const Userdash = () => {
             progress: x[i].progress,
             status: [x[i].status],
             updatedBy: x[i].updatedBy,
-            deadline: x[i].deadline
+            deadline: x[i].deadline,
+            objectives: x[i].objectives,
         });
       }
       setStudyData(tempStudyData)
@@ -149,7 +150,7 @@ const onSearch = value =>{
 return (
   <div>
     {userObj.USER.category === "user"? 
-    <Layout style={{height: '100vh'}} > 
+    <Layout style={{height: '200vh'}} > 
         <Sider  className="sidebar" >
             <Sidebar/>
         </Sider>
@@ -174,7 +175,7 @@ return (
                allowClear
              />
            </div>
-          <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> 
+            <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> 
           </div>
           }
         </Content> 

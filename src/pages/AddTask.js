@@ -11,16 +11,18 @@ const AddTask = () => {
     const projectObj = useSelector(state => state.project)
     const studyObj = useSelector(state => state.study)
     const userObj = useSelector(state => state.user)
+    let obj = studyObj.STUDY.objectives
 
     const [form] = Form.useForm();
 
     const { Option } = Select;
-    const [task, setTask] = useState({title: "", description:"", deadline: "", assignee:'', assigneeName: '', projectName:  projectObj.PROJECT.projectName, studyName: studyObj.STUDY.title, user: userObj.USER.name})
+    const [task, setTask] = useState({title: "", description:"", deadline: "", assignee:'', assigneeName: '', projectName:  projectObj.PROJECT.projectID, studyName: studyObj.STUDY.studyID, user: userObj.USER.name, objective: [], verification:''})
     const [userData, setUserData] = useState([])
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [forProps, setForProps] =useState()
 
-    const initialValues = {title: "", description:"", deadline: "", assignee:'', assigneeName: ''}
+
+    const initialValues = {title: "", description:"", deadline: "", assignee:'', assigneeName: '', objective: [], verification:''}
 
     const notif = (type, message) => {
         notification[type]({
@@ -65,19 +67,22 @@ const AddTask = () => {
         setTask({...task, assignee: value, assigneeName: tempArray})
     }
 
-  
+    const objChange = (value) => {   //for choosing objective
+        setTask({...task, objective: value})
+    }
 
 
     useEffect(() => {
         async function onGetUser(){
-            let resultUsers = await onGetUserForTask({study: studyObj.STUDY.title})
-            let x = resultUsers.data.studies
+            let resultUsers = await onGetUserForTask({study: studyObj.STUDY.studyID})
+            let x = resultUsers.data.studies[0].assigneeName
+            let y = resultUsers.data.studies[0].assignee
             let tempUserData = []
             for(let i = 0; i < x.length; i++){ 
                 tempUserData.push({
-                    key: x[i].assigneeName,
-                    name:  x[i].assigneeName,
-                    value:  x[i].assignee,
+                    key: x[i],
+                    name:  x[i],
+                    value:  y[i],
                 })
             }
             setUserData(tempUserData)
@@ -123,6 +128,15 @@ const AddTask = () => {
                         ]}>
                             <Input placeholder="Enter Task Description" onChange={e => setTask({...task, description: e.target.value})} value={task.description}></Input>
                     </Form.Item>
+                    <Form.Item name='verification'   label="Means of Verification"
+                        rules={[
+                            {
+                            required: true,
+                            message: 'MEans of verification is required.',
+                            },
+                        ]}>
+                            <Input placeholder="Enter menas of verification" onChange={e => setTask({...task, verification: e.target.value})} value={task.verification}></Input>
+                    </Form.Item>
                     <Form.Item  label="Deadline"
                                 rules={[
                                 {
@@ -133,6 +147,19 @@ const AddTask = () => {
                             <Space direction="vertical">
                             <DatePicker value={task.deadline} onChange={deadline}/>
                             </Space>
+                    </Form.Item>
+                    <Form.Item name='objective' label="Select Objective"
+                                rules={[
+                                {
+                                    required: true,
+                                    message: 'Please select objective!',
+                                },
+                                ]}>
+                            <Select style={{ width: '100%' }} onChange={objChange} placeholder="Select Objective">
+                            {obj.map(object => (
+                                <Option key={object} value={object}>{object}</Option>
+                            ))}
+                            </Select>
                     </Form.Item>
                     <Form.Item name='assign' label="Assign Task"
                                 rules={[
@@ -147,7 +174,7 @@ const AddTask = () => {
                             ))}
                             </Select>
                     </Form.Item>
-                    <Button htmlType="submit" style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE TASK</Button>
+                    <Button htmlType="submit" block style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE TASK</Button>
                 </Form>
             </Modal>
         </div>

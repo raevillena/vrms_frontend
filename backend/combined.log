@@ -118,3 +118,162 @@
 2021-10-15T16:04:26.218Z [info]: server started at port: 3001
 2021-10-17T12:16:58.739Z [info]: server started at port: 3001
 2021-10-17T12:29:56.318Z [info]: server started at port: 3001
+2021-10-17T13:33:35.397Z [info]: server started at port: 3001
+2021-10-17T16:14:22.488Z [info]: server started at port: 3001
+2021-10-17T16:14:37.139Z [info]: server started at port: 3001
+2021-10-17T16:15:40.053Z [info]: server started at port: 3001
+2021-10-17T16:17:18.128Z [info]: server started at port: 3001
+2021-10-17T16:17:33.727Z [info]: server started at port: 3001
+2021-10-17T16:17:51.289Z [info]: server started at port: 3001
+2021-10-17T16:21:03.091Z [info]: server started at port: 3001
+2021-10-17T16:21:18.892Z [info]: server started at port: 3001
+2021-10-18T00:44:55.739Z [info]: server started at port: 3001
+2021-10-18T01:09:08.499Z [info]: server started at port: 3001
+2021-10-18T01:09:51.980Z [info]: server started at port: 3001
+2021-10-18T01:20:44.285Z [error]: Studies validation failed: budget: Cast to Number failed for value "[]" (type Array) at path "budget"
+2021-10-18T01:21:59.215Z [error]: Studies validation failed: budget: Cast to Number failed for value "[ 'objective 1', 'objective 2' ]" (type Array) at path "budget"
+2021-10-18T01:22:34.254Z [info]: server started at port: 3001
+2021-10-18T01:22:38.140Z [error]: Studies validation failed: budget: Cast to Number failed for value "[ 'objective 1', 'objective 2' ]" (type Array) at path "budget"
+2021-10-18T01:23:32.386Z [error]: Studies validation failed: budget: Cast to Number failed for value "[]" (type Array) at path "budget"
+2021-10-18T01:36:26.697Z [error]: Studies validation failed: budget: Cast to Number failed for value "[ 'd1', 'd' ]" (type Array) at path "budget", createdBy: Path `createdBy` is required., startDate: Path `startDate` is required., updatedBy: Path `updatedBy` is required., projectName: Path `projectName` is required., deadline: Path `deadline` is required.
+2021-10-18T01:37:15.411Z [error]: Studies validation failed: createdBy: Path `createdBy` is required., startDate: Path `startDate` is required., updatedBy: Path `updatedBy` is required., studyTitle: Path `studyTitle` is required., projectName: Path `projectName` is required., deadline: Path `deadline` is required., budget: Path `budget` is required.
+2021-10-18T01:39:53.437Z [info]: server started at port: 3001
+2021-10-18T01:40:04.963Z [info]: server started at port: 3001
+2021-10-18T01:40:35.194Z [error]: Studies validation failed: budget: Cast to Number failed for value "[ 'obj 1', 'obj 2' ]" (type Array) at path "budget"
+2021-10-18T01:43:03.070Z [error]: Studies validation failed: budget: Cast to Number failed for value "[ 'obj 1', 'obj 2' ]" (type Array) at path "budget"
+2021-10-18T01:46:21.491Z [info]: server started at port: 3001
+2021-10-18T01:46:34.629Z [info]: server started at port: 3001
+2021-10-18T01:47:05.563Z [error]: Cast to Number failed for value "NaN" (type number) at path "progress"
+2021-10-18T01:51:42.890Z [error]: Cast to Number failed for value "NaN" (type number) at path "progress"
+2021-10-18T01:52:26.890Z [info]: server started at port: 3001
+2021-10-18T01:55:52.706Z [error]: Cast to Number failed for value "NaN" (type number) at path "progress"
+2021-10-18T02:00:54.961Z [error]: Cast to Number failed for value "NaN" (type number) at path "progress"
+2021-10-18T02:03:07.728Z [error]: Cast to Number failed for value "NaN" (type number) at path "progress"
+2021-10-18T02:06:24.824Z [error]: Cast to Number failed for value "NaN" (type number) at path "progress"
+2021-10-18T02:09:11.228Z [error]: Cast to Number failed for value "NaN" (type number) at path "progress"
+2021-10-18T05:19:15.168Z [info]: server started at port: 3001
+2021-10-18T05:19:29.328Z [info]: server started at port: 3001
+2021-10-18T05:20:30.966Z [info]: server started at port: 3001
+2021-10-18T05:47:40.956Z [info]: server started at port: 3001
+2021-10-18T05:48:27.309Z [error]: Error: /createTask
+2021-10-18T05:49:11.454Z [info]: server started at port: 3001
+2021-10-18T05:55:16.677Z [error]: Error: /createTask- project
+2021-10-18T15:03:28.841Z [info]: server started at port: 3001
+2021-10-19T01:30:27.457Z [info]: server started at port: 3001
+2021-10-19T01:30:53.586Z [info]: server started at port: 3001
+2021-10-19T01:31:21.161Z [info]: server started at port: 3001
+2021-10-19T01:34:17.103Z [info]: server started at port: 3001
+2021-10-19T02:16:18.191Z [info]: server started at port: 3001
+2021-10-19T02:16:34.791Z [info]: server started at port: 3001
+2021-10-19T03:17:16.694Z [info]: server started at port: 3001
+2021-10-19T03:31:26.867Z [error]: Error: /postComment
+2021-10-19T03:31:30.087Z [error]: Error: /postComment
+2021-10-19T03:31:38.437Z [error]: Error: /postComment
+2021-10-19T05:03:54.516Z [error]: Error: /postComment
+2021-10-19T05:04:28.343Z [error]: Error: /postComment
+2021-10-19T05:20:30.283Z [error]: Error: /postComment
+2021-10-19T05:20:39.306Z [error]: Error: /postComment
+2021-10-19T05:20:51.238Z [error]: Error: /postComment
+2021-10-19T05:21:34.966Z [info]: server started at port: 3001
+2021-10-19T05:21:40.193Z [error]: Error: /postComment
+2021-10-19T05:25:34.931Z [error]: Error: /postComment
+2021-10-19T05:27:31.714Z [error]: access token
+2021-10-19T05:29:00.334Z [error]: Error: /postComment
+2021-10-19T05:29:06.298Z [error]: Error: /postComment
+2021-10-19T05:34:21.380Z [info]: server started at port: 3001
+2021-10-19T05:34:35.326Z [info]: server started at port: 3001
+2021-10-19T05:34:49.988Z [error]: Error: /postComment
+2021-10-19T05:34:54.922Z [error]: Error: /postComment
+2021-10-19T05:43:42.037Z [error]: Error: /postComment
+2021-10-19T05:43:51.668Z [error]: Error: /postComment
+2021-10-19T05:44:09.411Z [info]: server started at port: 3001
+2021-10-19T05:44:16.409Z [info]: server started at port: 3001
+2021-10-19T05:44:45.598Z [error]: Error: /postComment
+2021-10-19T05:46:36.129Z [error]: Error: /postComment
+2021-10-19T06:22:22.924Z [info]: server started at port: 3001
+2021-10-19T06:23:22.496Z [info]: server started at port: 3001
+2021-10-19T06:24:15.691Z [info]: server started at port: 3001
+2021-10-19T14:09:56.992Z [info]: server started at port: 3001
+2021-10-19T14:20:02.309Z [info]: server started at port: 3001
+2021-10-19T15:19:29.872Z [info]: server started at port: 3001
+2021-10-19T15:20:25.113Z [info]: server started at port: 3001
+2021-10-20T05:18:25.607Z [error]: Error: /onUpdateTask
+2021-10-20T05:18:52.879Z [error]: Error: /onDeleteTask
+2021-10-20T05:20:40.059Z [error]: Error: /onUpdateTask
+2021-10-20T05:35:24.865Z [info]: server started at port: 3001
+2021-10-20T05:43:47.565Z [info]: server started at port: 3001
+2021-10-20T05:44:20.843Z [info]: server started at port: 3001
+2021-10-20T05:45:53.174Z [info]: server started at port: 3001
+2021-10-20T05:46:26.033Z [info]: server started at port: 3001
+2021-10-20T05:47:40.195Z [error]: Error: /onUpdateTask, project
+2021-10-20T05:48:21.448Z [info]: server started at port: 3001
+2021-10-20T05:49:29.727Z [error]: Error: /onUpdateTask, project
+2021-10-20T05:49:59.635Z [info]: server started at port: 3001
+2021-10-20T05:50:11.350Z [error]: Error: /onDeleteTask
+2021-10-20T05:57:27.794Z [info]: server started at port: 3001
+2021-10-20T06:19:57.165Z [info]: server started at port: 3001
+2021-10-20T06:28:50.566Z [info]: server started at port: 3001
+2021-10-20T06:44:08.296Z [info]: server started at port: 3001
+2021-10-20T06:52:32.936Z [info]: server started at port: 3001
+2021-10-20T06:52:37.050Z [info]: server started at port: 3001
+2021-10-20T06:59:20.807Z [info]: server started at port: 3001
+2021-10-20T07:00:08.347Z [info]: server started at port: 3001
+2021-10-20T07:01:06.457Z [info]: server started at port: 3001
+2021-10-20T07:02:04.128Z [info]: server started at port: 3001
+2021-10-20T07:02:53.013Z [info]: server started at port: 3001
+2021-10-20T07:10:46.898Z [info]: server started at port: 3001
+2021-10-20T07:17:56.318Z [info]: server started at port: 3001
+2021-10-20T07:18:14.117Z [info]: server started at port: 3001
+2021-10-20T07:40:22.575Z [info]: server started at port: 3001
+2021-10-20T07:41:12.598Z [info]: server started at port: 3001
+2021-10-20T07:41:18.602Z [info]: server started at port: 3001
+2021-10-20T08:20:55.676Z [info]: server started at port: 3001
+2021-10-20T08:21:05.144Z [info]: server started at port: 3001
+2021-10-20T08:22:10.352Z [error]: Error: /onUpdateTask, studies
+2021-10-20T08:30:24.705Z [info]: server started at port: 3001
+2021-10-20T08:34:47.529Z [info]: server started at port: 3001
+2021-10-20T12:21:42.349Z [error]: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://docs.atlas.mongodb.com/security-whitelist/
+2021-10-20T12:25:38.064Z [info]: server started at port: 3001
+2021-10-20T12:29:39.314Z [info]: server started at port: 3001
+2021-10-20T12:31:41.208Z [error]: Error: /onUpdateTask, project
+2021-10-20T12:31:45.707Z [error]: Error: /onUpdateTask, project
+2021-10-20T12:32:55.594Z [info]: server started at port: 3001
+2021-10-20T12:33:49.835Z [info]: server started at port: 3001
+2021-10-20T12:38:45.525Z [info]: server started at port: 3001
+2021-10-20T13:21:07.545Z [info]: server started at port: 3001
+2021-10-20T13:24:15.578Z [info]: server started at port: 3001
+2021-10-20T13:24:18.184Z [info]: server started at port: 3001
+2021-10-20T13:24:29.685Z [info]: server started at port: 3001
+2021-10-20T13:29:27.888Z [info]: server started at port: 3001
+2021-10-20T13:32:09.757Z [info]: server started at port: 3001
+2021-10-20T13:45:25.480Z [info]: server started at port: 3001
+2021-10-20T13:45:31.151Z [info]: server started at port: 3001
+2021-10-20T13:46:04.220Z [info]: server started at port: 3001
+2021-10-20T13:48:00.146Z [info]: server started at port: 3001
+2021-10-20T13:50:36.345Z [info]: server started at port: 3001
+2021-10-21T00:33:18.175Z [info]: server started at port: 3001
+2021-10-21T01:26:53.652Z [info]: server started at port: 3001
+2021-10-21T01:29:43.220Z [info]: server started at port: 3001
+2021-10-21T01:32:59.769Z [info]: server started at port: 3001
+2021-10-21T01:50:12.087Z [info]: server started at port: 3001
+2021-10-21T01:50:39.145Z [info]: server started at port: 3001
+2021-10-21T02:04:50.831Z [info]: server started at port: 3001
+2021-10-21T02:13:12.614Z [error]: TasksFile validation failed: taskID: Path `taskID` is required.
+2021-10-21T02:18:14.480Z [error]: TasksFile validation failed: taskID: Path `taskID` is required.
+2021-10-21T02:25:15.277Z [info]: server started at port: 3001
+2021-10-21T02:40:55.154Z [info]: server started at port: 3001
+2021-10-21T02:41:12.981Z [info]: server started at port: 3001
+2021-10-21T03:15:10.283Z [info]: server started at port: 3001
+2021-10-21T03:47:38.508Z [info]: server started at port: 3001
+2021-10-21T03:52:21.907Z [info]: server started at port: 3001
+2021-10-21T04:04:30.530Z [info]: server started at port: 3001
+2021-10-21T08:05:15.565Z [info]: server started at port: 3001
+2021-10-21T08:13:33.587Z [info]: server started at port: 3001
+2021-10-21T08:14:09.209Z [info]: server started at port: 3001
+2021-10-21T08:15:09.971Z [info]: server started at port: 3001
+2021-10-21T08:28:10.245Z [info]: server started at port: 3001
+2021-10-21T13:36:33.304Z [info]: server started at port: 3001
+2021-10-22T00:08:53.026Z [error]: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://docs.atlas.mongodb.com/security-whitelist/
+2021-10-22T05:13:46.558Z [info]: server started at port: 3001
+2021-10-22T05:15:44.361Z [info]: server started at port: 3001
+2021-10-23T12:29:57.832Z [info]: server started at port: 3001

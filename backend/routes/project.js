@@ -30,7 +30,6 @@ async function auth(req, res, next){
 
 //create project
 router.route('/createproject').post(async (req, res) => {
-  console.log(req.body)
    try {
     const projectID = shortid.generate() 
     const project = new Project({
@@ -64,7 +63,6 @@ router.route('/createproject').post(async (req, res) => {
 
  //create program
 router.route('/createprogram').post(async (req, res) => {
-  console.log(req.body)
    try {
     const programID = shortid.generate() 
     const program = new Program({
@@ -114,9 +112,9 @@ router.route('/createprogram').post(async (req, res) => {
   })
 
 
-  router.get("/getProjectforDirector", async(req,res) => {
+  router.get("/getProjectforDirector/:id", async(req,res) => {
     try {
-       Project.find({"active": true}, function(err, projects) {
+       Project.find({"active": true, "program": req.params.id}, function(err, projects) {
         res.send(projects);  
       });
     } catch (error) {

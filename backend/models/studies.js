@@ -74,6 +74,10 @@ const StudiesSchema = new mongoose.Schema({
     },
     editedBy:{
         type: String,
+    },
+    objectives: {
+        type: Array,
+        required: true
     }
 })
 

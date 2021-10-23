@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import Gallery from 'react-grid-gallery';
-import { Button, message, Spin, Empty } from 'antd';
+import { Button, message, Spin, Empty, Modal, Upload, Input, Form } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { onUploadGallery } from '../services/uploadAPI';
 import { useSelector } from 'react-redux';
@@ -11,8 +11,14 @@ const StudyGallery = () => {
 
     const studyObj = useSelector(state => state.study)
     const userObj = useSelector(state => state.user)
-    const [images, setImages] = useState([])
+    const [images, setImages] = useState()
+    const [caption, setCaption] = useState()
     const [loading, setLoading] = useState(true)
+    const [visible, setVisible] = useState(false);
+
+    const data = new FormData()
+    const initialValues = { caption: '', data: ''}
+    const [form] = Form.useForm();
 
     useEffect(() => {
         async function getImages(){
@@ -25,6 +31,7 @@ const StudyGallery = () => {
                 thumbnail: `/gallery/${image[i].images}`, //http://127.0.0.1:8080/gallery/${image[i].images}
                 thumbnailWidth: 258,
                 thumbnailHeight: 200,
+                caption: image[i].caption
                })
             }
             setImages(imageArr)
@@ -35,32 +42,56 @@ const StudyGallery = () => {
             console.log('unmounting gallery')
         }
     }, [])
+    
+    const upload = async(value)=>{
+        data.append("file", value.image.fileList[0].originFileObj)
+        data.append("study", studyObj.STUDY.studyID )               
+        data.append("caption", caption)
+        let result = await onUploadGallery(data)
+        let newImage = result.data.newGallery.images
+        setImages([...images, {
+            src: `http://nberic.org/gallery/${newImage}`,
+            thumbnail: `http://nberic.org/gallery/${newImage}`,
+            thumbnailWidth: 110,
+            thumbnailHeight: 70,
+            caption: caption
+            }])
+        message.success(result.data.message)
+        form.resetFields()
+    }
+
+    const props = {
+        beforeUpload: file => {
+          if (file.type !== 'image/png') {
+            message.error(`${file.name} is not a png file`);
+          }
+          return file.type === 'image/png' ? false : Upload.LIST_IGNORE;
+        },
+      };
+
+    
     return (
         <div style={{maxHeight: '320px', overflowY: 'auto'}}>
             {loading ? <Spin className="spinner" /> :
             <div>
-                <Button style={{background:'#A0BF85', display: userObj.USER.category === 'director' ? 'none' : 'initial'}}>
-                    <label className="file_input_id">
-                    <UploadOutlined/> Upload Image
-                        <input type="file"  accept="image/*" onChange={async e => {
-                            const file = e.target.files[0]
-                            const data = new FormData()
-                            data.append("study", studyObj.STUDY.studyID )
-                            data.append("file", file)
-                            let result = await onUploadGallery(data)
-                            let newImage = result.data.newGallery.images
-                            setImages([...images, {
-                                src: `http://nberic.org/gallery/${newImage}`,
-                                thumbnail: `http://nberic.org/gallery/${newImage}`,
-                                thumbnailWidth: 110,
-                                thumbnailHeight: 70,
-                                }])
-                            message.success(result.data.message)
-                            }
-                        }
-                        />
-                    </label>
+                <Button style={{background:'#A0BF85', display: userObj.USER.category === 'director' ? 'none' : 'initial'}}  onClick={() => setVisible(true)}>
+                    Upload
                 </Button>
+                <Modal title='Upload Gallery Image' visible={visible} onCancel={() => setVisible(false)} centered footer={null}>
+                    <Form onFinish={upload} initialValues={initialValues} form={form}>
+                        <Form.Item label="Caption:" name='caption'>
+                            <Input onChange={e => setCaption(e.target.value)} value={caption}/>
+                        </Form.Item>
+                        <Form.Item name='image' label='Select File:'>
+                            <Upload  {...props} maxCount={1}>
+                                <Button icon={<UploadOutlined />}>Choose file to upload</Button>
+                            </Upload>
+                        </Form.Item>
+                        <Form.Item>
+                            <Button block htmlType='submit' style={{background: "#A0BF85", borderRadius: "5px"}}>Upload</Button>
+                        </Form.Item>
+                    </Form>
+                </Modal>
                 {images.length === 0 ? <Empty/> : <Gallery  images={images}/>}
             </div>
             }

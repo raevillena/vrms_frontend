@@ -27,7 +27,7 @@ export async function onGetUserForTask(body) {
 
 export async function onGetAllTask(body) {
     try {
-        return axios.get(`/v1/tasks/getAllTask/${body.studyName}/${body.assignee}`, tokenConfig());
+        return axios.get(`/v1/tasks/getAllTask/${body.studyName}/${body.assignee}/${body.objective}`, tokenConfig());
     } catch (error) {
         return {
             error: error
@@ -38,7 +38,7 @@ export async function onGetAllTask(body) {
 //get al task for manager
 export async function onGetAllTaskManager(body) {
     try {
-        return axios.get(`/v1/tasks/getAllTaskManager/${body.studyName}`, tokenConfig());
+        return axios.get(`/v1/tasks/getAllTaskManager/${body.studyName}/${body.objective}`, tokenConfig());
     } catch (error) {
         return {
             error: error
@@ -95,6 +95,27 @@ export async function onUpdateTaskUser(body) {
 export async function onDeleteTask(body) {
     try {
         return axios.post(`/v1/tasks/onDeleteTask`, body, tokenConfig());
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+//getting all file for specific task
+export async function onGetFileList(body) {
+    try {
+        return axios.get(`/v1/tasks/getFileList/${body}`, tokenConfig());
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onGetManagerCSV(body) {
+    try {
+        return axios.get(`/v1/tasks/getManagerFile/${body}`, tokenConfig());
     } catch (error) {
         return {
             error: error

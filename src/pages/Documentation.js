@@ -6,6 +6,7 @@ import ResultsAndDiscussion from './ResultsAndDiscussion';
 import Conclusion from './Conclusion';
 import '../styles/CSS/Documentation.css'
 import Summary from './Summary'
+import Objectives from './Objectives';
 
 
 const { TabPane } = Tabs;
@@ -17,16 +18,19 @@ const Documentation = () => {
                 <TabPane tab="Summary" key="1">
                     <Summary/>
                 </TabPane>
-                <TabPane tab="Introduction" key="2">
+                <TabPane tab="Objectives" key="2">
+                    <Objectives/>
+                </TabPane>
+                <TabPane tab="Introduction" key="3">
                     <Introduction/>
                 </TabPane>
-                <TabPane tab="Methodology" key="3">
+                <TabPane tab="Methodology" key="4">
                     <Methodology />
                 </TabPane>
-                <TabPane tab="Results and Discussion" key="4">
+                <TabPane tab="Results and Discussion" key="5">
                    <ResultsAndDiscussion/>
                 </TabPane>
-                <TabPane tab="Conclusion" key="5">
+                <TabPane tab="Conclusion" key="6">
                     <Conclusion/>
                 </TabPane>
             </Tabs>

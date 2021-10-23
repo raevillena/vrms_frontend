@@ -3,31 +3,11 @@ const router = express.Router()
 const multer = require("multer")
 const User = require('./models/user')
 const Gallery = require('./models/gallery')
+const TasksFile = require('./models/tasksfile')
  const logger = require('./logger')
  const jwt = require('jsonwebtoken')
-const gallery = require("./models/gallery")
 
 
- async function auth(req, res, next){
-  try {
-   let token = req.header('Authorization')
-   token = token.split(" ")[1]
-   
-   if(token == null){
-       return res.sendStatus(401).json({message: "Unauthorized, missing token"})
-   }
-   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async(err, payload) => {
-     if(err){
-       return res.sendStatus(401).json({err})
-     }
-     req.payload =payload
-     next()
-   })
-  } catch(error) {
-   logger.log('error', 'access token') 
-   next(error)
-  } 
-}
 
 
 const storage = multer.diskStorage({
@@ -69,13 +49,22 @@ const storage3 = multer.diskStorage({
   },
   limits: { fileSize: 1 * 1000 * 1000 }
 });
+const storage4 = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, __dirname + '/uploads/tasks')
+  },
+  filename: function (req, file, cb) {
+      cb(null, Math.random() * 1000 + file.originalname)
+  },
+});
 
 var upload = multer({storage: storage})
 var upload1 = multer({storage: storage1})
 var upload2 = multer({storage: storage2})
 var upload3 = multer({storage: storage3})
+var upload4 = multer({storage: storage4})
 
-router.post("/avatar", upload.single("file"), auth, async (req, res, next) => {
+router.post("/avatar", upload.single("file"), async (req, res, next) => {
   try {
     await User.updateOne({_id: req.body.user}, {avatarFilename: req.file.filename}, (err) =>{
       if (err) {
@@ -94,7 +83,7 @@ router.post("/avatar", upload.single("file"), auth, async (req, res, next) => {
 });
 
 
-router.post("/datagrid", upload1.single("file"), auth, async (req, res, next) => {
+router.post("/datagrid", upload1.single("file"), async (req, res, next) => {
   try {
     const filename = req.file.filename
     return res.status(201).json({
@@ -107,7 +96,7 @@ router.post("/datagrid", upload1.single("file"), auth, async (req, res, next) =>
   }
 });
 
-router.post("/documentation", upload2.single("file"), auth, async (req, res, next) => {
+router.post("/documentation", upload2.single("file"), async (req, res, next) => {
   try {
     const filename = req.file.filename
    if(!req.file) {
@@ -127,11 +116,12 @@ router.post("/documentation", upload2.single("file"), auth, async (req, res, nex
 });
 
 
-router.post("/gallery", upload3.single("file"), auth, async (req, res, next) => {
+router.post("/gallery", upload3.single("file"), async (req, res, next) => {
   try {
       const gallery = new Gallery({
         studyID: req.body.study,
-        images: req.file.filename
+        images: req.file.filename,
+        caption: req.body.caption
       })
       const newGallery =  await gallery.save()
       res.status(201).json({
@@ -139,12 +129,39 @@ router.post("/gallery", upload3.single("file"), auth, async (req, res, next) => 
         newGallery
       })
   } catch (error) {
-   // logger.log('error', error)
+    logger.log('error', error)
     res.status(500).json({message: error.message})
   }
 });
 
+router.post("/tasksfile", upload4.single("file"), async (req, res, next) => {
+  console.log(req.body)
+  try {
+      const taskfile = new TasksFile({
+        taskID: req.body.task,
+        file: req.file.filename,
+        description: req.body.description,
+        uploadedByID: req.body.userID,
+        uploadedByName: req.body.userName,
+        uploadDate: Date.now(),
+        active: true
+      })
+      const newFile =  await taskfile.save()
+      res.status(201).json({
+        message: `File sucessfully uploaded!`,
+        newFile
+      })
+  } catch (error) {
+    logger.log('error', error)
+    res.status(500).json({message: error.message})
+  }
+});
 
+router.get('/downloadFileTask/:file', function(req, res, next) {
+  const file = `${__dirname}/uploads/tasks/${req.params.file}`;
+  res.download(file, req.params.file);
+  console.log('here')
+});
  module.exports = router
 
   

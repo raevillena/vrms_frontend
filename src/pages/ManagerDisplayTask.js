@@ -1,11 +1,14 @@
-import React, {useEffect, useState} from 'react'
-import {Button, Collapse, Spin, Empty, Popconfirm, notification, Tooltip } from 'antd'
-import {  onDeleteTask, onGetAllTaskManager, onUpdateTask } from '../services/taskAPI';
+import React, { useState, useEffect, useRef} from 'react'
+import {Button, Collapse, Form, Empty, Popconfirm, notification, Tooltip, Table, Tag,Modal, Upload, Input } from 'antd'
+import {  onDeleteTask, onGetAllTaskManager, onGetFileList, onGetManagerCSV, onUpdateTask } from '../services/taskAPI';
 import { useSelector} from 'react-redux';
 import moment from 'moment';
 import AddComment from './AddComment';
 import '../styles/CSS/Userdash.css'
-import { DeleteFilled } from '@ant-design/icons';
+import { DeleteFilled, UploadOutlined } from '@ant-design/icons';
+import { onDownloadFileTask, onUploadTaskFile } from '../services/uploadAPI';
+import { CSVLink } from 'react-csv';
+
 
 
 
@@ -14,14 +17,31 @@ const ManagerDisplayTask = (props) => {
     const studyObj = useSelector(state => state.study)
     const userObj = useSelector(state => state.user)
     const projectObj = useSelector(state => state.project)
+    const csvLink = useRef() 
 
     const [task , setTask] = useState([])
-    const [loading, setloading] = useState(false)
-    
- 
-    
-
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [taskModal, setTaskModal] = useState({taskTitle: '', dateCreated: '', taskDescription: '', lastUpdated:'', deadline: '', assignee: '', createdBy: '',verification: '', status: ''})
+    const [fileData, setfileData] = useState({file: '', description: '', dateUploaded: '', uploadedBy: ''})
     const [data, setData] = useState({task: '', length: 3})
+    const [visible, setVisible] = useState(false); //modal2
+    const [description, setDescription] = useState();
+    const [obj, setObj] = useState() 
+    const [ fileDataDownload, setFileDataDownload ] = useState(); //download report
+
+    const [fileHeaders] = useState([
+        {label: 'Task Title', key: 'title'},
+        {label: 'Task Desription', key: 'description'},
+        {label: 'Objective', key: 'objective'},
+        {label: 'Assignee', key: 'assignee'},
+        {label: 'Deadline', key: 'deadline'},
+        {label: 'Status', key: 'status'},
+      ])
+      
+
+    const dataForm = new FormData()
+    const initialValues = { description: '', data: ''}
+    const [form] = Form.useForm();
 
     const notif = (type, message) => {
         notification[type]({
@@ -31,81 +51,76 @@ const ManagerDisplayTask = (props) => {
         });
       };
 
-    
+      const handleCancel = () => {
+        setIsModalVisible(false);
+      };
 
-    useEffect(() => {
-        async function getAllTask (){
-            setloading(true)
-            let resultTask = await onGetAllTaskManager({studyName: studyObj.STUDY.title})
+      useEffect(()=>{
+        const handleDataFetch = async() => {
+            const response = await onGetManagerCSV(studyObj.STUDY.studyID)
+            let x = response.data.tasks
+            let tempData = []
+            for (let i = 0; i < x.length; i++) {
+               tempData.push({
+                   title: x[i].tasksTitle,
+                   description:  x[i].tasksDescription,
+                   status:  x[i].status,
+                   objective:  x[i].objective,
+                   deadline: moment( x[i].deadline).format('YYYY-MM-DD'),
+                   assignee:  x[i].assigneeName.join(),
+               })
+            }
+            setFileDataDownload(tempData)
+          };
+        handleDataFetch();
+      }, [])
+
+      useEffect(() => {
+          if(props.data == null||undefined||''){
+            return
+        }else{
+        let newTask = props.data.newTask
+        if(obj === newTask.objective){
+            setTask([...task, {
+                key: newTask._id,
+                id: newTask._id,
+                createdBy: newTask.createdBy,
+                dateCreated: moment(newTask.dateCreated).format('MM-DD-YYYY'),
+                lastUpdated: moment(newTask.lastUpdated).format('MM-DD-YYYY'),
+                deadline: moment(newTask.deadline).format('MM-DD-YYYY'),
+                taskTitle: newTask.tasksTitle,
+                taskDescription: newTask.tasksDescription,
+                verification: newTask.verification,
+                assignee: newTask.assigneeName,
+                status: [newTask.status]
+            }])
+        }else{
+            return
+        }
+        } 
+      }, [props.data])
+    
+    async function callback(key) {
+            setObj(key)
+            let resultTask = await onGetAllTaskManager({studyName: studyObj.STUDY.studyID, objective: key})
             let loopTask = resultTask.data.tasks
             let tempTaskData = []
              for(let i = 0; i < loopTask.length; i++){ 
                tempTaskData.push({
-                 key: [i],
+                 key: loopTask[i]._id,
                  id: loopTask[i]._id,
                  createdBy: loopTask[i].createdBy,
-                 dateCreated: moment(loopTask[i].dateCreated).format('MM-DD-YYYY HH:MM:SS'),
-                 lastUpdated: moment(loopTask[i].lastUpdated).format('MM-DD-YYYY HH:MM:SS'),
-                 deadline: moment(loopTask[i].deadline).format('MM-DD-YYYY HH:MM:SS'),
+                 dateCreated: moment(loopTask[i].dateCreated).format('MM-DD-YYYY'),
+                 lastUpdated: moment(loopTask[i].lastUpdated).format('MM-DD-YYYY'),
+                 deadline: moment(loopTask[i].deadline).format('MM-DD-YYYY'),
                  taskTitle: loopTask[i].tasksTitle,
                  taskDescription: loopTask[i].tasksDescription,
-                 assignee: loopTask[i].assigneeName,
-                 status: loopTask[i].status
+                 verification: loopTask[i].verification,
+                 assignee: loopTask[i].assigneeName.join(),
+                 status: [loopTask[i].status]
                });
              }
              setTask(tempTaskData)
-             setloading(false)
-        }
-        getAllTask()
-    }, [studyObj.STUDY.title])
-
-    useEffect(() => {
-        if(props.data == null||undefined||''){
-            return
-        }else{
-        let newTask = props.data.newTask
-       setTask([...task, {
-           key: task.length +1,
-           id: newTask._id,
-           createdBy: newTask.createdBy,
-           dateCreated: moment(newTask.dateCreated).format('MM-DD-YYYY HH:MM:SS'),
-           lastUpdated: moment(newTask.lastUpdated).format('MM-DD-YYYY HH:MM:SS'),
-           deadline: moment(newTask.deadline).format('MM-DD-YYYY HH:MM:SS'),
-           taskTitle: newTask.tasksTitle,
-           taskDescription: newTask.tasksDescription,
-           assignee: newTask.assigneeName,
-           status: newTask.status
-       }])}
-
-       async function getAllTask (){
-        setloading(true)
-        let resultTask = await onGetAllTaskManager({studyName: studyObj.STUDY.title})
-        setloading(false)
-        let loopTask = resultTask.data.tasks
-        let tempTaskData = []
-         for(let i = 0; i < loopTask.length; i++){ 
-           tempTaskData.push({
-             key: [i]._id,
-             id: loopTask[i]._id,
-             createdBy: loopTask[i].createdBy,
-             dateCreated: moment(loopTask[i].dateCreated).format('MM-DD-YYYY HH:MM:SS'),
-             lastUpdated: moment(loopTask[i].lastUpdated).format('MM-DD-YYYY HH:MM:SS'),
-             deadline: moment(loopTask[i].deadline).format('MM-DD-YYYY HH:MM:SS'),
-             taskTitle: loopTask[i].tasksTitle,
-             taskDescription: loopTask[i].tasksDescription,
-             assignee: loopTask[i].assigneeName,
-             status: loopTask[i].status
-           });
-         }
-         setTask(tempTaskData)
-         
-    }
-    getAllTask()
-
-    }, [props.data])
-    
-    async function callback(key) {
-            setData(task[key||0].id)
       }
 
       const handleRemove = (key) => { //deleting task
@@ -117,17 +132,10 @@ const ManagerDisplayTask = (props) => {
 
     async function markComplete(key){
         try {
-            let complete = task.filter(function(tasks){
-                return tasks.status==="COMPLETED"
-            }) 
-            let progress = (complete.length+1)/task.length
-            let progressDB =  Math.floor(progress*100)
-            let result = await onUpdateTask({taskId: task[key||0].id, status: "COMPLETED", study: studyObj.STUDY.studyID, progress: progressDB, projectName: projectObj.PROJECT.projectName})
+            let result = await onUpdateTask({taskId: taskModal.id, status: "COMPLETED", study: studyObj.STUDY.studyID, projectID: projectObj.PROJECT.projectID})
+            setTaskModal({...taskModal, status: ['COMPLETED']})
+            taskModal.status = ['COMPLETED']
             notif('info', result.data.message)
-            let newTask = [...task]
-            newTask[key]= {...newTask[key], status : "COMPLETED"}
-            setTask(newTask)
-            
         } catch (error) {
             notif('error', error)
         }
@@ -135,7 +143,7 @@ const ManagerDisplayTask = (props) => {
 
     async function deleteTask(key){
         try {
-           let result =  await onDeleteTask({taskId: task[key||0].id, projectName: projectObj.PROJECT.projectName, user: userObj.USER._id})
+           let result =  await onDeleteTask({taskId: taskModal.id, projectName: projectObj.PROJECT.projectID, user: userObj.USER._id})
            handleRemove(key)
            notif('info', result.data.message)
         } catch (error) {
@@ -143,55 +151,217 @@ const ManagerDisplayTask = (props) => {
         }
     }
 
+    const columns = [
+        {
+          title: 'Task',
+          dataIndex: 'taskTitle',
+          key: 'taskTitle',
+          ellipsis: true,
+        },
+        {
+          title: 'Task Description',
+          dataIndex: 'taskDescription',
+          key: 'taskDescription',
+          ellipsis: true,
+        },
+        {
+          title: 'Assignee',
+          dataIndex: 'assignee',
+          key: 'assignee',
+          ellipsis: true,
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            render: status => (
+                <span>
+                  {status.map(stat => {
+                    let color = stat === 'Ongoing' ? 'geekblue' : 'green';
+                    return (
+                      <Tag color={color} key={stat}>
+                        {stat.toUpperCase()}
+                      </Tag>
+                    );
+                  })}
+                </span>
+              ),
+        },
+        {
+            title: 'Action',
+            dataIndex: 'action',
+            key: 'action',
+            render: (text, record, index) => <Button onClick={async ()=>{
+                let result = await onGetFileList(record.id)
+                getFileList(result)
+                setTaskModal(record)
+                setData(record.id)
+                setIsModalVisible(true);
+                
+            }} 
+               type='link'>MANAGE</Button>
+            },
+      ];
+
+      const fileColumn = [
+        {
+          title: 'File Description',
+          dataIndex: 'description',
+          key: 'description',
+          ellipsis: true,
+        },
+        {
+          title: 'Uploaded By',
+          dataIndex: 'uploadedBy',
+          key: 'uploadedBy',
+          ellipsis: true,
+        },
+        {
+          title: 'Date Uploaded',
+          dataIndex: 'dateUploaded',
+          key: 'dateUploaded',
+          ellipsis: true,
+        },
+        {
+            title: 'Action',
+            dataIndex: 'action',
+            key: 'action',
+            render: (text, record, index) => 
+                <div>
+                    <Button type='link' onClick={()=>saveFile(record.file)}>Download</Button>
+                </div>
+            },
+      ];
+
+      const saveFile = async (value) => {
+        await onDownloadFileTask(value)
+      };
+
+      const prop = {
+        beforeUpload: file => {
+          return file ? false : Upload.LIST_IGNORE;
+        },
+      };
+
+      const upload = async(value)=>{
+        dataForm.append("file", value.image.fileList[0].originFileObj)
+        dataForm.append("task", taskModal.id )               
+        dataForm.append("description", description)
+        dataForm.append("userID", userObj.USER._id)
+        dataForm.append("userName", userObj.USER.name)
+        let res = await onUploadTaskFile(dataForm)
+        setfileData([...fileData, {
+            key: res.data.newFile._id,
+            description: res.data.newFile.description,
+            file: res.data.newFile.file,
+            dateUploaded: moment(res.data.newFile.uploadDate).format('MM-DD-YYYY'),
+            uploadedBy: res.data.newFile.uploadedByName
+        }])
+        notif('info', res.data.message)
+        form.resetFields()
+    }
+
+   
+        async function getFileList(value){
+            let files = value.data.tasksfile
+            let tempFiles = []
+            for (let i = 0; i < files.length; i++) {
+                tempFiles.push({
+                    key : files[i]._id,
+                    file: files[i].file,
+                    description: files[i].description,
+                    dateUploaded: moment(files[i].uploadDate    ).format('MM-DD-YYYY'),
+                    uploadedBy: files[i].uploadedByName
+                }) 
+            }
+            setfileData(tempFiles)
+        }
+  
+
 
     return (
         <div >
-            {loading ?  <div className="spinner"><Spin /> </div> : task.length===0 ? <Empty/> :
+            <div>
+            <CSVLink
+                headers={fileHeaders}
+                data={fileDataDownload}
+                fileName="vrms.csv"
+                target="_blank"
+                ref={csvLink}
+            >
+                Download Summary
+            </CSVLink>
+            
+            </div>
+            {studyObj.STUDY.objectives.length===0 ? <Empty/> :
             <div>
             <Collapse accordion onChange={callback} >
-                {task.map(tasks =>(<Panel header={tasks.taskTitle} key={tasks.key} extra={ tasks.status === "SUBMITTED" ? 
-                    <div>
-                        <Popconfirm title="Are you sure?" onConfirm={()=>markComplete(tasks.key)}>
+                {studyObj.STUDY.objectives.map(obj => (
+                    <Panel header={obj} key={obj}>
+                        {task.length===0 ? <Empty/> :
+                        <Table dataSource={task} scroll={{ x: 800, y: 500 }} columns={columns}/>
+                        }
+                    </Panel>
+                ))}
+            </Collapse></div>  }
+            <div>
+                <Modal width={1000} title='Task' visible={isModalVisible} footer={ taskModal.status[0] === "SUBMITTED" ? 
+                    <div >
+                        <Popconfirm title="Are you sure?" onConfirm={()=>markComplete(taskModal.key)}>
                             <Tooltip title="Click to complete task!" placement="leftTop">
-                            <Button disabled={tasks.status==="COMPLETED"? true: false} style={{background: '#A0BF85', borderRadius: '50px'}}>{tasks.status}</Button>
+                                <Button disabled={taskModal.status[0]==="COMPLETED"? true : false} style={{background: '#A0BF85', borderRadius: '5px'}}>{taskModal.status[0]}</Button>
                             </Tooltip>
                         </Popconfirm>
                     </div> : 
-                    <div>
-                        <Button disabled={true} >{tasks.status}</Button>
-                        <Popconfirm title="Are you sure?" onConfirm={()=>deleteTask(tasks.key)}>
+                    <div >
+                        <Button disabled={true} >{taskModal.status[0]}</Button>
+                        <Popconfirm title="Are you sure?" onConfirm={()=>deleteTask(taskModal.key)}>
                         <Tooltip title="Click to delete task!" placement="leftTop">
                             <Button danger icon={<DeleteFilled/>}></Button>
                         </Tooltip>
                         </Popconfirm>
                     </div>
-                        }>
-                    
+                        } onCancel={handleCancel}>
                     <div>
-                        <div style={{display: 'flex', gap: '5px'}}>
+                    <div style={{display: 'flex', gap: '5px'}}>
+                            <label style={{fontWeight:'bolder'}}>Task Title:</label>
+                            <p>{taskModal.taskTitle}</p>
+                        </div>
+                        <div >
                             <label style={{fontWeight:'bolder'}}>Task:</label>
-                            <p>{tasks.taskDescription}</p>
+                            <p>{taskModal.taskDescription}</p>
+                        </div>
+                        <div >
+                            <label style={{fontWeight:'bolder'}}>Means of Verification:</label>
+                            <p>{taskModal.verification}</p>
                         </div>
                         <div style={{display: 'grid', margin: '0px'}}>
                         <div className="task-display">
                             <label style={{fontWeight:'bold'}}>Date Created:</label>
-                            <p>{tasks.dateCreated}</p>
+                            <p>{taskModal.dateCreated}</p>
                         </div>
                         <div className="task-display">
                             <label style={{fontWeight:'bold'}}>Last Updated:</label>
-                            <p>{tasks.lastUpdated}</p>
+                            <p>{taskModal.lastUpdated}</p>
                         </div>
                         <div className="task-display">
                             <label style={{fontWeight:'bold'}}>Deadline:</label>
-                            <p>{tasks.deadline}</p>
+                            <p>{taskModal.deadline}</p>
                         </div>
                         <div className="task-display">
                             <label style={{fontWeight:'bold'}}>Assignee:</label>
-                            <p>{tasks.assignee}</p>
+                            <p>{taskModal.assignee}</p>
                         </div>
                         <div className="task-display">
                             <label style={{fontWeight:'bold'}}>Adviser:</label>
-                            <p>{tasks.createdBy}</p>
+                            <p>{taskModal.createdBy}</p>
+                        </div>
+                        <div >
+                            <label style={{fontWeight:'bold'}}>Task File:</label>
+                            <Button type='link' onClick={() => setVisible(true)}>Add File</Button>
+                        </div>
+                        <div>
+                            <Table columns={fileColumn} dataSource={fileData}/>
                         </div>
                         <div>
                             <label style={{fontWeight:'bold'}}>Comments:</label>
@@ -199,8 +369,29 @@ const ManagerDisplayTask = (props) => {
                         </div>
                         </div>
                     </div>
-                </Panel>))}
-            </Collapse></div>  }
+                    
+                </Modal>
+                <Modal bodyStyle={{overflowY: 'scroll', height: '100%'}} title='Upload Gallery Image' visible={visible} onCancel={() => setVisible(false)} centered footer={null}>
+                    <Form onFinish={upload} initialValues={initialValues} form={form}>
+                        <Form.Item label="File Description:" name='description' rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please enter a file description!',
+                                    },
+                                    ]}>
+                            <Input onChange={e => setDescription(e.target.value)} value={description}/>
+                        </Form.Item>
+                        <Form.Item name='image' label='Selet File:'>
+                            <Upload  {...prop} maxCount={1}>
+                                <Button icon={<UploadOutlined />}>Choose file to upload</Button>
+                            </Upload>
+                        </Form.Item>
+                        <Form.Item>
+                            <Button block htmlType='submit' style={{background: "#A0BF85", borderRadius: "5px"}}>Upload</Button>
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            </div>
         </div>
     )
 }

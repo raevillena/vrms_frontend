@@ -1,4 +1,5 @@
 import { Input, Button, Form, DatePicker, Space, Select, notification, Layout, Modal, Tooltip} from 'antd';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import { onStudyCreate } from '../services/studyAPI';
 import { onGetAllUsers } from '../services/userAPI';
@@ -10,6 +11,26 @@ import Headers from '../components/components/Header'
 import '../styles/CSS/Userdash.css'
 
 const { Header, Content, Sider } = Layout;
+const { TextArea } = Input;
+
+const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 4 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 20 },
+    },
+  };
+  const formItemLayoutWithOutLabel = {
+    wrapperCol: {
+      xs: { span: 24, offset: 0 },
+      sm: { span: 20, offset: 4 },
+    },
+  };
+
+
 
 const Study = () => {
     const { Option } = Select;
@@ -18,7 +39,7 @@ const Study = () => {
     const authObj = useSelector(state => state.auth)
 
     const [userData, setUserData] = useState([])
-    const [study, setStudy] = useState({title: "", projectName: projectObj.PROJECT.projectName, deadline:"", startDate: "" ,assignee:[], assigneeName:[], budget: "", user: userObj.USER.name})
+    const [study, setStudy] = useState({title: "", projectName: projectObj.PROJECT.projectID, deadline:"", startDate: "" ,assignee:[], assigneeName:[], budget: "", user: userObj.USER.name})
     const [forProps, setForProps] = useState()
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -75,12 +96,9 @@ const Study = () => {
         getUsers()
     }, [])
     
-
-
-
-    async function onSubmit(){
+    async function onSubmit(values){
         try {
-           let result = await onStudyCreate(study, authObj.accessToken, authObj.refreshToken) 
+           let result = await onStudyCreate({values, study}, authObj.accessToken, authObj.refreshToken) 
            notif("success",result.data.message)
            form.resetFields()
            setForProps(result.data.newStudy)
@@ -119,8 +137,8 @@ const Study = () => {
                     <Button className="add-button" onClick={showModal}>+</Button>
                 </Tooltip>
                     <Modal title="Add Study" visible={isModalVisible} footer={null} onCancel={handleCancel}>
-                        <Form initialValues={initialValues} form={form} onFinish={onSubmit}>
-                            <Form.Item name='title' label="Study Title"
+                        <Form initialValues={initialValues} form={form} onFinish={onSubmit} name="dynamic_form_item" {...formItemLayoutWithOutLabel}>
+                            <Form.Item {...formItemLayout} name='title' label="Study Title"
                             rules={[
                                 {
                                 required: true,
@@ -129,7 +147,7 @@ const Study = () => {
                             ]}>
                                 <Input placeholder="Enter Title" onChange={e => setStudy({...study, title: e.target.value})} value={study.title}></Input>
                             </Form.Item>
-                            <Form.Item name='budget'  label="Budget"
+                            <Form.Item {...formItemLayout} name='budget'  label="Budget"
                                     rules={[
                                     {
                                         required: true,
@@ -138,7 +156,7 @@ const Study = () => {
                                     ]}>
                                 <Input type="number" placeholder="Enter budget" onChange={(e)=> setStudy({...study, budget: e.target.value})} value={study.budget}/>
                             </Form.Item>
-                            <Form.Item   label="Start Date"
+                            <Form.Item {...formItemLayout}  label="Start Date"
                                     rules={[
                                     {
                                         required: true,
@@ -149,7 +167,7 @@ const Study = () => {
                                 <DatePicker value={study.startDate} onChange={onChangeStartDate}/>
                                 </Space>
                             </Form.Item>
-                            <Form.Item   label="Deadline"
+                            <Form.Item {...formItemLayout}  label="Deadline"
                                     rules={[
                                     {
                                         required: true,
@@ -160,7 +178,64 @@ const Study = () => {
                                 <DatePicker value={study.deadline} onChange={onChange}/>
                                 </Space>
                             </Form.Item>
-                            <Form.Item name='assignee' label="Assignee"
+                            <Form.List
+                                name="objectives"
+                                rules={[
+                                {
+                                    validator: async (_, objective) => {
+                                    if (!objective || objective.length < 2) {
+                                        return Promise.reject(new Error('At least 2 objectives'));
+                                    }
+                                    }
+                                },
+                                ]}
+                            >
+                                {(fields, { add, remove }, { errors }) => (
+                                <>
+                                    {fields.map((field, index) => (
+                                    <Form.Item
+                                        {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                                        label={index === 0 ? 'Objectives' : ''}
+                                        required={false}
+                                        key={field.key}
+                                    >
+                                        <Form.Item
+                                        {...field}
+                                        validateTrigger={['onChange', 'onBlur']}
+                                        rules={[
+                                            {
+                                            required: true,
+                                            whitespace: true,
+                                            message: "Please input objective or delete this field.",
+                                            },
+                                        ]}
+                                        noStyle
+                                        >
+                                        <TextArea autoSize={{ minRows: 3, maxRows: 6 }} placeholder="Objective" style={{width: '95%'}} />
+                                        </Form.Item>
+                                        {fields.length > 1 ? (
+                                        <MinusCircleOutlined
+                                            className="dynamic-delete-button"
+                                            onClick={() => remove(field.name)}
+                                        />
+                                        ) : null}
+                                    </Form.Item>
+                                    ))}
+                                    <Form.Item>
+                                    <Button
+                                        type="dashed"
+                                        onClick={() => add()}
+                                        style={{ width: '100%' }}
+                                        icon={<PlusOutlined />}
+                                    >
+                                        Add objective
+                                    </Button>
+                                    <Form.ErrorList errors={errors} />
+                                    </Form.Item>
+                                </>
+                                )}
+                            </Form.List>
+                            <Form.Item {...formItemLayout} name='assignee' label="Assignee"
                                     rules={[
                                     {
                                         required: true,

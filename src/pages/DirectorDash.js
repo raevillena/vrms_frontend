@@ -4,8 +4,8 @@ import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
-import { onGetProjectforDirector } from '../services/projectAPI';
-import Sidebar from '../components/components/ManagerSidebar'
+import { onGetProjectforDirector, onGetAllPrograms } from '../services/projectAPI';
+import Sidebar from '../components/components/DirectorSidebar'
 import Headers from '../components/components/HeaderManager'
 import MobileHeader from '../components/components/MobileHeader';
 
@@ -17,15 +17,31 @@ const DirectorDash = () => {
   let history= useHistory();
   const userObj = useSelector(state => state.user)
   const [projectData, setProjectData]= useState(["spinme"])
+  const [programData, setProgramData]= useState(["spinme"])
   const [value, setValue] = useState('');
   const [searchData, setSearchData] = useState([])
+  const [expandedRow, setExpandedRow] = useState(false);
+  const [id, setId] =useState()
  
 
   useEffect(() => {
     async function getProjects(){
-        let result = await onGetProjectforDirector()
+        let result = await onGetProjectforDirector(id)
+        let programRes = await onGetAllPrograms()
         let projectResult = result.data
+        let programResult = programRes.data
         let tempProjectData = []
+        let tempProgramData = []
+          for(let j = 0; j < programResult.length; j++){ 
+            tempProgramData.push({
+                key:  j,
+                programID: programResult[j].programID,
+                programName: programResult[j].programName,
+                programLeader:  programResult[j].assigneeName,
+                programLeaderID:  programResult[j].assignee,
+                dateCreated: moment( programResult[j].dateCreated).format('MM-DD-YYYY'),
+            });
+          }
         for(let i = 0; i < projectResult.length; i++){ 
             tempProjectData.push({
                 key:  projectResult[i]._id,
@@ -38,13 +54,20 @@ const DirectorDash = () => {
                 progress:  projectResult[i].progress,
                 status: [projectResult[i].status]
             });
-            
           }
+          tempProgramData= [...tempProgramData, {
+            key:  tempProgramData.length,
+            programID: 'others',
+            programName: 'Others',
+            programLeader:  ['Others'],
+            dateCreated: moment( Date.now()).format('MM-DD-YYYY'),
+      }]
         setProjectData(tempProjectData)
+        setProgramData(tempProgramData)
         setSearchData(tempProjectData)
     }
       getProjects()
-}, [userObj.USER.name])
+}, [userObj.USER.name, id])
 
 
 
@@ -59,17 +82,35 @@ const onSearch = value =>{
   } 
 }
 
+const programColumns = [
+  {
+    title: 'Program Leader',
+    dataIndex: 'programLeader',
+    width: '25%',
+    key: 'programLeader',
+    render: (leader) => <List size="small"
+    dataSource={leader}
+    renderItem={item => <List.Item>{item}</List.Item>}
+    >
+    </List>
+  },
+  {
+    title: 'Program Name',
+    dataIndex: 'programName',
+    key: 'programName',
+    width: '40%',
+    ellipsis: true,
+  },
+  {
+    title: 'Date Created',
+    dataIndex: 'dateCreated',
+    key: 'dateCreated', 
+    width: '15%'
+  },
+];
 
+const expandedRowRender = programs => {
   const columns = [
-    {
-      title: 'Project ID',
-      dataIndex: 'id',
-      key: 'id',
-      width: '5%',
-      defaultSortOrder: 'descend',
-
-      sorter: (a, b) => a.id - b.id,
-    },
     {
       title: 'Project Leader',
       dataIndex: 'projectLeader',
@@ -132,8 +173,8 @@ const onSearch = value =>{
       key: 'action',
       fixed: 'right',
       width: '15%',
-      render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row', gap:'5px'}}>
-        <Button onClick = {
+      render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row'}}>
+        <Button type='link' onClick = {
         (e) => {
           dispatch({
             type: "SET_PROJECT",
@@ -141,10 +182,17 @@ const onSearch = value =>{
          })
          history.push('/studies')
         }
-      } className="manageBtn">MANAGE</Button>
+      } >MANAGE</Button>
       </div>
     },
   ];
+  
+  if(programData === ''){
+    return <Spin className="spinner" />
+  }else{
+    return <Table columns={columns} dataSource={projectData} pagination={false} scroll={{ x: 1200, y: 1000 }} />
+  }
+};
 
     return (
       <div >
@@ -173,7 +221,9 @@ const onSearch = value =>{
                 allowClear
                 />
             </div> 
-                <Table size="small" scroll={{ x: 1200, y: 1000 }} dataSource={projectData} columns={columns} style={{margin: '15px'}}/>
+                <Table size="small" className="components-table-demo-nested" onExpand={(isExpanded, record) =>{
+                setExpandedRow([record.key])
+                setId(isExpanded ? record.programID : undefined)}}  expandable={{ expandedRowRender }} scroll={{ x: 1200, y: 1000 }} dataSource={programData} expandedRowKeys={expandedRow} columns={programColumns} style={{margin: '15px'}}/>
             </div>
             }
         </Content> 

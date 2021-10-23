@@ -5,6 +5,26 @@ import { notif } from '../functions/datagrid';
 import { onGetAllUsers } from '../services/userAPI';
 import moment from 'moment';
 import { onUpdateStudy } from '../services/studyAPI';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+
+const { TextArea } = Input;
+
+const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 4 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 20 },
+    },
+  };
+  const formItemLayoutWithOutLabel = {
+    wrapperCol: {
+      xs: { span: 24, offset: 0 },
+      sm: { span: 20, offset: 4 },
+    },
+  };
 
 const EditStudy = (props) => {
     const userObj = useSelector(state => state.user)
@@ -16,7 +36,7 @@ const EditStudy = (props) => {
     const [study, setStudy] = useState({studyID: props.data.record.studyID ,title: props.data.record.title, projectName: projectObj.PROJECT._id, deadline:moment( props.data.record.deadline) ,assignee:props.data.record.assignee, assigneeName:props.data.record.assigneeName, budget: props.data.record.budget, user: userObj.USER.name})
 
     const initialValues = {title: props.data.record.title, deadline:moment( props.data.record.deadline) ,assignee:props.data.record.assignee, 
-    assigneeName:props.data.record.assigneeName, budget: props.data.record.budget}
+    assigneeName:props.data.record.assigneeName, budget: props.data.record.budget, objectives:props.data.record.objectives }
 
     useEffect(() => {
         async function getUsers(){
@@ -53,8 +73,8 @@ const EditStudy = (props) => {
         setStudy({...study, deadline:moment( date)})
     }
 
-    async function handleUpdate(){
-        let res = await onUpdateStudy(study)
+    async function handleUpdate(value){
+        let res = await onUpdateStudy({study, value})
         props.func({user: userObj.USER._id, study});
         notif('info', res.data.message)
      }
@@ -73,6 +93,63 @@ const EditStudy = (props) => {
                         <DatePicker value={study.deadline} onChange={onChange}/>
                         </Space>
                     </Form.Item>
+                    <Form.List
+                                name="objectives"
+                                rules={[
+                                {
+                                    validator: async (_, objective) => {
+                                    if (!objective || objective.length < 2) {
+                                        return Promise.reject(new Error('At least 2 objectives'));
+                                    }
+                                    }
+                                },
+                                ]}
+                            >
+                                {(fields, { add, remove }, { errors }) => (
+                                <>
+                                    {fields.map((field, index) => (
+                                    <Form.Item
+                                        {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                                        label={index === 0 ? 'Objectives' : ''}
+                                        required={false}
+                                        key={field.key}
+                                    >
+                                        <Form.Item
+                                        {...field}
+                                        validateTrigger={['onChange', 'onBlur']}
+                                        rules={[
+                                            {
+                                            required: true,
+                                            whitespace: true,
+                                            message: "Please input objective or delete this field.",
+                                            },
+                                        ]}
+                                        noStyle
+                                        >
+                                        <TextArea autoSize={{ minRows: 3, maxRows: 6 }} placeholder="Objective" style={{width: '95%'}} />
+                                        </Form.Item>
+                                        {fields.length > 1 ? (
+                                        <MinusCircleOutlined
+                                            className="dynamic-delete-button"
+                                            onClick={() => remove(field.name)}
+                                        />
+                                        ) : null}
+                                    </Form.Item>
+                                    ))}
+                                    <Form.Item>
+                                    <Button
+                                        type="dashed"
+                                        onClick={() => add()}
+                                        style={{ width: '100%' }}
+                                        icon={<PlusOutlined />}
+                                    >
+                                        Add objective
+                                    </Button>
+                                    <Form.ErrorList errors={errors} />
+                                    </Form.Item>
+                                </>
+                                )}
+                            </Form.List>
                     <Form.Item name='assignee' label="Assignee">
                         <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} value={study.assignee} placeholder="Assign Study">
                         {userData.map(user => (

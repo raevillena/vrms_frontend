@@ -38,7 +38,6 @@ const Project = () => {
     }
 
     function handleProgramChange(value) {
-        console.log(value)
         setProject({...project, program: value})
       }
 

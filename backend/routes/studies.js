@@ -41,19 +41,20 @@ router.post('/createstudy', auth, async(req, res) => {
     const studyID = shortid.generate() 
     const study = new Studies({
         dateCreated: Date.now(),
-        createdBy: req.body.user,
+        createdBy: req.body.study.user,
         dateUpdated: Date.now(),
-        startDate: req.body.startDate,
-        updatedBy: req.body.user,
-        studyTitle: req.body.title,
+        startDate: req.body.study.startDate,
+        updatedBy: req.body.study.user,
+        studyTitle: req.body.study.title,
         studyID: studyID,
-        assignee: req.body.assignee,
-        assigneeName: req.body.assigneeName,
+        assignee: req.body.study.assignee,
+        assigneeName: req.body.study.assigneeName,
         status: "ONGOING",
         progress: 0,
-        projectName: req.body.projectName,
-        deadline: req.body.deadline,
-        budget: req.body.budget,
+        projectName: req.body.study.projectName,
+        deadline: req.body.study.deadline,
+        budget: req.body.study.budget,
+        objectives: req.body.values.objectives,
         active: true
     })
         const doesExist = await Studies.findOne({studyTitle: req.body.title})
@@ -602,8 +603,9 @@ router.get('/getViewlog/:tableID', auth,  async(req, res) => {
 
 router.post('/updateStudy', auth, async(req, res) => {
     try {
-        await Studies.findOneAndUpdate({"studyID": req.body.studyID, "active": true}, {'editedBy': req.body.user, 'editedDate': Date.now(), 
-        'assignee':req.body.assignee, 'assigneeName': req.body.assigneeName, 'budget': req.body.budget, 'deadline': req.body.deadline, 'studyTitle': req.body.title}, 
+        await Studies.findOneAndUpdate({"studyID": req.body.study.studyID, "active": true}, {'editedBy': req.body.study.user, 'editedDate': Date.now(), 
+        'assignee':req.body.study.assignee, 'assigneeName': req.body.study.assigneeName, 'budget': req.body.study.budget, 'deadline': req.body.study.deadline, 'studyTitle': req.body.study.title,
+        'objectives': req.body.value.objectives}, 
         function(err, study) {
             if(err){
                 logger.log('error', 'Error: /updateCurrentEditing')

@@ -99,7 +99,6 @@ const DataGrid = () => {
   useEffect(() => {
     const getCol = async() =>{
       let res = await onGetDatagridCol({study: studyObj.STUDY.studyID})
-      console.log(res)
       let col = res.data
       let colArr = []
       for (let index = 0; index < col.length; index++) {

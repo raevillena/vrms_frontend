@@ -312,7 +312,6 @@ const pull_data = (data) => {
 
 const edit_data = (data) => {
   let objIndex = projectData.findIndex((obj => obj.projectID === data.project.id));
-  console.log(projectData[objIndex].programID, data.project.program)
   if(projectData[objIndex].programID !== data.project.program){
     let arr = projectData
     arr.splice(objIndex,1);

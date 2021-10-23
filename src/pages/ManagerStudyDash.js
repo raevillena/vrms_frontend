@@ -9,7 +9,7 @@ import DirectorStudyDash from './DirectorStudyDash';
 import EditStudy from './EditStudy'
 
 
-const ManagerStudyDash = () => {
+const ManagerStudyDash = (props) => {
   const dispatch = useDispatch()
   let history= useHistory();
   const projectObj = useSelector(state => state.project)
@@ -38,31 +38,71 @@ const ManagerStudyDash = () => {
   
     
   useEffect(() => {
-    async function getStudies(){
-        let result = await onGetAllStudyforProject(projectObj.PROJECT)
-        let x = result.data
-        let tempStudyData = []
-        for(let i = 0; i < x.length; i++){ 
-          tempStudyData.push({
-              key: x[i]._id,
-              id: [i],
-              title: x[i].studyTitle,
-              studyID: x[i].studyID,
-              dateCreated: moment(x[i].dateCreated).format('MM-DD-YYYY'),
-              assignee: x[i].assignee,
-              assigneeName: x[i].assigneeName,
-              budget: x[i].budget,
-              dateUpdated: moment(x[i].dateUpdated).format('MM-DD-YYYY'),
-              progress: x[i].progress,
-              status: [x[i].status],
-              updatedBy: x[i].updatedBy,
-              deadline: x[i].deadline
-          });
-        }
-      setStudyData(tempStudyData)
-      setSearchData(tempStudyData)
+    if(props.data === null||props.data === undefined||props.data === ''){
+      return
+  }else{
+    setStudyData([...studyData,{
+      key: props.data._id,
+      id: studyData.length+1,
+      title: props.data.studyTitle,
+      studyID: props.data.studyID,
+      dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
+      assignee: props.data.assignee,
+      assigneeName: props.data.assigneeName,
+      budget: props.data.budget,
+      dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
+      progress: props.data.progress,
+      status: [props.data.status],
+      updatedBy: props.data.updatedBy,
+      deadline: props.data.deadline,
+      objectives: props.data.objectives
+    }])
+    setSearchData([ ...searchData,{
+      key: props.data._id,
+      id: studyData.length+1,
+      title: props.data.studyTitle,
+      studyID: props.data.studyID,
+      dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
+      assignee: props.data.assignee,
+      assigneeName: props.data.assigneeName,
+      budget: props.data.budget,
+      dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
+      progress: props.data.progress,
+      status: [props.data.status],
+      updatedBy: props.data.updatedBy,
+      deadline: props.data.deadline,
+      objectives: props.data.objectives
+    }])
+  }
+}, [props.data])
+
+useEffect(() => {
+  async function getStudies(){
+      let result = await onGetAllStudyforProject(projectObj.PROJECT)
+      let x = result.data
+      let tempStudyData = []
+      for(let i = 0; i < x.length; i++){ 
+        tempStudyData.push({
+            key: x[i]._id,
+            id: [i],
+            title: x[i].studyTitle,
+            studyID: x[i].studyID,
+            dateCreated: moment(x[i].dateCreated).format('MM-DD-YYYY'),
+            assignee: x[i].assignee,
+            assigneeName: x[i].assigneeName,
+            budget: x[i].budget,
+            dateUpdated: moment(x[i].dateUpdated).format('MM-DD-YYYY'),
+            progress: x[i].progress,
+            status: [x[i].status],
+            updatedBy: x[i].updatedBy,
+            deadline: x[i].deadline,
+            objectives: x[i].objectives,
+        });
       }
-      getStudies()
+    setStudyData(tempStudyData)
+    setSearchData(tempStudyData)
+    }
+    getStudies()
 }, [projectObj.PROJECT])
 
 

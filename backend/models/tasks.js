@@ -60,7 +60,14 @@ const TasksSchema = new mongoose.Schema({
     deletedBy:{
         type: String,
     },
-
+    objective:{
+        type: String,
+        required: true
+    },
+    verification:{
+        type: String,
+        required: true
+    },
 })
 
 module.exports = mongoose.model('Tasks', TasksSchema)
