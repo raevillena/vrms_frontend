@@ -277,3 +277,11 @@ export async function onUpdateStudy(body) {
         }
     }
 }
+
+export async function onGetAllStudy() {
+    try {
+        return axios.get(`/v1/studies/getAllStudy`, tokenConfig())
+    } catch (error) {
+        console.log('error', error)
+    }
+}

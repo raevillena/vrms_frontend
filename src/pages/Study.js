@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import ManagerStudyDash from './ManagerStudyDash';
 import MobileHeader from '../components/components/ManagerHeaderMobile';
 import Sidebar from '../components/components/ManagerSidebar'
+import DirectorSidebar from '../components/components/DirectorSidebar';
 import Headers from '../components/components/Header'
 import '../styles/CSS/Userdash.css'
 
@@ -121,7 +122,7 @@ const Study = () => {
         <div>
             <Layout  > 
                 <Sider  className="sidebar" >
-                    <Sidebar/>
+                {userObj.USER.category === "manager"? <Sidebar/> : <DirectorSidebar/>}
                 </Sider>
             <Layout >
             <Header className="header" style={{ padding: 0, background:'#f2f2f2' }} >

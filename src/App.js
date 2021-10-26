@@ -13,7 +13,7 @@ import ResetPassword from '@pages/NewPassword'
 import { onRenewToken } from '@/services/authAPI';
 import ManagerStudyDash from '@pages/Study';
 import PageNotFound from '@pages/PageNotFound';
-
+import DirectorMonitor from '@pages/DirectorMonitor';
 
 function App() {
   const dispatch = useDispatch();
@@ -103,6 +103,7 @@ function App() {
       <PublicRoute path="/reset-password/" exact component={ResetPassword} auth={authObj}/>
       <PublicRoute path="/secretcreateuser" exact component={Signup} auth={authObj}  />
       <PrivateRoute path="/" exact component={Userdash} auth={authObj} />
+      <PrivateRoute path="/monitor" exact component={DirectorMonitor} auth={authObj} />
       <PrivateRoute path="/studies" exact component={ManagerStudyDash} auth={authObj} />
       <PrivateRoute path="/editstudy" exact component={StudyDash} auth={authObj}/>
       <PrivateRoute path="/account" exact component={Account} auth={authObj}/>

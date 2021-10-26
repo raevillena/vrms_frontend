@@ -13,6 +13,7 @@ import '../styles/CSS/Userdash.css'
 import Mobiledash from './StudyDash_mobile';
 import { useSelector } from 'react-redux';
 import StudyGallery from './StudyGallery';
+import DirectorSidebar from '../components/components/DirectorSidebar';
 
 
 const { Title } = Typography;
@@ -26,14 +27,14 @@ const StudyDash = () => {
         <div className="study-dash">
             <Layout >
             <Sider className='sidebar' >
-                    {userObj.USER.category === "user"? <Sidebar/> : <SidebarManager/>}
+                    {userObj.USER.category === "user"? <Sidebar/> : userObj.USER.category === "manager"? <SidebarManager/> : <DirectorSidebar/>}
                 </Sider>
                <Layout style={{width: '100%', marginLeft: '10px'}}>
                 <Header className="header"  >
                         <Headers/>
                 </Header>
                 <div className="mobile-header">
-                    {userObj.USER.category === "user" ? <MobileHeader/> : <ManagerHeaderMobile/>}
+                    {userObj.USER.category === "user" ? <MobileHeader/> : <ManagerHeaderMobile/> }
                 </div>
                     <Content style={{height: '100%', width:'100%'}}>
                         <Label/>

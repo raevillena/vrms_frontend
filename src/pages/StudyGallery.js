@@ -60,14 +60,7 @@ const StudyGallery = () => {
         form.resetFields()
     }
 
-    const props = {
-        beforeUpload: file => {
-          if (file.type !== 'image/png') {
-            message.error(`${file.name} is not a png file`);
-          }
-          return file.type === 'image/png' ? false : Upload.LIST_IGNORE;
-        },
-      };
+
 
     
     return (
@@ -83,7 +76,7 @@ const StudyGallery = () => {
                             <Input onChange={e => setCaption(e.target.value)} value={caption}/>
                         </Form.Item>
                         <Form.Item name='image' label='Select File:'>
-                            <Upload  {...props} maxCount={1}>
+                            <Upload maxCount={1}>
                                 <Button icon={<UploadOutlined />}>Choose file to upload</Button>
                             </Upload>
                         </Form.Item>

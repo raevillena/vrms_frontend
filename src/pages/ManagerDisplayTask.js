@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef} from 'react'
-import {Button, Collapse, Form, Empty, Popconfirm, notification, Tooltip, Table, Tag,Modal, Upload, Input } from 'antd'
+import {Button, Collapse, Form, Empty, Popconfirm, notification, Tooltip, Table, Tag,Modal, Upload, Input, Space } from 'antd'
 import {  onDeleteTask, onGetAllTaskManager, onGetFileList, onGetManagerCSV, onUpdateTask } from '../services/taskAPI';
 import { useSelector} from 'react-redux';
 import moment from 'moment';
@@ -330,8 +330,8 @@ const ManagerDisplayTask = (props) => {
                         </Popconfirm>
                     </div>
                         } onCancel={handleCancel}>
-                    <div>
-                    <div style={{display: 'flex', gap: '5px'}}>
+                    <Space direction='vertical'>
+                    <div >
                             <label style={{fontWeight:'bolder'}}>Task Title:</label>
                             <p>{taskModal.taskTitle}</p>
                         </div>
@@ -343,20 +343,22 @@ const ManagerDisplayTask = (props) => {
                             <label style={{fontWeight:'bolder'}}>Means of Verification:</label>
                             <p>{taskModal.verification}</p>
                         </div>
-                        <div style={{display: 'grid', margin: '0px'}}>
-                        <div className="task-display">
-                            <label style={{fontWeight:'bold'}}>Date Created:</label>
-                            <p>{taskModal.dateCreated}</p>
-                        </div>
-                        <div className="task-display">
-                            <label style={{fontWeight:'bold'}}>Last Updated:</label>
-                            <p>{taskModal.lastUpdated}</p>
-                        </div>
-                        <div className="task-display">
-                            <label style={{fontWeight:'bold'}}>Deadline:</label>
-                            <p>{taskModal.deadline}</p>
-                        </div>
-                        <div className="task-display">
+                        <div >
+                        <Space>
+                            <div >
+                                <label style={{fontWeight:'bold'}}>Date Created:</label>
+                                <p>{taskModal.dateCreated}</p>
+                            </div>
+                            <div >
+                                <label style={{fontWeight:'bold'}}>Last Updated:</label>
+                                <p>{taskModal.lastUpdated}</p>
+                            </div>
+                            <div >
+                                <label style={{fontWeight:'bold'}}>Deadline:</label>
+                                <p>{taskModal.deadline}</p>
+                            </div>
+                        </Space>
+                        <div >
                             <label style={{fontWeight:'bold'}}>Assignee:</label>
                             <p>{taskModal.assignee}</p>
                         </div>
@@ -376,7 +378,7 @@ const ManagerDisplayTask = (props) => {
                             <AddComment data={data}/>
                         </div>
                         </div>
-                    </div>
+                    </Space>
                     
                 </Modal>
                 <Modal bodyStyle={{overflowY: 'scroll', height: '100%'}} title='Upload Gallery Image' visible={visible} onCancel={() => setVisible(false)} centered footer={null}>

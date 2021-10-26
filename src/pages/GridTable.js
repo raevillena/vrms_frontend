@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useMemo} from 'react';
-import { Table, Button, Popconfirm, Form, Spin, Tooltip, Modal, Empty, Tabs } from 'antd';
-import { DeleteFilled, EditFilled, DownloadOutlined, InfoCircleFilled, HistoryOutlined, EyeOutlined } from '@ant-design/icons';
+import { Table, Button, Popconfirm, Form, Spin, Tooltip, Modal, Empty, Tabs, Space, Input } from 'antd';
+import { DeleteFilled, EditFilled, DownloadOutlined, InfoCircleFilled, HistoryOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
 import { onDeleteDatagrid, onDownloadHistory, onEditDatagrid, onGetDatagrid, onGetDownloadHistory, onGetEditHistory, onGetViewHistory, onViewLog } from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import moment from 'moment';
@@ -9,7 +9,7 @@ import '../styles/CSS/Userdash.css'
 import { notif, downloadCSVonGrid } from '../functions/datagrid';
 import { join, view } from '../services/socket';
 import ViewDatagrid from './ViewDatagrid';
-
+import Highlighter from 'react-highlight-words';
 
 const { TabPane } = Tabs;
 
@@ -27,7 +27,7 @@ const GridTable = (props) => {
     const [editHistory, setEditHistory] = useState([])
     const [viewHistory, setViewHistory] = useState([])
     const [loadingModal, setLoadingModal] = useState(false)
-
+    const [search, setSearch] = useState({searchText: '', searchedColumn:''})
 
     const handleRemove = (key) => { //deleting datasheet
         let newData = tableData.filter((tempData) => {
@@ -179,6 +179,83 @@ const handleCancelView = () => {
     }
    }, [props.data, studyObj.STUDY.studyID])
 
+
+   const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearch({
+      searchText: selectedKeys[0],
+      searchedColumn: dataIndex,
+    });
+  };
+  
+  const handleReset = clearFilters => {
+    clearFilters();
+    setSearch({...search, searchText: '' });
+  };
+  let searchInput = ''
+  
+  const getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={node => {
+            searchInput = node;
+          }}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ marginBottom: 8, display: 'block' }}
+          id='searchInput'
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({ closeDropdown: false });
+              setSearch({
+                searchText: selectedKeys[0],
+                searchedColumn: dataIndex,
+              });
+            }}
+          >
+            Filter
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+        : '',
+   
+    render: text =>
+      search.searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[search.searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      ),
+  });
+
    const historyColumns=[
     {
       title: 'Downloader',
@@ -237,12 +314,14 @@ const handleCancelView = () => {
           width: '25%',
           dataIndex: 'title',
           key: 'title',
+          ...getColumnSearchProps('title'),
           ellipsis: true
         },
         {
             title: 'Description',
             width: '25%',
             dataIndex: 'description',
+            ...getColumnSearchProps('description'),
             key: 'description',
             ellipsis: true
         },

@@ -194,4 +194,14 @@ router.get("/getAllManager", async(req,res) => {
   }
 })
 
+router.get("/getAllUserDashboard", async(req,res) => {
+  try {
+     User.find({}, function(err, users) {
+      res.send(users);  
+    });
+  } catch (error) {
+    logger.log('error', `Error: /getAllUSer`)  
+  }
+})
+
 module.exports = router

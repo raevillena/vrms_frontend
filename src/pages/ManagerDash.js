@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Table,Progress, Spin, Popconfirm, notification, List, Tag, Input, Modal } from 'antd'
+import { Button, Table,Progress, Spin, Popconfirm, notification, List, Tag, Input, Modal, Space } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,7 +7,8 @@ import moment from 'moment';
 import { onDeleteProject, onGetProgramforManager, onGetProjectforManager } from '../services/projectAPI';
 import EditProgram from './EditProgram';
 import EditProject from './EditProject'
-
+import Highlighter from 'react-highlight-words';
+import {SearchOutlined} from '@ant-design/icons';
 
 
 const ManagerDash = (props) => {
@@ -16,14 +17,13 @@ const ManagerDash = (props) => {
   const userObj = useSelector(state => state.user)
   const [projectData, setProjectData]= useState(["spinme"])
   const [programData, setProgramData]= useState(["spinme"])
-  const [value, setValue] = useState('');
-  const [searchData, setSearchData] = useState([])
   const [id, setId] = useState()
   const [programProps, setProgramProps] = useState()
   const [projectProps, setProjectProps] = useState()
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isProjectVisible, setIsProjectVisible] = useState(false);
   const [expandedRow, setExpandedRow] = useState(false);
+  const [search, setSearch] = useState({searchText: '', searchedColumn:''})
 
   const notif = (type, message) => {
     notification[type]({
@@ -119,17 +119,81 @@ const handleRemove = (key) => { //deleting datasheet
   setProjectData(newData)
 }
 
-const onSearch = value =>{
-  if(value === ''){
-    setProjectData(searchData)
-  }else{
-    const filteredData = projectData.filter(entry =>
-      entry.projectName.includes(value)
-  );
-    setProjectData(filteredData)
-  } 
-}
+const handleSearch = (selectedKeys, confirm, dataIndex) => {
+  confirm();
+  setSearch({
+    searchText: selectedKeys[0],
+    searchedColumn: dataIndex,
+  });
+};
 
+const handleReset = clearFilters => {
+  clearFilters();
+  setSearch({...search, searchText: '' });
+};
+let searchInput = ''
+
+const getColumnSearchProps = dataIndex => ({
+  filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    <div style={{ padding: 8 }}>
+      <Input
+        ref={node => {
+          searchInput = node;
+        }}
+        placeholder={`Search ${dataIndex}`}
+        value={selectedKeys[0]}
+        onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+        onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+        style={{ marginBottom: 8, display: 'block' }}
+        id='searchInput'
+      />
+      <Space>
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Search
+        </Button>
+        <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          Reset
+        </Button>
+        <Button
+          type="link"
+          size="small"
+          onClick={() => {
+            confirm({ closeDropdown: false });
+            setSearch({
+              searchText: selectedKeys[0],
+              searchedColumn: dataIndex,
+            });
+          }}
+        >
+          Filter
+        </Button>
+      </Space>
+    </div>
+  ),
+  filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+  onFilter: (value, record) =>
+    record[dataIndex]
+      ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+      : '',
+ 
+  render: text =>
+    search.searchedColumn === dataIndex ? (
+      <Highlighter
+        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+        searchWords={[search.searchText]}
+        autoEscape
+        textToHighlight={text ? text.toString() : ''}
+      />
+    ) : (
+      text
+    ),
+});
 
 const programColumns = [
   {
@@ -137,6 +201,7 @@ const programColumns = [
     dataIndex: 'programLeader',
     width: '25%',
     key: 'programLeader',
+    ...getColumnSearchProps('programLeader'),
     render: (leader) => <List size="small"
     dataSource={leader}
     renderItem={item => <List.Item>{item}</List.Item>}
@@ -147,6 +212,7 @@ const programColumns = [
     title: 'Program Name',
     dataIndex: 'programName',
     key: 'programName',
+    ...getColumnSearchProps('programName'),
     width: '40%',
     ellipsis: true,
   },
@@ -180,6 +246,7 @@ const expandedRowRender = programs => {
       title: 'Project Leader',
       dataIndex: 'projectLeader',
       key: 'projectLeader',
+      ...getColumnSearchProps('projectLeader'),
       width: '15%',
       render: (leader) => <List size="small"
       dataSource={leader}
@@ -191,6 +258,7 @@ const expandedRowRender = programs => {
       title: 'Project Name',
       dataIndex: 'projectName',
       key: 'projectName',
+      ...getColumnSearchProps('projectName'),
       width: '25%',
       ellipsis: true,
     },
@@ -295,7 +363,6 @@ useEffect(() => {
         });
       }
       setProjectData(tempProjectData)
-      setSearchData(tempProjectData)
   }
   getProject()
   return () => {
@@ -328,17 +395,6 @@ const edit_data = (data) => {
       <div > 
         {programData[0]==="spinme"?  <Spin className="spinner" /> :
          <div>  
-            <div style={{width: '200px', float: 'right', margin: '0 5px 5px 0'}}>
-            <Input.Search placeholder="Search Project Title" value={value}
-                onChange={e => {
-                  const currValue = e.target.value;
-                  setValue(currValue);
-                  onSearch(currValue)
-                }}
-                onSearch={onSearch}
-                allowClear
-              />
-            </div> 
               <Table size="small" className="components-table-demo-nested"  expandable={{ expandedRowRender }} onExpand={(isExpanded, record) =>{
                 setExpandedRow([record.key])
                 setId(isExpanded ? record.programID : undefined)}}scroll={{ x: 1200, y: 1000 }}  dataSource={programData} expandedRowKeys={expandedRow} columns={programColumns} style={{margin: '15px'}} 

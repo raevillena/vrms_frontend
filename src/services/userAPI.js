@@ -118,3 +118,18 @@ export async function onGetAllManagers() {
     }
 }
 
+export async function onGetAllUser() {
+    try {
+        return axios.get(`/v1/user/getAllUserDashboard`, {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}
+

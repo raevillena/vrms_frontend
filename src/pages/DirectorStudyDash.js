@@ -1,19 +1,19 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Table,Progress, Tag, Spin, Input } from 'antd'
+import { Button, Table,Progress, Tag, Spin, Input, Space } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { onGetAllStudyforProject } from '../services/studyAPI';
 import moment from 'moment';
-
+import Highlighter from 'react-highlight-words';
+import { SearchOutlined} from '@ant-design/icons';
 
 const DirectorStudyDash = (props) => {
   const dispatch = useDispatch()
   let history= useHistory();
   const projectObj = useSelector(state => state.project)
   const [studyData, setStudyData]= useState(["spinme"])
-  const [value, setValue] = useState('');
-  const [searchData, setSearchData] = useState([])
+  const [search, setSearch] = useState({searchText: '', searchedColumn:''})
   
     
   useEffect(() => {
@@ -32,11 +32,11 @@ const DirectorStudyDash = (props) => {
               progress: x[i].progress,
               status: [x[i].status],
               updatedBy: x[i].updatedBy,
-              deadline: x[i].deadline
+              deadline: x[i].deadline,
+              objectives: x[i].objectives
           });
         }
       setStudyData(tempStudyData)
-      setSearchData(tempStudyData)
       }
       getStudies()
 }, [projectObj.PROJECT])
@@ -53,30 +53,89 @@ useEffect(() => {
         dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
         status: [props.data.status],
         progress: props.data.progress,
+        objectives: props.data.objectives
     }])
-    setSearchData([...studyData, {key: studyData.length + 1,
-      id: studyData.length + 1,
-      studyID:props.data.studyID,
-      title: props.data.studyTitle,
-      dateCreated: moment(props.data.dateCreated).format('MM-DD-YYYY'),
-      dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
-      status: [props.data.status],
-      progress: props.data.progress,
-  }])
     }
 }, [props.data])
 
 
-const onSearch = value =>{
-  if(value === ''){
-    setStudyData(searchData)
-  }else{
-    const filteredData = studyData.filter(entry =>
-      entry.title.includes(value)
-  );
-    setStudyData(filteredData)
-  } 
-}
+const handleSearch = (selectedKeys, confirm, dataIndex) => {
+  confirm();
+  setSearch({
+    searchText: selectedKeys[0],
+    searchedColumn: dataIndex,
+  });
+};
+
+const handleReset = clearFilters => {
+  clearFilters();
+  setSearch({...search, searchText: '' });
+};
+let searchInput = ''
+
+const getColumnSearchProps = dataIndex => ({
+  filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    <div style={{ padding: 8 }}>
+      <Input
+        ref={node => {
+          searchInput = node;
+        }}
+        placeholder={`Search ${dataIndex}`}
+        value={selectedKeys[0]}
+        onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+        onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+        style={{ marginBottom: 8, display: 'block' }}
+        id='searchInput'
+      />
+      <Space>
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Search
+        </Button>
+        <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          Reset
+        </Button>
+        <Button
+          type="link"
+          size="small"
+          onClick={() => {
+            confirm({ closeDropdown: false });
+            setSearch({
+              searchText: selectedKeys[0],
+              searchedColumn: dataIndex,
+            });
+          }}
+        >
+          Filter
+        </Button>
+      </Space>
+    </div>
+  ),
+  filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+  onFilter: (value, record) =>
+    record[dataIndex]
+      ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+      : '',
+ 
+  render: text =>
+    search.searchedColumn === dataIndex ? (
+      <Highlighter
+        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+        searchWords={[search.searchText]}
+        autoEscape
+        textToHighlight={text ? text.toString() : ''}
+      />
+    ) : (
+      text
+    ),
+});
+
+
 
   const columns = [
     {
@@ -105,6 +164,7 @@ const onSearch = value =>{
       dataIndex: 'title',
       key: 'title',
       width: '25%',
+      ...getColumnSearchProps('title'),
       ellipsis: true
     },
     {
@@ -166,17 +226,6 @@ return (
   <div>
         {studyData[0]==="spinme" ?  <Spin className="spinner" /> : 
         <div > 
-          <div style={{width: '200px', float: 'right', margin: '0 5px 5px 0'}}>
-          <Input.Search placeholder="Search Title" value={value}
-              onChange={e => {
-                const currValue = e.target.value;
-                setValue(currValue);
-                onSearch(currValue)
-              }}
-              onSearch={onSearch}
-              allowClear
-            />
-          </div>
           <Table size="small" scroll={{ x: 1500, y: 1000 }} style={{margin: '15px'}} dataSource={studyData} columns={columns} ></Table>
         </div>
          }

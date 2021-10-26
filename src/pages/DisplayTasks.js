@@ -1,5 +1,5 @@
 import React, { useState} from 'react'
-import {Button, Collapse, Form, Empty, Popconfirm, Input, Table, Tag, Modal, Upload } from 'antd'
+import {Button, Collapse, Form, Empty, Popconfirm, Input, Table, Tag, Modal, Upload, Space } from 'antd'
 import { onGetAllTask,  onUpdateTaskUser } from '../services/taskAPI';
 import { useSelector} from 'react-redux';
 import moment from 'moment';
@@ -225,8 +225,8 @@ return (
                             </Popconfirm>
                         </div> : 
                         <Button disabled={true} style={{background: '#A0BF85', borderRadius: '50px'}}>{taskModal.status[0]}</Button>}>
-                    <div>
-                    <div style={{display: 'flex', gap: '5px'}}>
+                    <Space direction='vertical'>
+                    <div >
                             <label style={{fontWeight:'bolder'}}>Task Title:</label>
                             <p>{taskModal.taskTitle}</p>
                         </div>
@@ -238,27 +238,31 @@ return (
                             <label style={{fontWeight:'bolder'}}>Means of Verification:</label>
                             <p>{taskModal.verification}</p>
                         </div>
-                        <div style={{display: 'grid', margin: '0px'}}>
-                        <div className="task-display">
-                            <label style={{fontWeight:'bold'}}>Date Created:</label>
-                            <p>{taskModal.dateCreated}</p>
-                        </div>
-                        <div className="task-display">
-                            <label style={{fontWeight:'bold'}}>Last Updated:</label>
-                            <p>{taskModal.lastUpdated}</p>
-                        </div>
-                        <div className="task-display">
-                            <label style={{fontWeight:'bold'}}>Deadline:</label>
-                            <p>{taskModal.deadline}</p>
-                        </div>
-                        <div className="task-display">
-                            <label style={{fontWeight:'bold'}}>Assignee:</label>
-                            <p>{taskModal.assignee}</p>
-                        </div>
-                        <div className="task-display">
-                            <label style={{fontWeight:'bold'}}>Adviser:</label>
-                            <p>{taskModal.createdBy}</p>
-                        </div>
+                        <div >
+                        <Space>
+                            <div >
+                                <label style={{fontWeight:'bold'}}>Date Created:</label>
+                                <p>{taskModal.dateCreated}</p>
+                            </div>
+                            <div >
+                                <label style={{fontWeight:'bold'}}>Last Updated:</label>
+                                <p>{taskModal.lastUpdated}</p>
+                            </div>
+                            <div >
+                                <label style={{fontWeight:'bold'}}>Deadline:</label>
+                                <p>{taskModal.deadline}</p>
+                            </div>
+                        </Space>
+                       
+                            <div >
+                                <label style={{fontWeight:'bold'}}>Assignee:</label>
+                                <p>{taskModal.assignee}</p>
+                            </div>
+                            <div >
+                                <label style={{fontWeight:'bold'}}>Adviser:</label>
+                                <p>{taskModal.createdBy}</p>
+                            </div>
+            
                         <div>
                             <label style={{fontWeight:'bold'}}>Task File:</label>
                             <Button type='link' onClick={() => setVisible(true)}>Add File</Button>
@@ -271,7 +275,7 @@ return (
                             <AddComment data={data}/>
                         </div>
                         </div>
-                    </div> 
+                    </Space> 
                 </Modal>
                 <Modal bodyStyle={{overflowY: 'scroll', height: '100%'}} title='Upload Gallery Image' visible={visible} onCancel={() => setVisible(false)} centered footer={null}>
                     <Form onFinish={upload} initialValues={initialValues} form={form}>

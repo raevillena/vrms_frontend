@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Layout,Button, Table,Progress, Tag, Spin, Input } from 'antd'
+import { Layout,Button, Table,Progress, Tag, Spin, Input, Space } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import Sidebar from '../components/components/Sidebar'
@@ -10,6 +10,9 @@ import moment from 'moment';
 import MobileHeader from '../components/components/MobileHeader';
 import Project from './Project';
 import DirectorDash from './DirectorDash';
+import Highlighter from 'react-highlight-words';
+import {SearchOutlined} from '@ant-design/icons'
+
 
 
 const { Header, Content, Sider } = Layout;
@@ -21,8 +24,8 @@ const Userdash = () => {
   let userObj = useSelector(state => state.user)
   const [studyData, setStudyData]= useState()
   const [loading, setLoading] = useState(true)
-  const [value, setValue] = useState('');
-  const [searchData, setSearchData] = useState([])
+  const [search, setSearch] = useState({searchText: '', searchedColumn:''})
+ 
   
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken")
@@ -48,7 +51,6 @@ const Userdash = () => {
         });
       }
       setStudyData(tempStudyData)
-      setSearchData(tempStudyData)
       setLoading(false) 
     }
     if(accessToken === null || refreshToken === null || userObj.USER === ""){
@@ -58,16 +60,81 @@ const Userdash = () => {
     }
 }, [])
 
-const onSearch = value =>{
-  if(value === ''){
-    setStudyData(searchData)
-  }else{
-    const filteredData = studyData.filter(entry =>
-      entry.title.includes(value)
-  );
-    setStudyData(filteredData)
-  } 
-}
+const handleSearch = (selectedKeys, confirm, dataIndex) => {
+  confirm();
+  setSearch({
+    searchText: selectedKeys[0],
+    searchedColumn: dataIndex,
+  });
+};
+
+const handleReset = clearFilters => {
+  clearFilters();
+  setSearch({...search, searchText: '' });
+};
+let searchInput = ''
+
+const getColumnSearchProps = dataIndex => ({
+  filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    <div style={{ padding: 8 }}>
+      <Input
+        ref={node => {
+          searchInput = node;
+        }}
+        placeholder={`Search ${dataIndex}`}
+        value={selectedKeys[0]}
+        onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+        onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+        style={{ marginBottom: 8, display: 'block' }}
+        id='searchInput'
+      />
+      <Space>
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Search
+        </Button>
+        <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          Reset
+        </Button>
+        <Button
+          type="link"
+          size="small"
+          onClick={() => {
+            confirm({ closeDropdown: false });
+            setSearch({
+              searchText: selectedKeys[0],
+              searchedColumn: dataIndex,
+            });
+          }}
+        >
+          Filter
+        </Button>
+      </Space>
+    </div>
+  ),
+  filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+  onFilter: (value, record) =>
+    record[dataIndex]
+      ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+      : '',
+ 
+  render: text =>
+    search.searchedColumn === dataIndex ? (
+      <Highlighter
+        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+        searchWords={[search.searchText]}
+        autoEscape
+        textToHighlight={text ? text.toString() : ''}
+      />
+    ) : (
+      text
+    ),
+});
 
   const columns = [
     {
@@ -97,6 +164,7 @@ const onSearch = value =>{
       key: 'title',
       width: '25%',
       ellipsis: true,
+      ...getColumnSearchProps('title')
     },
     {
       title: 'Progress',
@@ -164,17 +232,6 @@ return (
       <Content style={{height: '100%', width: '100%', background:'#f2f2f2' }} >          
           {loading ?  <Spin className="spinner" /> : 
            <div > 
-           <div style={{width: '200px', float: 'right', margin: '0 5px 5px 0'}}>
-           <Input.Search placeholder="Search Title" value={value}
-               onChange={e => {
-                 const currValue = e.target.value;
-                 setValue(currValue);
-                 onSearch(currValue)
-               }}
-               onSearch={onSearch}
-               allowClear
-             />
-           </div>
             <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> 
           </div>
           }

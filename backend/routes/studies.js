@@ -618,4 +618,15 @@ router.post('/updateStudy', auth, async(req, res) => {
     }
 })
 
+
+router.get("/getAllStudy", async(req,res) => {
+    try {
+       Studies.find({active: true}, function(err, studies) {
+        res.send(studies);  
+      });
+    } catch (error) {
+      logger.log('error', 'Get all project error!')  
+    }
+  })
+
 module.exports = router
