@@ -80,8 +80,8 @@ const EditDataGrid = (props) => {
   const runTimer = () => {
     timer = window.setTimeout(
       () => {
-        //document.getElementById('save').click()
-        updateDB(dataToSend, props.data.id.tableID ,userObj.USER.name)
+        document.getElementById('save').click()
+       // updateDB(dataToSend, props.data.id.tableID ,userObj.USER.name)
       }, 5000);
   }
 
@@ -89,6 +89,7 @@ const EditDataGrid = (props) => {
   function update(){
     window.clearTimeout(timer)
     updateDB(dataToSend, props.data.id.tableID ,userObj.USER.name)
+    props.func({'data': dataToSend, 'id':props.data.id.tableID});
     window.clearTimeout(timer)
   }
 
@@ -176,6 +177,7 @@ const EditDataGrid = (props) => {
       async function getEditData(){ //edit data
         let resultDB =  await onEditDatagrid(props.data.id)
         let result = resultDB.data
+        console.log(result)
         let tempCols=[]
         try{
           for(let j = 0; j < result[0].columns.length ; j++) {
@@ -402,7 +404,6 @@ const EditDataGrid = (props) => {
   const handleReplace = () =>{
       if(col.newCol === ''){
         notif('error', 'New column anme is empty!')
-        console.log('data', datagridData[0])
       }else{
         let arr = []
 

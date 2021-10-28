@@ -308,4 +308,53 @@ router.get('/getManagerFile/:id', auth, async(req, res) => {
         logger.log('error', 'Error: /getManagerFile')
     }
 })
+
+router.get('/getTaskProductivity', auth, async(req, res) => {
+    try {
+        Tasks.find({'active': true}, function(err, tasks){
+            if(err){
+                logger.log('error', 'Error: /getFileList')
+            }else{
+                res.status(201).json({
+                    tasks
+                })  
+            }
+        }) 
+    } catch (error) {
+        logger.log('error', 'Error: /getManagerFile')
+    }
+})
+
+router.get('/getUserTaskProductivity/:assignee', auth, async(req, res) => {
+    try {
+        Tasks.find({'active': true, 'assignee': req.params.assignee}, function(err, tasks){
+            if(err){
+                logger.log('error', 'Error: /getUserTaskProductivity')
+            }else{
+                res.status(201).json({
+                    tasks
+                })  
+            }
+        }) 
+    } catch (error) {
+        logger.log('error', 'Error: /getUserTaskProductivity')
+    }
+})
+
+//get all assigned task for user
+router.get('/getAllTaskMonitoring/:assignee', auth, async(req, res) => {
+    try {
+        Tasks.find({'active': true, 'assignee': req.params.assignee}, function(err, tasks){
+            if(err){
+                logger.log('error', 'Error: /getAllTaskMonitoring')
+            }else{
+                res.status(201).json({
+                    tasks
+                })  
+            }
+        }) 
+    } catch (error) {
+        logger.log('error', 'Error: /getAllTaskMonitoring')
+    }
+})
 module.exports = router

@@ -9,3 +9,41 @@
 2021-10-25T07:54:29.463Z [info]: server started at port: 3001
 2021-10-25T07:57:05.501Z [info]: server started at port: 3001
 2021-10-25T08:04:06.431Z [info]: server started at port: 3001
+2021-10-26T06:27:56.622Z [info]: server started at port: 3001
+2021-10-26T06:29:22.689Z [info]: server started at port: 3001
+2021-10-26T06:29:44.310Z [info]: server started at port: 3001
+2021-10-26T06:30:38.178Z [info]: server started at port: 3001
+2021-10-26T06:32:03.106Z [info]: server started at port: 3001
+2021-10-26T06:48:31.950Z [info]: server started at port: 3001
+2021-10-26T12:22:51.028Z [error]: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://docs.atlas.mongodb.com/security-whitelist/
+2021-10-26T12:25:26.052Z [info]: server started at port: 3001
+2021-10-26T12:28:06.359Z [info]: server started at port: 3001
+2021-10-27T02:05:58.129Z [info]: server started at port: 3001
+2021-10-27T02:32:00.881Z [info]: server started at port: 3001
+2021-10-27T02:45:40.358Z [info]: server started at port: 3001
+2021-10-27T02:49:55.451Z [info]: server started at port: 3001
+2021-10-27T02:50:06.235Z [error]: Error: /getUserTaskProductivity
+2021-10-27T02:50:19.158Z [error]: Error: /getUserTaskProductivity
+2021-10-27T02:52:25.083Z [info]: server started at port: 3001
+2021-10-27T02:55:13.350Z [info]: server started at port: 3001
+2021-10-27T02:55:38.189Z [info]: server started at port: 3001
+2021-10-27T06:01:04.958Z [info]: server started at port: 3001
+2021-10-27T12:36:58.354Z [error]: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://docs.atlas.mongodb.com/security-whitelist/
+2021-10-28T01:41:33.292Z [info]: server started at port: 3001
+2021-10-28T01:47:49.150Z [info]: server started at port: 3001
+2021-10-28T01:55:12.046Z [info]: server started at port: 3001
+2021-10-28T01:55:20.990Z [info]: server started at port: 3001
+2021-10-28T01:56:25.845Z [info]: server started at port: 3001
+2021-10-28T02:15:33.462Z [info]: server started at port: 3001
+2021-10-28T02:15:45.025Z [info]: server started at port: 3001
+2021-10-28T05:13:57.083Z [info]: server started at port: 3001
+2021-10-28T05:50:07.714Z [info]: server started at port: 3001
+2021-10-28T06:24:10.880Z [info]: server started at port: 3001
+2021-10-28T07:22:03.440Z [info]: server started at port: 3001
+2021-10-28T07:25:35.035Z [info]: server started at port: 3001
+2021-10-28T07:28:28.720Z [info]: server started at port: 3001
+2021-10-28T12:44:06.061Z [info]: server started at port: 3001
+2021-10-28T12:59:15.502Z [info]: server started at port: 3001
+2021-10-28T13:01:02.565Z [info]: server started at port: 3001
+2021-10-28T13:01:53.589Z [info]: server started at port: 3001
+2021-10-28T14:13:43.830Z [info]: server started at port: 3001

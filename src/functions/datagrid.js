@@ -89,7 +89,8 @@ export async function downloadCSVonCreate(data, title){
   }
 
   export async function updateDB(data, id, user){
-    let result = await onUpdateDatagrid(data)
+    let result = await onUpdateDatagrid({'data': data, 'id': id})
+    console.log(result)
     notif('success', result.data.message)
     await onEditLog({user: user , id})
   }

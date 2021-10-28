@@ -126,3 +126,11 @@ export const tokenConfig = () => {
     }
     return config
 }
+
+export async function onGetAllProjectIP(body) {
+    try {
+        return axios.get(`/v1/project/getAllProjectForIndividualPerformance/${body}`, tokenConfig())
+    } catch (error) {
+        console.log('error', error)
+    }
+}

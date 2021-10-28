@@ -12,7 +12,6 @@ export async function onStudyCreate(body) {
 }
 
 export async function onGetStudyForUser(body) {
-
     try {
         return axios.get(`/v1/studies/getStudyForUser/${body._id}`, tokenConfig())
     } catch (error) {
@@ -281,6 +280,14 @@ export async function onUpdateStudy(body) {
 export async function onGetAllStudy() {
     try {
         return axios.get(`/v1/studies/getAllStudy`, tokenConfig())
+    } catch (error) {
+        console.log('error', error)
+    }
+}
+
+export async function onGetAllCreatedTable(body) {
+    try {
+        return axios.get(`/v1/studies/getAllCreatedTable/${body}`, tokenConfig())
     } catch (error) {
         console.log('error', error)
     }

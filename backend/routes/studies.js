@@ -91,7 +91,7 @@ router.post('/createstudy', auth, async(req, res) => {
 //finding assigned study for each user
 router.get('/getStudyForUser/:assignee', auth , async(req, res) => {
     try {
-    await Studies.find({"assignee": req.params.assignee}, function(err, studies) {
+    await Studies.find({"assignee": req.params.assignee, 'active': true}, function(err, studies) {
             if(err){
                 logger.log('error', error)
             } else{
@@ -396,15 +396,16 @@ router.post('/deleteDataGrid', auth, async(req, res) => {
 //update datagrid/table
 router.post('/updateDataGrid', auth, async(req, res) => {
     try {
-      await  Datagrid.updateOne({title: req.body.title, studyID: req.body.studyID, active:true}, {data: req.body.data, title: req.body.title, description: req.body.description, columns: req.body.columns, dateUpdated: Date.now(), updatedBy: req.body.user}, async(err) =>{
+      await  Datagrid.findOneAndUpdate({'tableID': req.body.id, active:true}, {'data': req.body.data.data, 'title': req.body.data.title, 'description': req.body.data.description, 'columns': req.body.data.columns, 'dateUpdated': Date.now(), 'updatedBy': req.body.data.user}, async(err, edit) =>{
             if (err) {
                 logger.log('error', 'Error: /updateDatagrid')
             }else{
-              await  Studies.findOneAndUpdate({studyID: req.body.studyID}, {dateUpdated: Date.now(), updatedBy: req.body.user}, (err, study) =>{
+              await  Studies.findOneAndUpdate({'studyID': req.body.studyID}, {'dateUpdated': Date.now(), 'updatedBy': req.body.user}, (err, study) =>{
                     if(err){
                         logger.log('error', 'Error: /updateDatagrid')
+                    }else{
+                        res.send({message: "Data updated!", edit})
                     }
-                    res.send({message: "Data updated!"})
                 })
             }
           })
@@ -629,4 +630,13 @@ router.get("/getAllStudy", async(req,res) => {
     }
   })
 
+  router.get("/getAllCreatedTable/:user", async(req,res) => {
+    try {
+       Datagrid.find({'active': true, 'createdBy':  req.params.user }, function(err, table) {
+        res.send(table);  
+      });
+    } catch (error) {
+      logger.log('error', 'Get all project error!')  
+    }
+  })
 module.exports = router

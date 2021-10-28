@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { Layout, Row, Col, Card, Typography, Table, Button, Tag, Input, Space } from 'antd'
+import { Layout, Row, Col, Card, Table, Button, Tag, Input, Space, Modal } from 'antd'
 import Sidebar from '../components/components/DirectorSidebar'
 import Headers from '../components/components/HeaderManager'
 import MobileHeader from '../components/components/MobileHeader';
@@ -10,16 +10,22 @@ import { onGetAllStudy } from '../services/studyAPI';
 import { onGetAllUser } from '../services/userAPI';
 import Productivity from './Productivity'
 import Highlighter from 'react-highlight-words';
+import IndividualPerformance from './IndividualPerformance'
+import { useDispatch, useSelector } from 'react-redux';
 
 
 const { Header, Content, Sider } = Layout;
 const { Meta } = Card
-const {Title} = Typography
 
 const DirectorMonitor = () => {
+  const dispatch = useDispatch()
+ 
+
    const [state, setstate] = useState({'programs': '', 'project': '', 'study': '', 'user': ''})
    const [data, setData] = useState()
    const [search, setSearch] = useState({searchText: '', searchedColumn:''})
+   const [loading, setLoading] = useState(true)
+   const [isModalVisible, setIsModalVisible] = useState(false);
 
     useEffect(() => {
         async function getProgram(){
@@ -38,11 +44,17 @@ const DirectorMonitor = () => {
                 })
             }
             setData(tempUser)
-            console.log(user)
             setstate({...state, programs: program.data.length, project: project.data.length, study: study.data.length, user: user.data.length})
+            setLoading(false)
         }
         getProgram()
     }, [])
+        const showModal = () => {
+          setIsModalVisible(true)
+        }
+      const handleCancel = () => {
+        setIsModalVisible(false);
+      };
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -120,7 +132,7 @@ const DirectorMonitor = () => {
           ),
       });
     
-    
+
 
     const columns = [
         {
@@ -163,7 +175,16 @@ const DirectorMonitor = () => {
             key: 'action',
             fixed: 'right',
             width: '15%',
-            render: (text, record, index) => <Button type='link'>View</Button>
+            render: (text, record, index) => 
+            <Button type='link' onClick={ () => {
+                  dispatch({
+                    type: "SET_MONITOR",
+                    value: record
+                })
+                showModal()
+            }}>
+                View
+            </Button>
           },
       ];
 
@@ -182,42 +203,50 @@ const DirectorMonitor = () => {
                 </div>
                 <Content style={{height: '100%', width: '100%', background:'#f2f2f2' }} > 
                     <Row justify="space-around">
-                        <Col span={22}><Title level={3}>Yearly Productivity</Title></Col>
                         <Col  span={23}>
-                            <Card style={{borderRadius:'10px'}} hoverable >
+                            <Card style={{borderRadius:'10px'}} hoverable loading={loading} title='Year Productivity'>
                                 <Productivity/>
                             </Card>
                         </Col>   
                     </Row>      
                     <Row justify="space-around">
-                        <Col className="gutter-row" span={4}>
-                            <Card style={{ width: 300, borderRadius: '10px', background: '#7CAD4F', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable >
+                        <Col span={5}>
+                            <Card style={{borderRadius: '10px', background: '#7CAD4F', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading}>
                                 <Meta style={{color: '#FFFFFF'}} title={state.programs} description='Total Programs' avatar={<FileTextFilled style={{fontSize: '45px'}}/>}/>
                             </Card>
                         </Col>
-                        <Col className="gutter-row" span={4}>
-                            <Card style={{width: 300,borderRadius: '10px', background: '#A0BF85', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable>
+                        <Col span={5}>
+                            <Card style={{borderRadius: '10px', background: '#A0BF85', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading}>
                                 <Meta style={{color: '#FFFFFF'}} title={state.project} description='Total Projects' avatar={<ProjectFilled style={{fontSize: '45px'}}/>}/>
                             </Card>
                         </Col>
-                        <Col className="gutter-row" span={4}>
-                            <Card style={{width: 300, borderRadius: '10px', background: '#8EAA75', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable >
+                        <Col span={5}>
+                            <Card style={{borderRadius: '10px', background: '#8EAA75', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading}>
                                 <Meta style={{color: '#FFFFFF'}} title={state.study} description='Total Studies' avatar={<FileFilled style={{fontSize: '45px'}}/>}/>
                             </Card>
                         </Col>
-                        <Col className="gutter-row" span={4}>
-                            <Card style={{width: 300, borderRadius: '10px', background: '#8BBE5E', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable >
+                        <Col span={5}>
+                            <Card style={{borderRadius: '10px', background: '#8BBE5E', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading}>
                                 <Meta style={{color: '#FFFFFF'}} title={state.user} description='Total Researchers' avatar={<UserOutlined style={{fontSize: '45px'}}/>}/>
                             </Card>
                         </Col>
                     </Row>
                     <Row justify='space-around'>
                         <Col span={23}>
-                            <Card style={{borderRadius:'10px', marginTop: 16}} hoverable>
+                            <Card style={{borderRadius:'10px', marginTop: 16}} hoverable loading={loading}>
                                 <Table dataSource={data} size='small' columns={columns} />
                             </Card>
                         </Col>
                     </Row>
+                    {isModalVisible === true ? <Modal title="Individual Performance" visible={true} footer={null} onCancel={handleCancel} width={1000}>
+                      <Row justify="space-around">
+                          <Col  span={23}>
+                             
+                                  <IndividualPerformance/>
+                             
+                          </Col>   
+                      </Row>
+                    </Modal>: null}
                 </Content> 
                 </Layout>      
             </Layout>

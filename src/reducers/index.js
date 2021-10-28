@@ -8,6 +8,7 @@ import studyReducer from './studyReducer'
 import projectReducer from './projectReducer'
 import undoReducer from './undoReducers'
 import redoReducer from './redoReducer'
+import monitorReducer from './monitorReducer'
 
 
 
@@ -19,7 +20,8 @@ const rootReducer = combineReducers({
     study: studyReducer,
     project: projectReducer,
     undo : undoReducer,
-    redo: redoReducer
+    redo: redoReducer,
+    monitor: monitorReducer,
 })
 
 export default  rootReducer

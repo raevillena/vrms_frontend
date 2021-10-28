@@ -122,3 +122,33 @@ export async function onGetManagerCSV(body) {
         }
     }
 }
+
+export async function onGetTaskProductivity() {
+    try {
+        return axios.get(`/v1/tasks/getTaskProductivity`, tokenConfig());
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onGetUserTaskProductivity(body) {
+    try {
+        return axios.get(`/v1/tasks/getUserTaskProductivity/${body}`, tokenConfig());
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onGetAllTaskMonitoring(body) {
+    try {
+        return axios.get(`/v1/tasks/getAllTaskMonitoring/${body}`, tokenConfig());
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}

@@ -200,4 +200,25 @@ router.route('/createprogram').post(async (req, res) => {
     }
   })
 
+  router.get("/getallprogramsdashoard", async(req,res) => {
+    try {
+       Program.find({active: true}, function(err, programs) {
+        res.send(programs);  
+      });
+    } catch (error) {
+      logger.log('error', 'Get all project error!')  
+    }
+  }
+  )
+//on get all assigned project in user
+  router.get("/getAllProjectForIndividualPerformance/:assignee", async(req,res) => {
+    try {
+       Project.find({'active': true, 'assignee': req.params.assignee}, function(err, projects) {
+        res.send(projects);  
+      });
+    } catch (error) {
+      logger.log('error', 'Get all project error!')  
+    }
+  })
+
  module.exports = router

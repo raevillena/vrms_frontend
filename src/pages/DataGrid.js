@@ -217,8 +217,8 @@ const DataGrid = () => {
         title: 'Checkbox',
         type: 'Checkbox'
       }]})
-      setData([])
       notif('success', result.data.message)
+      setData([])
     }else{
      notif('error', result.data.message)
     }

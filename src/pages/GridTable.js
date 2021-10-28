@@ -443,14 +443,21 @@ const handleCancelView = () => {
         },
       ];
 
+      const new_data = (data) => {
+        let objIndex = finaldata.findIndex((obj => obj.tableID === data.id));
+        finaldata[objIndex].title = data.data.title
+        finaldata[objIndex].description = data.data.description
+        finaldata[objIndex].dateUpdated = moment(Date.now()).format('MM-DD-YYYY')
+      }
+
     return (
         <div>
             {loading ?  <div className="spinner"><Spin /> </div> : <div> 
             <Table scroll={{ x: 1000, y: 500 }} columns={columns} dataSource={finaldata} /> 
             </div>
            }
-            <Modal visible={isEditModalVisible} footer={null} onCancel={handleCancelEdit} width={1500} title="Edit Table">
-                <EditDatagrid data={editData}/>
+             <Modal visible={isEditModalVisible} footer={null} onCancel={handleCancelEdit} width={1500} title="Edit Table">
+                <EditDatagrid data={editData} func={new_data}/>
             </Modal>
 
             <Modal visible={isViewModalVisible} footer={null} onCancel={handleCancelView} width={1500} title="View Table">

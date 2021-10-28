@@ -1,62 +1,61 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Line } from '@ant-design/charts';
+import { onGetTaskProductivity } from '../services/taskAPI';
+import _ from 'lodash'
+import moment from 'moment';
 
-export const Productivity = () => {
-  const data = [
-    {
-      month: 'January',
-      value: 50,
-    },
-    {
-      month: 'February',
-      value: 50,
-    },
-    {
-      month: 'March',
-      value: 95,
-    },
-    {
-      month: 'April',
-      value: 55,
-    },
-    {
-      month: 'May',
-      value: 40,
-    },
-    {
-      month: 'June',
-      value: 76,
-    },
-    {
-      month: 'July',
-      value: 68,
-    },
-    {
-      month: 'August',
-      value: 80,
-    },
-    {
-      month: 'September',
-      value: 50,
-    },
-    {
-      month: 'October',
-      value: 70,
-    },
-    {
-      month: 'November',
-      value: 75,
-    },
-    {
-      month: 'December',
-      value: 84,
-    },
-  ];
+ const Productivity = () => {
+    const [data, setData] = useState([
+        { month: 'January', value: 0 },
+        { month: 'February', value: 0},
+        { month: 'March', value: 0 },
+        { month: 'April', value: 0 },
+        { month: 'May', value: 0 },
+        { month: 'June', value: 0 },
+        { month: 'July', value: 0 },
+        { month: 'August', value: 0 },
+        { month: 'September', value: 0 },
+        { month: 'October', value: 0 },
+        { month: 'November', value: 0 },
+        { month: 'December', value: 0 },
+    ])
+    useEffect(() => {
+       try {
+            async function getData(){
+                let res = await  onGetTaskProductivity()
+                let arr = res.data.tasks
+                const monthName = item => moment(item.deadline, 'YYYY-MM-DD').format('MM');
+                const result = _.groupBy(arr, monthName);
+                let tempArray =[]
+            
+                for (let i = 1; i < 13; i++) {
+                 if(result[i] === undefined || result[i] === null){
+                     tempArray.push({
+                         month: moment(i, 'MM').format('MMMM'),
+                         value: 0
+                     }) 
+                 } else{
+                     let completed = _.filter(result[i], {status: 'COMPLETED'});
+                     let denominator = result[i].length
+                     let percentage = completed.length/denominator
+                     tempArray.push({
+                         month: moment(i, 'MM').format('MMMM'),
+                         value: percentage*100
+                     }) 
+                 }
+                }
+                setData(tempArray)
+             }
+             getData()  
+        } catch (error) {
+            alert(error)
+        }
+        
+    }, [])
 
   const config = {
     data,
     height: 200,
-    label: 'Productivity',
     yField: 'value',
     xField: 'month',
     tooltip: {
