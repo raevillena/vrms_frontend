@@ -1,8 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { Layout, Row, Col, Card, Table, Button, Tag, Input, Space, Modal } from 'antd'
-import Sidebar from '../components/components/DirectorSidebar'
-import Headers from '../components/components/HeaderManager'
-import MobileHeader from '../components/components/MobileHeader';
+import { Row, Col, Card, Table, Button, Tag, Input, Space, Modal } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { FileTextFilled, ProjectFilled, FileFilled, UserOutlined, SearchOutlined} from '@ant-design/icons';
 import { onGetProgramforManager, onGetAllProjectMonitor } from '../services/projectAPI';
@@ -13,9 +10,10 @@ import Highlighter from 'react-highlight-words';
 import IndividualPerformance from './IndividualPerformance'
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash'
+import Layout1 from '../components/components/Layout1';
 
 
-const { Header, Content, Sider } = Layout;
+
 const { Meta } = Card
 
 const ManagerMonitor = () => {
@@ -193,18 +191,7 @@ const ManagerMonitor = () => {
 
     return (
         <div>
-            <Layout style={{height: '100%', minHeight: '150vh'}} > 
-                <Sider  className="sidebar" >
-                    <Sidebar/>
-                </Sider>
-                <Layout >
-                <Header className="header">
-                    <Headers/>
-                </Header>
-                <div className="mobile-header">
-                    <MobileHeader/>
-                </div>
-                <Content style={{height: '100%', width: '100%', background:'#f2f2f2' }} > 
+          <Layout1>
                   <Row justify="space-around">
                         <Col  span={23}>
                             <Card style={{borderRadius:'10px'}} hoverable loading={loading} title='Created Task Productivity'>
@@ -248,9 +235,7 @@ const ManagerMonitor = () => {
                           </Col>   
                       </Row>
                     </Modal>: null}
-                </Content> 
-                </Layout>      
-            </Layout>
+          </Layout1>
         </div>
     )
 }

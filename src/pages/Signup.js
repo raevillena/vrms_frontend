@@ -32,9 +32,9 @@ const Signup = () => {
     }
 
     return (
-        <div style={{background: '#f2f2f2', height: "100vh"}}>
-            <Row justify="center">
-                <Form style={{marginTop: "10%"}} initialValues={initialValues} form={form}>
+        <div>
+            <Row>
+                <Form initialValues={initialValues} form={form}>
                 <h1 style={{fontFamily: "Montserrat", fontWeight: "bolder"}}>Create User</h1>
                     <Form.Item name="Name" label="Name"
                     rules={[

@@ -7,7 +7,6 @@ import StudyDash from '@pages/StudyDash';
 import PrivateRoute from '@routes/privateRoute';
 import PublicRoute from '@routes/publicRoute';
 import Account from '@pages/Account'
-import Signup from '@pages/Signup';
 import ForgotPassword from '@pages/Forgotpassword';
 import ResetPassword from '@pages/NewPassword'
 import { onRenewToken } from '@/services/authAPI';
@@ -107,7 +106,6 @@ function App() {
       <PublicRoute path="/login" exact component={Login} auth={authObj} />
       <PublicRoute path="/forgotpassword" exact component={ForgotPassword} auth={authObj}/>
       <PublicRoute path="/reset-password/" exact component={ResetPassword} auth={authObj}/>
-      <PublicRoute path="/secretcreateuser" exact component={Signup} auth={authObj}  />
       <PrivateRoute path="/" exact component={Userdash} auth={authObj} />
       <PrivateRoute path="/monitor" exact component={DirectorMonitor} auth={authObj} />
       <PrivateRoute path="/studies" exact component={ManagerStudyDash} auth={authObj} />

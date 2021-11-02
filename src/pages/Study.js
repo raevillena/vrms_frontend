@@ -1,17 +1,14 @@
-import { Input, Button, Form, DatePicker, Space, Select, notification, Layout, Modal, Tooltip} from 'antd';
+import { Input, Button, Form, DatePicker, Space, Select, notification, Modal, Tooltip} from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import { onStudyCreate } from '../services/studyAPI';
 import { onGetAllUsers } from '../services/userAPI';
 import { useSelector } from 'react-redux';
 import ManagerStudyDash from './ManagerStudyDash';
-import MobileHeader from '../components/components/ManagerHeaderMobile';
-import Sidebar from '../components/components/ManagerSidebar'
-import DirectorSidebar from '../components/components/DirectorSidebar';
-import Headers from '../components/components/Header'
 import '../styles/CSS/Userdash.css'
+import Layout1 from '../components/components/Layout1';
 
-const { Header, Content, Sider } = Layout;
+
 const { TextArea } = Input;
 
 const formItemLayout = {
@@ -119,19 +116,8 @@ const Study = () => {
 
     
     return (
-        <div>
-            <Layout style={{height: '100%', minHeight: '100vh'}} > 
-                <Sider  className="sidebar" >
-                {userObj.USER.category === "manager"? <Sidebar/> : <DirectorSidebar/>}
-                </Sider>
-            <Layout >
-            <Header className="header" style={{ padding: 0, background:'#f2f2f2' }} >
-                <Headers/>
-            </Header>
-            <div className="mobile-header">
-                <MobileHeader/>
-            </div>
-             <Content style={{  width: '100%', height: '100vh', background: '#f2f2f2' }} >
+        <div> 
+            <Layout1> 
                 <h3 style={{marginTop: '10px', marginLeft: '25px', fontFamily: 'initial'}}>{projectObj.PROJECT.projectName}</h3>          
                 <ManagerStudyDash data={forProps}/> 
                 <Tooltip placement="top" title="Add Study">
@@ -252,10 +238,7 @@ const Study = () => {
                             <Button htmlType='submit' block style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE STUDY</Button>
                         </Form>
                     </Modal>
-            </Content> 
-            </Layout>      
-            </Layout>
-            
+            </Layout1> 
         </div>
     )
 }

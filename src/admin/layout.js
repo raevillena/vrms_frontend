@@ -41,7 +41,7 @@ const LayoutComponent = ({children}) => {
             <Header className="header">
             <div className="logo" />
             <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-                <Menu.Item key="/" onClick={click}>Dashboard</Menu.Item>
+                <Menu.Item key="/" onClick={click}>Create User</Menu.Item>
                 <Menu.Item key="/admin/users" onClick={click}>Users</Menu.Item>
                 <Menu.Item key="/admin/programs" onClick={click}>Programs</Menu.Item>
                 <Menu.Item key="/admin/projects" onClick={click}>Projects</Menu.Item>

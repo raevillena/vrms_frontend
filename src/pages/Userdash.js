@@ -1,22 +1,16 @@
 import React, {useState, useEffect} from 'react';
-import { Layout,Button, Table,Progress, Tag, Spin, Input, Space } from 'antd'
+import { Button, Table,Progress, Tag, Spin, Input, Space } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
-import Sidebar from '../components/components/Sidebar'
-import Headers from '../components/components/Header'
 import { useSelector, useDispatch } from 'react-redux';
 import { onGetStudyForUser } from '../services/studyAPI';
 import moment from 'moment';
-import MobileHeader from '../components/components/MobileHeader';
 import Project from './Project';
 import DirectorDash from './DirectorDash';
 import Highlighter from 'react-highlight-words';
 import {SearchOutlined} from '@ant-design/icons'
-import Dashboard from '../admin/dashboard'
-
-
-
-const { Header, Content, Sider } = Layout;
+import Dashboard from '../admin/layout'
+import Layout1 from '../components/components/Layout1';
 
 
 const Userdash = () => {
@@ -219,26 +213,13 @@ const getColumnSearchProps = dataIndex => ({
 return (
   <div>
     {userObj.USER.category === "user"? 
-    <Layout style={{height: '100%', minHeight: '100vh'}} > 
-        <Sider  className="sidebar" >
-            <Sidebar/>
-        </Sider>
-      <Layout >
-        <Header className="header">
-          <Headers/>
-        </Header>
-        <div className="mobile-header">
-          <MobileHeader/>
-        </div>
-      <Content style={{height: '100%', width: '100%', background:'#f2f2f2' }} >          
+        <Layout1>  
           {loading ?  <Spin className="spinner" /> : 
            <div > 
             <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> 
           </div>
           }
-        </Content> 
-      </Layout>      
-    </Layout>: userObj.USER.category === "manager" ?
+        </Layout1> : userObj.USER.category === "manager" ?
     <Project/> :  userObj.USER.category === "director" ? <DirectorDash/> : <Dashboard/>}
   </div>
     )

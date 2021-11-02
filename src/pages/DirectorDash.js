@@ -1,17 +1,14 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Table,Progress, Spin, List, Tag, Input, Layout, Space } from 'antd'
+import { Button, Table,Progress, Spin, List, Tag, Input, Space } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { onGetProjectforDirector, onGetAllPrograms } from '../services/projectAPI';
-import Sidebar from '../components/components/DirectorSidebar'
-import Headers from '../components/components/HeaderManager'
-import MobileHeader from '../components/components/MobileHeader';
 import Highlighter from 'react-highlight-words';
 import {SearchOutlined} from '@ant-design/icons';
+import Layout1 from '../components/components/Layout1';
 
-const { Header, Content, Sider } = Layout;
 
 const DirectorDash = () => {
   const dispatch = useDispatch()
@@ -263,18 +260,7 @@ const expandedRowRender = programs => {
 
     return (
       <div>
-        <Layout  style={{height: '100%', minHeight: '100vh'}} > 
-          <Sider  className="sidebar" >
-              <Sidebar/>
-          </Sider>
-        <Layout >
-        <Header className="header">
-          <Headers/>
-        </Header>
-        <div className="mobile-header">
-          <MobileHeader/>
-        </div>
-      <Content style={{height: '100%', width: '100%', background:'#f2f2f2' }} >          
+        <Layout1>         
         {projectData[0]==="spinme"?  <Spin className="spinner" /> :
             <div>  
                 <Table size="small" className="components-table-demo-nested" onExpand={(isExpanded, record) =>{
@@ -282,9 +268,7 @@ const expandedRowRender = programs => {
                 setId(isExpanded ? record.programID : undefined)}}  expandable={{ expandedRowRender }} scroll={{ x: 1200, y: 1000 }} dataSource={programData} expandedRowKeys={expandedRow} columns={programColumns} style={{margin: '15px'}}/>
             </div>
             }
-        </Content> 
-      </Layout>      
-    </Layout>
+        </Layout1> 
       </div>
     )
 }
