@@ -16,7 +16,7 @@ const AddTask = () => {
     const [form] = Form.useForm();
 
     const { Option } = Select;
-    const [task, setTask] = useState({title: "", description:"", deadline: "", assignee:'', assigneeName: '', projectName:  projectObj.PROJECT.projectID, studyName: studyObj.STUDY.studyID, user: userObj.USER.name, objective: [], verification:''})
+    const [task, setTask] = useState({title: "", description:"", deadline: "", assignee:'', assigneeName: '', projectName:  projectObj.PROJECT.projectID, studyName: studyObj.STUDY.studyID, user: userObj.USER._id, username: userObj.USER.name, objective: [], verification:''})
     const [userData, setUserData] = useState([])
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [forProps, setForProps] =useState()
@@ -106,7 +106,7 @@ const AddTask = () => {
         <div style= {{width: '100%'}}>
             <ManagerDisplayTask data={forProps}/>
             <Tooltip placement="top" title="Add Task">
-                <Button style={{background: '#A0BF85', borderRadius: '50%', float: 'right', height:'40px', marginTop: '10px'}} onClick={showModal}>+</Button>
+                <Button style={{background: '#A0BF85', borderRadius: '50%', float: 'right', height:'40px', marginTop: '10px', display: userObj.USER.category === 'manager'? 'initial': 'none'}} onClick={showModal}>+</Button>
             </Tooltip>
             <Modal title="Add Task" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                 <Form onFinish={onSubmit} form={form}  initialValues={initialValues}> 

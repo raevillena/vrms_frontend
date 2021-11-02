@@ -1,7 +1,7 @@
 import React from 'react'
 import { Menu} from 'antd'
 import logo from '../images/logo.png'
-import { BookOutlined, UserOutlined } from '@ant-design/icons';
+import { BookOutlined, UserOutlined, SearchOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 
 
@@ -15,6 +15,10 @@ const ManagerSidebar = () => {
     const account = async () => {
         history.push("/account")
       }
+      const monitor = async () => {
+        history.push("/monitor")
+      }
+
     return (
         <div>
              <img alt="" src={logo} className="logo"/>
@@ -22,7 +26,10 @@ const ManagerSidebar = () => {
           <Menu.Item key="1" icon={<BookOutlined />} className="menu1" onClick={project}>
            Project
           </Menu.Item>
-          <Menu.Item key="2" icon={<UserOutlined />} className="menu1" onClick={account}>
+          <Menu.Item key="2" icon={<SearchOutlined />} className="menu1" onClick={monitor}>
+            Monitor
+          </Menu.Item>
+          <Menu.Item key="3" icon={<UserOutlined />} className="menu1" onClick={account}>
             Account
           </Menu.Item>
           </Menu>

@@ -10,6 +10,10 @@ const ProjectSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    createdByName:{
+        type: String,
+        required: true,
+    },
     dateUpdated:{
         type: Date,
         required: true,
@@ -64,6 +68,9 @@ const ProjectSchema = new mongoose.Schema({
     },
     editedBy:{
         type: String,
+    },
+    deadline:{
+        type: Date
     }
 })
 

@@ -32,6 +32,7 @@ const ManagerDisplayTask = (props) => {
     const [fileHeaders] = useState([
         {label: 'Task Title', key: 'title'},
         {label: 'Task Desription', key: 'description'},
+        {label: 'Means of Verification', key: 'verification'},
         {label: 'Objective', key: 'objective'},
         {label: 'Assignee', key: 'assignee'},
         {label: 'Deadline', key: 'deadline'},
@@ -65,6 +66,7 @@ const ManagerDisplayTask = (props) => {
                    tempData.push({
                        title: x[i].tasksTitle,
                        description:  x[i].tasksDescription,
+                       verification:  x[i].verification,
                        status:  x[i].status,
                        objective:  x[i].objective,
                        deadline: moment( x[i].deadline).format('YYYY-MM-DD'),
@@ -90,6 +92,7 @@ const ManagerDisplayTask = (props) => {
                     key: newTask._id,
                     id: newTask._id,
                     createdBy: newTask.createdBy,
+                    createdByName: newTask.createdByName,
                     dateCreated: moment(newTask.dateCreated).format('MM-DD-YYYY'),
                     lastUpdated: moment(newTask.lastUpdated).format('MM-DD-YYYY'),
                     deadline: moment(newTask.deadline).format('MM-DD-YYYY'),
@@ -118,6 +121,7 @@ const ManagerDisplayTask = (props) => {
                  key: loopTask[i]._id,
                  id: loopTask[i]._id,
                  createdBy: loopTask[i].createdBy,
+                 createdByName: loopTask[i].createdByName,
                  dateCreated: moment(loopTask[i].dateCreated).format('MM-DD-YYYY'),
                  lastUpdated: moment(loopTask[i].lastUpdated).format('MM-DD-YYYY'),
                  deadline: moment(loopTask[i].deadline).format('MM-DD-YYYY'),
@@ -364,7 +368,7 @@ const ManagerDisplayTask = (props) => {
                         </div>
                         <div className="task-display">
                             <label style={{fontWeight:'bold'}}>Adviser:</label>
-                            <p>{taskModal.createdBy}</p>
+                            <p>{taskModal.createdByName}</p>
                         </div>
                         <div >
                             <label style={{fontWeight:'bold'}}>Task File:</label>

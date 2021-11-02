@@ -36,6 +36,7 @@ router.post('/createtask', auth, async(req, res) => {
     const tasks = new Tasks({
         dateCreated: Date.now(),
         createdBy: req.body.user,
+        createdByName: req.body.username,
         lastUpdated: Date.now(),
         updatedBy: req.body.user,
         tasksTitle: req.body.title,
@@ -213,6 +214,7 @@ router.post('/onUpdateTask', auth, async(req, res) => {
                     if(err){
                         logger.log('error', 'Error: /onUpdateTask, project')
                 }else{
+                    console.log('Project updated!')
                     res.status(201).json({
                         message: 'Task Updated!'
                     }) 
@@ -355,6 +357,23 @@ router.get('/getAllTaskMonitoring/:assignee', auth, async(req, res) => {
         }) 
     } catch (error) {
         logger.log('error', 'Error: /getAllTaskMonitoring')
+    }
+})
+
+//get tasks cretaed by manager
+router.get('/getTaskManager/:creator', auth, async(req, res) => {
+    try {
+        Tasks.find({'active': true, 'createdBy': req.params.creator}, function(err, tasks){
+            if(err){
+                logger.log('error', 'Error: /getTaskManager')
+            }else{
+                res.status(201).json({
+                    tasks
+                })  
+            }
+        }) 
+    } catch (error) {
+        logger.log('error', 'Error: /getTaskManager')
     }
 })
 module.exports = router

@@ -10,6 +10,10 @@ const StudiesSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    createdByName:{
+        type: String,
+        required: true,
+    },
     dateUpdated:{
         type: Date,
         required: true,

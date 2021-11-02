@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react'
-import {Form, Input, Button, Row, Select} from 'antd'
+import {Form, Input, Button, Row, Select, Space, DatePicker} from 'antd'
 import { useSelector } from 'react-redux';
 import { onGetAllManagers} from '../services/userAPI';
 import {onGetProgramforManager, onUpdateProject} from '../services/projectAPI'
 import { notif } from '../functions/datagrid';
+import moment from 'moment'
 
 const EditProject = (props) => {
     const userObj = useSelector(state => state.user)
@@ -12,10 +13,11 @@ const EditProject = (props) => {
     const [form] = Form.useForm();
     const [userData, setUserData] = useState([])
     const [programData, setProgramData] = useState([])
-    const [project, setProject] = useState({projectName: '', program: props.data.programs.programID, programName: props.data.programs.programName, assignee: props.data.record.projectLeaderID, assigneeName: props.data.record.projectLeader, user: userObj.USER._id, id: props.data.record.projectID});
+    const [project, setProject] = useState({projectName: '', program: props.data.programs.programID, programName: props.data.programs.programName, assignee: props.data.record.projectLeaderID, assigneeName: props.data.record.projectLeader, user: userObj.USER._id, id: props.data.record.projectID,
+    deadline: moment(props.data.programs.deadline)});
 
     
-    const initialValues = {projectName: props.data.record.projectName, assignee: props.data.record.projectLeaderID, assigneeName: props.data.record.projectLeader, program:props.data.programs.programID, programName:props.data.programs.programName }
+    const initialValues = {projectName: props.data.record.projectName, assignee: props.data.record.projectLeaderID, assigneeName: props.data.record.projectLeader, program:props.data.programs.programID, programName:props.data.programs.programName, deadline:moment(props.data.programs.deadline) }
    
     function handleChange(value) {   //for assigning user
         let tempArray = []
@@ -33,6 +35,10 @@ const EditProject = (props) => {
     function handleProgramChange(value) {
         setProject({...project, program: value})
       }
+
+      function onChange(date) {
+        setProject({...project, deadline:moment( date)})
+    }
 
     useEffect(() => {
         async function getUsers(){
@@ -83,6 +89,11 @@ const EditProject = (props) => {
                     ))}
                         <Option key={'others'} value={'others'}>Others</Option>
                     </Select>
+                </Form.Item>
+                <Form.Item name='deadline'  label="Deadline">
+                    <Space direction="vertical">
+                    <DatePicker value={project.deadline} onChange={onChange}/>
+                    </Space>
                 </Form.Item>
                 <Form.Item name='assignee'  label="Assignee">
                     <Select mode="tags" style={{ width: '100%' }} onChange={handleChange}  tokenSeparators={[',']} value={project.assignee} placeholder="Assign Project">

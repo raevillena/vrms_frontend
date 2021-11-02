@@ -14,6 +14,12 @@ import { onRenewToken } from '@/services/authAPI';
 import ManagerStudyDash from '@pages/Study';
 import PageNotFound from '@pages/PageNotFound';
 import DirectorMonitor from '@pages/DirectorMonitor';
+import Users from'./admin/users'
+import Programs from './admin/programs';
+import Datagrids from './admin/datagrids';
+import Tasks from './admin/tasks';
+import Projects from './admin/projects';
+import Studies from './admin/studies';
 
 function App() {
   const dispatch = useDispatch();
@@ -107,6 +113,12 @@ function App() {
       <PrivateRoute path="/studies" exact component={ManagerStudyDash} auth={authObj} />
       <PrivateRoute path="/editstudy" exact component={StudyDash} auth={authObj}/>
       <PrivateRoute path="/account" exact component={Account} auth={authObj}/>
+      <PrivateRoute path="/admin/users" exact component={Users} auth={authObj}/>
+      <PrivateRoute path="/admin/programs" exact component={Programs} auth={authObj}/>
+      <PrivateRoute path="/admin/projects" exact component={Projects} auth={authObj}/>
+      <PrivateRoute path="/admin/studies" exact component={Studies} auth={authObj}/>
+      <PrivateRoute path="/admin/tasks" exact component={Tasks} auth={authObj}/>
+      <PrivateRoute path="/admin/datagrids" exact component={Datagrids} auth={authObj}/>
       <Route path='*'>
         <PageNotFound/>
       </Route>

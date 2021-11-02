@@ -1,4 +1,4 @@
-import { Input, Button, Form, Row, Select, Layout, Tooltip, Modal, notification, Tabs} from 'antd';
+import { Input, Button, Form, Row, Select, Layout, Tooltip, Modal, notification, Tabs, Space, DatePicker} from 'antd';
 import React, {useState, useEffect} from 'react';
 import { onGetProgramforManager, onProgramCreate, onProjectCreate } from '../services/projectAPI.js';
 import { onGetAllManagers } from '../services/userAPI';
@@ -18,7 +18,7 @@ const Project = () => {
 
     const [userData, setUserData] = useState([])
     const [programData, setProgramData] = useState([])
-    const [project, setProject] = useState({projectName: '', program: '', assignee: [userObj.USER._id], assigneeName: [userObj.USER.name], user: userObj.USER.name, programName: ''});
+    const [project, setProject] = useState({projectName: '', program: '', assignee: [userObj.USER._id], assigneeName: [userObj.USER.name], user: userObj.USER._id,username: userObj.USER.name, programName: '', deadline: ''});
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [forProps, setForProps] = useState()
 
@@ -106,6 +106,10 @@ const Project = () => {
            notif("error",error.response.data.message)
         }
     }
+    function onChange(date) {
+        setProject({...project, deadline: date})
+    }
+
 
     async function onSubmitProgram(){
         try {
@@ -123,8 +127,7 @@ const Project = () => {
 
     return (
         <div>
-
-        <Layout  > 
+        <Layout style={{height: '100%', minHeight: '100vh'}} > 
             <Sider  className="sidebar" >
             <Sidebar/>
             </Sider>
@@ -135,7 +138,7 @@ const Project = () => {
                 <div className="mobile-header">
                     <MobileHeader/>
                 </div>
-                <Content style={{height: '100vh', width: '100%', background:'#f2f2f2'}} >          
+                <Content style={{height: '120vh', width: '100%', background:'#f2f2f2'}} >          
                     <ManagerDash data={forProps}/>
                     <Tooltip placement="top" title="Add Study">
                         <Button className="add-button" onClick={showModal}>+</Button>
@@ -191,6 +194,17 @@ const Project = () => {
                                     ))}
                                         <Option key={'others'} value={'others'}>Others</Option>
                                     </Select>
+                                </Form.Item>
+                                <Form.Item  label="Deadline"
+                                        rules={[
+                                        {
+                                            required: true,
+                                            message: 'Please input deadline of study!',
+                                        },
+                                        ]}>
+                                    <Space direction="vertical">
+                                    <DatePicker value={project.deadline} onChange={onChange}/>
+                                    </Space>
                                 </Form.Item>
                                 <Form.Item name='assigneeName'  label="Assignee">
                                     <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} value={project.assignee} placeholder="Assign Project">

@@ -35,6 +35,7 @@ router.route('/createproject').post(async (req, res) => {
     const project = new Project({
         dateCreated: Date.now(),
         createdBy: req.body.user,
+        createdByName: req.body.username,
         dateUpdated: Date.now(),
         updatedBy: req.body.user,
         projectName: req.body.projectName,
@@ -42,6 +43,7 @@ router.route('/createproject').post(async (req, res) => {
         assignee: req.body.assignee,
         program: req.body.program,
         assigneeName: req.body.assigneeName,
+        deadline: req.body.deadline,
         active: true,
         status: 'ONGOING'
     })
@@ -187,7 +189,7 @@ router.route('/createprogram').post(async (req, res) => {
   router.post("/updateProject", auth, async(req,res) => {
     try {
       await Project.findOneAndUpdate({"projectID": req.body.id},{'editedBy': req.body.user, 'editedDate': Date.now(), 'program': req.body.program, 
-      'assignee':req.body.assignee, 'assigneeName': req.body.assigneeName, 'projectName': req.body.projectName
+      'assignee':req.body.assignee, 'assigneeName': req.body.assigneeName, 'projectName': req.body.projectName, 'deadline': req.body.deadline
     }, function(err, projects) {
         if(err){
             logger.log('error', 'Update Program')
@@ -220,5 +222,26 @@ router.route('/createprogram').post(async (req, res) => {
       logger.log('error', 'Get all project error!')  
     }
   })
+
+  router.get("/getAllProgramForIndividualPerformance/:assignee", async(req,res) => {
+    try {
+       Program.find({'active': true, 'assignee': req.params.assignee}, function(err, projects) {
+        res.send(projects);  
+      });
+    } catch (error) {
+      logger.log('error', 'Get all project error!')  
+    }
+  })
+
+  router.get("/getAllProjectMonitor/:assignee", async(req,res) => {
+    try {
+       Program.find({'active': true, 'assignee': req.params.assignee}, function(err, projects) {
+        res.send(projects);  
+      });
+    } catch (error) {
+      logger.log('error', 'Get all project error!')  
+    }
+  })
+
 
  module.exports = router

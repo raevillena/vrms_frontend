@@ -64,7 +64,7 @@ const StudyGallery = () => {
 
     
     return (
-        <div style={{maxHeight: '320px', overflowY: 'auto'}}>
+        <div>
             {loading ? <Spin className="spinner" /> :
             <div>
                 <Button style={{background:'#A0BF85', display: userObj.USER.category === 'director' ? 'none' : 'initial'}}  onClick={() => setVisible(true)}>

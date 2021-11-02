@@ -12,6 +12,8 @@ import Productivity from './Productivity'
 import Highlighter from 'react-highlight-words';
 import IndividualPerformance from './IndividualPerformance'
 import { useDispatch, useSelector } from 'react-redux';
+import _ from 'lodash'
+import ManagerMonitor from './ManagerMonitor'
 
 
 const { Header, Content, Sider } = Layout;
@@ -19,7 +21,7 @@ const { Meta } = Card
 
 const DirectorMonitor = () => {
   const dispatch = useDispatch()
- 
+  let userObj = useSelector(state => state.user)
 
    const [state, setstate] = useState({'programs': '', 'project': '', 'study': '', 'user': ''})
    const [data, setData] = useState()
@@ -43,8 +45,10 @@ const DirectorMonitor = () => {
                     category: [userData[i].category]
                 })
             }
-            setData(tempUser)
-            setstate({...state, programs: program.data.length, project: project.data.length, study: study.data.length, user: user.data.length})
+            let filteredData =  _.filter(tempUser, function(item) { return item.category[0] !== 'director' })
+            console.log(filteredData)
+            setData(filteredData)
+            setstate({...state, programs: program.data.length, project: project.data.length, study: study.data.length, user: filteredData.length})
             setLoading(false)
         }
         getProgram()
@@ -190,7 +194,8 @@ const DirectorMonitor = () => {
 
     return (
         <div>
-            <Layout style={{height: '150vh'}} > 
+          {userObj.USER.category === 'manager' ? <ManagerMonitor/>: 
+            <Layout style={{height: '100%', minHeight: '100vh'}} > 
                 <Sider  className="sidebar" >
                     <Sidebar/>
                 </Sider>
@@ -238,7 +243,7 @@ const DirectorMonitor = () => {
                             </Card>
                         </Col>
                     </Row>
-                    {isModalVisible === true ? <Modal title="Individual Performance" visible={true} footer={null} onCancel={handleCancel} width={1000}>
+                    {isModalVisible === true ? <Modal title="Individual Performance" visible={true} footer={null} onCancel={handleCancel} width={1500}>
                       <Row justify="space-around">
                           <Col  span={23}>
                              
@@ -249,7 +254,7 @@ const DirectorMonitor = () => {
                     </Modal>: null}
                 </Content> 
                 </Layout>      
-            </Layout>
+            </Layout>}
         </div>
     )
 }

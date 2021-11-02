@@ -40,7 +40,7 @@ const Study = () => {
     const authObj = useSelector(state => state.auth)
 
     const [userData, setUserData] = useState([])
-    const [study, setStudy] = useState({title: "", projectName: projectObj.PROJECT.projectID, deadline:"", startDate: "" ,assignee:[], assigneeName:[], budget: "", user: userObj.USER.name})
+    const [study, setStudy] = useState({title: "", projectName: projectObj.PROJECT.projectID, deadline:"", startDate: "" ,assignee:[], assigneeName:[], budget: "", user: userObj.USER._id, username: userObj.USER.name})
     const [forProps, setForProps] = useState()
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -120,7 +120,7 @@ const Study = () => {
     
     return (
         <div>
-            <Layout  > 
+            <Layout style={{height: '100%', minHeight: '100vh'}} > 
                 <Sider  className="sidebar" >
                 {userObj.USER.category === "manager"? <Sidebar/> : <DirectorSidebar/>}
                 </Sider>

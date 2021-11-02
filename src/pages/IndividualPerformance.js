@@ -9,12 +9,18 @@ import { Row, Col, Card} from 'antd'
 import { onGetStudyForUser, onGetAllCreatedTable } from '../services/studyAPI';
 import { onGetAllTaskMonitoring } from '../services/taskAPI';
 import IndividualProjectTable from './IndividualProjectTable';
+import IndividualStudiesTable from './IndividualStudiesTable'
+import IndividualProgramTable from './IndividualProgramTable';
+import IndividualTaskTable from './IndividualTaskTable';
+import IndividualManagerGraph from './IndividualManagerGraph'
+import { onGetAllProgramIP, onGetAllProjectIP } from '../services/projectAPI';
 
 const { Meta } = Card
 
 const IndividualPerformance = () => {
   let monitorObj = useSelector(state => state.monitor)
-  const [state, setstate] = useState({'study': '', 'tasks': '', 'table': ''})
+  const [state, setstate] = useState({'study': '', 'tasks': '', 'table': '', 'projects': '', 'programs': ''})
+  const [props, setProps] = useState({'study': '', 'tasks': '', 'table': '', 'projects': '', 'programs': ''})
   const [loading, setLoading] = useState(true)
     const [data, setData] = useState([
         { month: 'January', value: 0 },
@@ -37,9 +43,19 @@ const IndividualPerformance = () => {
             let study =  await onGetStudyForUser({'_id': monitorObj.MONITOR.key})
             let task = await onGetAllTaskMonitoring(monitorObj.MONITOR.key)
             let table =  await onGetAllCreatedTable(monitorObj.MONITOR.name)
+            let program = await onGetAllProgramIP(monitorObj.MONITOR.key)
+            let project = await onGetAllProjectIP(monitorObj.MONITOR.key)
             let studyLength = study.data.length
             let taskLength = task.data.tasks.length
             let tableLength = table.data.length
+            let programLength = program.data.length
+            let projectLength = project.data.length
+            let studydata = study.data
+            let taskdata = task.data.tasks
+            let tabledata = table.data
+            let programdata = program.data
+            let projectdata = project.data
+
             let arr = res.data.tasks
                 const monthName = item => moment(item.deadline, 'YYYY-MM-DD').format('MM');
                 const result = _.groupBy(arr, monthName);
@@ -61,8 +77,10 @@ const IndividualPerformance = () => {
                      }) 
                  }
                 }
+
                 setData(tempArray)
-                setstate({...state, study: studyLength, tasks: taskLength, table: tableLength})
+                setstate({...state, study: studyLength, tasks: taskLength, table: tableLength, projects: projectLength, programs: programLength})
+                setProps({...props, study: studydata, tasks: taskdata, table: tabledata, projects: projectdata, programs: programdata})
                 setLoading(false)
           }
           getData()  
@@ -121,19 +139,20 @@ const IndividualPerformance = () => {
     <Row justify="space-around">
         <Col  span={23}>
           <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat'}} size='small' hoverable title={`${monitorObj.MONITOR.name} Year Performance`} loading={loading}>
-              <Line autoFit={true} {...config} />
+              {monitorObj.MONITOR.category[0] === 'user' ? <Line autoFit={true} {...config} /> : <IndividualManagerGraph data={props.projects}/>}
+              
           </Card>
         </Col>   
     </Row>
   <Row justify="space-around">
       <Col span={7}>
           <Card style={{  borderRadius: '10px', background: '#7CAD4F', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading}>
-              <Meta style={{color: '#FFFFFF'}} title={state.study} description='Total Assigned Studies' avatar={<FileTextFilled style={{fontSize: '45px'}}/>}/>
+              <Meta style={{color: '#FFFFFF'}} title={monitorObj.MONITOR.category[0] === 'user' ? state.study : state.programs} description={monitorObj.MONITOR.category[0] === 'user' ? 'Total Assigned Studies' : 'Total Assigned Programs'} avatar={<FileTextFilled style={{fontSize: '45px'}}/>}/>
           </Card>
       </Col>
       <Col span={7}>
           <Card style={{borderRadius: '10px', background: '#A0BF85', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading}>
-              <Meta style={{color: '#FFFFFF'}} title={state.tasks} description='Total Assigned Tasks' avatar={<ProjectFilled style={{fontSize: '45px'}}/>}/>
+              <Meta style={{color: '#FFFFFF'}} title={monitorObj.MONITOR.category[0] === 'user' ? state.tasks : state.projects} description={monitorObj.MONITOR.category[0] === 'user' ? 'Total Assigned Tasks' : 'Total Assigned Project'} avatar={<ProjectFilled style={{fontSize: '45px'}}/>}/>
           </Card>
       </Col>
       <Col span={7}>
@@ -142,13 +161,39 @@ const IndividualPerformance = () => {
           </Card>
       </Col>
 </Row>
+{monitorObj.MONITOR.category[0] === 'manager'? 
+<div>
 <Row justify="space-around">
       <Col span={23}>
-          <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading} title='Projects'>
-              <IndividualProjectTable />
+          <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading} title='Program'>
+              <IndividualProgramTable data={props.programs}/>
           </Card>
       </Col>
 </Row>
+<Row justify="space-around">
+      <Col span={23}>
+          <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading} title='Projects'>
+              <IndividualProjectTable data={props.projects}/>
+          </Card>
+      </Col>
+</Row>
+</div> : 
+<div>
+<Row justify="space-around">
+      <Col span={23}>
+          <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading} title='Studies'>
+              <IndividualStudiesTable data={props.study}/>
+          </Card>
+      </Col>
+</Row>
+<Row justify="space-around">
+      <Col span={23}>
+          <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading} title='Tasks'>
+              <IndividualTaskTable data={props.tasks} />
+          </Card>
+      </Col>
+</Row>
+</div>}
 </div>
 }
 

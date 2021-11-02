@@ -42,6 +42,7 @@ router.post('/createstudy', auth, async(req, res) => {
     const study = new Studies({
         dateCreated: Date.now(),
         createdBy: req.body.study.user,
+        createdByName: req.body.study.username,
         dateUpdated: Date.now(),
         startDate: req.body.study.startDate,
         updatedBy: req.body.study.user,
@@ -626,7 +627,7 @@ router.get("/getAllStudy", async(req,res) => {
         res.send(studies);  
       });
     } catch (error) {
-      logger.log('error', 'Get all project error!')  
+      logger.log('error', 'Get all study error!')  
     }
   })
 
@@ -636,7 +637,28 @@ router.get("/getAllStudy", async(req,res) => {
         res.send(table);  
       });
     } catch (error) {
-      logger.log('error', 'Get all project error!')  
+      logger.log('error', 'Get all created table error!')  
     }
   })
+
+  router.get("/getAllStudiesForIndividualPerformance/:assignee", async(req,res) => {
+    try {
+       Studies.find({'active': true, 'assignee': req.params.assignee}, function(err, studies) {
+        res.send(studies);  
+      });
+    } catch (error) {
+      logger.log('error', 'Get all study ip error!')  
+    }
+  })
+
+  router.get("/getStudyManagerMonitor/:creator", async(req,res) => {
+    try {
+       Studies.find({'active': true, 'createdBy': req.params.creator}, function(err, studies) {
+        res.send(studies);  
+      });
+    } catch (error) {
+      logger.log('error', 'Get all study ip error!')  
+    }
+  })
+
 module.exports = router

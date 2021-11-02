@@ -42,6 +42,10 @@ const ManagerHeaderMobile = () => {
         history.push("/account")
       }
 
+      const monitor = async () => {
+        history.push("/monitor")
+      }
+
     return (
         <div  style={{background:'white',height: '50px', width: '100%'}}>
             <div style={{float:'left'}}>
@@ -50,7 +54,10 @@ const ManagerHeaderMobile = () => {
                         <Menu.Item key="1" icon={<UserOutlined/>} onClick={account}>
                             Account
                         </Menu.Item>
-                        <Menu.Item icon={<BookOutlined/>} key="2" onClick={studies}>
+                        <Menu.Item icon={<BookOutlined/>} key="2" onClick={monitor}>
+                            Monitor
+                        </Menu.Item>
+                        <Menu.Item icon={<BookOutlined/>} key="3" onClick={studies}>
                             Projects
                         </Menu.Item>
                         <Menu.Item key="3" onClick={handleLogout}>

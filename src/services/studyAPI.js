@@ -292,3 +292,19 @@ export async function onGetAllCreatedTable(body) {
         console.log('error', error)
     }
 }
+
+export async function onGetAllStudyIP(body) {
+    try {
+        return axios.get(`/v1/studies/getTaskManager/${body}`, tokenConfig())
+    } catch (error) {
+        console.log('error', error)
+    }
+}
+
+export async function onGetAllStudyMonitor(body) {
+    try {
+        return axios.get(`/v1/studies/getStudyManagerMonitor/${body}`, tokenConfig())
+    } catch (error) {
+        console.log('error', error)
+    }
+}

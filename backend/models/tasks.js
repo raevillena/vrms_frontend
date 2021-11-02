@@ -26,6 +26,10 @@ const TasksSchema = new mongoose.Schema({
         type: String,
         required:  true,
     },
+    createdByName: {
+        type: String,
+        required:  true,
+    },
     updatedBy: {
         type: String,
         required:  true,

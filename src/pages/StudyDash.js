@@ -1,7 +1,7 @@
 import React from 'react';
 import Label from './Label'
 import DataGrid from './DataGrid'
-import { Col, Layout, Row, Typography} from 'antd'
+import { Col, Layout, Row, Typography, Tabs} from 'antd'
 import Sidebar from '../components/components/Sidebar'
 import SidebarManager from '../components/components/ManagerSidebar'
 import Headers from '../components/components/Header'
@@ -17,6 +17,7 @@ import DirectorSidebar from '../components/components/DirectorSidebar';
 
 
 const { Title } = Typography;
+const { TabPane } = Tabs;
 
 const StudyDash = () => {
     const { Header, Content, Sider } = Layout;
@@ -25,7 +26,7 @@ const StudyDash = () => {
     return (
       <div>
         <div className="study-dash">
-            <Layout >
+            <Layout style={{height: '100%', minHeight: '100vh'}} >
             <Sider className='sidebar' >
                     {userObj.USER.category === "user"? <Sidebar/> : userObj.USER.category === "manager"? <SidebarManager/> : <DirectorSidebar/>}
                 </Sider>
@@ -38,28 +39,22 @@ const StudyDash = () => {
                 </div>
                     <Content style={{height: '100%', width:'100%'}}>
                         <Label/>
-                        <Row gutter={16} style={{marginRight: '0px'}}>
-                            <Col span={12} >
+                        <div className="card-container">
+                        <Tabs type='card'>
+                            <TabPane style={{height:'90vh'}} tab="Documentation" key="1">
                                 <Documentation/>
-                            </Col>
-                            <Col span={12} >
-                            <Row gutter={16} >
-                                <Col span={24} >
-                                    <Title level={2}>Tasks</Title>
-                                    <Tasks/>
-                                </Col>
-                                <Col span={24}>
-                                    <Title level={2}>Gallery</Title>
-                                    <StudyGallery/>
-                                </Col>
-                              </Row>  
-                            </Col>
-                        </Row>
-                        <Row gutter={16} style={{ width: '100%'}}>
-                            <Col>
+                            </TabPane>
+                            <TabPane style={{height:'90vh'}} tab="Tasks" key="2">
+                                <Tasks/>
+                            </TabPane>
+                            <TabPane style={{height:'90vh'}} tab="Gallery" key="3">
+                                <StudyGallery/>
+                            </TabPane>
+                            <TabPane style={{height:'90vh'}} tab="Data" key="4">
                                 <DataGrid/>
-                            </Col>
-                        </Row>
+                            </TabPane>
+                        </Tabs>
+                        </div>
                     </Content>
                </Layout>
             </Layout>

@@ -262,8 +262,8 @@ const expandedRowRender = programs => {
 };
 
     return (
-      <div >
-        <Layout style={{height: '150vh'}} > 
+      <div>
+        <Layout  style={{height: '100%', minHeight: '100vh'}} > 
           <Sider  className="sidebar" >
               <Sidebar/>
           </Sider>

@@ -12,6 +12,7 @@ import Project from './Project';
 import DirectorDash from './DirectorDash';
 import Highlighter from 'react-highlight-words';
 import {SearchOutlined} from '@ant-design/icons'
+import Dashboard from '../admin/dashboard'
 
 
 
@@ -218,7 +219,7 @@ const getColumnSearchProps = dataIndex => ({
 return (
   <div>
     {userObj.USER.category === "user"? 
-    <Layout style={{height: '200vh'}} > 
+    <Layout style={{height: '100%', minHeight: '100vh'}} > 
         <Sider  className="sidebar" >
             <Sidebar/>
         </Sider>
@@ -238,7 +239,7 @@ return (
         </Content> 
       </Layout>      
     </Layout>: userObj.USER.category === "manager" ?
-    <Project/> : <DirectorDash/>}
+    <Project/> :  userObj.USER.category === "director" ? <DirectorDash/> : <Dashboard/>}
   </div>
     )
 }

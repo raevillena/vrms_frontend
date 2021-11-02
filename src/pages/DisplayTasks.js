@@ -44,6 +44,7 @@ const DisplayTasks = () => {
                  key: loopTask[i]._id,
                  id: loopTask[i]._id,
                  createdBy: loopTask[i].createdBy,
+                 createdByName: loopTask[i].createdByName,
                  dateCreated: moment(loopTask[i].dateCreated).format('MM-DD-YYYY'),
                  lastUpdated: moment(loopTask[i].lastUpdated).format('MM-DD-YYYY'),
                  deadline: moment(loopTask[i].deadline).format('MM-DD-YYYY'),
@@ -191,7 +192,7 @@ const DisplayTasks = () => {
                 key : files[i]._id,
                 file: files[i].file,
                 description: files[i].description,
-                dateUploaded: moment(files[i].uploadDate    ).format('MM-DD-YYYY'),
+                dateUploaded: moment(files[i].uploadDate).format('MM-DD-YYYY'),
                 uploadedBy: files[i].uploadedByName
             }) 
         }
@@ -201,8 +202,8 @@ const DisplayTasks = () => {
 
 
 return (
-    <div style={{maxHeight: '300px', overflowY: 'scroll'}}>
-        {userObj.USER.category === "manager" ? <AddTask/> : 
+    <div>
+        {userObj.USER.category === "user" ? 
             <div>
                 {studyObj.STUDY.objectives.length===0 ? <Empty/> : 
                     <div>
@@ -214,7 +215,7 @@ return (
                         ))}
                     </Collapse>
                     </div>  }
-            </div>
+            </div> :<AddTask/>
         }
         <Modal width={1000} title='Task' visible={isModalVisible} onCancel={handleCancel} footer={taskModal.status[0] === "ONGOING" ? 
                         <div>
@@ -260,7 +261,7 @@ return (
                             </div>
                             <div >
                                 <label style={{fontWeight:'bold'}}>Adviser:</label>
-                                <p>{taskModal.createdBy}</p>
+                                <p>{taskModal.createdByName}</p>
                             </div>
             
                         <div>

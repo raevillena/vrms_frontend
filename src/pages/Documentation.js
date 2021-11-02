@@ -13,8 +13,8 @@ const { TabPane } = Tabs;
 
 const Documentation = () => {
     return (
-        <div className="card-container">
-            <Tabs type="card">
+        <div >
+            <Tabs >
                 <TabPane tab="Summary" key="1">
                     <Summary/>
                 </TabPane>

@@ -107,6 +107,30 @@ export async function onUpdateProject(body) {
     }
 }
 
+export async function onGetAllProjectIP(body) {
+    try {
+        return axios.get(`/v1/project/getAllProjectForIndividualPerformance/${body}`, tokenConfig())
+    } catch (error) {
+        console.log('error', error)
+    }
+}
+
+export async function onGetAllProgramIP(body) {
+    try {
+        return axios.get(`/v1/project/getAllProgramForIndividualPerformance/${body}`, tokenConfig())
+    } catch (error) {
+        console.log('error', error)
+    }
+}
+
+export async function onGetAllProjectMonitor(body) {
+    try {
+        return axios.get(`/v1/project/getAllProjectMonitor/${body}`, tokenConfig())
+    } catch (error) {
+        console.log('error', error)
+    }
+}
+
 //set up config with token, helper function
 export const tokenConfig = () => {
 
@@ -127,10 +151,3 @@ export const tokenConfig = () => {
     return config
 }
 
-export async function onGetAllProjectIP(body) {
-    try {
-        return axios.get(`/v1/project/getAllProjectForIndividualPerformance/${body}`, tokenConfig())
-    } catch (error) {
-        console.log('error', error)
-    }
-}

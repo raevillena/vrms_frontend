@@ -44,8 +44,8 @@ const ChangePassword = () => {
      }
 
   return (
-    <Form style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat", display: 'grid', justifyItems: 'center'}} onFinish={onSubmit} initialValues={initialValues} form={form}>
-      <Title level={3}>Change Password</Title>
+    <Form style={{fontFamily: "Montserrat", display: 'grid', justifyItems: 'center'}} onFinish={onSubmit} initialValues={initialValues} form={form}>
+      <Title level={2}>Change Password</Title>
         <Form.Item name="cpassword"  label="Current Password"
           rules={[
             {

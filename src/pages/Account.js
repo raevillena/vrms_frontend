@@ -1,17 +1,21 @@
-import { Row, Layout, Typography,Avatar, notification, Col } from 'antd'
+import { Row, Layout, Typography,Avatar, notification, Col, Card } from 'antd'
 import React, {useState, useEffect} from 'react';
 import { useSelector} from 'react-redux';
 import {UserOutlined} from '@ant-design/icons';
 import Sidebar from '../components/components/Sidebar'
 import ManagerSidebar from '../components/components/ManagerSidebar';
+import DirectorSidebar from '../components/components/DirectorSidebar'
 import Headers from '../components/components/Header'
 import { onUploadAvatar } from '../services/uploadAPI';
 import '../styles/CSS/Account.css'
 import ChangePassword from './ChangePassword';
 import MobileHeader from '../components/components/MobileHeader';
 import ManagerHeaderMobile from '../components/components/ManagerHeaderMobile';
+import DirectorHeaderMobile from '../components/components/DirectorHeaderMobile';
 
 const { Header, Content, Sider } = Layout;
+
+const style = { marginTop: '25px', marginLeft: '8px' };
 
 const Account = () => {
     const userObj = useSelector(state => state.user) //reducer for user data
@@ -46,53 +50,57 @@ const Account = () => {
     if(height <= 768 && width <= 768){
       return(
         <div>
-      <Layout> 
+      <Layout style={{height: '100%'}}> 
         <Sider className="sidebar" >
-          {userObj.USER.category === "user"?  <Sidebar/> : <ManagerSidebar/>}
+          {userObj.USER.category === "user" ?  <Sidebar/> : <ManagerSidebar/> }
         </Sider>
         <Layout>
           <Header className="header" >
             <Headers/>
           </Header>
           <div className="mobile-header">
-            {userObj.USER.category ==="user"? <MobileHeader/>: <ManagerHeaderMobile/>}
+            {userObj.USER.category ==="user" ? <MobileHeader/>: userObj.USER.category === "manager"?<ManagerHeaderMobile/>: <DirectorHeaderMobile/>}
           </div>
           <Content className="content" > 
-            <div className="content-col" >
-              <Col >
-                <Col span={22} style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat"}}>
-                  <Row  style={{marginTop:'10px', marginLeft: '10px', justifyContent:'center', alignItems:'center', margintTop: '20px', display:'flex', marginRight:'20px', marginBottom:'20px'}}>
-                  <Col span={12} >
-                    <Avatar src={imgData||`/avatar/${avatar}`}  size={128} icon={<UserOutlined />} />
-                    <label htmlFor="file_input_id" style={{marginLeft: '20px'}}>Upload Photo</label>
-                    <input type="file" id="file_input_id" accept="image/*" onChange={async e => {
-                      const file = e.target.files[0]
-                      const reader = new FileReader();
-                        reader.addEventListener("load", () => {
-                          setImgData(reader.result);
-                        });
-                        reader.readAsDataURL(file)
-                        const data = new FormData()
-                        data.append("user", userObj.USER._id )
-                        data.append("file", file)
-                        let result = await onUploadAvatar(data)
-                        localStorage.setItem("avatarFilename", result.data.user.avatarFilename)
-                        notif('info', result.data.message)
+          <div  >
+              <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16, width: 350, height: 300}}  hoverable >
+                <Row justify="space-around" gutter={16}>
+                <Col className="gutter-row" span={12}  >
+                <Avatar src={imgData||`/avatar/${avatar}`}  size={150} icon={<UserOutlined />} />
+                  <div style={{marginLeft: '30px'}}>
+                      <label htmlFor="file_input_id" >Upload Photo</label>
+                      <input type="file" id="file_input_id" accept="image/*" onChange={async e => {
+                        const file = e.target.files[0]
+                        const reader = new FileReader();
+                          reader.addEventListener("load", () => {
+                            setImgData(reader.result);
+                          });
+                          reader.readAsDataURL(file)
+                          const data = new FormData()
+                          data.append("user", userObj.USER._id )
+                          data.append("file", file)
+                          let result = await onUploadAvatar(data)
+                          localStorage.setItem("avatarFilename", result.data.user.avatarFilename)
+                          notif('info', result.data.message)
+                        }
                       }
-                    }
-                    >
-                    </input>
+                      >
+                      </input>
+                  </div>
                   </Col>
-                    <Col span={12} style={{justifyContent:'center', display:'grid', alignItems:'center'}}>
-                      <Title style={{margin: '0px'}} level={3}>{userObj.USER.name}</Title>
-                      <p style={{margin: '0px'}}>{userObj.USER.title}</p>
-                      <p style={{margin: '0px'}}>{userObj.USER.project}</p>
-                      <p style={{margin: '0px'}}>{userObj.USER.email}</p>
-                    </Col>
-                  </Row>
-                </Col>
-                <Row ><ChangePassword/></Row>
-              </Col>
+                  <Col className="gutter-row" span={12} >
+                    <div style={style}>
+                      <Title level={3}>{userObj.USER.name}</Title>
+                      <p >{userObj.USER.title}</p>
+                      <p >{userObj.USER.project}</p>
+                      <p >{userObj.USER.email}</p>
+                      </div>
+                  </Col>
+                </Row>
+              </Card>
+              <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16, width: 350, height: 450}}  hoverable>
+                <ChangePassword/>
+              </Card>
             </div>
           </Content>
         </Layout>      
@@ -105,7 +113,7 @@ const Account = () => {
     <div>
       <Layout> 
         <Sider className="sidebar" >
-          {userObj.USER.category === "user"?  <Sidebar/> : <ManagerSidebar/>}
+          {userObj.USER.category === "user"?  <Sidebar/> :  userObj.USER.category === "director"? <DirectorSidebar/> : <ManagerSidebar/>}
         </Sider>
         <Layout>
           <Header className="header" >
@@ -115,44 +123,48 @@ const Account = () => {
             {userObj.USER.category ==="user"? <MobileHeader/>: <ManagerHeaderMobile/>}
           </div>
           <Content className="content" > 
-            <div className="content-col" >
-              <Row wrap={true} gutter={16}>
-                <Col span={12} style={{borderRadius: "10px", background:"white", fontFamily: "Montserrat"}}>
-                  <Row style={{marginTop:'10px', marginLeft: '10px', justifyContent:'center', alignItems:'center', margintTop: '20px', display:'flex', marginRight:'20px', marginBottom:'20px'}}>
-                  <Col span={12}  >
-                    <Avatar src={imgData||`/avatar/${avatar}`}  size={128} icon={<UserOutlined />} />
-                    <label htmlFor="file_input_id" style={{marginLeft: '20px'}}>Upload Photo</label>
-                    <input type="file" id="file_input_id" accept="image/*" onChange={async e => {
-                      const file = e.target.files[0]
-                      const reader = new FileReader();
-                        reader.addEventListener("load", () => {
-                          setImgData(reader.result);
-                        });
-                        reader.readAsDataURL(file)
-                        const data = new FormData()
-                        data.append("user", userObj.USER._id )
-                        data.append("file", file)
-                        let result = await onUploadAvatar(data)
-                        localStorage.setItem("avatarFilename", result.data.user.avatarFilename)
-                        notif('info', result.data.message)
+              <Row justify="space-around" gutter={16}>
+              <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16, width: 400, height: 300}}  hoverable >
+                <Row justify="space-around" gutter={16}>
+                <Col className="gutter-row" span={12}  >
+                <Avatar src={imgData||`/avatar/${avatar}`}  size={150} icon={<UserOutlined />} />
+                  <div style={{marginLeft: '30px'}}>
+                      <label htmlFor="file_input_id" >Upload Photo</label>
+                      <input type="file" id="file_input_id" accept="image/*" onChange={async e => {
+                        const file = e.target.files[0]
+                        const reader = new FileReader();
+                          reader.addEventListener("load", () => {
+                            setImgData(reader.result);
+                          });
+                          reader.readAsDataURL(file)
+                          const data = new FormData()
+                          data.append("user", userObj.USER._id )
+                          data.append("file", file)
+                          let result = await onUploadAvatar(data)
+                          localStorage.setItem("avatarFilename", result.data.user.avatarFilename)
+                          notif('info', result.data.message)
+                        }
                       }
-                    }
-                    >
-                    </input>
+                      >
+                      </input>
+                  </div>
                   </Col>
-                    <Col span={12} style={{justifyContent:'center', display:'grid', alignItems:'center'}}>
-                      <Title style={{margin: '0px'}} level={3}>{userObj.USER.name}</Title>
-                      <p style={{margin: '0px'}}>{userObj.USER.title}</p>
-                      <p style={{margin: '0px'}}>{userObj.USER.project}</p>
-                      <p style={{margin: '0px'}}>{userObj.USER.email}</p>
-                    </Col>
-                  </Row>
-                </Col>
-                <Col span={12} >
-                  <ChangePassword/>
-                </Col>
+                  <Col className="gutter-row" span={12} >
+                    <div style={style}>
+                      <Title level={3}>{userObj.USER.name}</Title>
+                      <p >{userObj.USER.title}</p>
+                      <p >{userObj.USER.project}</p>
+                      <p >{userObj.USER.email}</p>
+                      </div>
+                  </Col>
+                </Row>
+              </Card>
+              <div style={{padding: '0 8px'}} >
+              <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16, width: 400, height: 300}}  hoverable>
+                <ChangePassword/>
+              </Card>
+              </div>
               </Row>
-            </div>
           </Content>
         </Layout>      
       </Layout>
