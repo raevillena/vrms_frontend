@@ -1,5 +1,5 @@
 
-import { Input, Button, Form, Row, Checkbox, notification } from 'antd';
+import { Input, Button, Form, Checkbox, notification } from 'antd';
 import React, {useState} from 'react';
 import { onUserCreate } from '../services/userAPI';
 
@@ -33,9 +33,8 @@ const Signup = () => {
 
     return (
         <div>
-            <Row>
+      
                 <Form initialValues={initialValues} form={form}>
-                <h1 style={{fontFamily: "Montserrat", fontWeight: "bolder"}}>Create User</h1>
                     <Form.Item name="Name" label="Name"
                     rules={[
                         {
@@ -75,11 +74,8 @@ const Signup = () => {
                         <Checkbox onChange={e => setUser({...user, category: e.target.checked? "manager": ""})} value="manager">Manager</Checkbox>
                         <Checkbox onChange={e => setUser({...user, category: e.target.checked? "director": ""})} value="director">Director</Checkbox>
                     </Form.Item>
-                    <Row justify="center">
-                    <Button onClick={onSubmit} style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE USER</Button>
-                    </Row>
+                    <Button onClick={onSubmit} block style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE USER</Button>
                 </Form>
-            </Row>
         </div>
     )
 }

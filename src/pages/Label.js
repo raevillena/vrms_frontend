@@ -29,9 +29,9 @@ const Label = () => {
                     </div>
                 </div>
             </div>
-            <div className="progress-label" >
-                <Progress percent={studyObj.STUDY.progress} size="small" style={{maxWidth: '150px'}} />
-            </div>
+                <div className="progress-label" >
+                    <Progress percent={studyObj.STUDY.progress} size="small" style={{maxWidth: '150px'}} />
+                </div>
             </div>
         </div>
     )

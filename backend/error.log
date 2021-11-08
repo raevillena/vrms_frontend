@@ -6,3 +6,61 @@
 2021-10-30T15:03:03.430Z [error]: Update Program
 2021-10-30T15:03:32.008Z [error]: Update project find error: /updateProject
 2021-10-30T15:03:32.013Z [error]: Update Program
+2021-11-02T13:59:03.000Z [error]: Create project error!
+2021-11-02T13:59:11.996Z [error]: Create project error!
+2021-11-02T13:59:34.907Z [error]: Create project error!
+2021-11-02T14:05:28.442Z [error]: Create project error!
+2021-11-02T14:05:32.006Z [error]: Create project error!
+2021-11-02T14:06:09.130Z [error]: Create project error!
+2021-11-02T14:07:26.471Z [error]: Create project error!
+2021-11-02T14:07:48.438Z [error]: Create project error!
+2021-11-02T14:08:42.557Z [error]: Create project error!
+2021-11-02T14:09:30.691Z [error]: Create project error!
+2021-11-02T14:09:46.566Z [error]: Create project error!
+2021-11-02T14:11:35.081Z [error]: Create project error!
+2021-11-02T14:12:20.948Z [error]: Create project error!
+2021-11-02T14:12:35.273Z [error]: Create project error!
+2021-11-02T14:13:04.497Z [error]: Create project error!
+2021-11-03T05:28:09.996Z [error]: message: TypeError: Cannot read property 'password' of null
+2021-11-03T12:21:24.447Z [error]: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://docs.atlas.mongodb.com/security-whitelist/
+2021-11-03T14:32:59.504Z [error]: Error: /createUSer - ValidationError: name: Path `name` is required., email: Path `email` is required., title: Path `title` is required., category: Path `category` is required.
+2021-11-03T14:35:30.873Z [error]: Error: email sending
+2021-11-03T14:44:58.226Z [error]: Error: /updateUserAdmin
+2021-11-03T14:45:20.151Z [error]: Error: /updateUserAdmin
+2021-11-04T13:45:16.535Z [error]: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://docs.atlas.mongodb.com/security-whitelist/
+2021-11-05T00:30:13.762Z [error]: Error: /updateStudyAdmin
+2021-11-05T00:30:35.830Z [error]: Error: /updateStudyAdmin
+2021-11-05T00:30:55.036Z [error]: Error: /updateStudyAdmin
+2021-11-05T00:32:55.047Z [error]: Error: /updateStudyAdmin
+2021-11-05T00:37:38.476Z [error]: Error: /updateStudyAdmin
+2021-11-05T00:38:43.997Z [error]: Error: /updateStudyAdmin - CastError: Cast to string failed for value "[ 'COMPLETED' ]" (type Array) at path "status"
+2021-11-05T04:24:44.579Z [error]: Error: /updatetaskadmin
+2021-11-05T04:24:57.150Z [error]: Error: /updatetaskadmin
+2021-11-05T09:28:13.142Z [error]: Error: /updateDatagrid
+2021-11-05T09:29:43.316Z [error]: Error: /updateDatagrid
+2021-11-05T09:30:12.247Z [error]: Error: /updateDatagrid
+2021-11-06T07:29:08.552Z [error]: message: TypeError: Cannot read property 'password' of null
+2021-11-07T05:19:34.725Z [error]: Error: /studyGalleryAdmin
+2021-11-07T05:19:34.727Z [error]: Error: /studyGalleryAdmin
+2021-11-07T13:34:49.842Z [error]: Error: /updatetaskadmin
+2021-11-07T13:34:55.511Z [error]: Error: /updatetaskadmin
+2021-11-07T13:35:00.956Z [error]: Error: /updatetaskadmin
+2021-11-07T13:37:10.896Z [error]: Error: /updatetaskadmin
+2021-11-07T13:51:10.636Z [error]: Error: /updatetaskadmin
+2021-11-07T13:57:42.911Z [error]: Error: /updatetaskadmin
+2021-11-07T13:57:47.181Z [error]: Error: /updatetaskadmin
+2021-11-07T13:57:48.427Z [error]: Error: /updatetaskadmin
+2021-11-07T13:58:05.921Z [error]: Error: /updatetaskadmin
+2021-11-07T13:58:49.445Z [error]: Error: /updatetaskadmin
+2021-11-07T13:58:55.744Z [error]: Error: /updatetaskadmin
+2021-11-07T13:59:47.174Z [error]: Error: /updatetaskadmin
+2021-11-07T14:00:21.936Z [error]: Error: /updatetaskadmin
+2021-11-07T14:00:40.725Z [error]: Error: /updatetaskadmin
+2021-11-07T14:01:18.792Z [error]: Error: /updatetaskadmin
+2021-11-08T00:24:01.917Z [error]: Error: /updateUserAdmin
+2021-11-08T00:24:20.969Z [error]: Error: /updateUserAdmin
+2021-11-08T00:24:59.105Z [error]: Error: /updateUserAdmin
+2021-11-08T00:26:35.909Z [error]: Error: /updateUserAdmin
+2021-11-08T00:26:52.575Z [error]: Error: /updateUserAdmin
+2021-11-08T00:27:52.472Z [error]: Error: /updateUserAdmin
+2021-11-08T00:45:11.226Z [error]: Error: /updatetaskadmin

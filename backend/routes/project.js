@@ -42,6 +42,7 @@ router.route('/createproject').post(async (req, res) => {
         projectID: projectID,
         assignee: req.body.assignee,
         program: req.body.program,
+        programName: req.body.programName,
         assigneeName: req.body.assigneeName,
         deadline: req.body.deadline,
         active: true,
@@ -75,7 +76,8 @@ router.route('/createprogram').post(async (req, res) => {
         assignee: req.body.assignee,
         assigneeName: req.body.assigneeName,
         active: true,
-        status: 'ONGOING'
+        status: 'ONGOING',
+        progress: 0
     })
     const doesExist = await Program.findOne({programName: req.body.programName, active: true})
     if(doesExist){
@@ -95,7 +97,7 @@ router.route('/createprogram').post(async (req, res) => {
 
  router.get("/getAllProject", async(req,res) => {
     try {
-       Project.find({}, {"projectName": 1, _id: 0}, function(err, projects) {
+       Project.find({}, function(err, projects) {
         res.send(projects);  
       });
     } catch (error) {
@@ -105,7 +107,7 @@ router.route('/createprogram').post(async (req, res) => {
 
   router.get("/getAllPrograms", async(req,res) => {
     try {
-       Program.find({active: true}, function(err, programs) {
+       Program.find({}, function(err, programs) {
         res.send(programs);  
       });
     } catch (error) {
@@ -243,5 +245,36 @@ router.route('/createprogram').post(async (req, res) => {
     }
   })
 
+  router.post("/updateprogramadmin", auth, async(req,res) => {
+    try {
+      await Program.findOneAndUpdate({"programID": req.body.program},{'editedBy': req.body.user, 'editedDate': Date.now(), 'programName': req.body.programName, 'assignee':req.body.assignee, 'assigneeName': req.body.assigneeName, 
+      'active': req.body.active, 'status':req.body.status}, function(err, projects) {
+        if(err){
+            logger.log('error', 'Update Program')
+        } else{
+          res.send({message: "Program Updated"})
+        }
+      });
+    } catch (error) {
+      logger.log('error', 'Update program find error: /updateProgram')  
+    }
+  })
+
+  router.post("/updateprojectadmin", auth, async(req,res) => {
+    try {
+      await Project.findOneAndUpdate({"projectID": req.body.id},{'editedBy': req.body.user, 'editedDate': Date.now(), 'program': req.body.program, 
+      'assignee':req.body.assignee, 'assigneeName': req.body.assigneeName, 'projectName': req.body.projectName, 'deadline': req.body.deadline, 'active': req.body.active, 'progress': req.body.progress,
+      'status': req.body.status
+    }, function(err, projects) {
+        if(err){
+            logger.log('error', 'updateprojectadmn')
+        } else{
+          res.send({message: "Project Updated"})
+        }
+      });
+    } catch (error) {
+      logger.log('error', 'Update project find error: /updateprojectadmn')  
+    }
+  })
 
  module.exports = router

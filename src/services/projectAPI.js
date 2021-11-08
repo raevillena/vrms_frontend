@@ -131,6 +131,28 @@ export async function onGetAllProjectMonitor(body) {
     }
 }
 
+export async function onUpdateProgramAdmin(body) {
+    try {
+        return axios.post(`/v1/project/updateprogramadmin`, body, tokenConfig())
+    } catch (error) {
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}
+
+export async function onUpdateProjectAdmin(body) {
+    try {
+        return axios.post(`/v1/project/updateprojectadmin`, body, tokenConfig())
+    } catch (error) {
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}
+
 //set up config with token, helper function
 export const tokenConfig = () => {
 

@@ -376,4 +376,73 @@ router.get('/getTaskManager/:creator', auth, async(req, res) => {
         logger.log('error', 'Error: /getTaskManager')
     }
 })
+
+router.get('/getAllTaskAdmin', auth, async(req, res) => {
+    try {
+        Tasks.find({}, function(err, tasks){
+            if(err){
+                logger.log('error', 'Error: /getAllTaskAdmin')
+            }else{
+                res.status(201).json({
+                    tasks
+                })  
+            }
+        }) 
+    } catch (error) {
+        logger.log('error', 'Error: /getAllTaskAdmin')
+    }
+})
+
+router.post('/updatetaskadmin', auth, async(req, res) => {
+    try {
+       await Tasks.findOneAndUpdate({"_id": req.body.taskId}, {"status": req.body.status[0],"dateUpdated": Date.now(), 'assignee': req.body.assignee, 'assigneeName': req.body.assigneeName,
+        'tasksTitle': req.body.title, 'tasksDescription': req.body.description, 'verification': req.body.verification, 'objective': req.body.objective, 'deadline': req.body.deadline,
+         'studyName': req.body.studyName, 'projectName': req.body.projectName
+        },function(err, task){
+            if(err){
+                console.log(err)
+                logger.log('error', 'Error: /updatetaskadmin')
+            }else{
+                res.status(201).json({
+                    task,
+                    message: 'Task Updated!'
+                })  
+            }
+        }) 
+    } catch (error) {
+        logger.log('error', 'Error: /updatetaskadmin')
+    }
+})
+
+router.get('/getAllFileListAdmin/', auth, async(req, res) => {
+    try {
+        TasksFile.find({}, function(err, tasksfile){
+            if(err){
+                logger.log('error', 'Error: /getAllFileListAdmin')
+            }else{
+                res.status(201).json(
+                    tasksfile
+                )  
+            }
+        }) 
+    } catch (error) {
+        logger.log('error', 'Error: /getAllFileListAdmin')
+    }
+})
+
+router.post('/updatefiletaskadmin/', auth, async(req, res) => {
+    try {
+        TasksFile.findOneAndUpdate({'_id': req.body.id}, {'active': req.body.active, 'description': req.body.description, 'taskID': req.body.taskID}, function(err, tasksfile){
+            if(err){
+                logger.log('error', 'Error: /updatefiletaskadmin')
+            }else{
+                res.status(201).json({
+                    tasksfile, message: 'File updated!'
+                })  
+            }
+        }) 
+    } catch (error) {
+        logger.log('error', 'Error: /updatefiletaskadmin')
+    }
+})
 module.exports = router

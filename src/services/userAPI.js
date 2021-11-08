@@ -133,3 +133,32 @@ export async function onGetAllUser() {
     }
 }
 
+export async function onUpdateUserAdmin(body) {
+    try {
+        return axios.post(`/v1/user/updateUserAdmin/`,body , {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}
+
+export async function onResetPasswordAdmin(body) {
+    try {
+        return axios.post(`/v1/user/resetpasswordadmin/`,body , {
+            headers: {
+                        'Content-Type': 'application/json',
+                    } 
+        });
+    } catch (error) {
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}

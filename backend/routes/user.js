@@ -204,4 +204,60 @@ router.get("/getAllUserDashboard", async(req,res) => {
   }
 })
 
+router.post('/updateUserAdmin', async(req, res) => {
+  console.log(req.body)
+  try {
+     User.findOneAndUpdate({"_id": req.body.id}, {"name": req.body.name, "title": req.body.title, "category": req.body.category[0], 'email': req.body.email}, function(err, user){
+      if(err){
+          logger.log('error', 'Error: /updateUserAdmin')
+      }else{
+        res.send({message: 'User Updated', user})
+      }
+  })
+  } catch (error) {
+   logger.log('error', `Error: /updateUserAdmin - ${err}`)
+     res.status(500).json({message: error.message})
+  }
+})
+
+router.post('/resetpasswordadmin', async(req, res) => {
+  try {
+      var password = generator.generate({
+        length: 10,
+        numbers: true
+      });
+     const user = await User.findOne({_id: req.body.id}) 
+    let salt = await bcrypt.genSalt(10)
+    let hashedPassword = await bcrypt.hash(password, salt)
+    await User.updateOne({_id: user.id}, {password: hashedPassword}, function(err, user){
+      if(err){
+        logger.log('error', `Error: resetpasswordadmin - ${err}`)
+      }else{
+        var transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: process.env.EMAIL,  //sender email
+            pass: process.env.PASSWORD //sender password
+          }
+        });
+        var mailOptions = {
+          from: process.env.EMAIL,
+          to: req.body.email,
+          subject: 'VRMS ACCOUNT',
+          text: 'Your password has been reset. To login again to your VRMS account you can use this password:' + password
+        };
+        transporter.sendMail(mailOptions, function(error, info){
+          if (error) {
+            logger.log('error', 'Error: email sending')
+          } else {
+            res.status(201).json({message: "Email was sent to the user!", password: password})
+          }
+        });
+      }
+    })
+  } catch (error) {
+   logger.log('error', `Error: resetpasswordadmin - ${err}`)
+     res.status(500).json({message: error.message})
+  }
+})
 module.exports = router

@@ -40,14 +40,15 @@ const LayoutComponent = ({children}) => {
         <Layout>
             <Header className="header">
             <div className="logo" />
-            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-                <Menu.Item key="/" onClick={click}>Create User</Menu.Item>
+            <Menu  mode="horizontal" defaultSelectedKeys={['1']}>
+                <Menu.Item key="/" onClick={click}>Create</Menu.Item>
                 <Menu.Item key="/admin/users" onClick={click}>Users</Menu.Item>
                 <Menu.Item key="/admin/programs" onClick={click}>Programs</Menu.Item>
                 <Menu.Item key="/admin/projects" onClick={click}>Projects</Menu.Item>
                 <Menu.Item key="/admin/studies" onClick={click}>Studies</Menu.Item>
                 <Menu.Item key="/admin/tasks" onClick={click}>Tasks</Menu.Item>
                 <Menu.Item key="/admin/datagrids" onClick={click}>Datagrids</Menu.Item>
+                <Menu.Item key="/admin/files" onClick={click}>Files</Menu.Item>
                 <Menu.Item key="/login" onClick={handleLogout}>Logout</Menu.Item>
             </Menu>
             </Header>

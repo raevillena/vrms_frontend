@@ -19,6 +19,7 @@ import Datagrids from './admin/datagrids';
 import Tasks from './admin/tasks';
 import Projects from './admin/projects';
 import Studies from './admin/studies';
+import Files from './admin/files'
 
 function App() {
   const dispatch = useDispatch();
@@ -117,6 +118,7 @@ function App() {
       <PrivateRoute path="/admin/studies" exact component={Studies} auth={authObj}/>
       <PrivateRoute path="/admin/tasks" exact component={Tasks} auth={authObj}/>
       <PrivateRoute path="/admin/datagrids" exact component={Datagrids} auth={authObj}/>
+      <PrivateRoute path="/admin/files" exact component={Files} auth={authObj}/>
       <Route path='*'>
         <PageNotFound/>
       </Route>

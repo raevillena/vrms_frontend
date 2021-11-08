@@ -43,7 +43,8 @@ const ProjectSchema = new mongoose.Schema({
         type: Boolean
     },
     progress:{
-        type: Number
+        type: Number,
+        required: true
     },
     status:{
         type: String,

@@ -43,9 +43,12 @@ const DirectorMonitor = () => {
                 })
             }
             let filteredData =  _.filter(tempUser, function(item) { return item.category[0] !== 'director' })
+            let filteredprogram =  _.filter(program.data, function(item) { return item.active !== 'true' })
+            let filteredproject =  _.filter(project.data, function(item) { return item.active !== 'true' })
+            let filteredstudy =  _.filter(study.data, function(item) { return item.active !== 'true' })
             console.log(filteredData)
             setData(filteredData)
-            setstate({...state, programs: program.data.length, project: project.data.length, study: study.data.length, user: filteredData.length})
+            setstate({...state, programs: filteredprogram.length, project: filteredproject.length, study: filteredstudy.length, user: filteredData.length})
             setLoading(false)
         }
         getProgram()

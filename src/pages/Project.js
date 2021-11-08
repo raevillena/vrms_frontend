@@ -35,7 +35,13 @@ const Project = () => {
     }
 
     function handleProgramChange(value) {
-        setProject({...project, program: value})
+        let tempArray =[]
+        programData.forEach(prog => {
+            if(prog.value === value){
+            tempArray.push(prog.name)
+            }
+        });
+        setProject({...project, program: value, programName: tempArray[0]})
       }
 
     const [form] = Form.useForm();

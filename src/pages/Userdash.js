@@ -9,7 +9,7 @@ import Project from './Project';
 import DirectorDash from './DirectorDash';
 import Highlighter from 'react-highlight-words';
 import {SearchOutlined} from '@ant-design/icons'
-import Dashboard from '../admin/layout'
+import Dashboard from '../admin/dashboard'
 import Layout1 from '../components/components/Layout1';
 
 

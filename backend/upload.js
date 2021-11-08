@@ -121,7 +121,8 @@ router.post("/gallery", upload3.single("file"), async (req, res, next) => {
       const gallery = new Gallery({
         studyID: req.body.study,
         images: req.file.filename,
-        caption: req.body.caption
+        caption: req.body.caption,
+        active: true
       })
       const newGallery =  await gallery.save()
       res.status(201).json({

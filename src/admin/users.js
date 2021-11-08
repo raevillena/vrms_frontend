@@ -2,14 +2,17 @@
 import  { useState, useEffect } from 'react';
 import { onGetAllUser } from '../services/userAPI';
 import LayoutComponent from './layout';
-import {Table, Tag, Button, Input, Space} from 'antd'
+import {Table, Tag, Button, Input, Space, Modal} from 'antd'
 import {SearchOutlined} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
+import EditUser from './edituser';
 
 
 const Users = () => {
     const [state, setstate] = useState()
     const [search, setSearch] = useState({searchText: '', searchedColumn:''})
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [props, setprops] = useState()
     useEffect(() => {
         async function getUser() {
             let res = await onGetAllUser()
@@ -20,7 +23,8 @@ const Users = () => {
                     key: data[i]._id,
                     name: data[i].name,
                     title: data[i].title,
-                    category: [data[i].category]
+                    category: [data[i].category],
+                    email: data[i].email,
                 })
             }
             setstate(arr)
@@ -132,7 +136,7 @@ const Users = () => {
                 let color = cat === 'user' ? 'geekblue' : 'green';
                 return (
                   <Tag color={color} key={cat}>
-                    {cat.toUpperCase()}
+                    {cat}
                   </Tag>
                 );
               })}
@@ -146,19 +150,34 @@ const Users = () => {
             fixed: 'right',
             width: '15%',
             render: (text, record, index) => 
-            <Button type='link'>
+            <Button type='link' onClick={()=>{
+                setprops(record)
+                setIsModalVisible(true)
+            }}>
                 Edit
             </Button>
           },
       ];
 
-     
+      const handleCancel = () => {
+        setIsModalVisible(false);
+      };
+
+      const edit_data = (data) => {
+        let objIndex = state.findIndex((obj => obj.key === data.id));
+          state[objIndex].name = data.name
+          state[objIndex].title = data.title
+          state[objIndex].category = [data.category]
+      }
 
     return (
         <div>
             <LayoutComponent>
                 <Table dataSource={state} size='small' columns={columns} />
             </LayoutComponent>
+            <Modal title="Edit User" visible={isModalVisible} footer={null} onCancel={handleCancel}>
+                <EditUser data={props} func={edit_data}/> 
+            </Modal>
         </div>
     )
 }

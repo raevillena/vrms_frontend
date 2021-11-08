@@ -308,3 +308,51 @@ export async function onGetAllStudyMonitor(body) {
         console.log('error', error)
     }
 }
+
+export async function onGetAllDatagridAdmin() {
+    try {
+        return axios.get(`/v1/studies/getAllDatagridAdmin`, tokenConfig())
+    } catch (error) {
+        console.log('error', error)
+    }
+}
+
+export async function onUpdateStudyAdmin(body) {
+    try {
+        return axios.post('/v1/studies/updateStudyAdmin', body, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onUpdateDatagridAdmin(body) {
+    try {
+        return axios.post('/v1/studies/updateDataGridAdmin', body, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onGetGalleryAdmin() {
+    try {
+        return axios.get(`/v1/studies/studyGalleryAdmin`, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onUpdateGalleryAdmin(body) {
+    try {
+        return axios.post(`/v1/studies/studyGalleryAdminUpdate`, body, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}

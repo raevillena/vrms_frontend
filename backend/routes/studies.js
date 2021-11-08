@@ -515,7 +515,7 @@ router.post("/deleteStudy", auth, async(req,res) => {
 //get gallery
 router.get('/studyGallery/:studyID', auth, async(req, res) => {
     try {
-        await Gallery.find({"studyID": req.params.studyID}, function(err, gallery) {
+        await Gallery.find({"studyID": req.params.studyID, 'active': true}, function(err, gallery) {
             if(err){
                 logger.log('error', 'Error: /studyGallery')
             } else{
@@ -623,7 +623,7 @@ router.post('/updateStudy', auth, async(req, res) => {
 
 router.get("/getAllStudy", async(req,res) => {
     try {
-       Studies.find({active: true}, function(err, studies) {
+       Studies.find({}, function(err, studies) {
         res.send(studies);  
       });
     } catch (error) {
@@ -660,5 +660,82 @@ router.get("/getAllStudy", async(req,res) => {
       logger.log('error', 'Get all study ip error!')  
     }
   })
+
+
+  router.get("/getAllDatagridAdmin", async(req,res) => {
+    try {
+       Datagrid.find({}, function(err, data) {
+        res.send(data);  
+      });
+    } catch (error) {
+      logger.log('error', 'Get all study ip error!')  
+    }
+  })
+
+  router.post('/updateStudyAdmin', auth, async(req, res) => {
+    try {
+        await Studies.findOneAndUpdate({"studyID": req.body.study.studyID}, {'editedBy': req.body.study.user, 'editedDate': Date.now(), 
+        'assignee':req.body.study.assignee, 'assigneeName': req.body.study.assigneeName, 'budget': req.body.study.budget, 'deadline': req.body.study.deadline, 'studyTitle': req.body.study.title,
+        'objectives': req.body.value.objectives, 'active': req.body.study.active, 'projectName': req.body.study.projectName, 'progress': req.body.study.progress, 'dateCreated': req.body.study.dateCreated,
+        'status': req.body.study.status[0]}, 
+        function(err, study) {
+            if(err){
+                logger.log('error', `Error: /updateStudyAdmin - ${err}`)
+            } else{
+                res.send({message: "Study Updated"})
+            }
+          });
+    } catch (error) {
+        logger.log('error', 'Error: /updateStudyAdmin')
+    }
+})
+
+router.post('/updateDataGridAdmin', auth, async(req, res) => {
+    try {
+      await  Datagrid.findOneAndUpdate({'tableID': req.body.id}, {'title': req.body.title, 'description': req.body.description, 'dateUpdated': Date.now(), 'updatedBy': req.body.user, 'active': req.body.active, 'studyID': req.body.studyID}, async(err, edit) =>{
+            if (err) {
+                logger.log('error', 'Error: /updateDataGridAdmin')
+            }else{
+              await  Studies.findOneAndUpdate({'studyID': req.body.studyID}, {'dateUpdated': Date.now(), 'updatedBy': req.body.user}, (err, study) =>{
+                    if(err){
+                        logger.log('error', 'Error: /updateDataGridAdmin')
+                    }else{
+                        res.send({message: "Table updated!"})
+                    }
+                })
+            }
+          })
+    } catch (error) {
+        logger.log('error', 'Error: /updateDatagrid')
+    }
+})
+
+router.get('/studyGalleryAdmin', auth, async(req, res) => {
+    try {
+        await Gallery.find({}, function(err, gallery) {
+            if(err){
+                logger.log('error', 'Error: /studyGalleryAdmin')
+            } else{
+                res.send(gallery)
+            }
+          });
+    } catch (error) {
+        logger.log('error', 'Error: /studyGalleryAdmin')
+    }
+})
+
+router.post('/studyGalleryAdminUpdate', auth, async(req, res) => {
+    try {
+        await Gallery.findOneAndUpdate({'_id': req.body.id}, {'active': req.body.active, 'caption': req.body.caption, 'studyID': req.body.studyID}, function(err, gallery) {
+            if(err){
+                logger.log('error', 'Error: /studyGalleryAdmin')
+            } else{
+                res.send({gallery, message: 'Gallery updated!'})
+            }
+          });
+    } catch (error) {
+        logger.log('error', 'Error: /studyGalleryAdmin')
+    }
+})
 
 module.exports = router

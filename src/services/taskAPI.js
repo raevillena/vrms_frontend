@@ -152,3 +152,53 @@ export async function onGetAllTaskMonitoring(body) {
         }
     }
 }
+
+export async function onGetTaskCreatedbyManager(body) {
+    try {
+        return axios.get(`/v1/tasks/getAllTaskMonitoring/${body}`, tokenConfig());
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onGetAllTaskAdmin() {
+    try {
+        return axios.get(`/v1/tasks/getAllTAskAdmin`, tokenConfig());
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onUpdateTaskAdmin(body) {
+    try {
+        return axios.post(`/v1/tasks/updatetaskadmin`, body, tokenConfig());
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onGetAllFileTaskAdmin() {
+    try {
+        return axios.get(`/v1/tasks/getAllFileListAdmin`, tokenConfig());
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onUpdateFileTaskAdmin(body) {
+    try {
+        return axios.post(`/v1/tasks/updatefiletaskadmin`, body, tokenConfig());
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
