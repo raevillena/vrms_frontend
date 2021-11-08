@@ -26,6 +26,7 @@ export const columnDelete = (data, id) =>{
 
 
 export const emitDatagridChange = (data, id) =>{
+
     socket.emit('send-changes', {data: data, room: id})
 }
 
