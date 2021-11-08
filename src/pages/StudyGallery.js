@@ -67,7 +67,7 @@ const StudyGallery = () => {
         <div>
             {loading ? <Spin className="spinner" /> :
             <div>
-                <Button style={{background:'#A0BF85', display: userObj.USER.category === 'director' ? 'none' : 'initial'}}  onClick={() => setVisible(true)}>
+                <Button icon={<UploadOutlined />} style={{background:'#A0BF85', display: userObj.USER.category === 'director' ? 'none' : 'initial'}}  onClick={() => setVisible(true)}>
                     Upload
                 </Button>
                 <Modal title='Upload Gallery Image' visible={visible} onCancel={() => setVisible(false)} centered footer={null}>

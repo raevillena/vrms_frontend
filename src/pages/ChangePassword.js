@@ -57,7 +57,7 @@ const ChangePassword = () => {
           <Input.Password placeholder="Current Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
             onChange={e => setPassword({...password, oldPassword: e.target.value})} value={password.oldPassword}/>
         </Form.Item>
-        <Form.Item name="npassword"  label="New Password"
+        <Form.Item name="npassword"  label="New Password" hasFeedback
             rules={[
             {
               required: true,
@@ -66,18 +66,30 @@ const ChangePassword = () => {
             {
               min: 8,
               message: 'Password cannot be less than 8 characters'
-            }
+            },
+            {
+              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+              message: `Password must atleast consist 1 uppercase letter, 1 lowercase, 1 special character.`
+           }
           ]}
         >
           <Input.Password placeholder="New Password" style={{marginLeft: '5px', marginRight: '5px'}} iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
             onChange={e => setPassword({...password, newPassword: e.target.value})} value={password.newPassword}/>
         </Form.Item>
-        <Form.Item name='ccpassword' label="Confirm Password"
+        <Form.Item name='ccpassword' label="Confirm Password" hasFeedback
             rules={[
               {
                 required: true,
                 message: 'Please confirm your new password!',
               },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('npassword') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                },
+              }),
             ]}
         >
           <Input.Password placeholder="Confirm New Password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
