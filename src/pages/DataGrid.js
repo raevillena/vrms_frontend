@@ -366,7 +366,9 @@ const DataGrid = () => {
               </div>
             </div>
         </Modal>
+        <div style={{marginTop: '10px'}}>
         <GridTable  data={state.addTable}/>
+        </div>
     </div>
   )
 }

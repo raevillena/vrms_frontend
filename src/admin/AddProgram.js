@@ -84,7 +84,6 @@ const AddProgram = () => {
     async function onSubmit(){
         try {
           let result =  await onProjectCreate(project)
-          const data = result.data.newProject
           notif("success",result.data.message)
           form.resetFields()
           form1.resetFields()
@@ -101,7 +100,6 @@ const AddProgram = () => {
     async function onSubmitProgram(){
         try {
           let result =  await onProgramCreate(project)
-          const newProgram = result.data.newProgram
           notif("success",result.data.message1)
           form.resetFields()
           form1.resetFields()

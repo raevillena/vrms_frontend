@@ -6,7 +6,6 @@ import Tasks from './DisplayTasks'
 import Documentation from './Documentation'
 import '../styles/CSS/Userdash.css'
 import Mobiledash from './StudyDash_mobile';
-
 import StudyGallery from './StudyGallery';
 import Layout1 from '../components/components/Layout1';
 
@@ -16,9 +15,9 @@ const { TabPane } = Tabs;
 const StudyDash = () => {
 
     return (
-      <div>
+      <div >
         <Layout1>
-            <div style={{margin: '10px 10px 10px 10px'}}>
+            <div className='study-dash' style={{margin: '10px 10px 10px 10px'}}>
             <Label/>
             <div className="card-container">
             <Tabs type='card'>
@@ -37,8 +36,8 @@ const StudyDash = () => {
             </Tabs>
             </div>
             </div>
+            <Mobiledash/>
         </Layout1>
-        <Mobiledash/>
         </div>
     )
 }

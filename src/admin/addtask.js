@@ -9,10 +9,7 @@ import _ from 'lodash'
 
 const Addtask = () => {
 
-    const projectObj = useSelector(state => state.project)
-    const studyObj = useSelector(state => state.study)
     const userObj = useSelector(state => state.user)
-    let obj = studyObj.STUDY.objectives
 
     const [form] = Form.useForm();
 
@@ -71,7 +68,7 @@ const Addtask = () => {
     }
 
     const studyChange = async (value) => {   //for choosing study
-        let filteredData =  _.filter(studyData, function(item) { return item.key == value })
+        let filteredData =  _.filter(studyData, function(item) { return item.key === value })
         setTask({...task, studyName: value})
         setObjData(filteredData[0].objective)
      }

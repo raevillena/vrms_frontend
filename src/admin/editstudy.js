@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { notif } from '../functions/datagrid';
 import { onGetAllUsers } from '../services/userAPI';
 import moment from 'moment';
-import { onUpdateStudy, onUpdateStudyAdmin } from '../services/studyAPI';
+import { onUpdateStudyAdmin } from '../services/studyAPI';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 const { TextArea } = Input;

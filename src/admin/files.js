@@ -3,7 +3,7 @@ import LayoutComponent from './layout'
 import {Table, Card, Button, Image, Space, Input, Modal} from 'antd'
 import { onGetAllFileTaskAdmin } from '../services/taskAPI'
 import moment from 'moment'
-import { onGetGalleryAdmin, onUpdateGalleryAdmin } from '../services/studyAPI'
+import { onGetGalleryAdmin } from '../services/studyAPI'
 import Highlighter from 'react-highlight-words';
 import {SearchOutlined} from '@ant-design/icons';
 import EditGallery from './editgallery'
