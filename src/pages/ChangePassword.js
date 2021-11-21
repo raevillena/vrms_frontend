@@ -44,7 +44,7 @@ const ChangePassword = () => {
      }
 
   return (
-    <Form style={{fontFamily: "Montserrat", display: 'grid', justifyItems: 'center'}} onFinish={onSubmit} initialValues={initialValues} form={form}>
+    <Form name="basic"  style={{fontFamily: "Montserrat"}} onFinish={onSubmit} initialValues={initialValues} form={form}>
       <Title level={2}>Change Password</Title>
         <Form.Item name="cpassword"  label="Current Password"
           rules={[
@@ -97,7 +97,7 @@ const ChangePassword = () => {
         />
         </Form.Item>
         <Form.Item>
-          <Button htmlType="submit" style={{background: "#A0BF85", borderRadius: "5px"}} >SUBMIT</Button>
+          <Button block htmlType="submit" style={{background: "#A0BF85", borderRadius: "5px"}} >SUBMIT</Button>
         </Form.Item>
     </Form>
   )

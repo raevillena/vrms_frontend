@@ -46,7 +46,8 @@ router.route('/createproject').post(async (req, res) => {
         assigneeName: req.body.assigneeName,
         deadline: req.body.deadline,
         active: true,
-        status: 'ONGOING'
+        status: 'ONGOING',
+        progress: 0
     })
     const doesExist = await Project.findOne({projectName: req.body.projectName})
     if(doesExist){

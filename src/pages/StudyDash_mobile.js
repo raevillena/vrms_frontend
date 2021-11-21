@@ -15,10 +15,10 @@ const StudyDash_Mobile = () => {
     return (
         <div className="mobile-study-dash">
             <div style={{marginTop: '5px',marginLeft:'10px', marginRight: '10px'}}>
-                <div>
+                <div >
                     <Documentation/>
                 </div>
-                <div className='div-gap'>
+                <div >
                     <Title level={2}>Tasks</Title>
                     <Tasks/>
                 </div>
@@ -26,10 +26,10 @@ const StudyDash_Mobile = () => {
                     <Title level={2}>Gallery</Title>
                     <StudyGallery/>
                 </div>
-                <div className='div-gap'>
-                    <DataGrid/>
-                </div>
+               
             </div>
+      <DataGrid/>
+                
         </div>
     )
 }

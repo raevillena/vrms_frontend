@@ -14,6 +14,9 @@ const DocumentationSchema = new mongoose.Schema({
     conclusion: {
         type: String,
     },
+    rrl: {
+        type: String,
+    },
     studyID: {
         type: String,
     }

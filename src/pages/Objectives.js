@@ -1,46 +1,108 @@
-import React, {useState, useEffect} from 'react'
-import { onGetStudyForDoc } from '../services/studyAPI';
+import React from 'react'
+import { onUpdateObjective } from '../services/studyAPI';
 import { useSelector } from 'react-redux';
 import { notif } from '../functions/datagrid';
-import { List , Spin} from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import {  Form, Button, Input} from 'antd';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import '../styles/CSS/Userdash.css'
 
+const { TextArea } = Input;
+
+const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 4 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 20 },
+    },
+  };
+  const formItemLayoutWithOutLabel = {
+    wrapperCol: {
+      xs: { span: 24, offset: 0 },
+      sm: { span: 20, offset: 4 },
+    },
+  };
+
 const Objectives = () => {
-    const [loading, setLoading] = useState(false)
     const studyObj = useSelector(state => state.study)
-    const [obj, setObj] = useState()
-    const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+    const initialValues = {objectives: studyObj.STUDY.objectives}
 
-    useEffect(() => {
-        async function getStudyData(){
-            try {
-                setLoading(true)
-                let result = await onGetStudyForDoc({studyID: studyObj.STUDY.studyID})
-                setObj(result.data.study[0].objectives)
-                setLoading(false)
-            } catch (error) {
-                notif('error', 'Error in getting data!')
-            }
-        }
+ 
 
-          getStudyData()
-          return () => console.log("unmounting from summary")
-      }, [studyObj.STUDY.studyID])
+      async function handleUpdate(value){
+        let res = await onUpdateObjective({'studyID': studyObj.STUDY.studyID, value})
+        notif('info', res.data.message)
+     }
 
 
     return (
         <div>
-           {loading? <Spin indicator={antIcon} className='spinner' /> : 
-            <div className="div-flex">
-            <label style={{fontWeight:'bolder', marginTop: '7px'}}>Objectives: </label>
-            <List size="small"
-                dataSource={obj}
-                renderItem={item => <List.Item>{item}</List.Item>}
+            
+           <Form onFinish={handleUpdate} initialValues={initialValues}>
+            <Form.List
+            name="objectives"
+            rules={[
+            {
+                validator: async (_, objective) => {
+                if (!objective || objective.length < 2) {
+                    return Promise.reject(new Error('At least 2 objectives'));
+                }
+                }
+            },
+            ]}
+        >
+            {(fields, { add, remove }, { errors }) => (
+            <>
+                {fields.map((field, index) => (
+                <Form.Item
+                    {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                    label={index === 0 ? 'Objectives' : ''}
+                    required={false}
+                    key={field.key}
                 >
-            </List>
-        </div>
-           }
+                    <Form.Item
+                    {...field}
+                    validateTrigger={['onChange', 'onBlur']}
+                    rules={[
+                        {
+                        required: true,
+                        whitespace: true,
+                        message: "Please input objective or delete this field.",
+                        },
+                    ]}
+                    noStyle
+                    >
+                    <TextArea autoSize={{ minRows: 3, maxRows: 6 }} placeholder="Objective" style={{width: '50%'}} />
+                    </Form.Item>
+                    {fields.length > 1 ? (
+                    <MinusCircleOutlined
+                        className="dynamic-delete-button"
+                        onClick={() => remove(field.name)}
+                    />
+                    ) : null}
+                </Form.Item>
+                ))}
+                <Form.Item {...formItemLayoutWithOutLabel}>
+                <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    style={{ width: '50%' }}
+                    icon={<PlusOutlined />}
+                >
+                    Add objective
+                </Button>
+                <Form.ErrorList errors={errors} />
+                </Form.Item>
+                <Form.Item {...formItemLayoutWithOutLabel}>
+                    <Button htmlType='submit' style={{background: "#A0BF85", borderRadius: "5px", width: '50%'}} block>Update Objective</Button>
+                </Form.Item>
+            </>
+            )}
+        </Form.List>
+        </Form>
+           
         </div>
     )
 }

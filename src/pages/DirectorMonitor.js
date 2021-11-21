@@ -221,7 +221,7 @@ const DirectorMonitor = () => {
                         </Col>
                         <Col span={5}>
                             <Card style={{borderRadius: '10px', background: '#8BBE5E', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading}>
-                                <Meta style={{color: '#FFFFFF'}} title={state.user} description='Total Researchers' avatar={<UserOutlined style={{fontSize: '45px'}}/>}/>
+                                <Meta style={{color: '#FFFFFF'}} title={state.user} description='Total Researcher' avatar={<UserOutlined style={{fontSize: '45px'}}/>}/>
                             </Card>
                         </Col>
                     </Row>

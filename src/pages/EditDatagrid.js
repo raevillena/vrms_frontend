@@ -1,16 +1,19 @@
-import React, {useState, useEffect, useMemo, useCallback} from 'react';
+import React, {useState, useEffect, useMemo, useCallback, useRef} from 'react';
 import {Button, Input, Select, Spin, Tooltip, Image, Avatar } from 'antd'
 import { useSelector, useDispatch} from 'react-redux';
 import { DynamicDataSheetGrid, checkboxColumn,keyColumn} from 'react-datasheet-grid';
 import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined,  LoadingOutlined, UndoOutlined, RedoOutlined, RetweetOutlined } from '@ant-design/icons';
-import { onEditDatagrid, onGetCurrentEditing } from '../services/studyAPI';
+import { onBackupDatagrid, onEditDatagrid, onGetCurrentEditing } from '../services/studyAPI'
 import '../styles/CSS/Userdash.css'
 import { notif, downloadCSV, updateDB} from '../functions/datagrid'
 import { onUploadDataGrid } from '../services/uploadAPI';
 import { socket , changeColumns, columnDelete, emitDatagridChange, emitUndo, emitReplaceCol } from '../services/socket';
 import {onUpdateCurrentEditing} from '../services/studyAPI'
 
+
 const EditDataGrid = (props) => {
+
+  const timerIdRef2= useRef(0);
 
   const { Option } = Select
   const dispatch = useDispatch();
@@ -41,6 +44,7 @@ const EditDataGrid = (props) => {
   const [currentEditing, setCurrentEditing] = useState({avatar: '', username: ''})
 
 
+
   //declaring icon
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
@@ -51,16 +55,13 @@ const EditDataGrid = (props) => {
 
   //decalaring data to send backend
   const dataToSend ={
-    user: userObj.USER.name,
+    user: userObj.USER._id,
     title: state.title,
     description: state.description,
     studyID: studyObj.STUDY.studyID,
     data: datagridData,
     columns: columns
   }
-
-
- // let timer = null
 
   const checkColumnType= (key,title) => {
       switch(key) {
@@ -77,29 +78,62 @@ const EditDataGrid = (props) => {
 
   
   var timer;
-  const runTimer = () => {
-    timer = window.setTimeout(
-      () => {
-        document.getElementById('save').click()
-       // updateDB(dataToSend, props.data.id.tableID ,userObj.USER.name)
-      }, 5000);
-  }
+  var timer1;
+  //var el = document.getElementById('save');
+  const timerIdRef = useRef(0);
+ 
 
+const runTimer = () => {
+  /*timer = setTimeout(
+    () => {
+      document.getElementById('save').click()
+    // updateDB(dataToSend, props.data.id.tableID ,userObj.USER.name)
+    }, 5000);*/
+   // if (timerIdRef.current) { return; }
+    timerIdRef.current = setInterval( () => document.getElementById('save').click(), 5000);
+}
+
+const runTimer2 = () => {
+    timerIdRef.current = setInterval( () => document.getElementById('backup').click(), 5000);
+}
+
+async function backup(){
+  try {
+    await onBackupDatagrid({user: userObj.USER._id,
+      title: state.title,
+      description: state.description,
+      studyID: studyObj.STUDY.studyID,
+      data: data,
+      columns: tempCol,
+      tableID: props.data.id.tableID})
+  } catch (error) {
+    console.log(error)
+  }
+}
 
   function update(){
-    window.clearTimeout(timer)
-    updateDB(dataToSend, props.data.id.tableID ,userObj.USER.name)
-    props.func({'data': dataToSend, 'id':props.data.id.tableID});
-    window.clearTimeout(timer)
+      //clearTimeout(timer)
+      clearInterval(timerIdRef.current);
+      timerIdRef.current = 0;
+      updateDB(dataToSend, props.data.id.tableID ,userObj.USER.name)
+      props.func({'data': dataToSend, 'id':props.data.id.tableID});
   }
 
+  function startStop(){
+    //clearTimeout(timer)
+    clearInterval(timerIdRef.current);
+    timerIdRef.current = 0;
+    updateDB(dataToSend, props.data.id.tableID ,userObj.USER.name)
+  }
+
+  
 
  const TextComponent = React.memo(
     ({ rowData, setRowData, active}) => {
       const handleOnChange = (e) =>{
-            window.clearTimeout(timer)
-            runTimer() 
-            setRowData(e.target.value)
+          clearInterval(timerIdRef.current)
+          runTimer()
+          setRowData(e.target.value)
       }
       return (
         <input
@@ -156,6 +190,8 @@ const EditDataGrid = (props) => {
     pasteValue: ({ value }) => value,
   }
 
+
+
   useEffect(()=> { //getting data
     try {
       socket.on(props.data.id.tableID, msg =>{
@@ -177,7 +213,6 @@ const EditDataGrid = (props) => {
       async function getEditData(){ //edit data
         let resultDB =  await onEditDatagrid(props.data.id)
         let result = resultDB.data
-        console.log(result)
         let tempCols=[]
         try{
           for(let j = 0; j < result[0].columns.length ; j++) {
@@ -193,12 +228,20 @@ const EditDataGrid = (props) => {
         }
         setDatagridData(result[0].data)
         setTempCol(tempCols)
+        await onBackupDatagrid({user: userObj.USER._id,
+          title: result[0].title,
+          description: result[0].description,
+          studyID: studyObj.STUDY.studyID,
+          data: result[0].data,
+          columns: tempCols,
+          tableID: props.data.id.tableID})
       }
       getEditData()
     } catch (error) {
       notif('error', 'There is something wrong! Unable to display data!')
     }
   }, [props.data])
+
 
   useEffect(() => { //disable buttons for adding column
     if (addColumn === undefined ||addColumn ==='') {
@@ -329,10 +372,10 @@ const EditDataGrid = (props) => {
     if(divDisabled === false){
       emitDatagridChange(datagridData, props.data.id.tableID)
     }
-    clearTimeout(timer)
   }, [datagridData])
 
   useEffect(() => {
+    
     socket.on('receive-datagrid', msg => {
       setDatagridData(msg)
     })
@@ -345,6 +388,13 @@ const EditDataGrid = (props) => {
       setTempCol(tempCols)
       setDatagridData(msg.data)
     })
+    runTimer2()
+    return () =>{ 
+      clearInterval(timerIdRef.current);
+      clearInterval(timerIdRef2.current);
+      //timerIdRef2.current = 0;
+    }
+   
   }, [])
 
 
@@ -545,7 +595,9 @@ const EditDataGrid = (props) => {
                   <Tooltip title={currentEditing.username}>
                     <Avatar src={`/avatar/${currentEditing.avatar}`}/>
                   </Tooltip>
-                  <Button type="primary" id='save' onClick={update} >Save</Button>
+                  <Button type="primary" id='save' onClick={update} hidden={true} >Save</Button>
+                  <Button type="primary" id='backup' onClick={backup} hidden={true} >backup</Button>
+                  <Button type="primary" id='save1' onClick={startStop} >Save</Button>
                 </div>
             </div> }
         </div>   

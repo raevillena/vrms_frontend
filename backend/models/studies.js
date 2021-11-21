@@ -81,7 +81,6 @@ const StudiesSchema = new mongoose.Schema({
     },
     objectives: {
         type: Array,
-        required: true
     }
 })
 

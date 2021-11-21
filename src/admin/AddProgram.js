@@ -72,13 +72,18 @@ const AddProgram = () => {
     }
 
     function handleProgramChange(value) {
+        console.log(value)
         let tempArray =[]
         programData.forEach(prog => {
             if(prog.value === value){
             tempArray.push(prog.name)
             }
         });
-        setProject({...project, program: value, programName: tempArray[0]})
+        if(value === 'others'){
+            setProject({...project, program: value, programName: value})
+        }else{
+            setProject({...project, program: value, programName: tempArray[0]})
+        }
       }
 
     async function onSubmit(){

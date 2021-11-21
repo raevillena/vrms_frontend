@@ -41,7 +41,11 @@ const Project = () => {
             tempArray.push(prog.name)
             }
         });
-        setProject({...project, program: value, programName: tempArray[0]})
+        if(value === 'others'){
+            setProject({...project, program: value, programName: value})
+        }else{
+            setProject({...project, program: value, programName: tempArray[0]})
+        }
       }
 
     const [form] = Form.useForm();

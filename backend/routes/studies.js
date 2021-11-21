@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const Studies = require('../models/studies')
 const Datagrid = require('../models/datagrid')
+const Backup = require('../models/backup')
 const Projects = require('../models/projects')
 const Download = require('../models/download')
 const Editlog = require('../models/editlog')
@@ -168,6 +169,44 @@ router.post('/updateIntroduction', auth,  async(req, res) => {
                     logger.log('error', err)
                 }else{
                     res.send({newDoc})
+                }
+            })
+        }
+    } catch (error) {
+        logger.log('error', error)
+        res.status(400).json({message: error.message})
+    }
+})
+
+router.post('/updateRrl', auth, async(req, res) => {
+    try {
+       const doesExist = await Documentation.findOne({"studyID": req.body.studyID})
+        if(doesExist){
+            Documentation.updateOne({"studyID": req.body.studyID}, {"rrl": req.body.rrl},
+             function(err, docs){
+                if(err){
+                    logger.log('error', err)
+                }else{
+                    Studies.updateOne({"studyID": req.body.studyID}, {"updatedBy": req.body.user}, function(err){
+                        if(err){
+                            logger.log('error', err)
+                        }else{
+                            res.send({docs, message: 'Document Updated!'})
+                        }
+                    })
+                }
+            })
+        }else{
+            const document = new Documentation({
+                rrl: req.body.methodology,
+                studyID: req.body.studyID   
+            })
+            const newDoc =  await document.save()
+            Studies.updateOne({"studyID": req.body.studyID}, {"updatedBy": req.body.user}, function(err){
+                if(err){
+                    logger.log('error', err)
+                }else{
+                    res.send({newDoc, message: 'Document Updated!'})
                 }
             })
         }
@@ -370,6 +409,28 @@ router.get('/editDataGrid/:tableID', auth, async(req, res) => {
           });
     } catch (error) {
         logger.log('error', 'Error: /editDatagrid')
+    }
+})
+
+//backup datagrid
+router.post('/backupDatagrid', auth, async(req, res) => {
+    //console.log(req.body)
+    try {
+        const newBackup = new Backup({
+            backupDate: Date.now(),
+            backupBy: req.body.user,
+            title: req.body.title,
+            description: req.body.description,
+            data: req.body.data,
+            columns: req.body.columns,
+            studyID: req.body.studyID,
+            active: true,
+           tableID: req.body.tableID
+        })
+       
+        await newBackup.save()
+    } catch (error) {
+        logger.log('error', 'Error: /backupDatagrid')
     }
 })
 
@@ -735,6 +796,20 @@ router.post('/studyGalleryAdminUpdate', auth, async(req, res) => {
           });
     } catch (error) {
         logger.log('error', 'Error: /studyGalleryAdmin')
+    }
+})
+
+router.post('/updateObjective', auth, async(req, res) => {
+    try {
+        await Studies.findOneAndUpdate({'studyID': req.body.studyID}, {'objectives': req.body.value.objectives}, function(err, study) {
+            if(err){
+                logger.log('error', 'Error: /studyGalleryAdmin')
+            } else{
+                res.send({message: 'Objectives updated!'})
+            }
+          });
+    } catch (error) {
+        logger.log('error', 'Error: /updateObjective')
     }
 })
 

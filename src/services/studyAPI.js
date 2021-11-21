@@ -51,6 +51,16 @@ export async function onUpdateMethodology(body) {
     }
 }
 
+export async function onUpdateRrl(body) {
+    try {
+        return axios.post(`/v1/studies/updateRrl`, body, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
 export async function onUpdateResultsAndDiscussion(body) {
     try {
         return axios.post(`/v1/studies/updateResultsAndDiscussion`, body, tokenConfig())
@@ -352,6 +362,26 @@ export async function onUpdateGalleryAdmin(body) {
         return axios.post(`/v1/studies/studyGalleryAdminUpdate`, body, tokenConfig())
     } catch (error) {
         return {
+            error: error
+        }
+    }
+}
+
+export async function onBackupDatagrid(body) {
+    try {
+        return axios.post("/v1/studies/backupDatagrid", body, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onUpdateObjective(body){
+    try {
+        return axios.post("v1/studies/updateObjective", body, tokenConfig())
+    } catch (error) {
+        return{
             error: error
         }
     }

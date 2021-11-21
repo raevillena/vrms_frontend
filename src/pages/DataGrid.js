@@ -1,15 +1,15 @@
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
-import {Button, Input, Select, notification, Modal, Image, Tooltip} from 'antd'
+import {Button, Input, Select, Modal, Image, Tooltip} from 'antd'
 import { onAddDatagrid, onGetDatagridCol} from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import { DynamicDataSheetGrid, 
   checkboxColumn,
-  textColumn,
   keyColumn  } from 'react-datasheet-grid'
 import GridTable from './GridTable';
-import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, PlusSquareFilled} from '@ant-design/icons';
+import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, PlusSquareFilled, RetweetOutlined} from '@ant-design/icons';
 import { onUploadDataGrid } from '../services/uploadAPI';
 import '../styles/CSS/Userdash.css'
+import { notif } from '../functions/datagrid';
 
 
 const DataGrid = () => {
@@ -18,62 +18,75 @@ const DataGrid = () => {
 
   const studyObj = useSelector(state => state.study) //study reducer
   const userObj = useSelector(state => state.user) //user reducer
+  const [col, setCol] = useState({newCol: '', replaceCol: []})
+  const [ addColumn, setAddColumn ] = useState([])
+  const [ data, setData ] = useState([])
   const [state, setstate] = useState({
     title: '', 
     description: '', 
     columnsData: [], 
-    addColumn: '', 
     disableCol: true, 
     removeCol: '', 
     disableCreate: true,
     addTable: '', 
-    tempCol: [{ //column
-      ...keyColumn('Checkbox', checkboxColumn),
-      title: 'Checkbox',
-      type: 'Checkbox'
-    }],
     isModalImage: false,
     isModalAdd: false,
     dupCol : []
   })
-  const [ data, setData ] = useState([])
+  
 
-  const notif = (type, message) => {
-    notification[type]({
-      message: 'Notification Title',
-      description:
-        message,
-    });
-  };
+ 
 
+  const TextComponent = React.memo(
+    ({ rowData, setRowData, active}) => {
+      const handleOnChange = (e) =>{
+          setRowData(e.target.value)
+      }
+      return (
+        <input
+          className="dsg-input"
+          style={{border: 'none'}}
+          value={rowData}
+          onChange={(e) => handleOnChange(e)}
+        />
+      )
+    }
+  )
 
   const CameraComponent = React.memo(
     ({ rowData, setRowData }) => {
       return (
         <div style={{display:'flex', gap:'5px'}}>
-          <div>
+        <div>
             <Button value={rowData}>
-              <label className="file_input_id">
-                <CameraFilled/>
-                  <input type="file"  accept="image/*" onChange={async e => {
-                        const file = e.target.files[0]
-                        const data = new FormData()
-                        data.append("file", file)
-                        let result = await onUploadDataGrid(data) //uploading
-                        setRowData(result.data.filename)
-                      }
+              <label className="file_input_id"><CameraFilled/>
+                <input type="file"  accept="image/*" onChange={async e => {
+                      const file = e.target.files[0]
+                      const data = new FormData()
+                      data.append("file", file)
+                      let result = await onUploadDataGrid(data) //uploading
+                      setRowData(result.data.filename)
+                      notif('info', result.data.message)
                     }
-                    />
+                  }
+                  />
               </label>
             </Button>
-          </div>
+        </div>
         <div>  
           <Image width={20} src={`/datagrid/${rowData}`}/>
-          </div>
+        </div>
       </div>     
       )
     }
   )
+
+  const textColumn = {
+    component: TextComponent,
+    deleteValue: () => '',
+    copyValue: ({ rowData }) => rowData,
+    pasteValue: ({ value }) => value,
+  }
 
   const cameraColumn = {
     component: CameraComponent,
@@ -82,18 +95,23 @@ const DataGrid = () => {
     pasteValue: ({ value }) => value,
   }
 
-  const columns = useMemo(() => state.tempCol, [state.tempCol]) //displaying columns in datasheet 
+  const [ tempCol, setTempCol ] = useState([{ //column
+    ...keyColumn('Sample', textColumn),
+    title: 'Sample',
+    type: 'text'
+  }])
+
+  
+  const columns = useMemo(() => tempCol, [tempCol]) //displaying columns in datasheet 
   const createRow = useCallback(() => ({}), []) //creating row
   
   const addTextColumn = () => {
-    setstate({
-      ...state, 
-      addColumn: '', 
-      tempCol: [...columns, {
-      ...keyColumn(state.addColumn, textColumn),
-      title: state.addColumn,
+    setTempCol([...columns, {
+      ...keyColumn(addColumn, textColumn),
+      title: addColumn,
       type: 'text'
-    }]})
+    }])
+    setAddColumn('')
   }
 
   useEffect(() => {
@@ -127,15 +145,15 @@ const DataGrid = () => {
       setstate({...state, columnsData: tempColumns})
   }
     getColumns()
-  }, [state.tempCol, columns])
+  }, [tempCol, columns])
 
   useEffect(() => { //disable column
-    if (state.addColumn === undefined ||state.addColumn ==='') {
+    if (addColumn === undefined ||addColumn ==='') {
       setstate({...state, disableCol: true})
     } else {
       setstate({...state, disableCol: false})
     }
-  }, [state.addColumn]);
+  }, [addColumn]);
 
   useEffect(() => { //create button disable
     if (state.title === undefined ||state.title ===''|| state.description === undefined ||state.description ==='') {
@@ -147,30 +165,33 @@ const DataGrid = () => {
 
 
   const addCheckboxColumn = () => {
-    setstate({...state, addColumn: '', tempCol: [...columns, {
-      ...keyColumn(state.addColumn, checkboxColumn),
-      title: state.addColumn,
+    setTempCol([...tempCol, {
+      ...keyColumn(addColumn, checkboxColumn),
+      title: addColumn,
       type:'Checkbox'
-    }]})
+    }])
+    setAddColumn('')
   }
 
   const addCameraColumn = () => {
-    setstate({...state, addColumn:'', tempCol: [...columns, {
-      ...keyColumn(state.addColumn, cameraColumn),
-      title: state.addColumn,
-      disabled: ({ rowData }) => !rowData.Checkbox,
+    setTempCol([...tempCol, {
+      ...keyColumn(addColumn, cameraColumn),
+      title: addColumn,
       type:'camera'
-    }]})
+    }])
+    setAddColumn('')
   }
 
   const removeColumn = (key) => {
     try {
       let newColumn = columns.filter(value => !key.includes(value.title));
-      setstate({...state, tempCol: newColumn})
+      setTempCol(newColumn)
     } catch (error) {
       notif('error', error)
     }
   }
+
+ 
 
   const checkColumnType= (key,title) => {
     switch(key) {
@@ -185,8 +206,33 @@ const DataGrid = () => {
     }
 }
 
+const handleReplace = () =>{
+  if(col.newCol === ''){
+    notif('error', 'New column anme is empty!')
+  }else{
+    let arr = []
+
+    let index = tempCol.findIndex((obj => obj.title === col.replaceCol))
+    tempCol[index].title = col.newCol
+    tempCol.forEach((col) => {
+      arr.push(checkColumnType(col.type, col.title))
+    })
+    setTempCol(arr)
+    data.forEach((element) => {
+      element[col.newCol] = element[col.replaceCol]
+      delete element[col.replaceCol]
+    })
+    setCol({...col, newCol: '', replaceCol: []})
+    
+  }
+}
+
   function handleColumnToDelete(value) { //handling deleting column
     setstate({...state, removeCol: value})
+  }
+
+  function handleColumnToReplace(value) { //setting column to delete
+    setCol({...col, replaceCol: value})
   }
 
   function handleDuplicateColumn(value) { //handling duplicating table
@@ -196,7 +242,7 @@ const DataGrid = () => {
     for (let index = 0; index < obj.value.length; index++) {
       tempColArr.push(checkColumnType(obj.value[index].type, obj.value[index].title))
     }
-    setstate({...state, tempCol: tempColArr })
+   setTempCol(tempColArr)
   }
 
 
@@ -208,16 +254,14 @@ const DataGrid = () => {
       description: state.description,
       studyID: studyObj.STUDY.studyID,
       data: data,
-      columns: state.tempCol
+      columns: tempCol
     }
     let result = await onAddDatagrid(dataToSend)
     if(result.status === 200){
-      setstate({...state, title: '', description: '', addTable: result.data.data, tempCol: [{
-        ...keyColumn('Checkbox', checkboxColumn),
-        title: 'Checkbox',
-        type: 'Checkbox'
-      }]})
+      setstate({...state, title: '', description: '', addTable: result.data.data,})
       notif('success', result.data.message)
+      
+      //setTempCol([checkColumnType('text','Sample')])
       setData([])
     }else{
      notif('error', result.data.message)
@@ -263,12 +307,13 @@ const DataGrid = () => {
       addColumn:'', 
       removeCol: '', 
       isModalAdd: false,
-      tempCol: [{ 
-        ...keyColumn('Checkbox', checkboxColumn),
-        title: 'Checkbox',
-        type: 'Checkbox'
-      }]
     })
+    setData([])
+    /*setTempCol([{ //column
+      ...keyColumn('Sample', textColumn),
+      title: 'Sample',
+      type: 'text'
+    }])*/
   };
 
   return (
@@ -300,7 +345,7 @@ const DataGrid = () => {
                     Column Title
                   </label>
                   <div style={{display:'flex', flexDirection:'row', gap:'3px'}}>
-                    <Input  placeholder="Enter Column title" onChange={(e)=> {setstate({...state, addColumn: e.target.value})}} value={state.addColumn}/>
+                    <Input  placeholder="Enter Column title" onChange={(e)=> {setAddColumn(e.target.value)}} value={addColumn}/>
                     <Tooltip placement='top' title='Text Column'>
                       <Button disabled={state.disableCol}  onClick={addTextColumn}>
                         <FontSizeOutlined />
@@ -324,7 +369,7 @@ const DataGrid = () => {
                   </label>
                   <div style={{display:'flex', flexDirection:'row', gap:'5px', width:'300px'}}>
                     <Select placeholder="Select column title to delete" onChange={handleColumnToDelete} mode="tags" tokenSeparators={[',']} style={{ width: '100%' }}>
-                        {state.tempCol.map(column => (
+                        {tempCol.map(column => (
                           <Option key={column.title} value={column.title}>{column.title}</Option>
                         ))}
                      </Select>
@@ -342,13 +387,31 @@ const DataGrid = () => {
                   <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>
                     Duplicate Table 
                   </label>
-                  <div style={{display:'flex', flexDirection:'row', gap:'5px', width:'300px'}}>
+                  <div style={{display:'flex', flexDirection:'row', gap:'5px'}}>
                     <Select placeholder="Select table to duplicate" onChange={handleDuplicateColumn}>
                         {state.dupCol.map(column => (
                           <Option key={column.title} value={column.title}>{column.title}</Option>
                         ))}
                      </Select>
                   </div>
+                </div>
+                <div style={{display:'grid'}}>
+                    <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>
+                      Edit Column Title
+                    </label>
+                    <div style={{display:'flex', flexDirection:'row', gap:'3px'}}>
+                        <Input  placeholder="Enter New Column title" onChange={(e)=> {setCol({...col, newCol: e.target.value})}} value={col.newCol} />
+                        <Select placeholder="Column to Replace" onChange={handleColumnToReplace}  value={col.replaceCol}  >
+                        {tempCol.map(column => (
+                          <Option key={column.title} value={column.title}>{column.title}</Option>
+                        ))}
+                      </Select>
+                        <Tooltip placement='top' title='Replace Column Title'>
+                          <Button onClick={handleReplace}>
+                            <RetweetOutlined />
+                          </Button>
+                        </Tooltip>
+                    </div>
                 </div>
                 </div>
               <div style={{marginTop:'20px'}}>
@@ -366,9 +429,7 @@ const DataGrid = () => {
               </div>
             </div>
         </Modal>
-        <div style={{marginTop: '10px'}}>
         <GridTable  data={state.addTable}/>
-        </div>
     </div>
   )
 }

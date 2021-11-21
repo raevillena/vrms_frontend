@@ -1,217 +1,67 @@
-2021-10-25T07:21:38.432Z [info]: server started at port: 3001
-2021-10-25T07:26:05.753Z [info]: server started at port: 3001
-2021-10-25T07:28:16.933Z [info]: server started at port: 3001
-2021-10-25T07:37:16.742Z [info]: server started at port: 3001
-2021-10-25T07:37:47.276Z [info]: server started at port: 3001
-2021-10-25T07:38:29.711Z [info]: server started at port: 3001
-2021-10-25T07:52:56.904Z [info]: server started at port: 3001
-2021-10-25T07:53:47.973Z [info]: server started at port: 3001
-2021-10-25T07:54:29.463Z [info]: server started at port: 3001
-2021-10-25T07:57:05.501Z [info]: server started at port: 3001
-2021-10-25T08:04:06.431Z [info]: server started at port: 3001
-2021-10-26T06:27:56.622Z [info]: server started at port: 3001
-2021-10-26T06:29:22.689Z [info]: server started at port: 3001
-2021-10-26T06:29:44.310Z [info]: server started at port: 3001
-2021-10-26T06:30:38.178Z [info]: server started at port: 3001
-2021-10-26T06:32:03.106Z [info]: server started at port: 3001
-2021-10-26T06:48:31.950Z [info]: server started at port: 3001
-2021-10-26T12:22:51.028Z [error]: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://docs.atlas.mongodb.com/security-whitelist/
-2021-10-26T12:25:26.052Z [info]: server started at port: 3001
-2021-10-26T12:28:06.359Z [info]: server started at port: 3001
-2021-10-27T02:05:58.129Z [info]: server started at port: 3001
-2021-10-27T02:32:00.881Z [info]: server started at port: 3001
-2021-10-27T02:45:40.358Z [info]: server started at port: 3001
-2021-10-27T02:49:55.451Z [info]: server started at port: 3001
-2021-10-27T02:50:06.235Z [error]: Error: /getUserTaskProductivity
-2021-10-27T02:50:19.158Z [error]: Error: /getUserTaskProductivity
-2021-10-27T02:52:25.083Z [info]: server started at port: 3001
-2021-10-27T02:55:13.350Z [info]: server started at port: 3001
-2021-10-27T02:55:38.189Z [info]: server started at port: 3001
-2021-10-27T06:01:04.958Z [info]: server started at port: 3001
-2021-10-27T12:36:58.354Z [error]: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://docs.atlas.mongodb.com/security-whitelist/
-2021-10-28T01:41:33.292Z [info]: server started at port: 3001
-2021-10-28T01:47:49.150Z [info]: server started at port: 3001
-2021-10-28T01:55:12.046Z [info]: server started at port: 3001
-2021-10-28T01:55:20.990Z [info]: server started at port: 3001
-2021-10-28T01:56:25.845Z [info]: server started at port: 3001
-2021-10-28T02:15:33.462Z [info]: server started at port: 3001
-2021-10-28T02:15:45.025Z [info]: server started at port: 3001
-2021-10-28T05:13:57.083Z [info]: server started at port: 3001
-2021-10-28T05:50:07.714Z [info]: server started at port: 3001
-2021-10-28T06:24:10.880Z [info]: server started at port: 3001
-2021-10-28T07:22:03.440Z [info]: server started at port: 3001
-2021-10-28T07:25:35.035Z [info]: server started at port: 3001
-2021-10-28T07:28:28.720Z [info]: server started at port: 3001
-2021-10-28T12:44:06.061Z [info]: server started at port: 3001
-2021-10-28T12:59:15.502Z [info]: server started at port: 3001
-2021-10-28T13:01:02.565Z [info]: server started at port: 3001
-2021-10-28T13:01:53.589Z [info]: server started at port: 3001
-2021-10-28T14:13:43.830Z [info]: server started at port: 3001
-2021-10-28T14:27:57.319Z [info]: server started at port: 3001
-2021-10-29T00:21:26.415Z [info]: server started at port: 3001
-2021-10-29T01:25:43.258Z [info]: server started at port: 3001
-2021-10-29T01:50:13.197Z [info]: server started at port: 3001
-2021-10-29T06:01:42.713Z [info]: server started at port: 3001
-2021-10-30T14:49:35.209Z [info]: server started at port: 3001
-2021-10-30T14:50:07.694Z [info]: server started at port: 3001
-2021-10-30T15:02:33.903Z [info]: server started at port: 3001
-2021-10-30T15:03:03.426Z [error]: Update project find error: /updateProject
-2021-10-30T15:03:03.430Z [error]: Update Program
-2021-10-30T15:03:28.354Z [info]: server started at port: 3001
-2021-10-30T15:03:32.008Z [error]: Update project find error: /updateProject
-2021-10-30T15:03:32.013Z [error]: Update Program
-2021-11-01T03:14:24.188Z [info]: server started at port: 3001
-2021-11-01T03:18:19.339Z [info]: server started at port: 3001
-2021-11-01T03:44:53.737Z [info]: server started at port: 3001
-2021-11-01T03:48:30.727Z [info]: server started at port: 3001
-2021-11-01T03:49:36.292Z [info]: server started at port: 3001
-2021-11-01T05:19:58.810Z [info]: server started at port: 3001
-2021-11-01T05:25:32.391Z [info]: server started at port: 3001
-2021-11-01T05:26:44.997Z [info]: server started at port: 3001
-2021-11-01T05:37:32.608Z [info]: server started at port: 3001
-2021-11-01T05:38:13.572Z [info]: server started at port: 3001
-2021-11-01T12:39:20.233Z [info]: server started at port: 3001
-2021-11-01T12:40:52.662Z [info]: server started at port: 3001
-2021-11-02T02:49:14.040Z [info]: server started at port: 3001
-2021-11-02T02:50:16.147Z [info]: server started at port: 3001
-2021-11-02T07:31:45.162Z [info]: server started at port: 3001
-2021-11-02T13:59:03.000Z [error]: Create project error!
-2021-11-02T13:59:11.996Z [error]: Create project error!
-2021-11-02T13:59:34.907Z [error]: Create project error!
-2021-11-02T14:05:28.442Z [error]: Create project error!
-2021-11-02T14:05:32.006Z [error]: Create project error!
-2021-11-02T14:06:09.130Z [error]: Create project error!
-2021-11-02T14:07:26.471Z [error]: Create project error!
-2021-11-02T14:07:48.438Z [error]: Create project error!
-2021-11-02T14:08:42.557Z [error]: Create project error!
-2021-11-02T14:09:30.691Z [error]: Create project error!
-2021-11-02T14:09:46.566Z [error]: Create project error!
-2021-11-02T14:11:35.081Z [error]: Create project error!
-2021-11-02T14:12:17.733Z [info]: server started at port: 3001
-2021-11-02T14:12:20.948Z [error]: Create project error!
-2021-11-02T14:12:35.273Z [error]: Create project error!
-2021-11-02T14:12:56.084Z [info]: server started at port: 3001
-2021-11-02T14:12:59.663Z [info]: server started at port: 3001
-2021-11-02T14:13:04.497Z [error]: Create project error!
-2021-11-02T14:14:24.388Z [info]: server started at port: 3001
-2021-11-02T14:14:40.682Z [info]: server started at port: 3001
-2021-11-03T01:05:35.939Z [info]: server started at port: 3001
-2021-11-03T05:28:09.996Z [error]: message: TypeError: Cannot read property 'password' of null
-2021-11-03T06:12:48.637Z [info]: server started at port: 3001
-2021-11-03T08:06:26.036Z [info]: server started at port: 3001
-2021-11-03T08:08:47.490Z [info]: server started at port: 3001
-2021-11-03T08:09:00.314Z [info]: server started at port: 3001
-2021-11-03T08:09:06.266Z [info]: server started at port: 3001
-2021-11-03T08:31:24.082Z [info]: server started at port: 3001
-2021-11-03T08:31:47.100Z [info]: server started at port: 3001
-2021-11-03T08:33:00.839Z [info]: server started at port: 3001
-2021-11-03T12:21:24.447Z [error]: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://docs.atlas.mongodb.com/security-whitelist/
-2021-11-03T14:32:59.504Z [error]: Error: /createUSer - ValidationError: name: Path `name` is required., email: Path `email` is required., title: Path `title` is required., category: Path `category` is required.
-2021-11-03T14:35:30.873Z [error]: Error: email sending
-2021-11-03T14:40:34.589Z [info]: server started at port: 3001
-2021-11-03T14:40:43.207Z [info]: server started at port: 3001
-2021-11-03T14:42:40.017Z [info]: server started at port: 3001
-2021-11-03T14:44:52.149Z [info]: server started at port: 3001
-2021-11-03T14:44:58.226Z [error]: Error: /updateUserAdmin
-2021-11-03T14:45:20.151Z [error]: Error: /updateUserAdmin
-2021-11-03T14:45:33.635Z [info]: server started at port: 3001
-2021-11-04T01:51:01.537Z [info]: server started at port: 3001
-2021-11-04T01:55:32.070Z [info]: server started at port: 3001
-2021-11-04T13:45:16.535Z [error]: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://docs.atlas.mongodb.com/security-whitelist/
-2021-11-04T14:56:05.075Z [info]: server started at port: 3001
-2021-11-05T00:26:13.001Z [info]: server started at port: 3001
-2021-11-05T00:26:24.559Z [info]: server started at port: 3001
-2021-11-05T00:28:34.911Z [info]: server started at port: 3001
-2021-11-05T00:30:13.762Z [error]: Error: /updateStudyAdmin
-2021-11-05T00:30:35.830Z [error]: Error: /updateStudyAdmin
-2021-11-05T00:30:55.036Z [error]: Error: /updateStudyAdmin
-2021-11-05T00:32:55.047Z [error]: Error: /updateStudyAdmin
-2021-11-05T00:37:38.476Z [error]: Error: /updateStudyAdmin
-2021-11-05T00:38:16.070Z [info]: server started at port: 3001
-2021-11-05T00:38:43.997Z [error]: Error: /updateStudyAdmin - CastError: Cast to string failed for value "[ 'COMPLETED' ]" (type Array) at path "status"
-2021-11-05T00:39:06.241Z [info]: server started at port: 3001
-2021-11-05T02:40:01.986Z [info]: server started at port: 3001
-2021-11-05T02:40:53.282Z [info]: server started at port: 3001
-2021-11-05T02:41:24.229Z [info]: server started at port: 3001
-2021-11-05T02:42:33.165Z [info]: server started at port: 3001
-2021-11-05T04:16:45.349Z [info]: server started at port: 3001
-2021-11-05T04:20:50.195Z [info]: server started at port: 3001
-2021-11-05T04:24:44.579Z [error]: Error: /updatetaskadmin
-2021-11-05T04:24:57.150Z [error]: Error: /updatetaskadmin
-2021-11-05T09:27:37.174Z [info]: server started at port: 3001
-2021-11-05T09:28:13.142Z [error]: Error: /updateDatagrid
-2021-11-05T09:28:24.775Z [info]: server started at port: 3001
-2021-11-05T09:28:38.459Z [info]: server started at port: 3001
-2021-11-05T09:29:09.853Z [info]: server started at port: 3001
-2021-11-05T09:29:43.316Z [error]: Error: /updateDatagrid
-2021-11-05T09:30:07.935Z [info]: server started at port: 3001
-2021-11-05T09:30:12.247Z [error]: Error: /updateDatagrid
-2021-11-05T09:31:02.421Z [info]: server started at port: 3001
-2021-11-06T07:29:08.552Z [error]: message: TypeError: Cannot read property 'password' of null
-2021-11-06T14:42:49.072Z [info]: server started at port: 3001
-2021-11-06T14:44:04.782Z [info]: server started at port: 3001
-2021-11-06T14:44:38.304Z [info]: server started at port: 3001
-2021-11-07T02:36:33.364Z [info]: server started at port: 3001
-2021-11-07T03:07:19.604Z [info]: server started at port: 3001
-2021-11-07T03:18:30.116Z [info]: server started at port: 3001
-2021-11-07T04:35:18.678Z [info]: server started at port: 3001
-2021-11-07T04:47:03.798Z [info]: server started at port: 3001
-2021-11-07T05:14:48.178Z [info]: server started at port: 3001
-2021-11-07T05:19:34.725Z [error]: Error: /studyGalleryAdmin
-2021-11-07T05:19:34.727Z [error]: Error: /studyGalleryAdmin
-2021-11-07T05:20:07.579Z [info]: server started at port: 3001
-2021-11-07T05:20:49.811Z [info]: server started at port: 3001
-2021-11-07T05:24:44.839Z [info]: server started at port: 3001
-2021-11-07T06:20:39.632Z [info]: server started at port: 3001
-2021-11-07T06:22:18.031Z [info]: server started at port: 3001
-2021-11-07T06:40:16.430Z [info]: server started at port: 3001
-2021-11-07T06:48:14.726Z [info]: server started at port: 3001
-2021-11-07T07:05:37.524Z [info]: server started at port: 3001
-2021-11-07T12:50:29.881Z [info]: server started at port: 3001
-2021-11-07T13:34:49.842Z [error]: Error: /updatetaskadmin
-2021-11-07T13:34:55.511Z [error]: Error: /updatetaskadmin
-2021-11-07T13:35:00.956Z [error]: Error: /updatetaskadmin
-2021-11-07T13:36:51.924Z [info]: server started at port: 3001
-2021-11-07T13:37:10.896Z [error]: Error: /updatetaskadmin
-2021-11-07T13:37:54.330Z [info]: server started at port: 3001
-2021-11-07T13:41:59.407Z [info]: server started at port: 3001
-2021-11-07T13:42:05.010Z [info]: server started at port: 3001
-2021-11-07T13:50:40.570Z [info]: server started at port: 3001
-2021-11-07T13:51:10.636Z [error]: Error: /updatetaskadmin
-2021-11-07T13:51:46.555Z [info]: server started at port: 3001
-2021-11-07T13:56:25.504Z [info]: server started at port: 3001
-2021-11-07T13:56:30.733Z [info]: server started at port: 3001
-2021-11-07T13:57:42.911Z [error]: Error: /updatetaskadmin
-2021-11-07T13:57:47.181Z [error]: Error: /updatetaskadmin
-2021-11-07T13:57:48.427Z [error]: Error: /updatetaskadmin
-2021-11-07T13:58:05.921Z [error]: Error: /updatetaskadmin
-2021-11-07T13:58:49.445Z [error]: Error: /updatetaskadmin
-2021-11-07T13:58:55.744Z [error]: Error: /updatetaskadmin
-2021-11-07T13:59:27.264Z [info]: server started at port: 3001
-2021-11-07T13:59:47.174Z [error]: Error: /updatetaskadmin
-2021-11-07T14:00:14.894Z [info]: server started at port: 3001
-2021-11-07T14:00:21.936Z [error]: Error: /updatetaskadmin
-2021-11-07T14:00:40.725Z [error]: Error: /updatetaskadmin
-2021-11-07T14:01:14.847Z [info]: server started at port: 3001
-2021-11-07T14:01:18.792Z [error]: Error: /updatetaskadmin
-2021-11-07T14:01:33.373Z [info]: server started at port: 3001
-2021-11-07T14:03:03.003Z [info]: server started at port: 3001
-2021-11-07T14:04:57.144Z [info]: server started at port: 3001
-2021-11-07T14:32:27.009Z [info]: server started at port: 3001
-2021-11-07T14:55:40.910Z [info]: server started at port: 3001
-2021-11-07T14:56:00.645Z [info]: server started at port: 3001
-2021-11-07T22:54:47.469Z [info]: server started at port: 3001
-2021-11-08T00:24:01.917Z [error]: Error: /updateUserAdmin
-2021-11-08T00:24:20.969Z [error]: Error: /updateUserAdmin
-2021-11-08T00:24:49.626Z [info]: server started at port: 3001
-2021-11-08T00:24:59.105Z [error]: Error: /updateUserAdmin
-2021-11-08T00:26:35.909Z [error]: Error: /updateUserAdmin
-2021-11-08T00:26:52.575Z [error]: Error: /updateUserAdmin
-2021-11-08T00:27:52.472Z [error]: Error: /updateUserAdmin
-2021-11-08T00:28:41.227Z [info]: server started at port: 3001
-2021-11-08T00:45:11.226Z [error]: Error: /updatetaskadmin
-2021-11-08T00:45:52.917Z [info]: server started at port: 3001
-2021-11-08T00:58:31.503Z [info]: server started at port: 3001
-2021-11-08T01:26:27.003Z [info]: server started at port: 3001
-2021-11-08T02:05:31.395Z [info]: server started at port: 3001
-2021-11-08T02:05:42.180Z [info]: server started at port: 3001
+2021-11-14T13:23:47.105Z [info]: server started at port: 3001
+2021-11-14T13:55:09.582Z [info]: server started at port: 3001
+2021-11-14T13:59:47.154Z [info]: server started at port: 3001
+2021-11-14T14:45:03.245Z [info]: server started at port: 3001
+2021-11-14T15:13:08.270Z [info]: server started at port: 3001
+2021-11-14T15:20:43.268Z [info]: server started at port: 3001
+2021-11-15T02:21:42.461Z [info]: server started at port: 3001
+2021-11-15T05:57:50.280Z [error]: Create project error!
+2021-11-15T06:07:00.697Z [error]: Create project error!
+2021-11-15T06:07:28.858Z [error]: Create project error!
+2021-11-15T06:08:03.455Z [info]: server started at port: 3001
+2021-11-15T06:08:05.731Z [error]: Create project error!
+2021-11-15T06:12:29.633Z [error]: Create project error!
+2021-11-15T06:14:15.754Z [error]: Create project error!
+2021-11-15T06:18:05.668Z [error]: Create project error!
+2021-11-15T06:22:57.192Z [error]: Create project error!
+2021-11-15T06:24:28.508Z [error]: Create project error!
+2021-11-15T06:25:24.232Z [error]: Create project error!
+2021-11-15T06:26:06.575Z [info]: server started at port: 3001
+2021-11-15T06:35:25.714Z [error]: Create project error!
+2021-11-15T06:40:43.376Z [info]: server started at port: 3001
+2021-11-15T07:56:46.415Z [info]: server started at port: 3001
+2021-11-15T15:13:53.197Z [info]: server started at port: 3001
+2021-11-15T15:15:57.997Z [info]: server started at port: 3001
+2021-11-16T01:42:06.021Z [info]: server started at port: 3001
+2021-11-16T08:20:01.722Z [error]: Error: /backupDatagrid
+2021-11-16T08:20:16.301Z [error]: Error: /backupDatagrid
+2021-11-16T08:25:22.757Z [error]: Error: /backupDatagrid
+2021-11-16T08:25:29.792Z [error]: Error: /backupDatagrid
+2021-11-16T08:25:41.838Z [error]: Error: /backupDatagrid
+2021-11-16T08:25:58.027Z [error]: Error: /backupDatagrid
+2021-11-16T08:26:16.552Z [error]: Error: /backupDatagrid
+2021-11-16T08:27:11.885Z [error]: Error: /backupDatagrid
+2021-11-17T00:56:52.129Z [info]: server started at port: 3001
+2021-11-17T01:56:47.625Z [info]: server started at port: 3001
+2021-11-18T00:28:44.410Z [info]: server started at port: 3001
+2021-11-18T00:30:18.474Z [info]: server started at port: 3001
+2021-11-18T00:48:38.544Z [info]: server started at port: 3001
+2021-11-18T00:48:44.266Z [info]: server started at port: 3001
+2021-11-18T00:49:39.974Z [info]: server started at port: 3001
+2021-11-18T00:50:13.215Z [info]: server started at port: 3001
+2021-11-18T01:06:27.831Z [info]: server started at port: 3001
+2021-11-18T01:19:01.866Z [info]: server started at port: 3001
+2021-11-18T01:19:15.665Z [info]: server started at port: 3001
+2021-11-18T01:49:56.649Z [info]: server started at port: 3001
+2021-11-18T01:50:20.431Z [error]: Error: /backupDatagrid
+2021-11-18T01:50:20.441Z [error]: Error: /backupDatagrid
+2021-11-18T01:50:20.463Z [error]: Error: /backupDatagrid
+2021-11-18T01:50:20.503Z [error]: Error: /backupDatagrid
+2021-11-18T01:52:48.772Z [error]: Error: /backupDatagrid
+2021-11-18T02:14:30.392Z [error]: Error: /backupDatagrid
+2021-11-18T02:14:30.396Z [error]: Error: /backupDatagrid
+2021-11-18T02:14:30.489Z [error]: Error: /backupDatagrid
+2021-11-18T02:14:30.506Z [error]: Error: /backupDatagrid
+2021-11-18T02:15:20.019Z [error]: Error: /backupDatagrid
+2021-11-18T02:15:20.109Z [error]: Error: /backupDatagrid
+2021-11-18T02:15:20.188Z [error]: Error: /backupDatagrid
+2021-11-18T02:15:20.192Z [error]: Error: /backupDatagrid
+2021-11-18T02:16:30.597Z [error]: Error: /backupDatagrid
+2021-11-18T02:16:40.578Z [error]: Error: /backupDatagrid
+2021-11-18T02:16:50.486Z [error]: Error: /backupDatagrid
+2021-11-18T02:17:00.490Z [error]: Error: /backupDatagrid
+2021-11-18T02:17:10.486Z [error]: Error: /backupDatagrid
+2021-11-18T05:39:32.266Z [error]: Error: /backupDatagrid
+2021-11-18T05:39:42.190Z [error]: Error: /backupDatagrid
+2021-11-18T05:39:52.194Z [error]: Error: /backupDatagrid
+2021-11-21T12:03:27.021Z [info]: server started at port: 3001

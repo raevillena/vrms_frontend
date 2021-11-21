@@ -7,11 +7,12 @@ import ManagerSidebar from '../components/components/ManagerSidebar';
 import DirectorSidebar from '../components/components/DirectorSidebar'
 import Headers from '../components/components/Header'
 import { onUploadAvatar } from '../services/uploadAPI';
-import '../styles/CSS/Account.css'
+import '../styles/CSS/Userdash.css'
 import ChangePassword from './ChangePassword';
 import MobileHeader from '../components/components/MobileHeader';
 import ManagerHeaderMobile from '../components/components/ManagerHeaderMobile';
 import DirectorHeaderMobile from '../components/components/DirectorHeaderMobile';
+import Layout1 from '../components/components/Layout1';
 
 const { Header, Content, Sider } = Layout;
 
@@ -45,86 +46,13 @@ const Account = () => {
       return size;
     }
 
-    const [height, width] = useWindowSize();
 
-    if(height <= 768 && width <= 768){
-      return(
-        <div>
-      <Layout style={{height: '100%'}}> 
-        <Sider className="sidebar" >
-          {userObj.USER.category === "user" ?  <Sidebar/> : <ManagerSidebar/> }
-        </Sider>
-        <Layout>
-          <Header className="header" >
-            <Headers/>
-          </Header>
-          <div className="mobile-header">
-            {userObj.USER.category ==="user" ? <MobileHeader/>: userObj.USER.category === "manager"?<ManagerHeaderMobile/>: <DirectorHeaderMobile/>}
-          </div>
-          <Content className="content" > 
-          <div  >
-              <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16, width: 350, height: 300}}  hoverable >
-                <Row justify="space-around" gutter={16}>
-                <Col className="gutter-row" span={12}  >
-                <Avatar src={imgData||`/avatar/${avatar}`}  size={150} icon={<UserOutlined />} />
-                  <div style={{marginLeft: '30px'}}>
-                      <label htmlFor="file_input_id" >Upload Photo</label>
-                      <input type="file" id="file_input_id" accept="image/*" onChange={async e => {
-                        const file = e.target.files[0]
-                        const reader = new FileReader();
-                          reader.addEventListener("load", () => {
-                            setImgData(reader.result);
-                          });
-                          reader.readAsDataURL(file)
-                          const data = new FormData()
-                          data.append("user", userObj.USER._id )
-                          data.append("file", file)
-                          let result = await onUploadAvatar(data)
-                          localStorage.setItem("avatarFilename", result.data.user.avatarFilename)
-                          notif('info', result.data.message)
-                        }
-                      }
-                      >
-                      </input>
-                  </div>
-                  </Col>
-                  <Col className="gutter-row" span={12} >
-                    <div style={style}>
-                      <Title level={3}>{userObj.USER.name}</Title>
-                      <p >{userObj.USER.title}</p>
-                      <p >{userObj.USER.project}</p>
-                      <p >{userObj.USER.email}</p>
-                      </div>
-                  </Col>
-                </Row>
-              </Card>
-              <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16, width: 350, height: 450}}  hoverable>
-                <ChangePassword/>
-              </Card>
-            </div>
-          </Content>
-        </Layout>      
-      </Layout>
-    </div>
-  )
-      }
 
     return (
     <div>
-      <Layout> 
-        <Sider className="sidebar" >
-          {userObj.USER.category === "user"?  <Sidebar/> :  userObj.USER.category === "director"? <DirectorSidebar/> : <ManagerSidebar/>}
-        </Sider>
-        <Layout>
-          <Header className="header" >
-            <Headers/>
-          </Header>
-          <div className="mobile-header">
-            {userObj.USER.category ==="user"? <MobileHeader/>: <ManagerHeaderMobile/>}
-          </div>
-          <Content className="content" > 
-              <Row justify="space-around" gutter={16}>
-              <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16, width: 400, height: 300}}  hoverable >
+      <Layout1>
+      <Row justify="start" style={{marginLeft: '20px', marginRight: '20px'}} >
+              <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}}  hoverable >
                 <Row justify="space-around" gutter={16}>
                 <Col className="gutter-row" span={12}  >
                 <Avatar src={imgData||`/avatar/${avatar}`}  size={150} icon={<UserOutlined />} />
@@ -160,14 +88,12 @@ const Account = () => {
                 </Row>
               </Card>
               <div style={{padding: '0 8px'}} >
-              <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16, width: 400, height: 300}}  hoverable>
+              <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}}  hoverable>
                 <ChangePassword/>
               </Card>
               </div>
               </Row>
-          </Content>
-        </Layout>      
-      </Layout>
+      </Layout1>
     </div>
   )
 }
