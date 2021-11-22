@@ -63,15 +63,7 @@ const AddStudy = () => {
     }
 
     function handleChangeProject(value) {   //for assigning user
-        let tempArray =[]
-        value.forEach(id => {
-            userData.forEach(user => {
-                if(user.value === id){
-                   tempArray.push(user.name)
-                }
-            });
-        });
-        setStudy({...study, assignee: value, assigneeName: tempArray})
+        setStudy({...study, projectName: value[0]})
     }
 
     

@@ -65,3 +65,19 @@
 2021-11-18T05:39:42.190Z [error]: Error: /backupDatagrid
 2021-11-18T05:39:52.194Z [error]: Error: /backupDatagrid
 2021-11-21T12:03:27.021Z [info]: server started at port: 3001
+2021-11-21T12:03:45.314Z [info]: server started at port: 3001
+2021-11-21T12:23:29.585Z [error]: Studies validation failed: projectName: Path `projectName` is required.
+2021-11-21T12:25:23.676Z [error]: Studies validation failed: projectName: Path `projectName` is required.
+2021-11-21T12:28:42.098Z [error]: Studies validation failed: projectName: Path `projectName` is required.
+2021-11-21T12:28:49.070Z [error]: Cast to Number failed for value "NaN" (type number) at path "progress"
+2021-11-21T12:31:52.910Z [error]: Studies validation failed: createdBy: Path `createdBy` is required., createdByName: Path `createdByName` is required., updatedBy: Path `updatedBy` is required.
+2021-11-21T12:32:42.440Z [info]: server started at port: 3001
+2021-11-21T12:34:20.095Z [error]: Cast to Number failed for value "NaN" (type number) at path "progress"
+2021-11-21T12:39:27.034Z [info]: server started at port: 3001
+2021-11-21T12:43:50.840Z [error]: Studies validation failed: createdBy: Path `createdBy` is required., createdByName: Path `createdByName` is required., updatedBy: Path `updatedBy` is required.
+2021-11-21T12:45:24.407Z [error]: Cast to Number failed for value "NaN" (type number) at path "progress"
+2021-11-21T12:46:25.050Z [error]: Cast to Number failed for value "NaN" (type number) at path "progress"
+2021-11-22T00:52:45.071Z [info]: server started at port: 3001
+2021-11-22T01:03:02.112Z [info]: server started at port: 3001
+2021-11-22T01:04:20.326Z [info]: server started at port: 3001
+2021-11-22T02:50:52.515Z [info]: server started at port: 3001

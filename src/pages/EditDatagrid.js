@@ -13,8 +13,6 @@ import {onUpdateCurrentEditing} from '../services/studyAPI'
 
 const EditDataGrid = (props) => {
 
-  const timerIdRef2= useRef(0);
-
   const { Option } = Select
   const dispatch = useDispatch();
   //redux states
@@ -78,8 +76,6 @@ const EditDataGrid = (props) => {
 
   
   var timer;
-  var timer1;
-  //var el = document.getElementById('save');
   const timerIdRef = useRef(0);
  
 
@@ -93,9 +89,6 @@ const runTimer = () => {
     timerIdRef.current = setInterval( () => document.getElementById('save').click(), 5000);
 }
 
-const runTimer2 = () => {
-    timerIdRef.current = setInterval( () => document.getElementById('backup').click(), 5000);
-}
 
 async function backup(){
   try {
@@ -200,7 +193,6 @@ async function backup(){
           onUpdateCurrentEditing({avatar: localStorage.getItem("avatarFilename"), username: userObj.USER.name, tableID: props.data.id.tableID })
           setDivDisabled(false)
         }else if (msg.msg === "view-only"){
-          //alert(msg.user)
           let res;
           async function getEditing(){
              res = await onGetCurrentEditing({tableID: props.data.id.tableID})
@@ -388,11 +380,10 @@ async function backup(){
       setTempCol(tempCols)
       setDatagridData(msg.data)
     })
-    runTimer2()
+    //runTimer2()
     return () =>{ 
       clearInterval(timerIdRef.current);
-      clearInterval(timerIdRef2.current);
-      //timerIdRef2.current = 0;
+      
     }
    
   }, [])

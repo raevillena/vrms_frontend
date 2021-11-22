@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useEffect, useState, useMemo, useRef} from 'react';
 import { Table, Button, Popconfirm, Form, Spin, Tooltip, Modal, Empty, Tabs, Space, Input } from 'antd';
 import { DeleteFilled, EditFilled, DownloadOutlined, InfoCircleFilled, HistoryOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
 import { onDeleteDatagrid, onDownloadHistory, onEditDatagrid, onGetDatagrid, onGetDownloadHistory, onGetEditHistory, onGetViewHistory, onViewLog } from '../services/studyAPI';
@@ -14,6 +14,9 @@ import Highlighter from 'react-highlight-words';
 const { TabPane } = Tabs;
 
 const GridTable = (props) => {
+
+  const timerIdRef2= useRef(0);
+
     const studyObj = useSelector(state => state.study)
     const userObj = useSelector(state => state.user)
     const [tableData, setTableData] = useState([])
@@ -125,11 +128,14 @@ const GridTable = (props) => {
 
   const showModalEdit = () => {
       setIsEditModalVisible(true)
+      timerIdRef2.current = setInterval( () => document.getElementById('backup').click(), 1800000);
   };
 
   const handleCancelEdit = () => {
     setIsEditModalVisible(false)
     join(editData.id.tableID, userObj.USER._id, false)
+    clearInterval(timerIdRef2.current);
+    timerIdRef2.current = 0;
   };
 
   const showModalView = () => {

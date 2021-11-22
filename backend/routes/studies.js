@@ -46,7 +46,7 @@ router.post('/createstudy', auth, async(req, res) => {
         createdByName: req.body.study.username,
         dateUpdated: Date.now(),
         startDate: req.body.study.startDate,
-        updatedBy: req.body.study.user,
+        updatedBy: req.body.study.username,
         studyTitle: req.body.study.title,
         studyID: studyID,
         assignee: req.body.study.assignee,
@@ -414,7 +414,6 @@ router.get('/editDataGrid/:tableID', auth, async(req, res) => {
 
 //backup datagrid
 router.post('/backupDatagrid', auth, async(req, res) => {
-    //console.log(req.body)
     try {
         const newBackup = new Backup({
             backupDate: Date.now(),
