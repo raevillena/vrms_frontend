@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo, useCallback, useRef} from 'react';
+import React, {useState, useEffect, useMemo, useCallback, useRef, useLayoutEffect} from 'react';
 import {Button, Input, Select, Spin, Tooltip, Image, Avatar } from 'antd'
 import { useSelector, useDispatch} from 'react-redux';
 import { DynamicDataSheetGrid, checkboxColumn,keyColumn} from 'react-datasheet-grid';
@@ -122,7 +122,15 @@ async function backup(){
   
 
  const TextComponent = React.memo(
-    ({ rowData, setRowData, active}) => {
+    ({ rowData, setRowData, focus}) => {
+      const ref = useRef(null);
+      useLayoutEffect(() => {
+        if (focus) {
+            ref.current?.select();
+        } else {
+            ref.current?.blur();
+        }
+      }, [focus]);
       const handleOnChange = (e) =>{
           clearInterval(timerIdRef.current)
           runTimer()
@@ -130,6 +138,7 @@ async function backup(){
       }
       return (
         <input
+          ref={ref}
           className="dsg-input"
           style={{border: 'none'}}
           value={rowData}

@@ -1,10 +1,10 @@
-import React, {useState, useEffect, useMemo, useCallback} from 'react';
+import React, {useState, useEffect, useMemo, useCallback, useRef, useLayoutEffect} from 'react';
 import {Button, Input, Select, Modal, Image, Tooltip} from 'antd'
 import { onAddDatagrid, onGetDatagridCol} from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import { DynamicDataSheetGrid, 
   checkboxColumn,
-  keyColumn  } from 'react-datasheet-grid'
+  keyColumn, textColumn  } from 'react-datasheet-grid'
 import GridTable from './GridTable';
 import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, PlusSquareFilled, RetweetOutlined} from '@ant-design/icons';
 import { onUploadDataGrid } from '../services/uploadAPI';
@@ -37,21 +37,19 @@ const DataGrid = () => {
 
  
 
-  const TextComponent = React.memo(
-    ({ rowData, setRowData, active}) => {
-      const handleOnChange = (e) =>{
-          setRowData(e.target.value)
-      }
+  /*const TextComponent = React.memo(
+    ({ rowData, setRowData, focus}) => {
+      console.log(focus)
       return (
         <input
           className="dsg-input"
           style={{border: 'none'}}
           value={rowData}
-          onChange={(e) => handleOnChange(e)}
+          onChange={(e) => setRowData(e.target.value)}
         />
       )
     }
-  )
+  )*/
 
   const CameraComponent = React.memo(
     ({ rowData, setRowData }) => {
@@ -81,12 +79,12 @@ const DataGrid = () => {
     }
   )
 
-  const textColumn = {
+  /*const textColumn = {
     component: TextComponent,
     deleteValue: () => '',
     copyValue: ({ rowData }) => rowData,
     pasteValue: ({ value }) => value,
-  }
+  }*/
 
   const cameraColumn = {
     component: CameraComponent,
@@ -96,9 +94,9 @@ const DataGrid = () => {
   }
 
   const [ tempCol, setTempCol ] = useState([{ //column
-    ...keyColumn('Sample', textColumn),
-    title: 'Sample',
-    type: 'text'
+    ...keyColumn('Default', checkboxColumn),
+    title: 'Default',
+    type: 'Checkbox'
   }])
 
   
@@ -111,8 +109,38 @@ const DataGrid = () => {
       title: addColumn,
       type: 'text'
     }])
+    console.log('added column', columns)
     setAddColumn('')
   }
+
+  const addCheckboxColumn = () => {
+    setTempCol([...tempCol, {
+      ...keyColumn(addColumn, checkboxColumn),
+      title: addColumn,
+      type:'Checkbox'
+    }])
+    setAddColumn('')
+  }
+
+  const addCameraColumn = () => {
+    setTempCol([...tempCol, {
+      ...keyColumn(addColumn, cameraColumn),
+      title: addColumn,
+      type:'camera'
+    }])
+    setAddColumn('')
+  }
+
+  const removeColumn = (key) => {
+    try {
+      let newColumn = columns.filter(value => !key.includes(value.title));
+      setTempCol(newColumn)
+    } catch (error) {
+      notif('error', error)
+    }
+  }
+
+ 
 
   useEffect(() => {
     const getCol = async() =>{
@@ -163,35 +191,6 @@ const DataGrid = () => {
     }
   }, [state.title,state.description]);
 
-
-  const addCheckboxColumn = () => {
-    setTempCol([...tempCol, {
-      ...keyColumn(addColumn, checkboxColumn),
-      title: addColumn,
-      type:'Checkbox'
-    }])
-    setAddColumn('')
-  }
-
-  const addCameraColumn = () => {
-    setTempCol([...tempCol, {
-      ...keyColumn(addColumn, cameraColumn),
-      title: addColumn,
-      type:'camera'
-    }])
-    setAddColumn('')
-  }
-
-  const removeColumn = (key) => {
-    try {
-      let newColumn = columns.filter(value => !key.includes(value.title));
-      setTempCol(newColumn)
-    } catch (error) {
-      notif('error', error)
-    }
-  }
-
- 
 
   const checkColumnType= (key,title) => {
     switch(key) {
@@ -260,8 +259,7 @@ const handleReplace = () =>{
     if(result.status === 200){
       setstate({...state, title: '', description: '', addTable: result.data.data,})
       notif('success', result.data.message)
-      
-      //setTempCol([checkColumnType('text','Sample')])
+      setTempCol([checkColumnType('text','Sample')])
       setData([])
     }else{
      notif('error', result.data.message)
