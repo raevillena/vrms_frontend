@@ -4,7 +4,7 @@ import { onAddDatagrid, onGetDatagridCol} from '../services/studyAPI';
 import { useSelector} from 'react-redux';
 import { DynamicDataSheetGrid, 
   checkboxColumn,
-  keyColumn, textColumn  } from 'react-datasheet-grid'
+  keyColumn  } from 'react-datasheet-grid'
 import GridTable from './GridTable';
 import {CheckSquareFilled, CameraFilled, DeleteFilled, DownloadOutlined, FontSizeOutlined, PlusSquareFilled, RetweetOutlined} from '@ant-design/icons';
 import { onUploadDataGrid } from '../services/uploadAPI';
@@ -37,11 +37,19 @@ const DataGrid = () => {
 
  
 
-  /*const TextComponent = React.memo(
-    ({ rowData, setRowData, focus}) => {
-      console.log(focus)
+  const TextComponent = React.memo(
+    ({ rowData, setRowData, active}) => {
+      const ref = useRef(null);
+      useLayoutEffect(() => {
+        if (active) {
+            ref.current?.focus();
+        } else {
+            ref.current?.blur();
+        }
+      }, [active]);
       return (
         <input
+          ref={ref}
           className="dsg-input"
           style={{border: 'none'}}
           value={rowData}
@@ -49,7 +57,7 @@ const DataGrid = () => {
         />
       )
     }
-  )*/
+  )
 
   const CameraComponent = React.memo(
     ({ rowData, setRowData }) => {
@@ -79,12 +87,12 @@ const DataGrid = () => {
     }
   )
 
-  /*const textColumn = {
+  const textColumn = {
     component: TextComponent,
     deleteValue: () => '',
     copyValue: ({ rowData }) => rowData,
     pasteValue: ({ value }) => value,
-  }*/
+  }
 
   const cameraColumn = {
     component: CameraComponent,
@@ -94,9 +102,9 @@ const DataGrid = () => {
   }
 
   const [ tempCol, setTempCol ] = useState([{ //column
-    ...keyColumn('Default', checkboxColumn),
+    ...keyColumn('Default', textColumn),
     title: 'Default',
-    type: 'Checkbox'
+    type: 'text'
   }])
 
   
