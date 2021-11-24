@@ -122,15 +122,15 @@ async function backup(){
   
 
  const TextComponent = React.memo(
-    ({ rowData, setRowData, focus}) => {
+    ({ rowData, setRowData, active}) => {
       const ref = useRef(null);
       useLayoutEffect(() => {
-        if (focus) {
-            ref.current?.select();
+        if (active) {
+            ref.current?.focus();
         } else {
             ref.current?.blur();
         }
-      }, [focus]);
+      }, [active]);
       const handleOnChange = (e) =>{
           clearInterval(timerIdRef.current)
           runTimer()
