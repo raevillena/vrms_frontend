@@ -386,3 +386,23 @@ export async function onUpdateObjective(body){
         }
     }
 }
+
+export async function onGetAllBackup(){
+    try {
+        return axios.get("/v1/studies/getAllBackup", tokenConfig())
+    } catch (error) {
+        return{
+            error: error
+        }
+    }
+}
+
+export async function onRecoverDatagridData(body){
+    try {
+        return axios.post("/v1/studies/recoverDatagidData", body, tokenConfig())
+    } catch (error) {
+        return{
+            error: error
+        }
+    }
+}

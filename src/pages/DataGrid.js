@@ -267,7 +267,7 @@ const handleReplace = () =>{
     if(result.status === 200){
       setstate({...state, title: '', description: '', addTable: result.data.data,})
       notif('success', result.data.message)
-      setTempCol([checkColumnType('text','Sample')])
+      setTempCol([checkColumnType('text','Default')])
       setData([])
     }else{
      notif('error', result.data.message)
@@ -315,6 +315,7 @@ const handleReplace = () =>{
       isModalAdd: false,
     })
     setData([])
+    setTempCol([checkColumnType('text','Default')])
     /*setTempCol([{ //column
       ...keyColumn('Sample', textColumn),
       title: 'Sample',

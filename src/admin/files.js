@@ -22,7 +22,6 @@ const Files = () => {
     useEffect(() => {
        async function getData(){
         let resTaskFile = await onGetAllFileTaskAdmin()
-        console.log(resTaskFile)
         let resGallery = await onGetGalleryAdmin()
         let taskfile = resTaskFile.data
         let galleryFile = resGallery.data

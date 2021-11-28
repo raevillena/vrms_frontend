@@ -33,7 +33,14 @@ const BackupSchema = new mongoose.Schema({
     },
     tableID:{
         type: String,
-        require: true
+        required: true
+    },
+    status: {
+        type: String,
+        required: true
+    },
+    dateRecovered: {
+        type: Date,
     },
 })
 

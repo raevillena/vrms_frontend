@@ -424,7 +424,8 @@ router.post('/backupDatagrid', auth, async(req, res) => {
             columns: req.body.columns,
             studyID: req.body.studyID,
             active: true,
-           tableID: req.body.tableID
+           tableID: req.body.tableID,
+           status: 'BACKUP'
         })
        
         await newBackup.save()
@@ -809,6 +810,40 @@ router.post('/updateObjective', auth, async(req, res) => {
           });
     } catch (error) {
         logger.log('error', 'Error: /updateObjective')
+    }
+})
+
+router.get('/getAllBackup/', auth, async(req, res) => {
+    console.log('getting')
+    try {
+        await Backup.find({}, function(err, backup) {
+            if(err){
+                logger.log('error', 'Error: /getAllBackup')
+            } else{
+                res.send(backup)
+            }
+          });
+    } catch (error) {
+        logger.log('error', 'Error: /getAllBackup')
+    }
+})
+
+router.post('/recoverDatagidData', auth, async(req, res) => {
+    try {
+        await Datagrid.findOneAndUpdate({'tableID': req.body.tableID}, {'data': req.body.data, 'columns': req.body.columns, 'title': req.body.title, 'description': req.body.description}, function(err, datagrid) {
+            if(err){
+                logger.log('error', 'Error: /recoverDatagridData')
+            } else{
+                res.send({message: 'Data Updated!'})
+            }
+        });
+        await Backup.findOneAndUpdate({'_id': req.body.key}, {'status': 'RECOVERED', dateRecovered: Date.now()}, function(err, datagrid) {
+            if(err){
+                logger.log('error', 'Error: /recoverDatagridData backup')
+            } 
+        });
+    } catch (error) {
+        logger.log('error', 'Error: /recoverDatagridData')
     }
 })
 

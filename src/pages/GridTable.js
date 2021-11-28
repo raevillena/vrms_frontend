@@ -128,7 +128,7 @@ const GridTable = (props) => {
 
   const showModalEdit = () => {
       setIsEditModalVisible(true)
-      timerIdRef2.current = setInterval( () => document.getElementById('backup').click(), 1800000);
+      timerIdRef2.current = setInterval( () => document.getElementById('backup').click(), 3600000);
   };
 
   const handleCancelEdit = () => {
