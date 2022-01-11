@@ -58,7 +58,7 @@ const DirectorDash = () => {
             programName: 'Others',
             programLeader:  ['Others'],
             dateCreated: moment( Date.now()).format('MM-DD-YYYY'),
-      }]
+          }]
         setProjectData(tempProjectData)
         setProgramData(tempProgramData)
     }
@@ -79,15 +79,11 @@ const handleReset = clearFilters => {
   clearFilters();
   setSearch({...search, searchText: '' });
 };
-let searchInput = ''
 
 const getColumnSearchProps = dataIndex => ({
   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
     <div style={{ padding: 8 }}>
       <Input
-        ref={node => {
-          searchInput = node;
-        }}
         placeholder={`Search ${dataIndex}`}
         value={selectedKeys[0]}
         onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}

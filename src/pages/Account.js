@@ -1,28 +1,25 @@
-import { Row, Layout, Typography,Avatar, notification, Col, Card } from 'antd'
+import { Row, Typography,Avatar, notification, Col, Card, Anchor } from 'antd'
 import React, {useState, useEffect} from 'react';
 import { useSelector} from 'react-redux';
 import {UserOutlined} from '@ant-design/icons';
-import Sidebar from '../components/components/Sidebar'
-import ManagerSidebar from '../components/components/ManagerSidebar';
-import DirectorSidebar from '../components/components/DirectorSidebar'
-import Headers from '../components/components/Header'
 import { onUploadAvatar } from '../services/uploadAPI';
 import '../styles/CSS/Userdash.css'
 import ChangePassword from './ChangePassword';
-import MobileHeader from '../components/components/MobileHeader';
-import ManagerHeaderMobile from '../components/components/ManagerHeaderMobile';
-import DirectorHeaderMobile from '../components/components/DirectorHeaderMobile';
 import Layout1 from '../components/components/Layout1';
 
-const { Header, Content, Sider } = Layout;
+
 
 const style = { marginTop: '25px', marginLeft: '8px' };
 
 const Account = () => {
+    const { Link } = Anchor;
     const userObj = useSelector(state => state.user) //reducer for user data
     const [imgData, setImgData] = useState() //for displaying avatar
     const { Title } = Typography;
     let avatar = localStorage.getItem("avatarFilename")
+    const [isOnline, set_isOnline] = useState(true);
+    let interval = null;
+    const InternetErrMessagenger = () => set_isOnline(navigator.onLine);
 
     const notif = (type, message) => {
       notification[type]({
@@ -31,26 +28,21 @@ const Account = () => {
           message,
       });
     };
+
+    useEffect(() => {
+      interval = setInterval(InternetErrMessagenger, 6000);
+      return () => {
+        clearInterval(interval)
+      }
+    }, [isOnline])
     
-    function useWindowSize(){
-      const [size, setSize] = useState([window.innerHeight, window.innerWidth]);
-      useEffect(() => {
-        const handleResize = () => {
-          setSize([window.innerHeight, window.innerWidth])
-        }
-        window.addEventListener("resize", handleResize)
-        return() => {
-          window.removeEventListener("resize", handleResize)
-        }
-      }, [])
-      return size;
-    }
-
-
 
     return (
     <div>
       <Layout1>
+      {isOnline !== true ? <Anchor>
+      <Link href='/offline' title='Go to offline'/>
+    </Anchor> :
       <Row justify="start" style={{marginLeft: '20px', marginRight: '20px'}} >
               <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}}  hoverable >
                 <Row justify="space-around" gutter={16}>
@@ -92,7 +84,7 @@ const Account = () => {
                 <ChangePassword/>
               </Card>
               </div>
-              </Row>
+              </Row>}
       </Layout1>
     </div>
   )

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import LayoutComponent from './layout'
-import {Table, Space, Button, Input, Popconfirm, message} from 'antd'
+import {Table, Space, Button, Input, Popconfirm} from 'antd'
 import Highlighter from 'react-highlight-words';
 import {SearchOutlined} from '@ant-design/icons';
 import moment from 'moment';
@@ -46,15 +46,11 @@ const Backup = () => {
         clearFilters();
         setSearch({...search, searchText: '' });
       };
-      let searchInput = ''
       
       const getColumnSearchProps = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
           <div style={{ padding: 8 }}>
             <Input
-              ref={node => {
-                searchInput = node;
-              }}
               placeholder={`Search ${dataIndex}`}
               value={selectedKeys[0]}
               onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}

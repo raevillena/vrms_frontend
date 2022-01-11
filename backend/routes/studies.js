@@ -7,12 +7,14 @@ const Projects = require('../models/projects')
 const Download = require('../models/download')
 const Editlog = require('../models/editlog')
 const Viewlog = require('../models/viewlog')
+const Task = require('../models/tasks')
 const Documentation = require('../models/documentation')
 const mongoose = require('mongoose')
 const shortid = require('shortid')
 const logger = require('../logger')
 const jwt = require('jsonwebtoken')
 const Gallery = require('../models/gallery')
+const Offline = require('../models/offline')
 
 async function auth(req, res, next){
     try {
@@ -430,7 +432,7 @@ router.post('/backupDatagrid', auth, async(req, res) => {
        
         await newBackup.save()
     } catch (error) {
-        logger.log('error', 'Error: /backupDatagrid')
+        logger.log('error', `Error: /backupDatagrid ${error}`)
     }
 })
 
@@ -738,7 +740,7 @@ router.get("/getAllStudy", async(req,res) => {
         await Studies.findOneAndUpdate({"studyID": req.body.study.studyID}, {'editedBy': req.body.study.user, 'editedDate': Date.now(), 
         'assignee':req.body.study.assignee, 'assigneeName': req.body.study.assigneeName, 'budget': req.body.study.budget, 'deadline': req.body.study.deadline, 'studyTitle': req.body.study.title,
         'objectives': req.body.value.objectives, 'active': req.body.study.active, 'projectName': req.body.study.projectName, 'progress': req.body.study.progress, 'dateCreated': req.body.study.dateCreated,
-        'status': req.body.study.status[0]}, 
+        'status': req.body.study.progress === '100' ? 'COMPLETED' : req.body.study.status[0]}, 
         function(err, study) {
             if(err){
                 logger.log('error', `Error: /updateStudyAdmin - ${err}`)
@@ -800,6 +802,7 @@ router.post('/studyGalleryAdminUpdate', auth, async(req, res) => {
 })
 
 router.post('/updateObjective', auth, async(req, res) => {
+    console.log(req.body)
     try {
         await Studies.findOneAndUpdate({'studyID': req.body.studyID}, {'objectives': req.body.value.objectives}, function(err, study) {
             if(err){
@@ -808,6 +811,13 @@ router.post('/updateObjective', auth, async(req, res) => {
                 res.send({message: 'Objectives updated!'})
             }
           });
+         /* await Tasks.findOneAndUpdate({'studyID': req.body.studyID}, {'objectives': req.body.value.objectives}, function(err, study) {
+            if(err){
+                logger.log('error', 'Error: /studyGalleryAdmin')
+            } else{
+                res.send({message: 'Objectives updated!'})
+            }
+          });*/
     } catch (error) {
         logger.log('error', 'Error: /updateObjective')
     }
@@ -847,4 +857,104 @@ router.post('/recoverDatagidData', auth, async(req, res) => {
     }
 })
 
+router.post('/postOffline', auth, async(req, res) => {
+    console.log(req.body)
+    let x = req.body.cookies
+    try {
+        for (let i = 0; i < x.length; i++) {
+        const tableID = shortid.generate() 
+        const table = new Offline({
+            tableID: tableID,
+            title: x[i].title,
+            description: x[i].description,
+            data: x[i].data,
+            columns: x[i].columns,
+            active: true,
+            dateUploaded: Date.now(),
+            dateCreated:x[i].dateCreated,
+            uploadedBy: req.body.user
+        })
+            const doesExist = await Offline.findOne({title: x[i].title})
+            if(doesExist){
+                res.status(400).json({message: "Title already exist!"})
+            } else{
+                const newTable =  await table.save()
+                res.status(201).json({
+                    message: `Table created with the id ${tableID}`,
+                newTable})
+            }
+            
+        }
+        } catch (error) {
+            logger.log('error', error)  
+            res.status(400).json({message: error.message})
+        }
+})
+
+router.get('/getOffline/:user', auth, async(req, res) => {
+    try {
+        await Offline.find({'uploadedBy': req.params.user, 'active': true}, function(err, data) {
+            if(err){
+                logger.log('error', 'Error: /getOffline')
+            } else{
+                res.send(data)
+            }
+          });
+    } catch (error) {
+        logger.log('error', 'Error: /getOffline')
+    }
+})
+
+router.post('/moveOffline', auth, async(req, res) => {
+    try {
+       let doesExist =  await Datagrid.findOne({title: req.body.title, studyID: req.body.studyID})
+       if(doesExist){
+           res.send({message: 'Title already exist'})
+       }else{
+        const newDatagrid = new Datagrid({
+            dateCreated: Date.now(),
+            createdBy: req.body.user,
+            dateUpdated: Date.now(),
+            updatedBy: req.body.user,
+            title: req.body.title,
+            description: req.body.description,
+            data: req.body.data,
+            columns: req.body.columns,
+            studyID: req.body.studyID,
+            active: true,
+            tableID: req.body.tableID
+        })
+        Studies.updateOne({"studyID": req.body.studyID}, {"dateUpdated": Date.now(), "updatedBy": req.body.user}, async (err) =>{
+            if(err){
+                logger.log('error', 'Error: /addDatagrid')
+            }else{
+               await newDatagrid.save()
+               Offline.findOneAndUpdate({tableID: req.body.tableID,"active": true}, {active: false}, function(err, off){
+                if(err){
+                    logger.log('error', err)
+                }
+            })
+                res.status(200).json({data: newDatagrid, message: "Table added!"})
+            }
+        })
+       }
+    } catch (error) {
+        logger.log('error', 'Error: /moveOffline')
+    }  
+})
+
+router.post('/deleteOffline', auth, async(req, res) => {
+    try {
+        Offline.findOneAndUpdate({tableID: req.body.tableID, active: true},{active: false}, function(err, off){
+            if(err){
+                logger.log('error', err)
+            }else{
+                res.status(200).json({message: "Table deleted!"})
+            }
+        })
+            
+    } catch (error) {
+        logger.log('error', 'Error: /deleteOffline')
+    }
+})
 module.exports = router

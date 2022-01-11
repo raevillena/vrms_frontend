@@ -21,39 +21,14 @@ import Projects from './admin/projects';
 import Studies from './admin/studies';
 import Files from './admin/files'
 import Backup from './admin/backup'
+import Offline from '@pages/Offline';
+import OfflineData from '@pages/OfflineData';
+
 
 function App() {
   const dispatch = useDispatch();
   const authObj = useSelector(state => state.auth)
-  
-  /*
-  //authentication for public and private route
-  useEffect(() => {
-    console.log("entering verify...")
-    async function verify() {
-      dispatch({
-        type: "VERIFY_LOADING"
-      })
-      let result = await verifyAuth(authObj.accessToken, authObj.refreshToken)
-      console.log("RESULT FROM VERIFY: ", result)
-      if (result.error) {
-        dispatch({
-          type: "VERIFY_ERROR",
-        })
-      } else {
-        dispatch({
-          type: "VERIFY_SUCCESS",
-          value: true
-       })
-      }
-      console.log("exiting verify...")
-      return
-    }
-    verify()
-  }, [])
-  */
 
-  
   //to renew acesstoken
   useEffect(()=>{
     async function renew(){
@@ -95,7 +70,6 @@ function App() {
     return () => clearInterval(interval);
   }, [])
 
-  
 
   //refresh token before it expires
   //this prevents the app from getting 401 error due to expired tokens
@@ -106,6 +80,7 @@ function App() {
     <BrowserRouter>
     <Switch>
       <PublicRoute path="/login" exact component={Login} auth={authObj} />
+      <PublicRoute path="/offline" exact component={Offline} auth={authObj} />
       <PublicRoute path="/forgotpassword" exact component={ForgotPassword} auth={authObj}/>
       <PublicRoute path="/reset-password/" exact component={ResetPassword} auth={authObj}/>
       <PrivateRoute path="/" exact component={Userdash} auth={authObj} />
@@ -113,6 +88,7 @@ function App() {
       <PrivateRoute path="/studies" exact component={ManagerStudyDash} auth={authObj} />
       <PrivateRoute path="/editstudy" exact component={StudyDash} auth={authObj}/>
       <PrivateRoute path="/account" exact component={Account} auth={authObj}/>
+      <PrivateRoute path="/offline/uploaded" exact component={OfflineData} auth={authObj}/>
       <PrivateRoute path="/admin/users" exact component={Users} auth={authObj}/>
       <PrivateRoute path="/admin/programs" exact component={Programs} auth={authObj}/>
       <PrivateRoute path="/admin/projects" exact component={Projects} auth={authObj}/>
@@ -125,6 +101,7 @@ function App() {
         <PageNotFound/>
       </Route>
     </Switch>
+    
     </BrowserRouter> 
   );
 }

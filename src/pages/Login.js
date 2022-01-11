@@ -13,6 +13,9 @@ function Login() {
   const  history = useHistory();
   const dispatch = useDispatch();
   const { Title } = Typography;
+  const [isOnline, set_isOnline] = useState(true);
+  let interval = null;
+  const InternetErrMessagenger = () => set_isOnline(navigator.onLine);
 
   const [user, setUser] = useState({email:"", password:""}); //for login state
   const [loading, setLoading] = useState(false)
@@ -25,6 +28,19 @@ function Login() {
     });
   };
 
+  useEffect(()=>{
+    interval = setInterval(InternetErrMessagenger, 6000); // call the function name only not with function with call `()`
+    return ()=>{
+       clearInterval(interval) // for component unmount stop the interval
+    }
+ },[])
+
+ useEffect(() => {
+   if(isOnline!==true){
+     history.push('/offline')
+   }
+ }, [isOnline])
+ 
   async function onSubmit(){
     const getUser = {
       email: user.email,

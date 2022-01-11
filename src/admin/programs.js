@@ -50,15 +50,11 @@ const Programs = () => {
         clearFilters();
         setSearch({...search, searchText: '' });
       };
-      let searchInput = ''
       
       const getColumnSearchProps = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
           <div style={{ padding: 8 }}>
             <Input
-              ref={node => {
-                searchInput = node;
-              }}
               placeholder={`Search ${dataIndex}`}
               value={selectedKeys[0]}
               onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
