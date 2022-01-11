@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useMemo} from 'react';
 import Layout1 from '../components/components/Layout1';
-import {Table, Button, Input, Space, Modal, Popconfirm, Anchor} from 'antd'
+import {Table, Button, Input, Space, Modal, Popconfirm} from 'antd'
 import { onDeleteOfflineData, onGetOffline } from '../services/offline';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
@@ -9,10 +9,10 @@ import {SearchOutlined} from '@ant-design/icons'
 import ManagerOfflineData from '../components/components/ManagerOfflineData';
 import UserOfflineData from '../components/components/UserOfflineData';
 import { notif } from '../functions/datagrid';
+import Offline from './Offline';
 
 
 const OfflineData = () => {
-    const {Link} = Anchor
     const [data, setData] = useState([])
     const [search, setSearch] = useState({searchText: '', searchedColumn:''})
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -221,7 +221,6 @@ const OfflineData = () => {
               }} type='link'>Manage</Button> 
               <Popconfirm title="Sure to delete?" onConfirm = {
                   async (key) => {
-                    console.log('record', record)
                         let res = await onDeleteOfflineData({tableID: record.tableID})
                         let newData = data.filter((tempData) => {
                           return tempData.id !== record.id
@@ -240,9 +239,7 @@ const OfflineData = () => {
 
     return (
         <div>
-          {isOnline !== true ? <Anchor>
-              <Link href='/offline' title='Go to offline'/>
-            </Anchor> : 
+          {isOnline !== true ? <Offline/> : 
             <Layout1>
                 <Table columns={columns} dataSource={finaldata} style={{margin: '15px'}} scroll={{ x: 1500, y: 500 }}/>
             </Layout1>}

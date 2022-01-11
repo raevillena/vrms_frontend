@@ -858,7 +858,6 @@ router.post('/recoverDatagidData', auth, async(req, res) => {
 })
 
 router.post('/postOffline', auth, async(req, res) => {
-    console.log(req.body)
     let x = req.body.cookies
     try {
         for (let i = 0; i < x.length; i++) {

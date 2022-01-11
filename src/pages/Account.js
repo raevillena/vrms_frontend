@@ -1,4 +1,4 @@
-import { Row, Typography,Avatar, notification, Col, Card, Anchor } from 'antd'
+import { Row, Typography,Avatar, notification, Col, Card } from 'antd'
 import React, {useState, useEffect} from 'react';
 import { useSelector} from 'react-redux';
 import {UserOutlined} from '@ant-design/icons';
@@ -6,13 +6,13 @@ import { onUploadAvatar } from '../services/uploadAPI';
 import '../styles/CSS/Userdash.css'
 import ChangePassword from './ChangePassword';
 import Layout1 from '../components/components/Layout1';
+import Offline from './Offline';
 
 
 
 const style = { marginTop: '25px', marginLeft: '8px' };
 
 const Account = () => {
-    const { Link } = Anchor;
     const userObj = useSelector(state => state.user) //reducer for user data
     const [imgData, setImgData] = useState() //for displaying avatar
     const { Title } = Typography;
@@ -40,9 +40,7 @@ const Account = () => {
     return (
     <div>
       <Layout1>
-      {isOnline !== true ? <Anchor>
-      <Link href='/offline' title='Go to offline'/>
-    </Anchor> :
+      {isOnline !== true ? <Offline/> :
       <Row justify="start" style={{marginLeft: '20px', marginRight: '20px'}} >
               <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}}  hoverable >
                 <Row justify="space-around" gutter={16}>

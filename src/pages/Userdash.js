@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Table,Progress, Tag, Spin, Input, Space,Anchor } from 'antd'
+import { Button, Table,Progress, Tag, Spin, Input, Space } from 'antd'
 import '../styles/CSS/Userdash.css'
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -14,13 +14,12 @@ import Layout1 from '../components/components/Layout1';
 import Cookies from 'universal-cookie';
 import { onPostOffline } from '../services/offline';
 import { notif } from '../functions/datagrid';
-
+import Offline from './Offline';
 
 
 const Userdash = () => {
   const cookies = new Cookies();
   const dispatch = useDispatch()
-  const { Link } = Anchor;
   let history= useHistory();
   let userObj = useSelector(state => state.user)
   let authObj = useSelector(state => state.auth)
@@ -245,11 +244,7 @@ const getColumnSearchProps = dataIndex => ({
 return (
   <div>
     {isOnline !== true ? 
-    <Layout1>
-    <Anchor>
-      <Link href='/offline' title='Go to offline'/>
-    </Anchor> 
-    </Layout1>: 
+    <Offline/>: 
     <div>
     {userObj.USER.category === "user"? 
         <Layout1>  

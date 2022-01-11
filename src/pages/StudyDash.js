@@ -1,19 +1,19 @@
 import React, {useState, useEffect} from 'react';
 import Label from './Label'
 import DataGrid from './DataGrid'
-import { Tabs, Anchor} from 'antd'
+import { Tabs} from 'antd'
 import Tasks from './DisplayTasks'
 import Documentation from './Documentation'
 import '../styles/CSS/Userdash.css'
 import Mobiledash from './StudyDash_mobile';
 import StudyGallery from './StudyGallery';
 import Layout1 from '../components/components/Layout1';
+import Offline from './Offline';
 
 
 const { TabPane } = Tabs;
 
 const StudyDash = () => {
-    const { Link } = Anchor;
     const [isOnline, set_isOnline] = useState(true);
     let interval = null;
     const InternetErrMessagenger = () => set_isOnline(navigator.onLine);
@@ -28,11 +28,7 @@ const StudyDash = () => {
     return (
       <div >
         {isOnline !== true ? 
-        <Layout1>
-            <Anchor>
-                <Link href='/offline' title='Go to offline'/>
-            </Anchor> 
-        </Layout1>:
+        <Offline/>:
         <Layout1>
             <div className='study-dash' style={{margin: '10px 10px 10px 10px'}}>
             <Label/>

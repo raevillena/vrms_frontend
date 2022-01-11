@@ -248,7 +248,7 @@ const Offline = () => {
       }
 
       useEffect(() => {
-        cookies.set('add', cookie, { path: '/offline' });
+        cookies.set('add', cookie);
         console.log(cookies.get('add'));
       }, [cookie])
 
