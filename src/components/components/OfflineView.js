@@ -8,6 +8,7 @@ import { useSelector, useDispatch} from 'react-redux';
 import Cookies from 'universal-cookie';
 
 const OfflineView = (props) => {
+  console.log('index', props.data.id)
     const dispatch = useDispatch();
     const cookies = new Cookies();
     //redux states
@@ -299,7 +300,7 @@ const OfflineView = (props) => {
         arr[objIndex].description = state.description
         arr[objIndex].data = data
         arr[objIndex].columns = columns
-        cookies.set('add', arr, { path: '/offline' });
+        cookies.set('add', arr);
         props.func({state: arr})
         console.log('saving changes', cookies.get('add'))
       }

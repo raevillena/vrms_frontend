@@ -46,6 +46,7 @@ const Offline = () => {
         let tempArr = []
         for (let i = 0; i < arrData.length; i++) {
           tempArr.push({
+            id: i,
             user: arrData[i].user,
             title: arrData[i].title,
             description: arrData[i].description,
