@@ -113,7 +113,7 @@ function Login() {
         <Row justify="center">
       <Col  >
         <Form style={{marginTop: "40%", width: '100%', alignItems:'center', justifyContent:'center' , minHeight: "90vh"}} name="basic"initialValues={{remember: true}} onFinish={onSubmit}>
-        <Title style={{fontFamily: "Bangla MN", fontWeight: "bolder", fontSize: '16px'}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</Title>
+          <h1 style={{fontSize:'4vw', fontFamily: "Bangla MN", width: '100%', fontWeight:'bolder'}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</h1>
           <Form.Item name="email"  
               rules={[
               {
