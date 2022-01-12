@@ -173,6 +173,14 @@ const Offline = () => {
         }
       }, [state.title,state.description]);
 
+      useEffect(() => { //create button disable
+        if (state.title === undefined ||state.title ===''|| state.description === undefined ||state.description ==='') {
+          setstate({...state, disableCreate: true})
+        } else {
+          setstate({...state, disableCreate: false})
+        }
+      }, [state.title,state.description]);
+
       const showModalAdd = () => {
         setstate({...state, isModalAdd: true})
       };
@@ -424,7 +432,7 @@ const Offline = () => {
                             createRow={createRow}
                         />
                         <div style={{marginTop: '20px', display: 'flex', justifyContent:'flex-end'}}>
-                          <Button onClick={saveToCookies}>
+                          <Button type='primary' disabled={state.disableCreate} onClick={saveToCookies}>
                               Create
                           </Button>
                         </div>
