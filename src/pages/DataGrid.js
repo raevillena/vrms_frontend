@@ -325,7 +325,7 @@ const handleReplace = () =>{
 
   return (
     <div>
-       <div style={{marginTop: '20px'}} >
+       <div >
           <Tooltip placement="top" title="Add Table">
             <Button style={{background: '#A0BF85', marginTop: '15px', display: userObj.USER.category === 'director' ? 'none' : 'initial' }} onClick={showModalAdd} icon={<PlusSquareFilled/>}>
               Add Table

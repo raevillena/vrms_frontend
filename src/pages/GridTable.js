@@ -370,7 +370,7 @@ const handleCancelView = () => {
         {
           title: 'Action',
           key: 'operation',
-          fixed: 'right',
+          fixed: 'none',
           width: '20%',
           render: (text, record, index) => 
             <Form style={{display:'flex', gap:'5px'}}>
