@@ -370,9 +370,10 @@ const handleCancelView = () => {
         {
           title: 'Action',
           key: 'operation',
-          fixed: 'none',
+          fixed: 'right',
           width: '20%',
           render: (text, record, index) => 
+          <Space>
             <Form style={{display:'flex', gap:'5px'}}>
               <div>
                 <Tooltip title='Download table in CSV' placement='top'>
@@ -440,7 +441,8 @@ const handleCancelView = () => {
                 </Popconfirm>
               </Tooltip>
             </div>
-        </Form>,
+        </Form>
+        </Space>,
                     
         },
       ];

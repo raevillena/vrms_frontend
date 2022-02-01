@@ -25,7 +25,7 @@ const StudyDash_Mobile = () => {
                     <TabPane tab="Gallery" key="3">
                         <StudyGallery/>
                     </TabPane>
-                    <TabPane tab="Tables" key="4">
+                    <TabPane tab="Data" key="4">
                         <DataGrid/>
                     </TabPane>
                 </Tabs>
