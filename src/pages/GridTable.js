@@ -456,10 +456,11 @@ const handleCancelView = () => {
 
     return (
         <div>
-            {loading ?  <div className="spinner"><Spin /> </div> : <div> 
-            <Table scroll={{ x: 1000, y: 500 }} columns={columns} dataSource={finaldata} /> 
+            {loading ?  <div className="spinner"><Spin /> </div> : 
+            <div> 
+              <Table scroll={{ x: 1000, y: 500 }} columns={columns} dataSource={finaldata} /> 
             </div>
-           }
+            }
              <Modal visible={isEditModalVisible} footer={null} onCancel={handleCancelEdit} width={1500} title="Edit Table">
                 <EditDatagrid data={editData} func={new_data}/>
             </Modal>

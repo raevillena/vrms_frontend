@@ -20,9 +20,9 @@ const AddComment = (props) => {
   let forProps = {task}
 
     async function handleSubmit(){
-        let result = await onAddComment({taskID: task, comment, studyID: studyObj.STUDY.studyID})
-        setComment({...comment, value: ''})
-       forProps = {task, result}
+      let result = await onAddComment({taskID: task, comment, studyID: studyObj.STUDY.studyID})
+      setComment({...comment, value: ''})
+      forProps = {task, result}
     }
 
     const handleChange = (e) =>{
@@ -33,33 +33,33 @@ const AddComment = (props) => {
       setTask(props.data)
     }, [props.data])
    
-    return (
-      <div>
-        <Fragment>
-          <DisplayComment data={forProps} typing={comment.typing}/>
-        </Fragment>
-        <Fragment>
-          <Comment
-            avatar={
-              <Avatar
+  return (
+    <div>
+      <Fragment>
+        <DisplayComment data={forProps} typing={comment.typing}/>
+      </Fragment>
+      <Fragment>
+        <Comment
+          avatar={
+            <Avatar
               src={`/avatar/${avatar}`}
               alt={userObj.USER.name}
             />}
-            content={
-              <>
-              <Form.Item>
-                <TextArea rows={4} onChange={handleChange} value={comment.value} />
-              </Form.Item>
-              <Form.Item>
-                <Button htmlType="submit" loading={comment.submitting} onClick={handleSubmit} style={{background: '#A0BF85'}}>
-                  Add Comment
-                </Button>
-              </Form.Item>
-              </>
-            }
-          />
-        </Fragment>
-      </div>
+          content={
+            <>
+            <Form.Item>
+              <TextArea rows={4} onChange={handleChange} value={comment.value} />
+            </Form.Item>
+            <Form.Item>
+              <Button htmlType="submit" loading={comment.submitting} onClick={handleSubmit} style={{background: '#A0BF85'}}>
+                Add Comment
+              </Button>
+            </Form.Item>
+            </>
+          }
+        />
+      </Fragment>
+    </div>
   )
 }
 

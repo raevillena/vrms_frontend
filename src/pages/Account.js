@@ -41,10 +41,10 @@ const Account = () => {
     <div>
       <Layout1>
       {isOnline !== true ? <Offline/> :
-      <Row justify="start" style={{marginLeft: '20px', marginRight: '20px'}} >
-              <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}}  hoverable >
-                <Row justify="space-around" gutter={16}>
-                <Col className="gutter-row" span={12}  >
+        <Row justify="start" style={{marginLeft: '20px', marginRight: '20px'}} >
+          <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}}  hoverable >
+            <Row justify="space-around" gutter={16}>
+              <Col className="gutter-row" span={12}  >
                 <Avatar src={imgData||`/avatar/${avatar}`}  size={150} icon={<UserOutlined />} />
                   <div style={{marginLeft: '30px'}}>
                       <label htmlFor="file_input_id" >Upload Photo</label>
@@ -66,23 +66,23 @@ const Account = () => {
                       >
                       </input>
                   </div>
-                  </Col>
+              </Col>
                   <Col className="gutter-row" span={12} >
                     <div style={style}>
                       <Title level={3}>{userObj.USER.name}</Title>
                       <p >{userObj.USER.title}</p>
                       <p >{userObj.USER.project}</p>
                       <p >{userObj.USER.email}</p>
-                      </div>
+                    </div>
                   </Col>
-                </Row>
-              </Card>
-              <div style={{padding: '0 8px'}} >
-              <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}}  hoverable>
-                <ChangePassword/>
-              </Card>
-              </div>
-              </Row>}
+            </Row>     
+          </Card>
+          <div style={{padding: '0 8px'}} >
+            <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}}  hoverable>
+              <ChangePassword/>
+            </Card>
+          </div>  
+        </Row>}
       </Layout1>
     </div>
   )

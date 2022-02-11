@@ -23,6 +23,7 @@ import Files from './admin/files'
 import Backup from './admin/backup'
 import Offline from '@pages/Offline';
 import OfflineData from '@pages/OfflineData';
+import Privacy from '@pages/Policy';
 
 
 function App() {
@@ -80,6 +81,7 @@ function App() {
     <BrowserRouter>
     <Switch>
       <PublicRoute path="/login" exact component={Login} auth={authObj} />
+      <PublicRoute path="/privacypolicy" exact component={Privacy} auth={authObj} />
       <PublicRoute path="/offline" exact component={Offline} auth={authObj} />
       <PublicRoute path="/forgotpassword" exact component={ForgotPassword} auth={authObj}/>
       <PublicRoute path="/reset-password/" exact component={ResetPassword} auth={authObj}/>
