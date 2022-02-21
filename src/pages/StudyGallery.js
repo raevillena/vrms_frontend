@@ -29,7 +29,7 @@ const StudyGallery = () => {
                imageArr.push({
                 src: `/gallery/${image[i].images}`,   ///http://127.0.0.1:8080/gallery/${image[i].images}
                 thumbnail: `/gallery/${image[i].images}`, //http://127.0.0.1:8080/gallery/${image[i].images}
-                thumbnailWidth: 258,
+                thumbnailWidth: 200,
                 thumbnailHeight: 200,
                 caption: image[i].caption
                })
@@ -52,8 +52,8 @@ const StudyGallery = () => {
         setImages([...images, {
             src: `http://nberic.org/gallery/${newImage}`,
             thumbnail: `http://nberic.org/gallery/${newImage}`,
-            thumbnailWidth: 110,
-            thumbnailHeight: 70,
+            thumbnailWidth: 258,
+            thumbnailHeight: 200,
             caption: caption
             }])
         message.success(result.data.message)
