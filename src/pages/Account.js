@@ -15,7 +15,7 @@ const style = { marginTop: '25px', marginLeft: '8px' };
 const Account = () => {
     const userObj = useSelector(state => state.user) //reducer for user data
     const [imgData, setImgData] = useState() //for displaying avatar
-    const { Title } = Typography;
+    const { Title, Text } = Typography;
     let avatar = localStorage.getItem("avatarFilename")
     const [isOnline, set_isOnline] = useState(true);
     let interval = null;
@@ -44,7 +44,7 @@ const Account = () => {
         <Row justify="start" style={{marginLeft: '20px', marginRight: '20px'}} >
           <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}}  hoverable >
             <Row justify="space-around" gutter={16}>
-              <Col className="gutter-row" span={12}  >
+              <Col className="gutter-row" span={12} >
                 <Avatar src={imgData||`/avatar/${avatar}`}  size={150} icon={<UserOutlined />} />
                   <div style={{marginLeft: '30px'}}>
                       <label htmlFor="file_input_id" >Upload Photo</label>
@@ -67,12 +67,12 @@ const Account = () => {
                       </input>
                   </div>
               </Col>
-                  <Col className="gutter-row" span={12} >
+                  <Col className="gutter-row" span={12}>
                     <div style={style}>
                       <Title level={3}>{userObj.USER.name}</Title>
-                      <p >{userObj.USER.title}</p>
-                      <p >{userObj.USER.project}</p>
-                      <p >{userObj.USER.email}</p>
+                      <p>{userObj.USER.title}</p>
+                      <p>{userObj.USER.project}</p>
+                      <Text autoSize={true}>{userObj.USER.email}</Text>
                     </div>
                   </Col>
             </Row>     
