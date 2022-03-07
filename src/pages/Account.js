@@ -41,7 +41,7 @@ const Account = () => {
     <div>
       <Layout1>
       {isOnline !== true ? <Offline/> :
-        <Row justify="start" style={{marginLeft: '20px', marginRight: '20px'}} >
+        <Row justify="start" style={{marginLeft: '21px', marginRight: '21px'}} >
           <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}}  hoverable >
             <Row justify="space-around" gutter={16}>
               <Col className="gutter-row" span={12} >
