@@ -1,202 +1,198 @@
-@import '~antd/dist/antd.css';
-
-
+@import "~antd/dist/antd.css";
 
 .sidebar {
-    padding: 5px 5px;
-    font-family: Montserrat;
-    font-style: normal;
-    color: #393550;
-    background: #FFFFFF;
+  padding: 5px 5px;
+  font-family: Montserrat;
+  font-style: normal;
+  color: #393550;
+  background: #ffffff;
 }
 
-
-.header{
-    font-family: Montserrat;
-    font-style: normal;
-    font-size: 28px;
-    background: #f2f2f2;
-    padding: 0;
+.header {
+  font-family: Montserrat;
+  font-style: normal;
+  font-size: 28px;
+  background: #f2f2f2;
+  padding: 0;
 }
 
-.hidden{
-    display: none;
+.hidden {
+  display: none;
 }
 
-.logo{
-    position: absolute;
-    width: 96px;
-    height: 96px;
-    left: 62px;
-    top: 29px;
+.logo {
+  position: absolute;
+  width: 96px;
+  height: 96px;
+  left: 62px;
+  top: 29px;
+}
+.ant-input {
+  width: auto;
 }
 
+.menu1 {
+  position: static;
+  width: 192px;
+  height: 45px;
+  left: 1px;
+  top: 135px;
+  padding: 3px 2px;
 
-.menu1{
-    position: static;
-    width: 192px;
-    height: 45px;
-    left: 1px;
-    top: 135px;
-    padding: 3px 2px;
-    
-    background: #A0BF85;
-    border-radius: 16px;
+  background: #a0bf85;
+  border-radius: 16px;
 
-    font-family: Montserrat;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
 }
 
-.manageBtn{
-    background: #A0BF85;
-    border-radius: 5px;
- 
+.manageBtn {
+  background: #a0bf85;
+  border-radius: 5px;
 }
 
-
-.spinner{
-    display: flex;
-    justify-content: center;
-    padding: 25%;
+.spinner {
+  display: flex;
+  justify-content: center;
+  padding: 25%;
 }
 
-.mobile-header{
-    display: none;
+.mobile-header {
+  display: none;
 }
- h3{
-     font-size: 20px;
- }
-
- .menu-mobile{
-    display: flex;
-    margin-left: 50px;
- }
-
- .label-header{
-     margin-top: 0px;
-     margin-bottom: 0px;
-     font-family: 'Times New Roman', Times, serif;
-    width: 100%;
- }
-
- .add-grid{
-     display: flex;
-     flex-direction: row;
-     gap: 5px;
-     max-width: 100%;
- }
-
- .div-flex{
-     display: flex;
-     flex-direction: row;
-     gap: 5px;
- }
-
- .div-inline-block{
-    display: inline-block;
-    position: absolute;
-    gap: 10px;
-    left: 0px;
- }
-
- .content-grid{
-    margin: 10px;
- }
- .row-grid{
-     display: flex;
-     flex-direction: row;
-     gap: 50px;
- }
- .mobile-study-dash{
-    display: none;
+h3 {
+  font-size: 20px;
 }
 
-.div-text-align{
-    position:absolute;
-    text-align: right;
+.menu-mobile {
+  display: flex;
+  margin-left: 50px;
 }
 
-.add-button{
-    background-color: #A0BF85;
-    border-radius: 50%;
-    height: 40px;
-    float: right;
-    margin-right: 20px;
+.label-header {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-family: "Times New Roman", Times, serif;
+  width: 100%;
 }
 
-.div[disabled]{
-    pointer-events: none;
-    opacity: 0.7;
+.add-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  max-width: 100%;
 }
 
-.task-display{
+.div-flex {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.div-inline-block {
+  display: inline-block;
+  position: absolute;
+  gap: 10px;
+  left: 0px;
+}
+
+.content-grid {
+  margin: 10px;
+}
+.row-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+}
+.mobile-study-dash {
+  display: none;
+}
+
+.div-text-align {
+  position: absolute;
+  text-align: right;
+}
+
+.add-button {
+  background-color: #a0bf85;
+  border-radius: 50%;
+  height: 40px;
+  float: right;
+  margin-right: 20px;
+}
+
+.div[disabled] {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.task-display {
   display: flex;
   gap: 5px;
   line-height: 2px;
 }
 
-.div-gap{
-    margin-top: 10px;
+.div-gap {
+  margin-top: 10px;
 }
 @media screen and (min-width: 767px) {
-    .progress-label{
-        align-content: flex-end;
-    }
+  .progress-label {
+    align-content: flex-end;
+  }
 }
 
 @media screen and (max-width: 1300px) {
-    .add-grid{
-        display: grid;
-    }
+  .add-grid {
+    display: grid;
+  }
 }
 @media screen and (max-width: 768px) {
-    .sidebar{
-        display: none;
-    }
-    .header{
-        display: none;
-    }
-    .mobile-header{
-        display: initial;
-        width: 100%;
-    }
-    .study-dash{
-        display: none;
-    }
-    .mobile-study-dash{
-        display:initial;
-    }
-   .label-hidden{
-        display: none;
-    }
-    .content-mobile{
-        margin-top: 0px;
-     
-    }
-    .add-grid{
-        display: grid;
-    }
-    .progress-label{
-        display: none;
-    }
+  .sidebar {
+    display: none;
+  }
+  .header {
+    display: none;
+  }
+  .mobile-header {
+    display: initial;
+    width: 100%;
+  }
+  .study-dash {
+    display: none;
+  }
+  .mobile-study-dash {
+    display: initial;
+  }
+  .label-hidden {
+    display: none;
+  }
+  .content-mobile {
+    margin-top: 0px;
+  }
+  .add-grid {
+    display: grid;
+  }
+  .progress-label {
+    display: none;
+  }
 }
 
 @media screen and (max-width: 426px) {
-    h3{
-        font-size: 12px;
-    }
-    .menu-mobile{
-        display: flex;
-        margin-left: 20px;
-    }
-    .content-mobile{
-        margin-top: 0px;
-    }
-    .progress-label{
-        display: none;
-    }
+  h3 {
+    font-size: 12px;
+  }
+  .menu-mobile {
+    display: flex;
+    margin-left: 20px;
+  }
+  .content-mobile {
+    margin-top: 0px;
+  }
+  .progress-label {
+    display: none;
+  }
 }

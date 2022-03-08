@@ -484,19 +484,23 @@ async function backup(){
             <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>
               Table Title
             </label>
-            <Input  placeholder="Input table title" onChange={(e)=> {setState({...state, title: e.target.value})}} value={state.title}/> 
+            <div style={{display:'flex', flexDirection:'row'}}>
+            <Input size='default' placeholder="Input table title" onChange={(e)=> {setState({...state, title: e.target.value})}} value={state.title}/>
+            </div>
           </div>
           <div style={{display:'grid'}}>
             <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>
               Table Description
             </label>
+            <div style={{display:'flex', flexDirection:'row'}}>
             <Input  placeholder="Enter table description" onChange={(e)=> {setState({...state, description: e.target.value})}} value={state.description}/>
+            </div>
           </div>
           <div style={{display:'grid'}}>
               <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>
                 Column Title
               </label>
-              <div style={{display:'flex', flexDirection:'row', gap:'3px'}}>
+              <div style={{display:'flex', flexDirection:'row', gap:'3px', width: '300px'}}>
                   <Input  placeholder="Enter Column title" onChange={(e)=> {setAddColumn( e.target.value)}} value={addColumn} />
                   <Tooltip placement='top' title='Text Column'>
                     <Button disabled={state.disabledColumn}  onClick={addTextColumn}>
@@ -537,7 +541,7 @@ async function backup(){
             <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>
               Delete Column 
             </label>
-            <div style={{display:'flex', flexDirection:'row', gap:'5px'}}>
+            <div style={{display:'flex', flexDirection:'row', gap:'3px', width: '300px'}}>
                 <Select placeholder="Select column title to delete" onChange={handleColumnToDelete} value={state.toRemoveColumn} mode="tags" tokenSeparators={[',']} style={{width: 150}}>
                   {tempCol.map(column => (
                     <Option key={column.title} value={column.title}>{column.title}</Option>
