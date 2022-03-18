@@ -68,6 +68,7 @@ export async function onDownloadFileTask(body) {
     try {
          axios.get(`/v1/upload/downloadFileTask/${body}`, { key: 'value', headers: {
             "Content-Type": "multipart/form-data",
+            "Content-Disposition": "inline",
             'Authorization' : `Bearer ${accessToken}`,
         }, responseType: 'blob' }).then(async function (response) {
             let blob  = new Blob([response.data])

@@ -81,7 +81,7 @@ router.route('/secretcreateuser').post(async (req, res) => {
             }
         }
      } catch (error) {
-      logger.log('error', `Error: /updatePassword - ${err}`)
+      logger.log('error', `Error: /updatePassword - ${error}`)
         res.status(500).json({message: error.message})
      }
  })
@@ -205,16 +205,17 @@ router.get("/getAllUserDashboard", async(req,res) => {
 })
 
 router.post('/updateUserAdmin', async(req, res) => {
+
   try {
-     User.findOneAndUpdate({"_id": req.body.id}, {"name": req.body.name, "title": req.body.title, "category": req.body.category, 'email': req.body.email}, function(err, user){
+     User.findOneAndUpdate({"_id": req.body.id}, {"name": req.body.name, "title": req.body.title, "category": req.body.category[0], 'email': req.body.email}, function(err, user){
       if(err){
-          logger.log('error', 'Error: /updateUserAdmin')
+          logger.log('error', `Error: /updateUserAdmin - ${err}`)
       }else{
         res.send({message: 'User Updated', user})
       }
   })
   } catch (error) {
-   logger.log('error', `Error: /updateUserAdmin - ${err}`)
+   logger.log('error', `Error: /updateUserAdmin - ${error}`)
      res.status(500).json({message: error.message})
   }
 })
