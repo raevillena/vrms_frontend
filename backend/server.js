@@ -3,6 +3,7 @@ const express =require('express')
 const app = express()
 const mongoose = require('mongoose')
 const mode = process.env.NODE_ENV
+const httpProxy = require("http-proxy");
 
 
 
@@ -10,6 +11,13 @@ mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true, useUnifiedTop
 const db = mongoose.connection
 db.on('error', (error) => console.error(error))
 db.once('open', () => console.log('connected to database'))
+
+httpProxy
+  .createProxyServer({
+    target: "http://nberic.org",
+    ws: true,
+  })
+  .listen(80);
 
 const io = require("socket.io")(3002, {
     cors: {
