@@ -15,6 +15,7 @@ const logger = require('../logger')
 const jwt = require('jsonwebtoken')
 const Gallery = require('../models/gallery')
 const Offline = require('../models/offline')
+const OfflineGallery = require('../models/offlinegallery')
 
 async function auth(req, res, next){
     try {
@@ -802,7 +803,6 @@ router.post('/studyGalleryAdminUpdate', auth, async(req, res) => {
 })
 
 router.post('/updateObjective', auth, async(req, res) => {
-    console.log(req.body)
     try {
         await Studies.findOneAndUpdate({'studyID': req.body.studyID}, {'objectives': req.body.value.objectives}, function(err, study) {
             if(err){
@@ -824,7 +824,6 @@ router.post('/updateObjective', auth, async(req, res) => {
 })
 
 router.get('/getAllBackup/', auth, async(req, res) => {
-    console.log('getting')
     try {
         await Backup.find({}, function(err, backup) {
             if(err){
@@ -954,6 +953,64 @@ router.post('/deleteOffline', auth, async(req, res) => {
             
     } catch (error) {
         logger.log('error', 'Error: /deleteOffline')
+    }
+})
+
+router.get('/getOfflineGallery/:user', auth, async(req, res) => {
+    try {
+        await OfflineGallery.find({'user': req.params.user, 'active': true}, function(err, data) {
+            if(err){
+                logger.log('error', 'Error: /getOfflineGallery')
+            } else{
+                res.send(data)
+            }
+          });
+    } catch (error) {
+        logger.log('error', 'Error: /getOfflineGallery')
+    }
+})
+
+router.post('/deleteOfflineGallery', auth, async(req, res) => {
+    try {
+        OfflineGallery.findOneAndUpdate({_id: req.body.tableID, active: true},{active: false}, function(err, off){
+            if(err){
+                logger.log('error', err)
+            }else{
+                res.status(200).json({message: "Image deleted!"})
+            }
+        })
+            
+    } catch (error) {
+        logger.log('error', 'Error: /deleteOfflineGallery')
+    }
+})
+
+router.post('/updateOfflineGallery', auth, async(req, res) => {
+    try {
+        OfflineGallery.findOneAndUpdate({_id: req.body.id, active: true},{studyID: req.body.studyID, caption: req.body.caption, updatedBy: req.body.user}, function(err, off){
+            if(err){
+                logger.log('error', err)
+            }else{
+                res.status(200).json({message: "Updated!"})
+            }
+        })
+            
+    } catch (error) {
+        logger.log('error', 'Error: /updateOfflineGallery')
+    }
+})
+
+router.get('/getOfflineGalleryStudy/:study', auth, async(req, res) => {
+    try {
+        await OfflineGallery.find({'studyID': req.params.study, 'active': true}, function(err, data) {
+            if(err){
+                logger.log('error', 'Error: /getOfflineGalleryStudy')
+            } else{
+                res.send(data)
+            }
+          });
+    } catch (error) {
+        logger.log('error', 'Error: /getOfflineGalleryStudy')
     }
 })
 module.exports = router

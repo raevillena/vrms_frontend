@@ -6,12 +6,13 @@ import { onUploadGallery } from '../services/uploadAPI';
 import { useSelector } from 'react-redux';
 import { onGetGallery } from '../services/studyAPI';
 import '../styles/CSS/Userdash.css'
+import { onGetOfflineGalleryStudy } from '../services/offline';
 
 const StudyGallery = () => {
 
     const studyObj = useSelector(state => state.study)
     const userObj = useSelector(state => state.user)
-    const [images, setImages] = useState()
+    const [images, setImages] = useState([])
     const [caption, setCaption] = useState()
     const [loading, setLoading] = useState(true)
     const [visible, setVisible] = useState(false);
@@ -25,6 +26,11 @@ const StudyGallery = () => {
             let result = await onGetGallery(studyObj.STUDY.studyID)
             let image =  result.data
             let imageArr = []
+
+            let result1 = await onGetOfflineGalleryStudy(studyObj.STUDY.studyID)
+            let x = result1.data
+            let tempData = []
+
             for (let i = 0; i < image.length; i++) {
                imageArr.push({
                 src: `/gallery/${image[i].images}`,   ///http://127.0.0.1:8080/gallery/${image[i].images}
@@ -34,9 +40,22 @@ const StudyGallery = () => {
                 caption: image[i].caption
                })
             }
-            setImages(imageArr)
+
+            for (let i = 0; i < x.length; i++) {
+                tempData.push({
+                    caption: x[i].caption,
+                    thumbnailWidth: 200,
+                    thumbnailHeight: 200,
+                    src: `/offline/${x[i].images}`,
+                    thumbnail: `/offline/${x[i].images}`
+            });
+            }
+            let mergedArr = imageArr.concat(tempData)
+            setImages(mergedArr) 
             setLoading(false)
         }
+        
+          
         getImages()
         return () => {
             console.log('unmounting gallery')
@@ -59,8 +78,6 @@ const StudyGallery = () => {
         message.success(result.data.message)
         form.resetFields()
     }
-
-
 
     
     return (

@@ -13,6 +13,7 @@ import Dashboard from '../admin/dashboard'
 import Layout1 from '../components/components/Layout1';
 import Cookies from 'universal-cookie';
 import { onPostOffline } from '../services/offline';
+import { onUploadOfflineGallery } from '../services/uploadAPI';
 import { notif } from '../functions/datagrid';
 import Offline from './Offline';
 
@@ -30,8 +31,20 @@ const Userdash = () => {
   let interval = null;
   const InternetErrMessagenger = () => set_isOnline(navigator.onLine);
 
- // cookies.set('myCat', 'Pacman', { path: '/offline' });
-  //console.log(cookies.get('myCat')); // Pacman
+
+  function dataURLtoFile(dataurl, filename) { // used to convert base64 file stored in local storage for offline uploading
+    var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), 
+        n = bstr.length, 
+        u8arr = new Uint8Array(n);
+        
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    
+    return new File([u8arr], filename, {type:mime});
+  }
   
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken")
@@ -73,16 +86,37 @@ const Userdash = () => {
 useEffect(() => {
   async function postData(){
     let x = { cookies: cookies.get('add'), user: userObj.USER._id}
-    console.log('online', x)
     let res = await onPostOffline(x)
     notif('info', res.data.message)
     
   }
+  async function postGallery(){
+    let y = localStorage.getItem('gallery')
+      if(y !== 'undefined'){
+        let x = JSON.parse(y)
+          if(x == null){
+            console.log('null')
+          }else{
+            for (let i = 0; i < x.length; i++) {
+              var base64 = x[i].file;
+              var file = dataURLtoFile(base64,'offline.png');
+              const fd = new FormData();
+              fd.append('file', file)
+              fd.append('user', userObj.USER._id)
+              fd.append('caption', x[i].caption)
+              let res = await onUploadOfflineGallery(fd)
+              notif('info', res.data.message)
+              localStorage.removeItem('gallery')
+            }
+          }
+      }else{
+        return
+      }
+    }
   if(isOnline === true){
-    //console.log(authObj.AUTHENTICATED)
     if(authObj.AUTHENTICATED === true){
-        console.log('authenticated true')
         postData()
+        postGallery()
     }else{
       history.push('/')
       notif('info', 'Authentication error, please login!')
@@ -250,7 +284,8 @@ return (
         <Layout1>  
           {loading ?  <Spin className="spinner" /> : 
            <div > 
-            <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table> 
+            <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table>
+            
           </div>
           }
         </Layout1> : userObj.USER.category === "manager" ?

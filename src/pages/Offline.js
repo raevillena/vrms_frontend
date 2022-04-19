@@ -11,6 +11,7 @@ import Cookies from 'universal-cookie';
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import OfflineView from './../components/components/OfflineView'
+import OfflineGallery from './OfflineGallery';
 
 const Offline = () => {
     const cookies = new Cookies();
@@ -98,7 +99,7 @@ const Offline = () => {
           )
         }
       )
-    
+
     
       const textColumn = {
         component: TextComponent,
@@ -106,7 +107,6 @@ const Offline = () => {
         copyValue: ({ rowData }) => rowData,
         pasteValue: ({ value }) => value,
       }
-
     
       const [ tempCol, setTempCol ] = useState([{ //column
         ...keyColumn('Default', textColumn),
@@ -135,7 +135,6 @@ const Offline = () => {
           title: addColumn,
           type: 'text'
         }])
-        console.log('added column', columns)
         setAddColumn('')
       }
     
@@ -235,7 +234,6 @@ const Offline = () => {
     }
     
     function saveToCookies(){
-        console.log('off')
         setCookie([...cookie, {
           user: userObj.USER.name,
           title: state.title,
@@ -258,7 +256,6 @@ const Offline = () => {
 
       useEffect(() => {
         cookies.set('add', cookie);
-        console.log(cookies.get('add'));
       }, [cookie])
 
       function handleColumnToDelete(value) { //handling deleting column
@@ -270,7 +267,6 @@ const Offline = () => {
       }
       
       const showModal = (record) => {
-        console.log(record)
         setManageData(record)
         setIsModalVisible(!isModalVisible);
     };
@@ -337,8 +333,9 @@ const Offline = () => {
         <div>
             <Layout1>
                 <div style={{marginLeft: '20px', marginRight: '20px'}}> 
+                    <OfflineGallery/>
                     <Button style={{background: '#A0BF85', marginTop: '15px', display: userObj.USER.category === 'director' ? 'none' : 'initial' }} onClick={showModalAdd} icon={<PlusSquareFilled/>}>Add Table</Button>
-                    <Table size="small" scroll={{ x: 1500, y: 500 }} columns={tableColumn} dataSource={finaldata} ></Table> 
+                    <Table size="small" scroll={{ x: 1500, y: 500 }} columns={tableColumn} dataSource={finaldata} /> 
                 </div>
                 <Modal visible={isModalVisible} footer={null} onCancel={handleCancelShow} width={1000} title="View Table">
                     <OfflineView data={manageData} func={new_data}/>
@@ -439,6 +436,7 @@ const Offline = () => {
                     </div>
                     </div>
                 </Modal>
+                
             </Layout1>
         </div>
     )

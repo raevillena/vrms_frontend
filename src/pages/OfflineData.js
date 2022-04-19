@@ -1,13 +1,15 @@
 import React, {useState, useEffect, useMemo} from 'react';
 import Layout1 from '../components/components/Layout1';
-import {Table, Button, Input, Space, Modal, Popconfirm} from 'antd'
-import { onDeleteOfflineData, onGetOffline } from '../services/offline';
+import {Table, Button, Input, Space, Modal, Popconfirm, Image} from 'antd'
+import { onDeleteOfflineData, onGetOffline, onGetOfflineGallery, onDeleteOfflineGallery } from '../services/offline';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
 import {SearchOutlined} from '@ant-design/icons'
 import ManagerOfflineData from '../components/components/ManagerOfflineData';
 import UserOfflineData from '../components/components/UserOfflineData';
+import UserOfflineGallery from '../components/components/UserOfflineGallery';
+import ManagerOfflineGallery from '../components/components/ManagerOfflineGallery'
 import { notif } from '../functions/datagrid';
 import Offline from './Offline';
 
@@ -16,12 +18,16 @@ const OfflineData = () => {
     const [data, setData] = useState([])
     const [search, setSearch] = useState({searchText: '', searchedColumn:''})
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isModalVisibleGallery, setIsModalVisibleGallery] = useState(false);
     const [manageData, setManageData] = useState({})
+    const [manageGallery, setManageGallery] = useState({})
     const [isOnline, set_isOnline] = useState(true);
+    const [images, setImages] = useState([])
     let interval = null;
     const InternetErrMessagenger = () => set_isOnline(navigator.onLine);
 
     let userObj = useSelector(state => state.user)
+
 
     useEffect(() => {
       interval = setInterval(InternetErrMessagenger, 6000);
@@ -33,11 +39,15 @@ const OfflineData = () => {
     const new_data = (key) => {
       let x = key.index
       let newData = data.filter((tempData) => {
-        console.log('tempData',tempData)
         return tempData.id !== x
       })
       
       setData(newData)
+    }
+
+    const new_gallery = (val) => {
+      let x = val.id
+      images.find(someobject => someobject.id === x).caption = val.caption
     }
 
     const finaldata = useMemo(() => data, [data]) //final table data
@@ -45,7 +55,6 @@ const OfflineData = () => {
     useEffect(() => {
         async function getData(){
             let res = await onGetOffline(userObj.USER)
-            console.log(res)
             let x = res.data
             let tempData = []
             for (let i = 0; i < x.length; i++) {
@@ -62,7 +71,24 @@ const OfflineData = () => {
             }
             setData(tempData)
         }
+
+        async function getImages(){
+          let result = await onGetOfflineGallery(userObj.USER)
+          let x = result.data
+          let tempData = []
+          for (let i = 0; i < x.length; i++) {
+            tempData.push({
+                key: [i],
+                id: x[i]._id,
+                caption: x[i].caption,
+                study: x[i].studyID,
+                image: `http://192.168.2.35:8080/offline/${x[i].images}`
+            });
+        }
+        setImages(tempData)
+        }
         getData()
+        getImages()
     }, [])
 
     const showModal = (record) => {
@@ -70,10 +96,20 @@ const OfflineData = () => {
         setIsModalVisible(true);
     };
 
+    const showModalGallery = (record) => {
+      setManageGallery(record)
+      setIsModalVisibleGallery(true);
+  };
+
     const handleCancel = () => {
         setIsModalVisible(false);
         setManageData({})
     };
+
+    const handleCancelGallery = () => {
+      setManageGallery({})
+      setIsModalVisibleGallery(false);
+  };
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -235,16 +271,61 @@ const OfflineData = () => {
           },
         ]
 
-        
+        const galleryCollumn = [
+          {
+              title: 'Image',
+              dataIndex: 'image',
+              key: 'image',
+              render: (image) => 
+                  <div>
+                      <Image src={image}></Image>
+                  </div>
+              },
+          {
+            title: 'Caption',
+            dataIndex: 'caption',
+            key: 'caption',
+            ...getColumnSearchProps('caption'),
+            ellipsis: true,
+          },
+          {
+              title: 'Action',
+              dataIndex: 'action',
+              key: 'action',
+              render: (text, record, index) => 
+                  <div>
+                    <Button type='link' onClick = {()=>{
+                        showModalGallery(record)
+                    }}>Manage
+                    </Button> 
+                    <Popconfirm title="Sure to delete?" onConfirm = {
+                        async (key) => {
+                          let res = await onDeleteOfflineGallery({tableID: record.id})
+                          let newData = images.filter((tempData) => {
+                            return tempData.key !== record.key
+                          })
+                          setImages(newData)
+                          notif('info', res.data.message)
+                        }
+                    }>
+                        <Button danger type='link'>Delete</Button>
+                    </Popconfirm>
+                  </div>
+              },
+        ];   
 
     return (
         <div>
           {isOnline !== true ? <Offline/> : 
             <Layout1>
                 <Table columns={columns} dataSource={finaldata} style={{margin: '15px'}} scroll={{ x: 1500, y: 500 }}/>
+                <Table dataSource={images} style={{margin: '15px'}} size='small' columns={galleryCollumn} /> 
             </Layout1>}
             <Modal title={manageData.title} footer={null} visible={isModalVisible} onCancel={handleCancel} width={1500}>
                 {userObj.USER.category === 'manager' ? <ManagerOfflineData data={manageData} func={new_data}/> : <UserOfflineData data={manageData} func={new_data}/>}
+            </Modal>
+            <Modal title='Manage Image' footer={null} visible={isModalVisibleGallery} onCancel={handleCancelGallery} width={1500}>
+                {userObj.USER.category === 'manager' ? <ManagerOfflineGallery data={manageGallery} func={new_gallery}/> : <UserOfflineGallery data={manageGallery} func={new_gallery}/>}
             </Modal>
         </div>
     )

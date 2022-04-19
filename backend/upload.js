@@ -4,6 +4,7 @@ const multer = require("multer")
 const User = require('./models/user')
 const Gallery = require('./models/gallery')
 const TasksFile = require('./models/tasksfile')
+const OfflineGallery = require('./models/offlinegallery')
  const logger = require('./logger')
  const jwt = require('jsonwebtoken')
 
@@ -49,6 +50,7 @@ const storage3 = multer.diskStorage({
   },
   limits: { fileSize: 1 * 1000 * 1000 }
 });
+
 const storage4 = multer.diskStorage({
   destination: function (req, file, cb) {
       cb(null, __dirname + '/uploads/tasks')
@@ -58,11 +60,25 @@ const storage4 = multer.diskStorage({
   },
 });
 
+const storage5 = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, __dirname + '/uploads/offline')
+  },
+  filename: function (req, file, cb) {
+      cb(null, Math.random() * 1000 + file.originalname)
+  },
+  limits: { fileSize: 1 * 1000 * 1000 }
+});
+
+
+
 var upload = multer({storage: storage})
 var upload1 = multer({storage: storage1})
 var upload2 = multer({storage: storage2})
 var upload3 = multer({storage: storage3})
 var upload4 = multer({storage: storage4})
+var upload5 = multer({storage: storage5})
+
 
 router.post("/avatar", upload.single("file"), async (req, res, next) => {
   try {
@@ -135,8 +151,8 @@ router.post("/gallery", upload3.single("file"), async (req, res, next) => {
   }
 });
 
+
 router.post("/tasksfile", upload4.single("file"), async (req, res, next) => {
-  console.log(req.body)
   try {
       const taskfile = new TasksFile({
         taskID: req.body.task,
@@ -158,10 +174,29 @@ router.post("/tasksfile", upload4.single("file"), async (req, res, next) => {
   }
 });
 
+router.post("/postofflinegallery", upload5.single("file"), async (req, res, next) => {
+  try {
+      const gallery = new OfflineGallery({
+        images: req.file.filename,
+        caption: req.body.caption,
+        user: req.body.user,
+        active: true
+      })
+      const newGallery =  await gallery.save()
+      res.status(201).json({
+        message: `Image sucessfully uploaded!`,
+        newGallery
+      })
+  } catch (error) {
+    logger.log('error', error)
+    res.status(500).json({message: error.message})
+  }
+});
+
+
 router.get('/downloadFileTask/:file', function(req, res, next) {
   const file = `${__dirname}/uploads/tasks/${req.params.file}`;
   res.download(file, req.params.file);
-  console.log('here')
 });
  module.exports = router
 

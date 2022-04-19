@@ -34,7 +34,6 @@ export async function onMoveOfflineData(body) {
 }
 
 export async function onDeleteOfflineData(body) {
-    console.log(body)
     try {
         return axios.post(`/v1/studies/deleteOffline`, body, tokenConfig())
     } catch (error) {
@@ -43,3 +42,45 @@ export async function onDeleteOfflineData(body) {
         }
     }
 }
+
+export async function onGetOfflineGallery(body) {
+    try {
+        return axios.get(`/v1/studies/getOfflineGallery/${body._id}`, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onDeleteOfflineGallery(body) {
+    console.log(body)
+    try {
+        return axios.post(`/v1/studies/deleteOfflineGallery`, body, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onUpdateOfflineGallery(body) {
+    try {
+        return axios.post(`/v1/studies/updateOfflineGallery/`, body, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+
+export async function onGetOfflineGalleryStudy(body) {
+    try {
+        return axios.get(`/v1/studies/getOfflineGalleryStudy/${body}`, tokenConfig())
+    } catch (error) {
+        return {
+            error: error
+        }
+    }
+}
+

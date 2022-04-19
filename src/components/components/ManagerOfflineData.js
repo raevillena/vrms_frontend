@@ -451,16 +451,16 @@ const ManagerOfflineData = (props) => {
           </div>
         </div> 
         <div className='add-datagrid'>
-            <div style={{display: 'grid'}}>
-                <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>
-                    Program
-                </label>
-                <Select placeholder="Select program" onChange={handleProgramChange}>
-                    {program.map(prog =>(
-                        <Option key={prog.programID} value={prog.programID}>{prog.programName}</Option>
-                    ))}
-                </Select>
-            </div>
+          <div style={{display: 'grid'}}>
+              <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>
+                  Program
+              </label>
+              <Select placeholder="Select program" onChange={handleProgramChange}>
+                  {program.map(prog =>(
+                      <Option key={prog.programID} value={prog.programID}>{prog.programName}</Option>
+                  ))}
+              </Select>
+          </div>
           <div style={{display: 'grid'}}>
             <label style={{fontSize: '20px', fontFamily:'Montserrat'}}>
               Project

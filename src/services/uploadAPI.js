@@ -49,6 +49,7 @@ export function onUploadGallery(file) {
     }
 }
 
+
 export function onUploadTaskFile(file) {
     try {
         return axios.post("/v1/upload/tasksfile", file, {headers:{
@@ -56,6 +57,25 @@ export function onUploadTaskFile(file) {
             'Authorization' : `Bearer ${accessToken}`,
         }});
     } catch (error) {
+        return {
+            status: 'false',
+            error: error
+        }
+    }
+}
+
+
+
+
+export function onUploadOfflineGallery(value) {
+    console.log('send api', value)
+    try {
+        return axios.post("/v1/upload/postofflinegallery", value, {headers:{
+            "Content-Type": "multipart/form-data",
+            "Authorization" : `Bearer ${accessToken}`,
+        }});
+    } catch (error) {
+        console.log('error: ', error)
         return {
             status: 'false',
             error: error
