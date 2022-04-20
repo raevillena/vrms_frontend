@@ -48,7 +48,8 @@ const StudyGallery = () => {
                     thumbnailHeight: 200,
                     src: `/offline/${x[i].images}`,
                     thumbnail: `/offline/${x[i].images}`
-            });
+            }
+            );
             }
             let mergedArr = imageArr.concat(tempData)
             setImages(mergedArr) 
