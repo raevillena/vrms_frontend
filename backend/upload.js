@@ -62,7 +62,7 @@ const storage4 = multer.diskStorage({
 
 const storage5 = multer.diskStorage({
   destination: function (req, file, cb) {
-      cb(null, __dirname + '/uploads/offline')
+      cb(null, __dirname + '/uploads/offlinegallery')
   },
   filename: function (req, file, cb) {
       cb(null, Math.random() * 1000 + file.originalname)

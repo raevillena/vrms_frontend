@@ -82,7 +82,7 @@ const OfflineData = () => {
                 id: x[i]._id,
                 caption: x[i].caption,
                 study: x[i].studyID,
-                image: `/offline/${x[i].images}`
+                image: `/offlinegallery/${x[i].images}`
             });
         }
         setImages(tempData)

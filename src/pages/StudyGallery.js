@@ -46,8 +46,8 @@ const StudyGallery = () => {
                     caption: x[i].caption,
                     thumbnailWidth: 200,
                     thumbnailHeight: 200,
-                    src: `/offline/${x[i].images}`,
-                    thumbnail: `/offline/${x[i].images}`
+                    src: `/offlinegallery/${x[i].images}`,
+                    thumbnail: `/offlinegallery/${x[i].images}`
             }
             );
             }
