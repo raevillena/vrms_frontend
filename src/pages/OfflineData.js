@@ -82,7 +82,7 @@ const OfflineData = () => {
                 id: x[i]._id,
                 caption: x[i].caption,
                 study: x[i].studyID,
-                image: `http://192.168.2.35:8080/offline/${x[i].images}`
+                image: `/offline/${x[i].images}`
             });
         }
         setImages(tempData)
