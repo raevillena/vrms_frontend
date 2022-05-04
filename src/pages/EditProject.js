@@ -14,10 +14,12 @@ const EditProject = (props) => {
     const [userData, setUserData] = useState([])
     const [programData, setProgramData] = useState([])
     const [project, setProject] = useState({projectName: '', program: props.data.programs.programID, programName: props.data.programs.programName, assignee: props.data.record.projectLeaderID, assigneeName: props.data.record.projectLeader, user: userObj.USER._id, id: props.data.record.projectID,
-    deadline: moment(props.data.programs.deadline)});
+    deadline: moment(props.data.programs.deadline), fundingAgency: props.data.fundingAgency, fundingCategory: props.data.fundingCategory});
 
     
-    const initialValues = {projectName: props.data.record.projectName, assignee: props.data.record.projectLeaderID, assigneeName: props.data.record.projectLeader, program:props.data.programs.programID, programName:props.data.programs.programName, deadline:moment(props.data.programs.deadline) }
+    const initialValues = {projectName: props.data.record.projectName, assignee: props.data.record.projectLeaderID, assigneeName: props.data.record.projectLeader, 
+        program:props.data.programs.programID, programName:props.data.programs.programName, deadline:moment(props.data.programs.deadline), fundingAgency: props.data.record.fundingAgency,
+        fundingCategory: props.data.record.fundingCategory}
    
     function handleChange(value) {   //for assigning user
         let tempArray = []
@@ -30,6 +32,10 @@ const EditProject = (props) => {
             });
         });
         setProject({...project, assignee: assign, assigneeName: tempArray})
+    }
+
+    function handleChangeInFundingCat(value) {   //for assigning user
+        setProject({...project, fundingCategory: value})
     }
 
     function handleProgramChange(value) {
@@ -67,7 +73,7 @@ const EditProject = (props) => {
         }
        getUsers()
         form.resetFields()
-        setProject({...project,projectName: props.data.record.projectName, assignee: props.data.record.projectLeaderID, assigneeName: props.data.record.projectLeader})
+        setProject({...project,projectName: props.data.record.projectName, assignee: props.data.record.projectLeaderID, assigneeName: props.data.record.projectLeader, fundingAgency: props.data.record.fundingAgency, fundingCategory: props.data.record.fundingCategory })
     }, [props.data])
 
     async function handleUpdate(){
@@ -94,6 +100,20 @@ const EditProject = (props) => {
                     <Space direction="vertical">
                     <DatePicker value={project.deadline} onChange={onChange}/>
                     </Space>
+                </Form.Item>
+                <Form.Item name='fundingCategory' label="Funding Category">
+                    <Select style={{ width: '100%' }} onChange={handleChangeInFundingCat} value={project.fundingCategory} placeholder="Select funding category">
+                        <Option key={1} value={'GIA'}>{'GIA'}</Option>
+                        <Option key={2} value={'GAA'}>{'GAA'}</Option>
+                    </Select>
+                </Form.Item>
+                <Form.Item name='fundingAgency' label="Funding Agency"
+                rules={[
+                    {
+                    message: 'Please input funding agency!',
+                    },
+                ]}>
+                    <Input placeholder="Enter Funding Agency" onChange={e => setProject({...project, fundingAgency: e.target.value})} value={project.fundingAgency} ></Input>
                 </Form.Item>
                 <Form.Item name='assignee'  label="Assignee">
                     <Select mode="tags" style={{ width: '100%' }} onChange={handleChange}  tokenSeparators={[',']} value={project.assignee} placeholder="Assign Project">

@@ -32,6 +32,8 @@ const Projects = () => {
                         progress:  projectResult[i].progress,
                         status: projectResult[i].status,
                         active: projectResult[i].active.toString(),
+                        fundingCategory: projectResult[i].fundingCategory,
+                        fundingAgency: projectResult[i].fundingAgency,
                         programID: projectResult[i].program,
                         createdBy: projectResult[i].createdByName
                     });
@@ -151,6 +153,23 @@ const Projects = () => {
              <Progress percent={progress} size="small" />,
           },
           {
+            title: 'Funding Agency',
+            dataIndex: 'fundingAgency',
+            key: 'fundingAgency',
+            ...getColumnSearchProps('fundingAgency'),
+            ellipsis: true, 
+          },
+          {
+            title: 'Funding Category',
+            dataIndex: 'fundingCategory',
+            key: 'fundingCategory',
+            filters: [
+              { text: 'GAA', value: 'GAA' },
+              { text: 'GIA', value: 'GIA' },
+            ],
+            onFilter: (value, record) => record.fundingCategory.indexOf(value) === 0, 
+            },
+          {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
@@ -196,6 +215,8 @@ const Projects = () => {
       projectData[objIndex].projectName = data.projectName
       projectData[objIndex].programID = data.program
       projectData[objIndex].active = data.active
+      projectData[objIndex].fundingAgency = data.fundingAgency
+      projectData[objIndex].fundingCategory = data.fundingCategory
       projectData[objIndex].deadline = moment(data.deadline).format('MM-DD-YYYY')
       projectData[objIndex].progress = data.progress
     }

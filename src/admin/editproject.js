@@ -24,7 +24,9 @@ const EditProject = (props) => {
     deadline: moment(props.data.deadline), 
     progress: props.data.progress, 
     status: props.data.status, 
-    active: props.data.active, 
+    active: props.data.active,
+    fundingAgency: props.data.fundingAgency,
+    fundingCategory: props.data.fundingCategory, 
     createdBy: props.data.createdBy});
 
     
@@ -38,6 +40,8 @@ const EditProject = (props) => {
         status: props.data.status, 
         active: props.data.active, 
         createdBy: props.data.createdBy,
+        fundingAgency: props.data.fundingAgency,
+        fundingCategory: props.data.fundingCategory,
         id:props.data.projectID }
    
     function handleChange(value) {   //for assigning user
@@ -59,6 +63,10 @@ const EditProject = (props) => {
 
       function onChange(date) {
         setProject({...project, deadline:moment( date)})
+    }
+
+    function handleChangeInFundingCat(value) {   //for assigning user
+        setProject({...project, fundingCategory: value})
     }
 
     useEffect(() => {
@@ -128,6 +136,20 @@ const EditProject = (props) => {
                     ))}
                         <Option key={'others'} value={'others'}>Others</Option>
                     </Select>
+                </Form.Item>
+                <Form.Item name='fundingCategory' label="Funding Category">
+                    <Select style={{ width: '100%' }} onChange={handleChangeInFundingCat} value={project.fundingCategory} placeholder="Select funding category">
+                        <Option key={1} value={'GIA'}>{'GIA'}</Option>
+                        <Option key={2} value={'GAA'}>{'GAA'}</Option>
+                    </Select>
+                </Form.Item>
+                <Form.Item name='fundingAgency' label="Funding Agency"
+                    rules={[
+                        {
+                        message: 'Please input funding agency!',
+                        },
+                    ]}>
+                    <Input placeholder="Enter Funding Agency" onChange={e => setProject({...project, fundingAgency: e.target.value})} value={project.fundingAgency} ></Input>
                 </Form.Item>
                 <Form.Item name='deadline'  label="Deadline">
                     <Space direction="vertical">

@@ -45,7 +45,9 @@ const EditStudy = (props) => {
         progress: props.data.progress, 
         user: userObj.USER.name, 
         status: props.data.status, 
-        active: props.data.active, 
+        active: props.data.active,
+        fundingAgency: props.data.fundingAgency,
+        fundingCategory: props.data.fundingCategory, 
         dateCreated:moment(props.data.dateCreated)})
 
     const initialValues = {title: props.data.title, 
@@ -57,6 +59,8 @@ const EditStudy = (props) => {
         progress: props.data.progress, 
         status: props.data.status, 
         active:props.data.active,
+        fundingAgency: props.data.fundingAgency,
+        fundingCategory: props.data.fundingCategory,
         projectName: props.data.projectName, 
         dateCreated: moment(props.data.dateCreated)}
 
@@ -83,12 +87,18 @@ const EditStudy = (props) => {
             assignee:props.data.assignee, 
             assigneeName:props.data.assigneeName, 
             budget: props.data.budget,
-            progress: props.data.progress, 
+            progress: props.data.progress,
+            fundingAgency: props.data.fundingAgency,
+            fundingCategory: props.data.fundingCategory, 
             user: userObj.USER.name, 
             status: props.data.status, 
             active: props.data.active, 
             dateCreated:moment(props.data.dateCreated)})
     }, [props.data])
+
+    function handleChangeInFundingCat(value) {   //for assigning user
+        setStudy({...study, fundingCategory: value})
+    }
 
     function handleChange(value) {   //for assigning user
         let tempArray =[]
@@ -138,6 +148,20 @@ const EditStudy = (props) => {
                     </Form.Item>
                     <Form.Item name='progress'  label="Progress">
                         <Input type="number" placeholder="Enter progress" onChange={(e)=> setStudy({...study, progress: e.target.value})} value={study.progress}/>
+                    </Form.Item>
+                    <Form.Item name='fundingCategory' label="Funding Category">
+                        <Select style={{ width: '100%' }} onChange={handleChangeInFundingCat} value={study.fundingCategory} placeholder="Select funding category">
+                            <Option key={1} value={'GIA'}>{'GIA'}</Option>
+                            <Option key={2} value={'GAA'}>{'GAA'}</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item name='fundingAgency' label="Funding Agency"
+                        rules={[
+                            {
+                            message: 'Please input funding agency!',
+                            },
+                        ]}>
+                        <Input placeholder="Enter Funding Agency" onChange={e => setStudy({...study, fundingAgency: e.target.value})} value={study.fundingAgency} ></Input>
                     </Form.Item>
                     <Form.Item name='deadline'  label="Deadline">
                         <Space direction="vertical">

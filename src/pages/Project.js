@@ -15,11 +15,11 @@ const Project = () => {
 
     const [userData, setUserData] = useState([])
     const [programData, setProgramData] = useState([])
-    const [project, setProject] = useState({projectName: '', program: '', assignee: [userObj.USER._id], assigneeName: [userObj.USER.name], user: userObj.USER._id,username: userObj.USER.name, programName: '', deadline: ''});
+    const [project, setProject] = useState({projectName: '', program: '', assignee: [userObj.USER._id], assigneeName: [userObj.USER.name], user: userObj.USER._id,username: userObj.USER.name, programName: '', deadline: '', fundingAgency: '', fundingCategory: ''});
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [forProps, setForProps] = useState()
 
-    const initialValues = {projectName: '', assignee: [userObj.USER._id], assigneeName: [], programName: ''}
+    const initialValues = {projectName: '', assignee: [userObj.USER._id], assigneeName: [], programName: '', fundingAgency: '', fundingCategory: ''}
 
     function handleChange(value) {   //for assigning user
         let tempArray = [userObj.USER.name]
@@ -32,6 +32,10 @@ const Project = () => {
             });
         });
         setProject({...project, assignee: assign, assigneeName: tempArray})
+    }
+
+    function handleChangeInFundingCat(value) {   //for assigning user
+        setProject({...project, fundingCategory: value})
     }
 
     function handleProgramChange(value) {
@@ -108,7 +112,7 @@ const Project = () => {
           form.resetFields()
           form1.resetFields()
           setForProps({type: 'project', data})
-          setProject({...project, projectName: '', assignee: [userObj.USER._id]})
+          setProject({...project, projectName: '', assignee: [userObj.USER._id], fundingAgency: '', fundingCategory: ''})
         } catch (error) {
            notif("error",error.response.data.message)
         }
@@ -122,13 +126,14 @@ const Project = () => {
         try {
           let result =  await onProgramCreate(project)
           const newProgram = result.data.newProgram
-          notif("success",result.data.message1)
+          notif("success", result.data.message1)
           form.resetFields()
           form1.resetFields()
           setForProps({type: 'program', newProgram})
-          setProject({...project, projectName: '', assignee: [userObj.USER._id]})
+          setProject({...project, projectName: '', assignee: [userObj.USER._id],fundingAgency: '', fundingCategory: ''})
         } catch (error) {
-           notif("error",error.response.data.message)
+            console.log(error)
+           notif("error",error)
         }
     }
 
@@ -152,6 +157,20 @@ const Project = () => {
                                 },
                             ]}>
                                 <Input placeholder="Enter Program Name" onChange={e => setProject({...project, programName: e.target.value})} value={project.programName} ></Input>
+                            </Form.Item>
+                            <Form.Item name='fundingCategory' label="Funding Category">
+                            <Select style={{ width: '100%' }} onChange={handleChangeInFundingCat} value={project.fundingCategory} placeholder="Select funding category">
+                                <Option key={1} value={'GIA'}>{'GIA'}</Option>
+                                <Option key={2} value={'GAA'}>{'GAA'}</Option>
+                            </Select>
+                            </Form.Item>
+                            <Form.Item name='fundingAgency' label="Funding Agency"
+                            rules={[
+                                {
+                                message: 'Please input funding agency!',
+                                },
+                            ]}>
+                                <Input placeholder="Enter Funding Agency" onChange={e => setProject({...project, fundingAgency: e.target.value})} value={project.fundingAgency} ></Input>
                             </Form.Item>
                             <Form.Item name='assigneeName'  label="Assignee">
                                 <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} value={project.assignee} placeholder="Assign Project">
@@ -190,6 +209,20 @@ const Project = () => {
                             ))}
                                 <Option key={'others'} value={'others'}>Others</Option>
                             </Select>
+                        </Form.Item>
+                        <Form.Item name='fundingCategory' label="Funding Category">
+                            <Select style={{ width: '100%' }} onChange={handleChangeInFundingCat} value={project.fundingCategory} placeholder="Select funding category">
+                                <Option key={1} value={'GIA'}>{'GIA'}</Option>
+                                <Option key={2} value={'GAA'}>{'GAA'}</Option>
+                            </Select>
+                        </Form.Item>
+                        <Form.Item name='fundingAgency' label="Funding Agency"
+                            rules={[
+                                {
+                                message: 'Please input funding agency!',
+                                },
+                            ]}>
+                                <Input placeholder="Enter Funding Agency" onChange={e => setProject({...project, fundingAgency: e.target.value})} value={project.fundingAgency} ></Input>
                         </Form.Item>
                         <Form.Item  label="Deadline"
                                 rules={[

@@ -8,9 +8,10 @@ import { notif } from '../functions/datagrid';
 const EditProgram = (props) => {
     const { Option } = Select;
     const [form] = Form.useForm();
-    const [program, setProgram] = useState({programName: '', assignee: '', assigneeName: ''})
+    const [program, setProgram] = useState({programName: '', assignee: '', assigneeName: '', fundingAgency: '', fundingCategory: ''})
     const [userData, setUserData] = useState([])
-    const initialValues = { assignee:props.data.record.programLeaderID, assigneeName: props.data.record.programLeader, programName: props.data.record.programName}
+    const initialValues = { assignee:props.data.record.programLeaderID, assigneeName: props.data.record.programLeader, programName: props.data.record.programName, 
+        fundingCategory: props.data.record.fundingCategory, fundingAgency: props.data.record.fundingAgency}
 
     const userObj = useSelector(state => state.user)
 
@@ -30,6 +31,10 @@ const EditProgram = (props) => {
         setProgram({...program, assignee: assign, assigneeName: tempArray})
     }
 
+    function handleChangeInFundingCat(value) {   //for assigning user
+        setProgram({...program, fundingCategory: value})
+    }
+
     useEffect(() => {
         async function getUsers(){
             let resultUsers = await onGetAllManagers()
@@ -46,12 +51,12 @@ const EditProgram = (props) => {
         }
        getUsers()
         form.resetFields()
-       setProgram({programName: props.data.record.programName, assignee: props.data.record.programLeaderID, assigneeName: props.data.record.programLeader})
+       setProgram({programName: props.data.record.programName, assignee: props.data.record.programLeaderID, assigneeName: props.data.record.programLeader, fundingAgency: props.data.record.fundingAgency, fundingCategory: props.data.record.fundingCategory})
     }, [props.data])
 
     async function handleUpdate(){
-       let res = await onUpdateProgram({user: userObj.USER._id, programName: program.programName, assignee: program.assignee, assigneeName: program.assigneeName, program: props.data.record.programID})
-       props.func({user: userObj.USER._id, programName: program.programName, assignee: program.assignee, assigneeName: program.assigneeName, program: props.data.record.programID});
+       let res = await onUpdateProgram({user: userObj.USER._id, programName: program.programName, assignee: program.assignee, assigneeName: program.assigneeName, program: props.data.record.programID, fundingAgency: program.fundingAgency, fundingCategory: program.fundingCategory})
+       props.func({user: userObj.USER._id, programName: program.programName, assignee: program.assignee, assigneeName: program.assigneeName, program: props.data.record.programID, fundingAgency: program.fundingAgency, fundingCategory: program.fundingCategory});
        notif('info', res.data.message)
     }
 
@@ -65,6 +70,20 @@ const EditProgram = (props) => {
                     },
                 ]}>
                     <Input placeholder="Enter Program Name" onChange={e => setProgram({...program, programName: e.target.value})} value={program.programName} ></Input>
+                </Form.Item>
+                <Form.Item name='fundingCategory' label="Funding Category">
+                    <Select style={{ width: '100%' }} onChange={handleChangeInFundingCat} value={program.fundingCategory} placeholder="Select funding category">
+                        <Option key={1} value={'GIA'}>{'GIA'}</Option>
+                        <Option key={2} value={'GAA'}>{'GAA'}</Option>
+                    </Select>
+                </Form.Item>
+                <Form.Item name='fundingAgency' label="Funding Agency"
+                rules={[
+                    {
+                    message: 'Please input funding agency!',
+                    },
+                ]}>
+                    <Input placeholder="Enter Funding Agency" onChange={e => setProgram({...program, fundingAgency: e.target.value})} value={program.fundingAgency} ></Input>
                 </Form.Item>
                 <Form.Item name='assignee' label="Assignee">
                     <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} value={program.assignee} placeholder="Assign Project">

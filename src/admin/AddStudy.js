@@ -35,10 +35,11 @@ const AddStudy = () => {
 
     const [userData, setUserData] = useState([])
     const [projectData, setProjectData] = useState([])
-    const [study, setStudy] = useState({title: "", projectName: '', deadline:"", startDate: "" ,assignee:[], assigneeName:[], budget: "", user: userObj.USER._id, username: userObj.USER.name})
+    const [study, setStudy] = useState({title: "", projectName: '', deadline:"", startDate: "" ,assignee:[], assigneeName:[], budget: "", user: userObj.USER._id, username: userObj.USER.name,
+        fundingAgency: "", fundingCategory: ""})
 
 
-    const initialValues = {title: "", deadline:"", startDate: "" ,assignee:[], assigneeName:[], budget: ""}
+    const initialValues = {title: "", deadline:"", startDate: "" ,assignee:[], assigneeName:[], budget: "", fundingAgency: "", fundingCategory: ""}
 
     const [form] = Form.useForm();
     
@@ -66,7 +67,10 @@ const AddStudy = () => {
         setStudy({...study, projectName: value[0]})
     }
 
-    
+    function handleChangeInFundingCat(value) {   //for assigning user
+        setStudy({...study, fundingCategory: value})
+    }
+
     useEffect(() => {
         async function getUsers(){
             let resultUsers = await onGetAllUsers()
@@ -101,7 +105,7 @@ const AddStudy = () => {
            let result = await onStudyCreate({values, study}, authObj.accessToken, authObj.refreshToken) 
            notif("success",result.data.message)
            form.resetFields()
-           setStudy({title: " ", projectName:" ", deadline:"",assignee:[], startDate:''})
+           setStudy({title: " ", projectName:" ", deadline:"",assignee:[], startDate:'', fundingAgency:'', fundingCategory:''})
         } catch (error) {
             notif("error", error)
         }
@@ -138,6 +142,20 @@ const AddStudy = () => {
                     <Option key={proj.key} value={proj.value}>{proj.name}</Option>
                 ))}
                 </Select>
+            </Form.Item>
+            <Form.Item name='fundingCategory' label="Funding Category">
+                <Select style={{ width: '100%' }} onChange={handleChangeInFundingCat} value={study.fundingCategory} placeholder="Select funding category">
+                    <Option key={1} value={'GIA'}>{'GIA'}</Option>
+                    <Option key={2} value={'GAA'}>{'GAA'}</Option>
+                </Select>
+            </Form.Item>
+            <Form.Item name='fundingAgency' label="Funding Agency"
+                rules={[
+                    {
+                    message: 'Please input funding agency!',
+                    },
+                ]}>
+                <Input placeholder="Enter Funding Agency" onChange={e => setStudy({...study, fundingAgency: e.target.value})} value={study.fundingAgency} ></Input>
             </Form.Item>
             <Form.Item name='budget'  label="Budget"
                     rules={[

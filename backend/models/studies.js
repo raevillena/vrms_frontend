@@ -81,7 +81,15 @@ const StudiesSchema = new mongoose.Schema({
     },
     objectives: {
         type: Array,
-    }
+    },
+    fundingCategory:{
+        type: String,
+        required: true
+    },
+    fundingAgency:{
+        type: String,
+        required: true
+    },
 })
 
 module.exports = mongoose.model('Studies', StudiesSchema)

@@ -54,6 +54,8 @@ router.post('/createstudy', auth, async(req, res) => {
         studyID: studyID,
         assignee: req.body.study.assignee,
         assigneeName: req.body.study.assigneeName,
+        fundingCategory: req.body.study.fundingCategory,
+        fundingAgency: req.body.study.fundingAgency,
         status: "ONGOING",
         progress: 0,
         projectName: req.body.study.projectName,
@@ -741,7 +743,7 @@ router.get("/getAllStudy", async(req,res) => {
         await Studies.findOneAndUpdate({"studyID": req.body.study.studyID}, {'editedBy': req.body.study.user, 'editedDate': Date.now(), 
         'assignee':req.body.study.assignee, 'assigneeName': req.body.study.assigneeName, 'budget': req.body.study.budget, 'deadline': req.body.study.deadline, 'studyTitle': req.body.study.title,
         'objectives': req.body.value.objectives, 'active': req.body.study.active, 'projectName': req.body.study.projectName, 'progress': req.body.study.progress, 'dateCreated': req.body.study.dateCreated,
-        'status': req.body.study.progress === '100' ? 'COMPLETED' : req.body.study.status[0]}, 
+        'status': req.body.study.progress === '100' ? 'COMPLETED' : req.body.study.status[0], 'fundingCategory': req.body.fundingCategory, 'fundingAgency': req.body.fundingAgency}, 
         function(err, study) {
             if(err){
                 logger.log('error', `Error: /updateStudyAdmin - ${err}`)

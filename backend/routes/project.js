@@ -44,6 +44,8 @@ router.route('/createproject').post(async (req, res) => {
         program: req.body.program,
         programName: req.body.programName,
         assigneeName: req.body.assigneeName,
+        fundingAgency: req.body.fundingAgency,
+        fundingCategory: req.body.fundingCategory,
         deadline: req.body.deadline,
         active: true,
         status: 'ONGOING',
@@ -76,6 +78,8 @@ router.route('/createprogram').post(async (req, res) => {
         programID: programID,
         assignee: req.body.assignee,
         assigneeName: req.body.assigneeName,
+        fundingAgency: req.body.fundingAgency,
+        fundingCategory: req.body.fundingCategory,
         active: true,
         status: 'ONGOING',
         progress: 0
@@ -177,7 +181,7 @@ router.route('/createprogram').post(async (req, res) => {
 
   router.post("/updateProgram", auth, async(req,res) => {
     try {
-      await Program.findOneAndUpdate({"programID": req.body.program},{'editedBy': req.body.user, 'editedDate': Date.now(), 'programName': req.body.programName, 'assignee':req.body.assignee, 'assigneeName': req.body.assigneeName}, function(err, projects) {
+      await Program.findOneAndUpdate({"programID": req.body.program},{'editedBy': req.body.user, 'editedDate': Date.now(), 'programName': req.body.programName, 'assignee':req.body.assignee, 'assigneeName': req.body.assigneeName, 'fundingAgency': req.body.fundingAgency, 'fundingCategory': req.body.fundingCategory}, function(err, projects) {
         if(err){
             logger.log('error', 'Update Program')
         } else{
@@ -192,7 +196,7 @@ router.route('/createprogram').post(async (req, res) => {
   router.post("/updateProject", auth, async(req,res) => {
     try {
       await Project.findOneAndUpdate({"projectID": req.body.id},{'editedBy': req.body.user, 'editedDate': Date.now(), 'program': req.body.program, 
-      'assignee':req.body.assignee, 'assigneeName': req.body.assigneeName, 'projectName': req.body.projectName, 'deadline': req.body.deadline
+      'assignee':req.body.assignee, 'assigneeName': req.body.assigneeName, 'projectName': req.body.projectName, 'deadline': req.body.deadline, 'fundingAgency': req.body.fundingAgency, 'fundingCategory': req.body.fundingCategory
     }, function(err, projects) {
         if(err){
             logger.log('error', 'Update Program')
@@ -249,7 +253,7 @@ router.route('/createprogram').post(async (req, res) => {
   router.post("/updateprogramadmin", auth, async(req,res) => {
     try {
       await Program.findOneAndUpdate({"programID": req.body.program},{'editedBy': req.body.user, 'editedDate': Date.now(), 'programName': req.body.programName, 'assignee':req.body.assignee, 'assigneeName': req.body.assigneeName, 
-      'active': req.body.active, 'status':req.body.status}, function(err, projects) {
+      'active': req.body.active, 'status':req.body.status, 'fundingAgency': req.body.fundingAgency, 'fundingCategory': req.body.fundingCategory}, function(err, projects) {
         if(err){
             logger.log('error', 'Update Program')
         } else{
@@ -265,7 +269,7 @@ router.route('/createprogram').post(async (req, res) => {
     try {
       await Project.findOneAndUpdate({"projectID": req.body.id},{'editedBy': req.body.user, 'editedDate': Date.now(), 'program': req.body.program, 
       'assignee':req.body.assignee, 'assigneeName': req.body.assigneeName, 'projectName': req.body.projectName, 'deadline': req.body.deadline, 'active': req.body.active, 'progress': req.body.progress,
-      'status': req.body.status
+      'status': req.body.status, 'fundingCategory': req.body.fundingCategory, 'fundingAgency': req.body.fundingAgency
     }, function(err, projects) {
         if(err){
             logger.log('error', 'updateprojectadmn')

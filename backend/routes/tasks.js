@@ -395,7 +395,7 @@ router.get('/getAllTaskAdmin', auth, async(req, res) => {
 
 router.post('/updatetaskadmin', auth, async(req, res) => {
     try {
-       await Tasks.findOneAndUpdate({"_id": req.body.taskId}, {"status": req.body.status[0],"dateUpdated": Date.now(), 'assignee': req.body.assignee, 'assigneeName': req.body.assigneeName,
+       await Tasks.findOneAndUpdate({"_id": req.body.taskId}, {"status": req.body.status,"dateUpdated": Date.now(), 'assignee': req.body.assignee, 'assigneeName': req.body.assigneeName,
         'tasksTitle': req.body.title, 'tasksDescription': req.body.description, 'verification': req.body.verification, 'objective': req.body.objective, 'deadline': req.body.deadline,
          'studyName': req.body.studyName, 'projectName': req.body.projectName
         },function(err, task){

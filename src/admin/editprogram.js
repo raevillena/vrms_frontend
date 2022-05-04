@@ -14,6 +14,8 @@ const EditProgram = (props) => {
         active: props.data.active, 
         status: props.data.status, 
         createdBy: props.data.createdBy,
+        fundingAgency: props.data.fundingAgency,
+        fundingCategory: props.data.fundingCategory,
         id: props.data.programID})
     const [userData, setUserData] = useState([])
     const initialValues = { assignee:props.data.programLeaderID, 
@@ -21,7 +23,9 @@ const EditProgram = (props) => {
         programName: props.data.programName, 
         active: props.data.active, 
         status: props.data.status, 
-        createdBy: props.data.createdBy}
+        createdBy: props.data.createdBy,
+        fundingAgency: props.data.fundingAgency,
+        fundingCategory: props.data.fundingCategory}
 
     const userObj = useSelector(state => state.user)
     const active = ['true', 'false']
@@ -50,6 +54,10 @@ const EditProgram = (props) => {
         setProgram({...program, status: value})
     }
 
+    function handleChangeInFundingCat(value) {   //for assigning user
+        setProgram({...program, fundingCategory: value})
+    }
+
     useEffect(() => {
         async function getUsers(){
             let resultUsers = await onGetAllManagers()
@@ -72,11 +80,13 @@ const EditProgram = (props) => {
         active: props.data.active, 
         status: props.data.status, 
         createdBy: props.data.createdBy,
+        fundingAgency: props.data.fundingAgency,
+        fundingCategory: props.data.fundingCategory,
         id: props.data.programID})
     }, [props.data])
 
     async function handleUpdate(){
-       let res = await onUpdateProgramAdmin({user: userObj.USER._id, programName: program.programName, assignee: program.assignee, assigneeName: program.assigneeName, program: props.data.programID, status: program.status, active: program.active})
+       let res = await onUpdateProgramAdmin({user: userObj.USER._id, programName: program.programName, assignee: program.assignee, assigneeName: program.assigneeName, program: props.data.programID, status: program.status, active: program.active, fundingAgency: program.fundingAgency, fundingCategory: program.fundingCategory})
        props.func(program);
        notif('info', res.data.message)
     }
@@ -98,6 +108,20 @@ const EditProgram = (props) => {
                         <Option key={user.key} value={user.value}>{user.name}</Option>
                     ))}
                     </Select>
+                </Form.Item>
+                <Form.Item name='fundingCategory' label="Funding Category">
+                    <Select style={{ width: '100%' }} onChange={handleChangeInFundingCat} value={program.fundingCategory} placeholder="Select funding category">
+                        <Option key={1} value={'GIA'}>{'GIA'}</Option>
+                        <Option key={2} value={'GAA'}>{'GAA'}</Option>
+                    </Select>
+                </Form.Item>
+                <Form.Item name='fundingAgency' label="Funding Agency"
+                    rules={[
+                        {
+                        message: 'Please input funding agency!',
+                        },
+                    ]}>
+                    <Input placeholder="Enter Funding Agency" onChange={e => setProgram({...program, fundingAgency: e.target.value})} value={program.fundingAgency} ></Input>
                 </Form.Item>
                 <Form.Item name='active' label="Active">
                     <Select style={{ width: '100%' }} onChange={handleChangeActive} tokenSeparators={[',']} value={program.active} placeholder="Assign Project">

@@ -14,9 +14,9 @@ const AddProgram = () => {
 
     const [userData, setUserData] = useState([])
     const [programData, setProgramData] = useState([])
-    const [project, setProject] = useState({projectName: '', program: '', assignee: [userObj.USER._id], assigneeName: [userObj.USER.name], user: userObj.USER._id,username: userObj.USER.name, programName: '', deadline: ''});
+    const [project, setProject] = useState({projectName: '', program: '', assignee: [userObj.USER._id], assigneeName: [userObj.USER.name], user: userObj.USER._id,username: userObj.USER.name, programName: '', deadline: '', fundingAgency: '', fundingCategory: ''});
 
-    const initialValues = {projectName: '', assignee: [userObj.USER._id], assigneeName: [], programName: ''}
+    const initialValues = {projectName: '', assignee: [userObj.USER._id], assigneeName: [], programName: '', fundingAgency: '', fundingCategory: ''}
 
     const [form] = Form.useForm();
     const [form1] = Form.useForm();
@@ -28,6 +28,10 @@ const AddProgram = () => {
             message,
         });
       };
+
+    function handleChangeInFundingCat(value) {   //for assigning user
+        setProject({...project, fundingCategory: value})
+    }
 
     useEffect(() => {
         async function getUsers(){
@@ -129,6 +133,20 @@ const AddProgram = () => {
                             ]}>
                                 <Input placeholder="Enter Program Name" onChange={e => setProject({...project, programName: e.target.value})} value={project.programName} ></Input>
                             </Form.Item>
+                            <Form.Item name='fundingCategory' label="Funding Category">
+                                <Select style={{ width: '100%' }} onChange={handleChangeInFundingCat} value={project.fundingCategory} placeholder="Select funding category">
+                                    <Option key={1} value={'GIA'}>{'GIA'}</Option>
+                                    <Option key={2} value={'GAA'}>{'GAA'}</Option>
+                                </Select>
+                            </Form.Item>
+                            <Form.Item name='fundingAgency' label="Funding Agency"
+                            rules={[
+                                {
+                                message: 'Please input funding agency!',
+                                },
+                            ]}>
+                                <Input placeholder="Enter Funding Agency" onChange={e => setProject({...project, fundingAgency: e.target.value})} value={project.fundingAgency} ></Input>
+                            </Form.Item>
                             <Form.Item name='assigneeName'  label="Assignee">
                                 <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} value={project.assignee} placeholder="Assign Project">
                                 {userData.map(user => (
@@ -166,6 +184,20 @@ const AddProgram = () => {
                             ))}
                                 <Option key={'others'} value={'others'}>Others</Option>
                             </Select>
+                        </Form.Item>
+                        <Form.Item name='fundingCategory' label="Funding Category">
+                            <Select style={{ width: '100%' }} onChange={handleChangeInFundingCat} value={project.fundingCategory} placeholder="Select funding category">
+                                <Option key={1} value={'GIA'}>{'GIA'}</Option>
+                                <Option key={2} value={'GAA'}>{'GAA'}</Option>
+                            </Select>
+                        </Form.Item>
+                        <Form.Item name='fundingAgency' label="Funding Agency"
+                        rules={[
+                            {
+                            message: 'Please input funding agency!',
+                            },
+                        ]}>
+                            <Input placeholder="Enter Funding Agency" onChange={e => setProject({...project, fundingAgency: e.target.value})} value={project.fundingAgency} ></Input>
                         </Form.Item>
                         <Form.Item  label="Deadline"
                                 rules={[

@@ -35,7 +35,9 @@ const Studies = () => {
                     budget: data[i].budget,
                     assignee: data[i].assignee,
                     assigneeName: data[i].assigneeName, 
-                    projectName: data[i].projectName
+                    projectName: data[i].projectName,
+                    fundingAgency: data[i].fundingAgency,
+                    fundingCategory: data[i].fundingCategory
                 })
             }
             setstate(arr)
@@ -177,6 +179,23 @@ const Studies = () => {
                 <Progress percent={progress} size="small" />,
         },
         {
+          title: 'Funding Agency',
+          dataIndex: 'fundingAgency',
+          key: 'fundingAgency',
+          ...getColumnSearchProps('fundingAgency'),
+          ellipsis: true, 
+        },
+        {
+          title: 'Funding Category',
+          dataIndex: 'fundingCategory',
+          key: 'fundingCategory',
+          filters: [
+            { text: 'GAA', value: 'GAA' },
+            { text: 'GIA', value: 'GIA' },
+          ],
+          onFilter: (value, record) => record.fundingCategory.indexOf(value) === 0, 
+          },
+        {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
@@ -235,6 +254,8 @@ const Studies = () => {
           state[objIndex].status = data.value.status
           state[objIndex].active = data.value.active
           state[objIndex].objectives = data.value.objectives
+          state[objIndex].fundingAgency = data.value.fundingAgency
+          state[objIndex].fundingCategory = data.value.fundingCategory
           state[objIndex].deadline = moment(data.value.deadline).format('MM-DD-YYYY')
           state[objIndex].progress = data.value.progress
       }

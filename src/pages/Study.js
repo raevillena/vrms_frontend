@@ -24,7 +24,7 @@ const formItemLayout = {
   const formItemLayoutWithOutLabel = {
     wrapperCol: {
       xs: { span: 24, offset: 0 },
-      sm: { span: 20, offset: 4 },
+      sm: { span: 24, offset: 4 },
     },
   };
 
@@ -37,11 +37,12 @@ const Study = () => {
     const authObj = useSelector(state => state.auth)
 
     const [userData, setUserData] = useState([])
-    const [study, setStudy] = useState({title: "", projectName: projectObj.PROJECT.projectID, deadline:"", startDate: "" ,assignee:[], assigneeName:[], budget: "", user: userObj.USER._id, username: userObj.USER.name})
+    const [study, setStudy] = useState({title: "", projectName: projectObj.PROJECT.projectID, deadline:"", startDate: "" ,assignee:[], assigneeName:[], budget: "", user: userObj.USER._id, username: userObj.USER.name,
+        fundingAgency: '', fundingCategory: ''})
     const [forProps, setForProps] = useState()
     const [isModalVisible, setIsModalVisible] = useState(false);
 
-    const initialValues = {title: "", deadline:"", startDate: "" ,assignee:[], assigneeName:[], budget: ""}
+    const initialValues = {title: "", deadline:"", startDate: "" ,assignee:[], assigneeName:[], budget: "", fundingAgency: '', fundingCategory: ''}
 
     const [form] = Form.useForm();
     
@@ -76,7 +77,9 @@ const Study = () => {
         setStudy({...study, assignee: value, assigneeName: tempArray})
     }
 
-    
+    function handleChangeInFundingCat(value) {   //for assigning user
+        setStudy({...study, fundingCategory: value})
+    }
     useEffect(() => {
         async function getUsers(){
             let resultUsers = await onGetAllUsers()
@@ -123,7 +126,7 @@ const Study = () => {
                 <Tooltip placement="top" title="Add Study">
                     <Button className="add-button" onClick={showModal}>+</Button>
                 </Tooltip>
-                    <Modal title="Add Study" visible={isModalVisible} footer={null} onCancel={handleCancel}>
+                    <Modal title="Add Study" visible={isModalVisible} footer={null} onCancel={handleCancel} width={740}>
                         <Form initialValues={initialValues} form={form} onFinish={onSubmit} name="dynamic_form_item" {...formItemLayoutWithOutLabel}>
                             <Form.Item {...formItemLayout} name='title' label="Study Title"
                             rules={[
@@ -133,6 +136,20 @@ const Study = () => {
                                 },
                             ]}>
                                 <Input placeholder="Enter Title" onChange={e => setStudy({...study, title: e.target.value})} value={study.title}></Input>
+                            </Form.Item>
+                            <Form.Item {...formItemLayout} name='fundingCategory' label="Category">
+                                <Select onChange={handleChangeInFundingCat} value={study.fundingCategory} placeholder="Select funding category">
+                                    <Option key={1} value={'GIA'}>{'GIA'}</Option>
+                                    <Option key={2} value={'GAA'}>{'GAA'}</Option>
+                                </Select>
+                            </Form.Item>
+                            <Form.Item {...formItemLayout} name='fundingAgency' label="Agency"
+                                rules={[
+                                    {
+                                    message: 'Please input funding agency!',
+                                    },
+                                ]}>
+                                <Input placeholder="Enter Funding Agency" onChange={e => setStudy({...study, fundingAgency: e.target.value})} value={study.fundingAgency} ></Input>
                             </Form.Item>
                             <Form.Item {...formItemLayout} name='budget'  label="Budget"
                                     rules={[

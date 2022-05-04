@@ -43,6 +43,14 @@ const ProgramSchema = new mongoose.Schema({
     editedBy:{
         type: String,
     },
+    fundingCategory:{
+        type: String,
+        required: true
+    },
+    fundingAgency:{
+        type: String,
+        required: true
+    },
 })
 
 module.exports = mongoose.model('Program', ProgramSchema)

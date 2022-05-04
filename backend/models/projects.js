@@ -72,7 +72,15 @@ const ProjectSchema = new mongoose.Schema({
     },
     deadline:{
         type: Date
-    }
+    },
+    fundingCategory:{
+        type: String,
+        required: true
+    },
+    fundingAgency:{
+        type: String,
+        required: true
+    },
 })
 
 module.exports = mongoose.model('Project', ProjectSchema)

@@ -137,3 +137,71 @@
 2022-04-19T01:34:47.136Z [error]: Error: /getOffline
 2022-04-20T01:42:01.833Z [info]: server started at port: 3001
 2022-04-20T05:05:11.405Z [error]: connect ETIMEDOUT 34.87.143.29:27017
+2022-04-25T01:08:30.028Z [info]: server started at port: 3001
+2022-04-25T01:10:51.738Z [error]: Cannot read property 'length' of undefined
+2022-04-25T01:27:07.113Z [error]: Cannot read property 'length' of undefined
+2022-04-25T01:37:46.279Z [error]: Cannot read property 'length' of undefined
+2022-04-25T01:38:38.493Z [error]: Cannot read property 'length' of undefined
+2022-04-25T01:39:48.428Z [error]: Cast to Number failed for value "NaN" (type number) at path "progress"
+2022-04-25T01:50:21.966Z [error]: Error: /updateUserAdmin - CastError: Cast to string failed for value "[ 'user' ]" (type Array) at path "category"
+2022-04-25T01:50:47.475Z [error]: Error: /updateUserAdmin - CastError: Cast to string failed for value "[ 'user' ]" (type Array) at path "category"
+2022-04-25T01:52:32.587Z [error]: Error: /updateUserAdmin - CastError: Cast to string failed for value "[ 'manager' ]" (type Array) at path "category"
+2022-04-25T02:23:38.800Z [info]: server started at port: 3001
+2022-04-25T08:16:23.473Z [error]: connect ETIMEDOUT 34.87.143.29:27017
+2022-04-26T01:32:06.345Z [info]: server started at port: 3001
+2022-04-26T01:32:24.149Z [error]: Error: /updatetaskadmin
+2022-04-26T01:32:24.151Z [error]: Error: /updatetaskadmin
+2022-04-26T01:32:40.052Z [info]: server started at port: 3001
+2022-04-26T01:33:24.133Z [error]: Cannot read property 'length' of undefined
+2022-04-28T05:28:45.999Z [info]: server started at port: 3001
+2022-04-28T05:41:24.144Z [info]: server started at port: 3001
+2022-04-28T05:41:43.805Z [info]: server started at port: 3001
+2022-04-28T05:41:54.879Z [info]: server started at port: 3001
+2022-04-28T05:45:39.061Z [error]: Cannot read property 'length' of undefined
+2022-04-28T05:56:51.160Z [error]: Cannot read property 'length' of undefined
+2022-04-28T06:54:19.706Z [error]: Cannot read property 'length' of undefined
+2022-04-28T06:56:52.166Z [error]: Cannot read property 'length' of undefined
+2022-04-28T07:04:12.168Z [error]: Cannot read property 'length' of undefined
+2022-04-28T07:05:35.892Z [error]: Cannot read property 'length' of undefined
+2022-04-28T07:06:42.147Z [error]: Cannot read property 'length' of undefined
+2022-04-28T07:52:39.233Z [error]: Cannot read property 'length' of undefined
+2022-04-29T02:05:31.059Z [info]: server started at port: 3001
+2022-04-29T02:21:01.207Z [info]: server started at port: 3001
+2022-04-29T02:32:23.682Z [info]: server started at port: 3001
+2022-04-29T02:37:55.991Z [info]: server started at port: 3001
+2022-04-29T05:34:56.878Z [info]: server started at port: 3001
+2022-04-29T05:39:45.126Z [info]: server started at port: 3001
+2022-04-29T05:40:35.160Z [error]: Studies validation failed: fundingCategory: Path `fundingCategory` is required., fundingAgency: Path `fundingAgency` is required.
+2022-04-29T05:42:54.760Z [error]: Studies validation failed: fundingCategory: Path `fundingCategory` is required., fundingAgency: Path `fundingAgency` is required.
+2022-04-29T05:43:21.668Z [error]: Studies validation failed: fundingCategory: Path `fundingCategory` is required., fundingAgency: Path `fundingAgency` is required.
+2022-04-29T05:44:28.420Z [info]: server started at port: 3001
+2022-04-29T05:44:55.664Z [error]: Studies validation failed: fundingCategory: Path `fundingCategory` is required., fundingAgency: Path `fundingAgency` is required.
+2022-04-29T05:47:03.765Z [info]: server started at port: 3001
+2022-04-29T05:47:30.845Z [error]: Cast to Number failed for value "NaN" (type number) at path "progress"
+2022-04-29T06:53:30.071Z [info]: server started at port: 3001
+2022-04-29T06:54:51.737Z [info]: server started at port: 3001
+2022-04-29T08:07:26.292Z [info]: server started at port: 3001
+2022-05-02T00:47:14.477Z [info]: server started at port: 3001
+2022-05-02T00:53:11.407Z [error]: Cannot read property 'length' of undefined
+2022-05-02T00:54:17.693Z [error]: Cannot read property 'length' of undefined
+2022-05-02T00:56:07.545Z [error]: Cannot read property 'length' of undefined
+2022-05-02T01:47:56.086Z [error]: Cannot read property 'length' of undefined
+2022-05-02T02:47:56.177Z [error]: Cannot read property 'length' of undefined
+2022-05-02T03:00:08.414Z [error]: Update Program
+2022-05-02T03:00:08.415Z [error]: Update project find error: /updateProject
+2022-05-02T03:00:41.125Z [error]: Cannot read property 'length' of undefined
+2022-05-02T03:01:01.311Z [error]: Cannot read property 'length' of undefined
+2022-05-02T03:09:12.477Z [error]: Cannot read property 'length' of undefined
+2022-05-02T03:09:12.886Z [error]: Cannot read property 'length' of undefined
+2022-05-02T03:13:12.629Z [error]: Cannot read property 'length' of undefined
+2022-05-02T03:13:13.138Z [error]: Cannot read property 'length' of undefined
+2022-05-02T03:42:45.341Z [error]: Cannot read property 'length' of undefined
+2022-05-02T03:43:52.291Z [error]: Cannot read property 'length' of undefined
+2022-05-02T03:43:52.797Z [error]: Cannot read property 'length' of undefined
+2022-05-02T03:49:40.946Z [error]: Cannot read property 'length' of undefined
+2022-05-02T05:59:02.589Z [error]: Cannot read property 'length' of undefined
+2022-05-02T06:01:56.562Z [error]: Cast to Number failed for value "NaN" (type number) at path "progress"
+2022-05-02T06:18:20.900Z [error]: Cast to Number failed for value "NaN" (type number) at path "progress"
+2022-05-02T06:54:16.583Z [error]: Cannot read property 'length' of undefined
+2022-05-02T06:55:06.513Z [error]: Cast to Number failed for value "NaN" (type number) at path "progress"
+2022-05-04T00:55:42.966Z [error]: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://docs.atlas.mongodb.com/security-whitelist/

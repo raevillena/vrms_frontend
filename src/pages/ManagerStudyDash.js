@@ -51,6 +51,8 @@ const ManagerStudyDash = (props) => {
       assignee: props.data.assignee,
       assigneeName: props.data.assigneeName,
       budget: props.data.budget,
+      fundingCategory: props.data.fundingCategory,
+      fundingAgency: props.data.fundingAgency,
       dateUpdated: moment(props.data.dateUpdated).format('MM-DD-YYYY'),
       progress: props.data.progress,
       status: [props.data.status],
@@ -77,6 +79,8 @@ useEffect(() => {
             assigneeName: x[i].assigneeName,
             budget: x[i].budget,
             dateUpdated: moment(x[i].dateUpdated).format('MM-DD-YYYY'),
+            fundingAgency: x[i].fundingAgency,
+            fundingCategory: x[i].fundingCategory,
             progress: x[i].progress,
             status: [x[i].status],
             updatedBy: x[i].updatedBy,
@@ -200,6 +204,25 @@ const getColumnSearchProps = dataIndex => ({
       ellipsis: true
     },
     {
+      title: 'Funding Agency',
+      dataIndex: 'fundingAgency',
+      key: 'fundingAgency', 
+      ...getColumnSearchProps('fundingAgency'),
+      ellipsis: true,
+      width: '10%'
+    },
+    {
+      title: 'Funding Category',
+      dataIndex: 'fundingCategory',
+      key: 'fundingCategory',
+      filters: [
+        { text: 'GAA', value: 'GAA' },
+        { text: 'GIA', value: 'GIA' },
+      ],
+      onFilter: (value, record) => record.fundingCategory.indexOf(value) === 0, 
+      width: '10%'
+      },
+    {
       title: 'Progress',
       dataIndex: 'progress',
       key: 'progress',
@@ -272,6 +295,10 @@ const getColumnSearchProps = dataIndex => ({
   const edit_data = (data) => {
     let objIndex = studyData.findIndex((obj => obj.studyID === data.study.studyID));
     studyData[objIndex].title = data.study.title
+    studyData[objIndex].fundingAgency = data.study.fundingAgency
+    studyData[objIndex].fundingCategory = data.study.fundingCategory
+    studyData[objIndex].assignee = data.study.assignee
+    studyData[objIndex].assigneeName = data.study.assigneeName //continue here
   }
 
 return (

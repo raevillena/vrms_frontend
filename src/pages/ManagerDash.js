@@ -60,6 +60,8 @@ const ManagerDash = (props) => {
                 programID: programResult[j].programID,
                 programName: programResult[j].programName,
                 programLeader:  programResult[j].assigneeName,
+                fundingAgency: programResult[j].fundingAgency,
+                fundingCategory:  programResult[j].fundingCategory,
                 programLeaderID:  programResult[j].assignee,
                 dateCreated: moment( programResult[j].dateCreated).format('MM-DD-YYYY'),
             });
@@ -68,6 +70,8 @@ const ManagerDash = (props) => {
                 key:  tempProgramData.length,
                 programID: 'others',
                 programName: 'Others',
+                fundingAgency: 'others',
+                fundingCategory: 'Others',
                 programLeader:  ['Others'],
                 dateCreated: moment( Date.now()).format('MM-DD-YYYY'),
           }]
@@ -87,6 +91,8 @@ useEffect(() => {
       programID: props.data.newProgram.program,
       programName: props.data.newProgram.programName,
       programLeader:  props.data.newProgram.assigneeName,
+      fundingAgency: props.data.newProgram.fundingAgency,
+      fundingCategory: props.data.newProgram.fundingCategory,
       dateCreated: moment( props.data.newProgram.dateCreated).format('MM-DD-YYYY')}])
     }else{
       if(props.data.data.program === id){
@@ -97,6 +103,8 @@ useEffect(() => {
           projectName: props.data.data.projectName,
           deadline: moment(props.data.data.deadline).format('MM-DD-YYYY'),
           programID: props.data.data.program,
+          fundingAgency: props.data.data.fundingAgency,
+          fundingCategory: props.data.data.fundingCategory,
           dateCreated: moment(props.data.data.dateCreated).format('MM-DD-YYYY'),
           dateUpdated: moment(props.data.data.dateUpdated).format('MM-DD-YYYY'),
           progress: props.data.data.progress,
@@ -210,19 +218,38 @@ const programColumns = [
     dataIndex: 'programName',
     key: 'programName',
     ...getColumnSearchProps('programName'),
-    width: '40%',
+    width: '30%',
     ellipsis: true,
   },
   {
     title: 'Date Created',
     dataIndex: 'dateCreated',
     key: 'dateCreated', 
-    width: '15%'
+    width: '10%'
   },
+  {
+    title: 'Funding Agency',
+    dataIndex: 'fundingAgency',
+    key: 'fundingAgency', 
+    ...getColumnSearchProps('fundingAgency'),
+    ellipsis: true,
+    width: '10%'
+  },
+  {
+    title: 'Funding Category',
+    dataIndex: 'fundingCategory',
+    key: 'fundingCategory',
+    filters: [
+      { text: 'GAA', value: 'GAA' },
+      { text: 'GIA', value: 'GIA' },
+    ],
+    onFilter: (value, record) => record.fundingCategory.indexOf(value) === 0, 
+    width: '10%'
+    },
   {
     title: 'Action',
     dataIndex: 'action',
-    width: '15%',
+    width: '10%',
     key: 'action',
     fixed: 'right',
     render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row', gap:'5px'}}>
@@ -266,6 +293,23 @@ const expandedRowRender = programs => {
       width: '10%',
       
     },
+    {
+      title: 'Funding Agency',
+      dataIndex: 'fundingAgency',
+      key: 'fundingAgency', 
+      ...getColumnSearchProps('fundingAgency'),
+      ellipsis: true,
+    },
+    {
+      title: 'Funding Category',
+      dataIndex: 'fundingCategory',
+      key: 'fundingCategory',
+      filters: [
+        { text: 'GAA', value: 'GAA' },
+        { text: 'GIA', value: 'GIA' },
+      ],
+      onFilter: (value, record) => record.fundingCategory.indexOf(value) === 0, 
+      },
     {
       title: 'Progress',
       dataIndex: 'progress',
@@ -353,6 +397,8 @@ useEffect(() => {
             projectLeaderID:  projectResult[i].assignee,
             programID: projectResult[i].program,
             projectName:  projectResult[i].projectName,
+            fundingAgency: projectResult[i].fundingAgency,
+            fundingCategory: projectResult[i].fundingCategory,
             deadline: moment( projectResult[i].deadline).format('MM-DD-YYYY'),
             dateCreated: moment( projectResult[i].dateCreated).format('MM-DD-YYYY'),
             dateUpdated: moment( projectResult[i].dateUpdated).format('MM-DD-YYYY'),
@@ -373,6 +419,8 @@ const pull_data = (data) => {
   programData[objIndex].programLeaderID = data.assignee
   programData[objIndex].programLeader = data.assigneeName
   programData[objIndex].programName = data.programName
+  programData[objIndex].fundingAgency = data.fundingAgency
+  programData[objIndex].fundingCategory = data.fundingCategory
 }
 
 const edit_data = (data) => {
@@ -386,6 +434,8 @@ const edit_data = (data) => {
     projectData[objIndex].projectLeader = data.project.assigneeName
     projectData[objIndex].projectName = data.project.projectName
     projectData[objIndex].programID = data.project.program
+    projectData[objIndex].fundingAgency = data.project.fundingAgency
+    projectData[objIndex].fundingCategory = data.project.fundingCategory
   }
 }
 

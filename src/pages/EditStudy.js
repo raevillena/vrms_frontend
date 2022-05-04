@@ -33,10 +33,11 @@ const EditStudy = (props) => {
     const { Option } = Select;
     const [form] = Form.useForm();
     const [userData, setUserData] = useState([])
-    const [study, setStudy] = useState({studyID: props.data.record.studyID ,title: props.data.record.title, projectName: projectObj.PROJECT._id, deadline:moment( props.data.record.deadline) ,assignee:props.data.record.assignee, assigneeName:props.data.record.assigneeName, budget: props.data.record.budget, user: userObj.USER.name})
+    const [study, setStudy] = useState({studyID: props.data.record.studyID ,title: props.data.record.title, projectName: projectObj.PROJECT._id, deadline:moment( props.data.record.deadline) ,assignee:props.data.record.assignee, 
+        assigneeName:props.data.record.assigneeName, budget: props.data.record.budget, user: userObj.USER.name, fundingAgency: props.data.record.fundingAgency, fundingCategory: props.data.record.fundingCategory})
 
-    const initialValues = {title: props.data.record.title, deadline:moment( props.data.record.deadline) ,assignee:props.data.record.assignee, 
-    assigneeName:props.data.record.assigneeName, budget: props.data.record.budget, objectives:props.data.record.objectives }
+    const initialValues = {title: props.data.record.title, deadline:moment( props.data.record.deadline) ,assignee:props.data.record.assignee, assigneeName:props.data.record.assigneeName, 
+        budget: props.data.record.budget, objectives:props.data.record.objectives, fundingAgency: props.data.record.fundingAgency, fundingCategory: props.data.record.fundingCategory }
 
     useEffect(() => {
         async function getUsers(){
@@ -53,7 +54,8 @@ const EditStudy = (props) => {
             setUserData(tempUserData)
         }
         getUsers()
-        setStudy({...study,title: props.data.record.title, assignee: props.data.record.assignee, assigneeName: props.data.record.assigneeName, budget: props.data.record.budget, deadline: moment( props.data.record.deadline)})
+        setStudy({...study,title: props.data.record.title, assignee: props.data.record.assignee, assigneeName: props.data.record.assigneeName, budget: props.data.record.budget, deadline: moment( props.data.record.deadline),
+        fundingAgency: props.data.record.fundingAgency, fundingCategory: props.data.record.fundingCategory })
         form.resetFields()
     }, [props.data])
 
@@ -67,6 +69,10 @@ const EditStudy = (props) => {
             });
         });
         setStudy({...study, assignee: value, assigneeName: tempArray})
+    }
+
+    function handleChangeInFundingCat(value) {   //for assigning user
+        setStudy({...study, fundingCategory: value})
     }
 
     function onChange(date) {
@@ -87,6 +93,20 @@ const EditStudy = (props) => {
                     </Form.Item>
                     <Form.Item name='budget'  label="Budget">
                         <Input type="number" placeholder="Enter budget" onChange={(e)=> setStudy({...study, budget: e.target.value})} value={study.budget}/>
+                    </Form.Item>
+                    <Form.Item name='fundingCategory' label="Funding Category">
+                        <Select style={{ width: '100%' }} onChange={handleChangeInFundingCat} value={study.fundingCategory} placeholder="Select funding category">
+                            <Option key={1} value={'GIA'}>{'GIA'}</Option>
+                            <Option key={2} value={'GAA'}>{'GAA'}</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item name='fundingAgency' label="Funding Agency"
+                    rules={[
+                        {
+                        message: 'Please input funding agency!',
+                        },
+                    ]}>
+                        <Input placeholder="Enter Funding Agency" onChange={e => setStudy({...study, fundingAgency: e.target.value})} value={study.fundingAgency} ></Input>
                     </Form.Item>
                     <Form.Item name='deadline'  label="Deadline">
                         <Space direction="vertical">

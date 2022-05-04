@@ -30,7 +30,9 @@ const Programs = () => {
                     active: programResult[j].active.toString(),
                     createdBy: programResult[j].createdBy,
                     editedBy: programResult[j].editedBy,
-                    status: programResult[j].status
+                    status: programResult[j].status,
+                    fundingCategory: programResult[j].fundingCategory,
+                    fundingAgency: programResult[j].fundingAgency
                 });
               }
             setProgramData(tempProgramData)
@@ -142,6 +144,23 @@ const Programs = () => {
             key: 'dateCreated', 
           },
           {
+            title: 'Funding Agency',
+            dataIndex: 'fundingAgency',
+            key: 'fundingAgency', 
+            ...getColumnSearchProps('fundingAgency'),
+            ellipsis: true,
+          },
+          {
+            title: 'Funding Category',
+            dataIndex: 'fundingCategory',
+            key: 'fundingCategory',
+            filters: [
+              { text: 'GAA', value: 'GAA' },
+              { text: 'GIA', value: 'GIA' },
+            ],
+            onFilter: (value, record) => record.fundingCategory.indexOf(value) === 0, 
+            },
+          {
             title: 'Active',
             dataIndex: 'active',
             key: 'active',
@@ -179,6 +198,8 @@ const Programs = () => {
       programData[objIndex].lastUpdated = moment(Date.now).format('MM-DD-YYYY')
       programData[objIndex].programName = data.programName
       programData[objIndex].active = data.active
+      programData[objIndex].fundingAgency = data.fundingAgency
+      programData[objIndex].fundingCategory = data.fundingCategory
       programData[objIndex].deadline = moment(data.deadline).format('MM-DD-YYYY')
     }
 
