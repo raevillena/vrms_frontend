@@ -74,8 +74,8 @@ const Conclusion = () => {
 
   async function updateDB(){
     try {
-        await onUpdateConclusion({studyID: studyObj.STUDY.studyID, conclusion: dataToSaveBackend, user: userObj.USER.name})
-        notif('success', 'Document Updated!')
+        let res = await onUpdateConclusion({studyID: studyObj.STUDY.studyID, conclusion: dataToSaveBackend, user: userObj.USER.name})
+        notif('success', res.data.message)
     } catch (error) {
         notif('error', 'Error in updating document!')
     }
@@ -88,7 +88,7 @@ const Conclusion = () => {
       setLoading(false)
       let contentState = null
       try{
-        contentState = convertFromRaw(JSON.parse(result.data.docs.introduction))//displaying summary
+        contentState = convertFromRaw(JSON.parse(result.data.docs.conclusion))//displaying summary
       }catch(error){
         const dummy ={
           introduction: "{\"blocks\":[{\"key\":\"8taok\",\"text\":\"\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",

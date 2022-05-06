@@ -1,7 +1,7 @@
 import React, { useState , useEffect} from "react";
 import { Button, Spin, notification } from "antd";
 import { useSelector } from 'react-redux';
-import { onGetDocumentation, onUpdateMethodology } from "../services/studyAPI";
+import { onGetDocumentation, onUpdateResultsAndDiscussion } from "../services/studyAPI";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw, convertFromRaw} from "draft-js";
@@ -73,8 +73,8 @@ const Methodology = () => {
 
   async function updateDB(){
     try {
-        await onUpdateMethodology({studyID: studyObj.STUDY.studyID, methodology: dataToSaveBackend, user: userObj.USER.name})
-        notif('success', "Document updated!")
+        let result = await onUpdateResultsAndDiscussion({studyID: studyObj.STUDY.studyID, resultsAndDiscussion: dataToSaveBackend, user: userObj.USER.name})
+        notif('success', result.data.message)
     } catch (error) {
         notif('error', "Error in saving document!")
     }

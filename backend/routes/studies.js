@@ -187,16 +187,16 @@ router.post('/updateRrl', auth, async(req, res) => {
     try {
        const doesExist = await Documentation.findOne({"studyID": req.body.studyID})
         if(doesExist){
-            Documentation.updateOne({"studyID": req.body.studyID}, {"rrl": req.body.rrl},
-             function(err, docs){
+            Documentation.findOneAndUpdate({"studyID": req.body.studyID}, {"rrl": req.body.rrl},
+             function(err){
                 if(err){
                     logger.log('error', err)
                 }else{
-                    Studies.updateOne({"studyID": req.body.studyID}, {"updatedBy": req.body.user}, function(err){
+                    Studies.findOneAndUpdate({"studyID": req.body.studyID}, {"updatedBy": req.body.user}, function(err){
                         if(err){
                             logger.log('error', err)
                         }else{
-                            res.send({docs, message: 'Document Updated!'})
+                            res.send({message: 'Document Updated!'})
                         }
                     })
                 }
@@ -263,7 +263,7 @@ router.post('/updateResultsAndDiscussion', auth, async(req, res) => {
     try {
        const doesExist = await Documentation.findOne({"studyID": req.body.studyID})
         if(doesExist){
-            Documentation.updateOne({"studyID": req.body.studyID}, {"resultsAndDiscussion": req.body.resultsAndDiscussion},
+            Documentation.findOneAndUpdate({"studyID": req.body.studyID}, {"resultsAndDiscussion": req.body.resultsAndDiscussion},
              function(err, docs){
                 if(err){
                     logger.log('error', err)
@@ -272,7 +272,7 @@ router.post('/updateResultsAndDiscussion', auth, async(req, res) => {
                         if(err){
                             logger.log('error', err)
                         }else{
-                            res.send({docs})
+                            res.send({message: 'Document Updated!'})
                         }
                     })
                 }
@@ -298,11 +298,12 @@ router.post('/updateResultsAndDiscussion', auth, async(req, res) => {
 })
 
 router.post('/updateConclusion', auth, async(req, res) => {
+    console.log('conclusion', req.body.conclusion)
     try {
        const doesExist = await Documentation.findOne({"studyID": req.body.studyID})
         if(doesExist){
-            Documentation.updateOne({"studyID": req.body.studyID}, {"conclusion": req.body.conclusion},
-             function(err, docs){
+            Documentation.findOneAndUpdate({"studyID": req.body.studyID}, {"conclusion": req.body.conclusion},
+             function(err){
                 if(err){
                     logger.log('error', err)
                 }else{
@@ -310,7 +311,7 @@ router.post('/updateConclusion', auth, async(req, res) => {
                         if(err){
                             logger.log('error', err)
                         }else{
-                            res.send({docs})
+                            res.send({message:'Document Updated!'})
                         }
                     })
                 }
@@ -325,7 +326,7 @@ router.post('/updateConclusion', auth, async(req, res) => {
                 if(err){
                     logger.log('error', err)
                 }else{
-                    res.send({newDoc})
+                    res.send({message:'Document Updated!'})
                 }
             })
         }
