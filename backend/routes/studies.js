@@ -806,23 +806,24 @@ router.post('/studyGalleryAdminUpdate', auth, async(req, res) => {
 })
 
 router.post('/updateObjective', auth, async(req, res) => {
+    console.log(req.body)
     try {
-        await Studies.findOneAndUpdate({'studyID': req.body.studyID}, {'objectives': req.body.value.objectives}, function(err, study) {
+          await Task.findOneAndUpdate({'studyName': req.body.studyID, 'objective': req.body.objective}, {'objective': req.body.value}, async function(err, task) {
             if(err){
-                logger.log('error', 'Error: /studyGalleryAdmin')
-            } else{
-                res.send({message: 'Objectives updated!'})
+                logger.log('error', 'Error: /updateObj1')
+            }{
+                console.log('updated task', task)
             }
           });
-         /* await Tasks.findOneAndUpdate({'studyID': req.body.studyID}, {'objectives': req.body.value.objectives}, function(err, study) {
+          await Studies.findOneAndUpdate({'studyID': req.body.studyID}, {'objectives': req.body.objectives.objectives}, function(err, study) {
             if(err){
-                logger.log('error', 'Error: /studyGalleryAdmin')
+                logger.log('error', 'Error: /updateObj2')
             } else{
-                res.send({message: 'Objectives updated!'})
+                res.send({message: 'Objective Updated!'})
             }
-          });*/
+          });
     } catch (error) {
-        logger.log('error', 'Error: /updateObjective')
+        logger.log('error', `Error: /updateObj, ${error}`)
     }
 })
 

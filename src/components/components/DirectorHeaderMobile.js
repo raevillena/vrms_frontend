@@ -3,7 +3,7 @@ import {  Menu } from 'antd'
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { onUserLogout } from '../../services/authAPI';
-import { UserOutlined, BookOutlined, MenuOutlined, SearchOutlined } from '@ant-design/icons';
+import { UserOutlined, BookOutlined, MenuOutlined, SearchOutlined,ClockCircleOutlined } from '@ant-design/icons';
 import logo from '../images/logo.png'
 import '../../styles/CSS/Userdash.css'
 
@@ -45,6 +45,9 @@ const DirectorHeaderMobile = () => {
     const account = async () => {
         history.push("/account")
       }
+      const off = async () => {
+        history.push("/offline/uploaded")
+      }
 
     return (
         <div  style={{background:'white',height: '50px', width: '100%'}}>
@@ -59,6 +62,9 @@ const DirectorHeaderMobile = () => {
                         </Menu.Item>
                         <Menu.Item icon={<SearchOutlined/>} key="3" onClick={monitor}>
                             Monitor
+                        </Menu.Item>
+                        <Menu.Item icon={<ClockCircleOutlined/>} key="4" onClick={off}>
+                            Offline Data
                         </Menu.Item>
                         <Menu.Item key="3" onClick={handleLogout}>
                             Logout

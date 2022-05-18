@@ -29,11 +29,35 @@ const Objectives = () => {
     const studyObj = useSelector(state => state.study)
     const initialValues = {objectives: studyObj.STUDY.objectives}
 
- 
+    function equalArray(a, b) {
+        if (a.length === b.length) {
+            for (var i = 0; i < a.length; i++) {
+                if (a[i] !== b[i]) {
+                    let x = {}
+                    x= {'stat': false, index: i }
+                    return x;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
 
       async function handleUpdate(value){
-        let res = await onUpdateObjective({'studyID': studyObj.STUDY.studyID, value})
-        notif('info', res.data.message)
+        let old = studyObj.STUDY.objectives
+        let newobj = value.objectives
+
+        if(old.length === newobj.length){
+            let x = equalArray(old, newobj)
+            console.log('x', x)
+            let res = await onUpdateObjective({'studyID': studyObj.STUDY.studyID, objective: studyObj.STUDY.objectives[x.index] , value: value.objectives[x.index], objectives: value})
+            notif('info', res.data.message)
+        }else{
+            let res = await onUpdateObjective({'studyID': studyObj.STUDY.studyID, objective: studyObj.STUDY.objectives , value})
+            notif('info', res.data.message)
+        }
+        
      }
 
 
