@@ -11,12 +11,10 @@ const EditProgram = (props) => {
     const [program, setProgram] = useState({programName: '', assignee: '', assigneeName: '', fundingAgency: '', fundingCategory: ''})
     const [userData, setUserData] = useState([])
     const initialValues = { assignee:props.data.record.programLeaderID, assigneeName: props.data.record.programLeader, programName: props.data.record.programName, 
-        fundingCategory: props.data.record.fundingCategory, fundingAgency: props.data.record.fundingAgency}
+                            fundingCategory: props.data.record.fundingCategory, fundingAgency: props.data.record.fundingAgency
+                        }
 
     const userObj = useSelector(state => state.user)
-
-    
-   
 
     function handleChange(value) {   //for assigning user
         let tempArray = []

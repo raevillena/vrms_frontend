@@ -50,22 +50,22 @@ const NewPassword = () => {
       };
 
     return (
-        <div style={{background: '#f2f2f2', minHeight: "100vh"}}>
-        <Row justify="center">
+      <div style={{background: '#f2f2f2', minHeight: "100vh"}}>
+      <Row justify="center">
         <Form style={{marginTop: "20%"}}>
-            <Title level={2} style={{fontFamily: "Bangla MN", fontWeight: "bolder"}}>Password Reset</Title>
-            <Form.Item > 
-              <Input.Password placeholder="Enter new password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={e => setNewPassword({...newPassword,newPassword: e.target.value})} value={newPassword.newPassword}/>
-            </Form.Item>
-            <Form.Item> 
-              <Input.Password placeholder="Confirm new password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={e => setNewPassword({...newPassword, confirmPassword: e.target.value})} value={newPassword.confirmPassword}/>
-            </Form.Item>
-            <Form.Item> 
-              <Button block style={{background: "#A0BF85", borderRadius: "5px"}} onClick={handleSubmit}>SUBMIT</Button>
-            </Form.Item>
+          <Title level={2} style={{fontFamily: "Bangla MN", fontWeight: "bolder"}}>Password Reset</Title>
+          <Form.Item > 
+            <Input.Password placeholder="Enter new password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={e => setNewPassword({...newPassword,newPassword: e.target.value})} value={newPassword.newPassword}/>
+          </Form.Item>
+          <Form.Item> 
+            <Input.Password placeholder="Confirm new password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={e => setNewPassword({...newPassword, confirmPassword: e.target.value})} value={newPassword.confirmPassword}/>
+          </Form.Item>
+          <Form.Item> 
+            <Button block style={{background: "#A0BF85", borderRadius: "5px"}} onClick={handleSubmit}>SUBMIT</Button>
+          </Form.Item>
         </Form>
-        </Row>
-        </div>
+      </Row>
+      </div>
     )
 }
 

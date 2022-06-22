@@ -28,8 +28,7 @@ const ManagerDash = (props) => {
   const notif = (type, message) => {
     notification[type]({
       message: 'Notification',
-      description:
-        message,
+      description: message,
     });
   };
 
@@ -77,7 +76,7 @@ const ManagerDash = (props) => {
           }]
         setProgramData(tempProgramData)
     }
-      getProjects()
+    getProjects()
 }, [userObj.USER.name])
 
 useEffect(() => {
@@ -86,37 +85,37 @@ useEffect(() => {
         return
     }else{
       if(cancel) return
-    if(props.data.type === 'program'){
-    setProgramData([...programData, {key:  props.data.newProgram._id,
-      programID: props.data.newProgram.program,
-      programName: props.data.newProgram.programName,
-      programLeader:  props.data.newProgram.assigneeName,
-      fundingAgency: props.data.newProgram.fundingAgency,
-      fundingCategory: props.data.newProgram.fundingCategory,
-      dateCreated: moment( props.data.newProgram.dateCreated).format('MM-DD-YYYY')}])
-    }else{
-      if(props.data.data.program === id){
-        setProjectData([...projectData, {key: projectData.length + 1,
-          projectID:props.data.data.projectID,
-          projectLeader: props.data.data.assigneeName,
-          projectLeaderID: props.data.data.assignee,
-          projectName: props.data.data.projectName,
-          deadline: moment(props.data.data.deadline).format('MM-DD-YYYY'),
-          programID: props.data.data.program,
-          fundingAgency: props.data.data.fundingAgency,
-          fundingCategory: props.data.data.fundingCategory,
-          dateCreated: moment(props.data.data.dateCreated).format('MM-DD-YYYY'),
-          dateUpdated: moment(props.data.data.dateUpdated).format('MM-DD-YYYY'),
-          progress: props.data.data.progress,
-          status:  [props.data.data.status]
-        }])
+      if(props.data.type === 'program'){
+      setProgramData([...programData, {key:  props.data.newProgram._id,
+        programID: props.data.newProgram.program,
+        programName: props.data.newProgram.programName,
+        programLeader:  props.data.newProgram.assigneeName,
+        fundingAgency: props.data.newProgram.fundingAgency,
+        fundingCategory: props.data.newProgram.fundingCategory,
+        dateCreated: moment( props.data.newProgram.dateCreated).format('MM-DD-YYYY')}])
       }else{
-        return
+        if(props.data.data.program === id){
+          setProjectData([...projectData, {key: projectData.length + 1,
+            projectID:props.data.data.projectID,
+            projectLeader: props.data.data.assigneeName,
+            projectLeaderID: props.data.data.assignee,
+            projectName: props.data.data.projectName,
+            deadline: moment(props.data.data.deadline).format('MM-DD-YYYY'),
+            programID: props.data.data.program,
+            fundingAgency: props.data.data.fundingAgency,
+            fundingCategory: props.data.data.fundingCategory,
+            dateCreated: moment(props.data.data.dateCreated).format('MM-DD-YYYY'),
+            dateUpdated: moment(props.data.data.dateUpdated).format('MM-DD-YYYY'),
+            progress: props.data.data.progress,
+            status:  [props.data.data.status]
+          }])
+        }else{
+          return
+        }
       }
-    }
-    }
-    return () => { 
-      cancel = true;
+      }
+      return () => { 
+        cancel = true;
     }
 }, [props.data])
 
@@ -443,11 +442,11 @@ const edit_data = (data) => {
       <div > 
         {programData[0]==="spinme"?  <Spin className="spinner" /> :
          <div>  
-              <Table size="small" className="components-table-demo-nested"  expandable={{ expandedRowRender }} onExpand={(isExpanded, record) =>{
-                setExpandedRow([record.key])
-                setId(isExpanded ? record.programID : undefined)}}scroll={{ x: 1200, y: 1000 }}  dataSource={programData} expandedRowKeys={expandedRow} columns={programColumns} style={{margin: '15px'}} 
-                />
-            </div>
+            <Table size="small" className="components-table-demo-nested"  expandable={{ expandedRowRender }} onExpand={(isExpanded, record) =>{
+              setExpandedRow([record.key])
+              setId(isExpanded ? record.programID : undefined)}}scroll={{ x: 1200, y: 1000 }}  dataSource={programData} expandedRowKeys={expandedRow} columns={programColumns} style={{margin: '15px'}} 
+            />
+          </div>
            }
             <Modal title="Edit Program" visible={isModalVisible} footer={null} onCancel={handleCancel}>
               <EditProgram data={programProps} func={pull_data}/>

@@ -57,15 +57,15 @@ const EditProject = (props) => {
         setProject({...project, assignee: assign, assigneeName: tempArray})
     }
 
-    function handleProgramChange(value) {
+    function handleProgramChange(value) { //for program changes
         setProject({...project, program: value})
       }
 
-      function onChange(date) {
+      function onChange(date) { //for changing deadline date
         setProject({...project, deadline:moment( date)})
     }
 
-    function handleChangeInFundingCat(value) {   //for assigning user
+    function handleChangeInFundingCat(value) {   //for changes in funding category
         setProject({...project, fundingCategory: value})
     }
 
@@ -115,11 +115,11 @@ const EditProject = (props) => {
         notif('info', res.data.message)
      }
 
-     function handleChangeActive(value) {   
+     function handleChangeActive(value) {    //for deleting and retrieving
         setProject({...project, active: value})
     }
 
-    function handleChangeStatus(value) {   
+    function handleChangeStatus(value) {   //for changing status
         setProject({...project, status: value})
     }
 

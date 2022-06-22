@@ -83,11 +83,11 @@ const Userdash = () => {
    }
 }, [])
 
-useEffect(() => {
-  async function postData(){
-    let x = { cookies: cookies.get('add'), user: userObj.USER._id}
-    let res = await onPostOffline(x)
-    notif('info', res.data.message)
+  useEffect(() => {
+    async function postData(){
+      let x = { cookies: cookies.get('add'), user: userObj.USER._id}
+      let res = await onPostOffline(x)
+      notif('info', res.data.message)
     
   }
   async function postGallery(){

@@ -35,15 +35,17 @@ const AddStudy = () => {
 
     const [userData, setUserData] = useState([])
     const [projectData, setProjectData] = useState([])
-    const [study, setStudy] = useState({title: "", projectName: '', deadline:"", startDate: "" ,assignee:[], assigneeName:[], budget: "", user: userObj.USER._id, username: userObj.USER.name,
-        fundingAgency: "", fundingCategory: ""})
+    const [study, setStudy] = useState({title: "", projectName: '', deadline:"", startDate: "" ,
+                                        assignee:[], assigneeName:[], budget: "", user: userObj.USER._id, username: userObj.USER.name,
+                                        fundingAgency: "", fundingCategory: ""
+                                        })
 
 
     const initialValues = {title: "", deadline:"", startDate: "" ,assignee:[], assigneeName:[], budget: "", fundingAgency: "", fundingCategory: ""}
 
     const [form] = Form.useForm();
     
-    const notif = (type, message) => {
+    const notif = (type, message) => { //notification
         notification[type]({
           message: 'Notification',
           description:
@@ -63,11 +65,11 @@ const AddStudy = () => {
         setStudy({...study, assignee: value, assigneeName: tempArray})
     }
 
-    function handleChangeProject(value) {   //for assigning user
+    function handleChangeProject(value) {   //for project change
         setStudy({...study, projectName: value[0]})
     }
 
-    function handleChangeInFundingCat(value) {   //for assigning user
+    function handleChangeInFundingCat(value) {   //for funding category change
         setStudy({...study, fundingCategory: value})
     }
 
@@ -77,17 +79,18 @@ const AddStudy = () => {
             let resultProj = await onGetAllProject()
             let x = resultUsers.data
             let y = resultProj.data
-            console.log(y)
+            //console.log(y)
             let tempUserData = []
             let tempProjData = []
-            for(let i = 0; i < x.length; i++){ 
+            for(let i = 0; i < x.length; i++){ //for user choices upon render
                 tempUserData.push({
                     key: x[i].name,
                     name:  x[i].name,
                     value:  x[i]._id,
                 })
             }
-            for(let i = 0; i < y.length; i++){ 
+
+            for(let i = 0; i < y.length; i++){ //for project choices upon render
                 tempProjData.push({
                     key: y[i].projectID,
                     name:  y[i].projectName,
@@ -100,7 +103,7 @@ const AddStudy = () => {
         getUsers()
     }, [])
     
-    async function onSubmit(values){
+    async function onSubmit(values){ // creating study
         try {
            let result = await onStudyCreate({values, study}, authObj.accessToken, authObj.refreshToken) 
            notif("success",result.data.message)
@@ -111,12 +114,12 @@ const AddStudy = () => {
         }
     }
 
-    function onChangeStartDate(date) {
+    function onChangeStartDate(date) { //for changing the start date
         setStudy({...study, startDate: date})
     }
 
     function onChange(date) {
-        setStudy({...study, deadline: date})
+        setStudy({...study, deadline: date}) //for changing the deadline date
     }
 
     return (

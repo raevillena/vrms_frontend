@@ -65,34 +65,33 @@ const ManagerStudyDash = (props) => {
 
 useEffect(() => {
   async function getStudies(){
-      let result = await onGetAllStudyforProject(projectObj.PROJECT)
-      let x = result.data
-      let tempStudyData = []
-      for(let i = 0; i < x.length; i++){ 
-        tempStudyData.push({
-            key: x[i]._id,
-            id: [i],
-            title: x[i].studyTitle,
-            studyID: x[i].studyID,
-            dateCreated: moment(x[i].dateCreated).format('MM-DD-YYYY'),
-            assignee: x[i].assignee,
-            assigneeName: x[i].assigneeName,
-            budget: x[i].budget,
-            dateUpdated: moment(x[i].dateUpdated).format('MM-DD-YYYY'),
-            fundingAgency: x[i].fundingAgency,
-            fundingCategory: x[i].fundingCategory,
-            progress: x[i].progress,
-            status: [x[i].status],
-            updatedBy: x[i].updatedBy,
-            deadline: x[i].deadline,
-            objectives: x[i].objectives,
-        });
-      }
+    let result = await onGetAllStudyforProject(projectObj.PROJECT)
+    let x = result.data
+    let tempStudyData = []
+    for(let i = 0; i < x.length; i++){ 
+      tempStudyData.push({
+          key: x[i]._id,
+          id: [i],
+          title: x[i].studyTitle,
+          studyID: x[i].studyID,
+          dateCreated: moment(x[i].dateCreated).format('MM-DD-YYYY'),
+          assignee: x[i].assignee,
+          assigneeName: x[i].assigneeName,
+          budget: x[i].budget,
+          dateUpdated: moment(x[i].dateUpdated).format('MM-DD-YYYY'),
+          fundingAgency: x[i].fundingAgency,
+          fundingCategory: x[i].fundingCategory,
+          progress: x[i].progress,
+          status: [x[i].status],
+          updatedBy: x[i].updatedBy,
+          deadline: x[i].deadline,
+          objectives: x[i].objectives,
+      });
+    }
     setStudyData(tempStudyData)
     }
     getStudies()
 }, [projectObj.PROJECT])
-
 
 const handleRemove = (key) => { //deleting datasheet
   let newData = studyData.filter((tempData) => {
@@ -303,15 +302,15 @@ const getColumnSearchProps = dataIndex => ({
 
 return (
   <div>
-      {userObj.USER.category === 'manager' ? 
-  <div>
-        {studyData[0]==="spinme" ?  <Spin className="spinner" /> : 
-        <div > 
-            <Table size="small" scroll={{ x: 1500, y: 1000 }} style={{margin: '15px'}} dataSource={studyData} columns={columns} ></Table>
-        </div>
-         }
-  </div> : <DirectorStudyDash/>}
-
+    {userObj.USER.category === 'manager' ? 
+      <div>
+            {studyData[0]==="spinme" ?  <Spin className="spinner" /> : 
+            <div > 
+                <Table size="small" scroll={{ x: 1500, y: 1000 }} style={{margin: '15px'}} dataSource={studyData} columns={columns} ></Table>
+            </div>
+              }
+      </div> : <DirectorStudyDash/>
+    }
     <Modal title="Edit Study" visible={isModalVisible} footer={null} onCancel={handleCancel}>
       <EditStudy data={studyProps} func={edit_data}/>
     </Modal>

@@ -37,7 +37,7 @@ function Login() {
 
  useEffect(() => {
    if(isOnline!==true){
-     history.push('/offline')
+    history.push('/offline')
    }
  }, [isOnline])
  
@@ -96,39 +96,40 @@ function Login() {
   return (
     <div>
       {loading? <Spin className="spinner" />  :
-    <div style={{background: '#f2f2f2', minHeight: "100vh"}}>
-     <Row justify="center">
-    <Col  >
-      <Form style={{marginTop: "40%"}} name="basic" initialValues={{remember: true,}} onFinish={onSubmit}>
-      <Title style={{fontFamily: "Bangla MN", fontWeight: "bolder", fontSize: '15px'}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</Title>
-        <Form.Item name="email"  
-            rules={[
-            {
-              type: 'email',
-              required: true,
-            },
-            ]}
-        >
-          <Input  placeholder="Enter Email" prefix={<MailOutlined />} onChange={e => setUser({...user, email: e.target.value})} value={user.email}/>
-        </Form.Item>
+        <div style={{background: '#f2f2f2', minHeight: "100vh"}}>
+          <Row justify="center">
+            <Col  >
+              <Form style={{marginTop: "40%"}} name="basic" initialValues={{remember: true,}} onFinish={onSubmit}>
+              <Title style={{fontFamily: "Bangla MN", fontWeight: "bolder", fontSize: '15px'}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</Title>
+                <Form.Item name="email"  
+                    rules={[
+                    {
+                      type: 'email',
+                      required: true,
+                    },
+                    ]}
+                >
+                  <Input  placeholder="Enter Email" prefix={<MailOutlined />} onChange={e => setUser({...user, email: e.target.value})} value={user.email}/>
+                </Form.Item>
 
-        <Form.Item name="password" 
-          rules={[
-            {
-              required: true,
-              message: 'Please input your password!',
-            },
-          ]}
-          >
-            <Input.Password placeholder="Enter password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={e => setUser({...user, password: e.target.value})} value={user.password}/>
-        </Form.Item>
-        <Form.Item><Button type= "link" style={{fontFamily: "Montserrat",color: "#000000", float: 'right'}} onClick={forgotPassword}> Forgot your password?</Button></Form.Item>
-        <Form.Item><Button block style={{background: "#A0BF85", borderRadius: "5px"}} htmlType="submit" >LOGIN</Button></Form.Item>
-        
-    </Form>
-    </Col>
-    </Row>
-    </div>}
+                <Form.Item name="password" 
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please input your password!',
+                    },
+                  ]}
+                  >
+                    <Input.Password placeholder="Enter password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={e => setUser({...user, password: e.target.value})} value={user.password}/>
+                </Form.Item>
+                <Form.Item><Button type= "link" style={{fontFamily: "Montserrat",color: "#000000", float: 'right'}} onClick={forgotPassword}> Forgot your password?</Button></Form.Item>
+                <Form.Item><Button block style={{background: "#A0BF85", borderRadius: "5px"}} htmlType="submit" >LOGIN</Button></Form.Item>
+                
+            </Form>
+            </Col>
+          </Row>
+        </div>
+      }
     </div>
   )
 }

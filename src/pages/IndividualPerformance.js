@@ -22,72 +22,73 @@ const IndividualPerformance = () => {
   const [state, setstate] = useState({'study': '', 'tasks': '', 'table': '', 'projects': '', 'programs': ''})
   const [props, setProps] = useState({'study': '', 'tasks': '', 'table': '', 'projects': '', 'programs': ''})
   const [loading, setLoading] = useState(true)
-    const [data, setData] = useState([
-        { month: 'January', value: 0 },
-        { month: 'February', value: 0},
-        { month: 'March', value: 0 },
-        { month: 'April', value: 0 },
-        { month: 'May', value: 0 },
-        { month: 'June', value: 0 },
-        { month: 'July', value: 0 },
-        { month: 'August', value: 0 },
-        { month: 'September', value: 0 },
-        { month: 'October', value: 0 },
-        { month: 'November', value: 0 },
-        { month: 'December', value: 0 },
-    ])
-    useEffect(() => {
-       try {
-          async function getData(){
-            let res = await  onGetUserTaskProductivity(monitorObj.MONITOR.key)
-            let study =  await onGetStudyForUser({'_id': monitorObj.MONITOR.key})
-            let task = await onGetAllTaskMonitoring(monitorObj.MONITOR.key)
-            let table =  await onGetAllCreatedTable(monitorObj.MONITOR.name)
-            let program = await onGetAllProgramIP(monitorObj.MONITOR.key)
-            let project = await onGetAllProjectIP(monitorObj.MONITOR.key)
-            let studyLength = study.data.length
-            let taskLength = task.data.tasks.length
-            let tableLength = table.data.length
-            let programLength = program.data.length
-            let projectLength = project.data.length
-            let studydata = study.data
-            let taskdata = task.data.tasks
-            let tabledata = table.data
-            let programdata = program.data
-            let projectdata = project.data
+  const [data, setData] = useState([
+      { month: 'January', value: 0 },
+      { month: 'February', value: 0},
+      { month: 'March', value: 0 },
+      { month: 'April', value: 0 },
+      { month: 'May', value: 0 },
+      { month: 'June', value: 0 },
+      { month: 'July', value: 0 },
+      { month: 'August', value: 0 },
+      { month: 'September', value: 0 },
+      { month: 'October', value: 0 },
+      { month: 'November', value: 0 },
+      { month: 'December', value: 0 },
+  ])
+    
+  useEffect(() => {
+    try {
+      async function getData(){
+        let res = await  onGetUserTaskProductivity(monitorObj.MONITOR.key)
+        let study =  await onGetStudyForUser({'_id': monitorObj.MONITOR.key})
+        let task = await onGetAllTaskMonitoring(monitorObj.MONITOR.key)
+        let table =  await onGetAllCreatedTable(monitorObj.MONITOR.name)
+        let program = await onGetAllProgramIP(monitorObj.MONITOR.key)
+        let project = await onGetAllProjectIP(monitorObj.MONITOR.key)
+        let studyLength = study.data.length
+        let taskLength = task.data.tasks.length
+        let tableLength = table.data.length
+        let programLength = program.data.length
+        let projectLength = project.data.length
+        let studydata = study.data
+        let taskdata = task.data.tasks
+        let tabledata = table.data
+        let programdata = program.data
+        let projectdata = project.data
 
-            let arr = res.data.tasks
-                const monthName = item => moment(item.deadline, 'YYYY-MM-DD').format('MM');
-                const result = _.groupBy(arr, monthName);
-                let tempArray =[]
-            
-                for (let i = 1; i < 13; i++) {
-                 if(result[i] === undefined || result[i] === null){
-                     tempArray.push({
-                         month: moment(i, 'MM').format('MMMM'),
-                         value: 0
-                     }) 
-                 } else{
-                     let completed = _.filter(result[i], {status: 'COMPLETED'});
-                     let denominator = result[i].length
-                     let percentage = completed.length/denominator
-                     tempArray.push({
-                         month: moment(i, 'MM').format('MMMM'),
-                         value: percentage*100
-                     }) 
-                 }
-                }
-
-                setData(tempArray)
-                setstate({...state, study: studyLength, tasks: taskLength, table: tableLength, projects: projectLength, programs: programLength})
-                setProps({...props, study: studydata, tasks: taskdata, table: tabledata, projects: projectdata, programs: programdata})
-                setLoading(false)
+        let arr = res.data.tasks
+        const monthName = item => moment(item.deadline, 'YYYY-MM-DD').format('MM');
+        const result = _.groupBy(arr, monthName);
+        let tempArray =[]
+    
+        for (let i = 1; i < 13; i++) {
+          if(result[i] === undefined || result[i] === null){
+              tempArray.push({
+                  month: moment(i, 'MM').format('MMMM'),
+                  value: 0
+              }) 
+          } else{
+              let completed = _.filter(result[i], {status: 'COMPLETED'});
+              let denominator = result[i].length
+              let percentage = completed.length/denominator
+              tempArray.push({
+                  month: moment(i, 'MM').format('MMMM'),
+                  value: percentage*100
+              }) 
           }
-          getData()  
-        } catch (err) {
-          console.log(err)
         }
-    }, [monitorObj.MONITOR.key])
+
+        setData(tempArray)
+        setstate({...state, study: studyLength, tasks: taskLength, table: tableLength, projects: projectLength, programs: programLength})
+        setProps({...props, study: studydata, tasks: taskdata, table: tabledata, projects: projectdata, programs: programdata})
+        setLoading(false)
+      }
+      getData()  
+    } catch (err) {
+      console.log(err)
+    }
+  }, [monitorObj.MONITOR.key])
 
   const config = {
     data,
@@ -144,7 +145,7 @@ const IndividualPerformance = () => {
           </Card>
         </Col>   
     </Row>
-  <Row justify="space-around">
+    <Row justify="space-around">
       <Col span={7}>
           <Card style={{  borderRadius: '10px', background: '#7CAD4F', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading}>
               <Meta style={{color: '#FFFFFF'}} title={monitorObj.MONITOR.category[0] === 'user' ? state.study : state.programs} description={monitorObj.MONITOR.category[0] === 'user' ? 'Total Assigned Studies' : 'Total Assigned Programs'} avatar={<FileTextFilled style={{fontSize: '45px'}}/>}/>
@@ -160,41 +161,41 @@ const IndividualPerformance = () => {
               <Meta style={{color: '#FFFFFF'}} title={state.table} description='Total Created Table' avatar={<FileFilled style={{fontSize: '45px'}}/>}/>
           </Card>
       </Col>
-</Row>
-{monitorObj.MONITOR.category[0] === 'manager'? 
-<div>
-<Row justify="space-around">
+    </Row>
+    {monitorObj.MONITOR.category[0] === 'manager'? 
+    <div>
+    <Row justify="space-around">
+    <Col span={23}>
+        <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading} title='Program'>
+            <IndividualProgramTable data={props.programs}/>
+        </Card>
+    </Col>
+    </Row>
+    <Row justify="space-around">
+    <Col span={23}>
+        <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading} title='Projects'>
+            <IndividualProjectTable data={props.projects}/>
+        </Card>
+    </Col>
+    </Row>
+    </div> : 
+    <div>
+    <Row justify="space-around">
+    <Col span={23}>
+      <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading} title='Studies'>
+          <IndividualStudiesTable data={props.study}/>
+      </Card>
+    </Col>
+    </Row>
+    <Row justify="space-around">
       <Col span={23}>
-          <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading} title='Program'>
-              <IndividualProgramTable data={props.programs}/>
-          </Card>
+        <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading} title='Tasks'>
+          <IndividualTaskTable data={props.tasks} />
+        </Card>
       </Col>
-</Row>
-<Row justify="space-around">
-      <Col span={23}>
-          <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading} title='Projects'>
-              <IndividualProjectTable data={props.projects}/>
-          </Card>
-      </Col>
-</Row>
-</div> : 
-<div>
-<Row justify="space-around">
-      <Col span={23}>
-          <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading} title='Studies'>
-              <IndividualStudiesTable data={props.study}/>
-          </Card>
-      </Col>
-</Row>
-<Row justify="space-around">
-      <Col span={23}>
-          <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}} size='small' hoverable loading={loading} title='Tasks'>
-              <IndividualTaskTable data={props.tasks} />
-          </Card>
-      </Col>
-</Row>
-</div>}
-</div>
+    </Row>
+    </div>}
+  </div>
 }
 
 export default IndividualPerformance

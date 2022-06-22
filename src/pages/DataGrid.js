@@ -35,8 +35,6 @@ const DataGrid = () => {
   })
   
 
- 
-
   const TextComponent = React.memo(
     ({ rowData, setRowData, active}) => {
       const ref = useRef(null);
@@ -148,8 +146,6 @@ const DataGrid = () => {
     }
   }
 
- 
-
   useEffect(() => {
     const getCol = async() =>{
       let res = await onGetDatagridCol({study: studyObj.STUDY.studyID})
@@ -211,28 +207,28 @@ const DataGrid = () => {
         default:
             return { ...keyColumn(title, textColumn), title: title,  type: 'text'}
     }
-}
-
-const handleReplace = () =>{
-  if(col.newCol === ''){
-    notif('error', 'New column anme is empty!')
-  }else{
-    let arr = []
-
-    let index = tempCol.findIndex((obj => obj.title === col.replaceCol))
-    tempCol[index].title = col.newCol
-    tempCol.forEach((col) => {
-      arr.push(checkColumnType(col.type, col.title))
-    })
-    setTempCol(arr)
-    data.forEach((element) => {
-      element[col.newCol] = element[col.replaceCol]
-      delete element[col.replaceCol]
-    })
-    setCol({...col, newCol: '', replaceCol: []})
-    
   }
-}
+
+  const handleReplace = () =>{
+    if(col.newCol === ''){
+      notif('error', 'New column anme is empty!')
+    }else{
+      let arr = []
+
+      let index = tempCol.findIndex((obj => obj.title === col.replaceCol))
+      tempCol[index].title = col.newCol
+      tempCol.forEach((col) => {
+        arr.push(checkColumnType(col.type, col.title))
+      })
+      setTempCol(arr)
+      data.forEach((element) => {
+        element[col.newCol] = element[col.replaceCol]
+        delete element[col.replaceCol]
+      })
+      setCol({...col, newCol: '', replaceCol: []})
+      
+    }
+  }
 
   function handleColumnToDelete(value) { //handling deleting column
     setstate({...state, removeCol: value})
@@ -251,8 +247,6 @@ const handleReplace = () =>{
     }
    setTempCol(tempColArr)
   }
-
-
 
   async function saveToDB(){
     const dataToSend ={
@@ -363,11 +357,8 @@ const handleReplace = () =>{
                         <CheckSquareFilled />
                       </Button>
                     </Tooltip>
-                    <Tooltip placement='top' title='Camera Column'>
-                      <Button disabled={state.disableCol} onClick={addCameraColumn} >
-                        <CameraFilled />
-                      </Button>
-                    </Tooltip>
+                    
+                    
                   </div>
                 </div>
                 <div style={{display:'grid'}}>

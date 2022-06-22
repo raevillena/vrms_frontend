@@ -19,7 +19,8 @@ const EditProject = (props) => {
     
     const initialValues = {projectName: props.data.record.projectName, assignee: props.data.record.projectLeaderID, assigneeName: props.data.record.projectLeader, 
         program:props.data.programs.programID, programName:props.data.programs.programName, deadline:moment(props.data.programs.deadline), fundingAgency: props.data.record.fundingAgency,
-        fundingCategory: props.data.record.fundingCategory}
+        fundingCategory: props.data.record.fundingCategory
+    }
    
     function handleChange(value) {   //for assigning user
         let tempArray = []
@@ -40,9 +41,9 @@ const EditProject = (props) => {
 
     function handleProgramChange(value) {
         setProject({...project, program: value})
-      }
+    }
 
-      function onChange(date) {
+    function onChange(date) {
         setProject({...project, deadline:moment( date)})
     }
 

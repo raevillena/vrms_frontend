@@ -25,7 +25,7 @@ const EditGallery = (props) => {
             studyID: props.data.studyID})
     }, [props.data])
 
-    function handleChangeActive(value) {   
+    function handleChangeActive(value) {   //deleting or retrieving
         setstate({...state, active: value})
     }
 

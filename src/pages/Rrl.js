@@ -73,10 +73,10 @@ const Rrl = () => {
 
   async function updateDB(){
     try {
-        let res = await onUpdateRrl({studyID: studyObj.STUDY.studyID, rrl: dataToSaveBackend, user: userObj.USER.name})
-        notif('success', res.data.message)
+      let res = await onUpdateRrl({studyID: studyObj.STUDY.studyID, rrl: dataToSaveBackend, user: userObj.USER.name})
+      notif('success', res.data.message)
     } catch (error) {
-        notif('error', "Error in saving document!")
+      notif('error', "Error in saving document!")
     }
   }
 

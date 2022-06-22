@@ -227,28 +227,24 @@ const Files = () => {
             },
       ];
 
-      const handleCancel = () => {
+      const handleCancel = () => { //cancel modal for gallery
         setIsModalVisible(false);
         setgalleryProps('')
       };
-      const handleCancel2 = () => {
+      const handleCancel2 = () => { //cancel modal for file task 
         setIsModalVisible2(false);
         setFileTaskProps('')
       };
 
-      const edit_data = (data) => {
-        console.log('data',data)
+      const edit_data = (data) => { //editing data in table for gallery
       let objIndex = galleryData.findIndex((obj => obj.key === data.id));
-      console.log(objIndex)
       galleryData[objIndex].caption = data.caption
       galleryData[objIndex].studyID = data.studyID
       galleryData[objIndex].active = data.active
     }
 
-    const edit_data2 = (data) => {
-        console.log('data',data)
+    const edit_data2 = (data) => { //editing data in table for file task
       let objIndex = fileTaskData.findIndex((obj => obj.key === data.id));
-      console.log(objIndex)
       fileTaskData[objIndex].description = data.description
       fileTaskData[objIndex].taskID = data.taskID
       fileTaskData[objIndex].active = data.active

@@ -54,23 +54,23 @@ const Study = () => {
         });
       };
 
-      const showModal = () => {
-        setIsModalVisible(true);
-      };
+    const showModal = () => {
+    setIsModalVisible(true);
+    };
 
     
-      const handleCancel = () => {
-        setIsModalVisible(false);
-        form.resetFields()
-        setStudy({...study, assignee: [], title: "", deadline: "", budget: "" ,startDate: ''})
-      };
+    const handleCancel = () => {
+    setIsModalVisible(false);
+    form.resetFields()
+    setStudy({...study, assignee: [], title: "", deadline: "", budget: "" ,startDate: ''})
+    };
       
-      function handleChange(value) {   //for assigning user
+    function handleChange(value) {   //for assigning user
         let tempArray =[]
         value.forEach(id => {
             userData.forEach(user => {
                 if(user.value === id){
-                   tempArray.push(user.name)
+                    tempArray.push(user.name)
                 }
             });
         });
@@ -80,6 +80,7 @@ const Study = () => {
     function handleChangeInFundingCat(value) {   //for assigning user
         setStudy({...study, fundingCategory: value})
     }
+    
     useEffect(() => {
         async function getUsers(){
             let resultUsers = await onGetAllUsers()

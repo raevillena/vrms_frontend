@@ -75,8 +75,8 @@ const EditDataGrid = (props) => {
   }
 
   
-  var timer;
-  const timerIdRef = useRef(0);
+var timer;
+const timerIdRef = useRef(0);
  
 
 const runTimer = () => {
@@ -105,11 +105,11 @@ async function backup(){
 }
 
   function update(){
-      //clearTimeout(timer)
-      clearInterval(timerIdRef.current);
-      timerIdRef.current = 0;
-      updateDB(dataToSend, props.data.id.tableID ,userObj.USER.name)
-      props.func({'data': dataToSend, 'id':props.data.id.tableID});
+    //clearTimeout(timer)
+    clearInterval(timerIdRef.current);
+    timerIdRef.current = 0;
+    updateDB(dataToSend, props.data.id.tableID ,userObj.USER.name)
+    props.func({'data': dataToSend, 'id':props.data.id.tableID});
   }
 
   function startStop(){
@@ -323,7 +323,7 @@ async function backup(){
   }
   
   useEffect(() => {
-    socket.on('receive-columns', msg => {
+    socket.on('receive-columns', msg => { //sending websocket the column added
       try {
         if(msg === null|| msg=== undefined || msg === ''){
             return
@@ -335,7 +335,7 @@ async function backup(){
         notif('error', error)
       }
     })
-    socket.on('receive-columns-delete', msg => {
+    socket.on('receive-columns-delete', msg => { //sending websocket the column to delete
       try {
         if(msg === null|| msg=== undefined || msg === ''){
             return
@@ -349,7 +349,7 @@ async function backup(){
       } catch (error) {
         notif('error', error)
     }}) 
-    socket.on('receive-replace-col', msg => {
+    socket.on('receive-replace-col', msg => { //sending websocket the column to replace
       try {
         if(msg === null|| msg=== undefined || msg === ''){
             return
@@ -402,7 +402,7 @@ async function backup(){
     setState({...state, toRemoveColumn: value})
   }
 
-  function handleColumnToReplace(value) { //setting column to delete
+  function handleColumnToReplace(value) { //setting column to replace
     setCol({...col, replaceCol: value})
   }
 
@@ -452,25 +452,25 @@ async function backup(){
   }
 
   const handleReplace = () =>{
-      if(col.newCol === ''){
-        notif('error', 'New column anme is empty!')
-      }else{
-        let arr = []
+    if(col.newCol === ''){
+      notif('error', 'New column anme is empty!')
+    }else{
+      let arr = []
 
-        let index = tempCol.findIndex((obj => obj.title === col.replaceCol))
-        tempCol[index].title = col.newCol
-        tempCol.forEach((col) => {
-          arr.push(checkColumnType(col.type, col.title))
-        })
-        setTempCol(arr)
-        datagridData.forEach((element) => {
-          element[col.newCol] = element[col.replaceCol]
-          delete element[col.replaceCol]
-        })
-        emitReplaceCol({columns: tempCol, data: datagridData}, props.data.id.tableID)
-        setCol({...col, newCol: '', replaceCol: []})
-        
-      }
+      let index = tempCol.findIndex((obj => obj.title === col.replaceCol))
+      tempCol[index].title = col.newCol
+      tempCol.forEach((col) => {
+        arr.push(checkColumnType(col.type, col.title))
+      })
+      setTempCol(arr)
+      datagridData.forEach((element) => {
+        element[col.newCol] = element[col.replaceCol]
+        delete element[col.replaceCol]
+      })
+      emitReplaceCol({columns: tempCol, data: datagridData}, props.data.id.tableID)
+      setCol({...col, newCol: '', replaceCol: []})
+      
+    }
   }
 
   return (

@@ -32,9 +32,9 @@ const Methodology = () => {
   async function download(){
     try {
       var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
-          "xmlns:w='urn:schemas-microsoft-com:office:word' "+
-          "xmlns='http://www.w3.org/TR/REC-html40'>"+
-          "<head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
+        "xmlns:w='urn:schemas-microsoft-com:office:word' "+
+        "xmlns='http://www.w3.org/TR/REC-html40'>"+
+        "<head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
       var footer = "</body></html>";
       var sourceHTML = header+markup+footer;
       
@@ -73,10 +73,10 @@ const Methodology = () => {
 
   async function updateDB(){
     try {
-        await onUpdateMethodology({studyID: studyObj.STUDY.studyID, methodology: dataToSaveBackend, user: userObj.USER.name})
-        notif('success', "Document updated!")
+      await onUpdateMethodology({studyID: studyObj.STUDY.studyID, methodology: dataToSaveBackend, user: userObj.USER.name})
+      notif('success', "Document updated!")
     } catch (error) {
-        notif('error', "Error in saving document!")
+      notif('error', "Error in saving document!")
     }
   }
 
@@ -117,26 +117,26 @@ const Methodology = () => {
     <div>
       {loading? <Spin indicator={antIcon} className="spinner" /> :
       <div style={{justifyContent:'space-between', flexDirection:'column', display:'flex'}}>
-          <div style={{lineHeight: '20px', pointerEvents: userObj.USER.category === 'director' ? 'none' : 'initial'}}>
-              <Editor editorState={editorState}
-              toolbarClassName="toolbarClassName"
-              wrapperClassName="wrapperClassName"
-              editorClassName="editorClassName"
-              toolbar={{
-                  inline: { inDropdown: true },
-                  list: { inDropdown: true },
-                  textAlign: { inDropdown: true },
-                  link: { inDropdown: true },
-                  history: { inDropdown: true },
-                  image: { uploadCallback: uploadImageCallBack, alt: { present: true, mandatory: true }, previewImage: true }
-                }}
-                  onEditorStateChange={onEditorStateChange}
-              />
-          </div>
-          <div style={{display:'flex', justifyContent:'flex-end', lineHeight: '20px', gap:'5px'}}>
+        <div style={{lineHeight: '20px', pointerEvents: userObj.USER.category === 'director' ? 'none' : 'initial'}}>
+          <Editor editorState={editorState}
+          toolbarClassName="toolbarClassName"
+          wrapperClassName="wrapperClassName"
+          editorClassName="editorClassName"
+          toolbar={{
+              inline: { inDropdown: true },
+              list: { inDropdown: true },
+              textAlign: { inDropdown: true },
+              link: { inDropdown: true },
+              history: { inDropdown: true },
+              image: { uploadCallback: uploadImageCallBack, alt: { present: true, mandatory: true }, previewImage: true }
+            }}
+              onEditorStateChange={onEditorStateChange}
+          />
+        </div>
+        <div style={{display:'flex', justifyContent:'flex-end', lineHeight: '20px', gap:'5px'}}>
           <Button type='primary' style={{display: userObj.USER.category === 'director' ? 'none' : 'initial'}} onClick={updateDB}>Save</Button>
           <Button type='primary' onClick={download}>Download</Button>
-          </div>
+        </div>
       </div>}
     </div>
   )

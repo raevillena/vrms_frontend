@@ -40,14 +40,12 @@ const AddTask = () => {
         setIsModalVisible(false);
         form.resetFields()
         setTask({...task, deadline: '', description: '', title: '', assignee: []})
-  
       };
     
       const handleCancel = () => {
         setIsModalVisible(false);
         form.resetFields()
         setTask({...task, deadline: '', description: '', title: '', assignee:[]})
-   
       };
 
 

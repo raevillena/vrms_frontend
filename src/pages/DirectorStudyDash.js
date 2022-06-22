@@ -39,7 +39,7 @@ const DirectorStudyDash = (props) => {
       setStudyData(tempStudyData)
       }
       getStudies()
-}, [projectObj.PROJECT])
+  }, [projectObj.PROJECT])
 
 useEffect(() => {
     if(props.data === null||props.data ===undefined||props.data === ''){
@@ -224,7 +224,7 @@ return (
         <div > 
           <Table size="small" scroll={{ x: 1500, y: 1000 }} style={{margin: '15px'}} dataSource={studyData} columns={columns} ></Table>
         </div>
-         }
+        }
   </div>
     )
 }

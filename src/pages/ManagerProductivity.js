@@ -9,51 +9,51 @@ import { useSelector } from 'react-redux';
     let userObj = useSelector(state => state.user)
 
     const [data, setData] = useState([
-        { month: 'January', value: 0 },
-        { month: 'February', value: 0},
-        { month: 'March', value: 0 },
-        { month: 'April', value: 0 },
-        { month: 'May', value: 0 },
-        { month: 'June', value: 0 },
-        { month: 'July', value: 0 },
-        { month: 'August', value: 0 },
-        { month: 'September', value: 0 },
-        { month: 'October', value: 0 },
-        { month: 'November', value: 0 },
-        { month: 'December', value: 0 },
+      { month: 'January', value: 0 },
+      { month: 'February', value: 0},
+      { month: 'March', value: 0 },
+      { month: 'April', value: 0 },
+      { month: 'May', value: 0 },
+      { month: 'June', value: 0 },
+      { month: 'July', value: 0 },
+      { month: 'August', value: 0 },
+      { month: 'September', value: 0 },
+      { month: 'October', value: 0 },
+      { month: 'November', value: 0 },
+      { month: 'December', value: 0 },
     ])
+
     useEffect(() => {
-       try {
-            async function getData(){
-                let res = await  onGetTaskCreatedbyManager(userObj.USER._id)
-                let arr = res.data.tasks
-                const monthName = item => moment(item.deadline, 'YYYY-MM-DD').format('MM');
-                const result = _.groupBy(arr, monthName);
-                let tempArray =[]
-            
-                for (let i = 1; i < 13; i++) {
-                 if(result[i] === undefined || result[i] === null){
-                     tempArray.push({
-                         month: moment(i, 'MM').format('MMMM'),
-                         value: 0
-                     }) 
-                 } else{
-                     let completed = _.filter(result[i], {status: 'COMPLETED'});
-                     let denominator = result[i].length
-                     let percentage = completed.length/denominator
-                     tempArray.push({
-                         month: moment(i, 'MM').format('MMMM'),
-                         value: percentage*100
-                     }) 
-                 }
-                }
-                setData(tempArray)
-             }
-             getData()  
-        } catch (error) {
-            alert(error)
-        }
-        
+      try {
+        async function getData(){
+          let res = await  onGetTaskCreatedbyManager(userObj.USER._id)
+          let arr = res.data.tasks
+          const monthName = item => moment(item.deadline, 'YYYY-MM-DD').format('MM');
+          const result = _.groupBy(arr, monthName);
+          let tempArray =[]
+      
+          for (let i = 1; i < 13; i++) {
+            if(result[i] === undefined || result[i] === null){
+                tempArray.push({
+                    month: moment(i, 'MM').format('MMMM'),
+                    value: 0
+                }) 
+            } else{
+                let completed = _.filter(result[i], {status: 'COMPLETED'});
+                let denominator = result[i].length
+                let percentage = completed.length/denominator
+                tempArray.push({
+                    month: moment(i, 'MM').format('MMMM'),
+                    value: percentage*100
+                }) 
+            }
+          }
+          setData(tempArray)
+          }
+          getData()  
+      } catch (error) {
+        alert(error)
+      }
     }, [])
 
   const config = {

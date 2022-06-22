@@ -96,7 +96,7 @@ const EditStudy = (props) => {
             dateCreated:moment(props.data.dateCreated)})
     }, [props.data])
 
-    function handleChangeInFundingCat(value) {   //for assigning user
+    function handleChangeInFundingCat(value) {   //for changing in funding category
         setStudy({...study, fundingCategory: value})
     }
 
@@ -112,19 +112,19 @@ const EditStudy = (props) => {
         setStudy({...study, assignee: value, assigneeName: tempArray})
     }
 
-    function handleChangeActive(value) {   
+    function handleChangeActive(value) {   //for deleting or retrieving
         setStudy({...study, active: value})
     }
 
-    function handleChangeStatus(value) {   
+    function handleChangeStatus(value) {  //for changing status 
         setStudy({...study, status: value})
     }
 
-    function onChange(date) {
+    function onChange(date) { //for changing deadline
         setStudy({...study, deadline:moment( date)})
     }
 
-    function onChangeCreated(date) {
+    function onChangeCreated(date) { //for creation date
         setStudy({...study, dateCreated:moment( date)})
     }
 

@@ -29,7 +29,7 @@ const AddProgram = () => {
         });
       };
 
-    function handleChangeInFundingCat(value) {   //for assigning user
+    function handleChangeInFundingCat(value) {   //for changes in funding category
         setProject({...project, fundingCategory: value})
     }
 
@@ -75,7 +75,7 @@ const AddProgram = () => {
         setProject({...project, assignee: value, assigneeName: tempArray})
     }
 
-    function handleProgramChange(value) {
+    function handleProgramChange(value) { // for assigning program
         console.log(value)
         let tempArray =[]
         programData.forEach(prog => {
@@ -90,7 +90,7 @@ const AddProgram = () => {
         }
       }
 
-    async function onSubmit(){
+    async function onSubmit(){ // creating project
         try {
           let result =  await onProjectCreate(project)
           notif("success",result.data.message)
@@ -101,12 +101,12 @@ const AddProgram = () => {
            notif("error",error.response.data.message)
         }
     }
-    function onChange(date) {
+    function onChange(date) { //for change in deadline
         setProject({...project, deadline: date})
     }
 
 
-    async function onSubmitProgram(){
+    async function onSubmitProgram(){ //creating program
         try {
           let result =  await onProgramCreate(project)
           notif("success",result.data.message1)

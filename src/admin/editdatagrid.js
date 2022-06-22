@@ -43,13 +43,13 @@ const EditDatagrid = (props) => {
         form.resetFields()
     }, [props.data])
       
-    async function handleUpdate(){
+    async function handleUpdate(){ //updating datagrid data
      let res = await onUpdateDatagridAdmin(datagrid)
      props.func(datagrid);
         notif('info', res.data.message)
     }
 
-    function handleChangeActive(value) {   
+    function handleChangeActive(value) {   //deleting or retrieving
         setDatagrid({...datagrid, active: value})
     }
 

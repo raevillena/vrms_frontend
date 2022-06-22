@@ -11,7 +11,6 @@ const LayoutComponent = ({children}) => {
     const dispatch = useDispatch();
 
     const click = async (key) => {
-        console.log(key)
         history.push(`${key.key}`)
     }
 

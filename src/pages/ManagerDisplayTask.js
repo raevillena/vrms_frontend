@@ -37,7 +37,7 @@ const ManagerDisplayTask = (props) => {
         {label: 'Assignee', key: 'assignee'},
         {label: 'Deadline', key: 'deadline'},
         {label: 'Status', key: 'status'},
-      ])
+    ])
       
 
     const dataForm = new FormData()
@@ -47,69 +47,68 @@ const ManagerDisplayTask = (props) => {
     const notif = (type, message) => {
         notification[type]({
           message: 'Notification Title',
-          description:
-            message,
+          description: message,
         });
-      };
+    };
 
-      const handleCancel = () => {
-        setIsModalVisible(false);
-      };
+    const handleCancel = () => {
+    setIsModalVisible(false);
+    };
 
-      useEffect(()=>{
+    useEffect(()=>{
+    try {
+        const handleDataFetch = async() => {
+            const response = await onGetManagerCSV(studyObj.STUDY.studyID)
+            let x = response.data.tasks
+            let tempData = []
+            for (let i = 0; i < x.length; i++) {
+                tempData.push({
+                    title: x[i].tasksTitle,
+                    description:  x[i].tasksDescription,
+                    verification:  x[i].verification,
+                    status:  x[i].status,
+                    objective:  x[i].objective,
+                    deadline: moment( x[i].deadline).format('YYYY-MM-DD'),
+                    assignee:  x[i].assigneeName.join(),
+                })
+            }
+            setFileDataDownload(tempData)
+            };
+        handleDataFetch(); 
+    } catch (error) {
+        console.log(error)
+    }
+    }, [])
+
+    useEffect(() => {
         try {
-            const handleDataFetch = async() => {
-                const response = await onGetManagerCSV(studyObj.STUDY.studyID)
-                let x = response.data.tasks
-                let tempData = []
-                for (let i = 0; i < x.length; i++) {
-                   tempData.push({
-                       title: x[i].tasksTitle,
-                       description:  x[i].tasksDescription,
-                       verification:  x[i].verification,
-                       status:  x[i].status,
-                       objective:  x[i].objective,
-                       deadline: moment( x[i].deadline).format('YYYY-MM-DD'),
-                       assignee:  x[i].assigneeName.join(),
-                   })
-                }
-                setFileDataDownload(tempData)
-              };
-            handleDataFetch(); 
+        if(props.data == null||undefined||''){
+            return
+        }else{
+        let newTask = props.data.newTask
+        if(obj === newTask.objective){
+            setTask([...task, {
+                key: newTask._id,
+                id: newTask._id,
+                createdBy: newTask.createdBy,
+                createdByName: newTask.createdByName,
+                dateCreated: moment(newTask.dateCreated).format('MM-DD-YYYY'),
+                lastUpdated: moment(newTask.lastUpdated).format('MM-DD-YYYY'),
+                deadline: moment(newTask.deadline).format('MM-DD-YYYY'),
+                taskTitle: newTask.tasksTitle,
+                taskDescription: newTask.tasksDescription,
+                verification: newTask.verification,
+                assignee: newTask.assigneeName,
+                status: [newTask.status]
+            }])
+        }else{
+            return
+        }
+        }
         } catch (error) {
             console.log(error)
-        }
-      }, [])
-
-      useEffect(() => {
-         try {
-            if(props.data == null||undefined||''){
-                return
-            }else{
-            let newTask = props.data.newTask
-            if(obj === newTask.objective){
-                setTask([...task, {
-                    key: newTask._id,
-                    id: newTask._id,
-                    createdBy: newTask.createdBy,
-                    createdByName: newTask.createdByName,
-                    dateCreated: moment(newTask.dateCreated).format('MM-DD-YYYY'),
-                    lastUpdated: moment(newTask.lastUpdated).format('MM-DD-YYYY'),
-                    deadline: moment(newTask.deadline).format('MM-DD-YYYY'),
-                    taskTitle: newTask.tasksTitle,
-                    taskDescription: newTask.tasksDescription,
-                    verification: newTask.verification,
-                    assignee: newTask.assigneeName,
-                    status: [newTask.status]
-                }])
-            }else{
-                return
-            }
-            }
-         } catch (error) {
-             console.log(error)
-         } 
-      }, [props.data])
+        } 
+    }, [props.data])
     
     async function callback(key) {
             setObj(key)
@@ -213,49 +212,49 @@ const ManagerDisplayTask = (props) => {
             }} 
                type='link'>MANAGE</Button>
             },
-      ];
+    ];
 
-      const fileColumn = [
-        {
-          title: 'File Description',
-          dataIndex: 'description',
-          key: 'description',
-          ellipsis: true,
+    const fileColumn = [
+    {
+        title: 'File Description',
+        dataIndex: 'description',
+        key: 'description',
+        ellipsis: true,
+    },
+    {
+        title: 'Uploaded By',
+        dataIndex: 'uploadedBy',
+        key: 'uploadedBy',
+        ellipsis: true,
+    },
+    {
+        title: 'Date Uploaded',
+        dataIndex: 'dateUploaded',
+        key: 'dateUploaded',
+        ellipsis: true,
+    },
+    {
+        title: 'Action',
+        dataIndex: 'action',
+        key: 'action',
+        render: (text, record, index) => 
+            <div>
+                <Button type='link' onClick={()=>saveFile(record.file)}>Download</Button>
+            </div>
         },
-        {
-          title: 'Uploaded By',
-          dataIndex: 'uploadedBy',
-          key: 'uploadedBy',
-          ellipsis: true,
-        },
-        {
-          title: 'Date Uploaded',
-          dataIndex: 'dateUploaded',
-          key: 'dateUploaded',
-          ellipsis: true,
-        },
-        {
-            title: 'Action',
-            dataIndex: 'action',
-            key: 'action',
-            render: (text, record, index) => 
-                <div>
-                    <Button type='link' onClick={()=>saveFile(record.file)}>Download</Button>
-                </div>
-            },
-      ];
+    ];
 
-      const saveFile = async (value) => {
-        await onDownloadFileTask(value)
-      };
+    const saveFile = async (value) => {
+    await onDownloadFileTask(value)
+    };
 
-      const prop = {
-        beforeUpload: file => {
-          return file ? false : Upload.LIST_IGNORE;
-        },
-      };
+    const prop = {
+    beforeUpload: file => {
+        return file ? false : Upload.LIST_IGNORE;
+    },
+    };
 
-      const upload = async(value)=>{
+    const upload = async(value)=>{
         dataForm.append("file", value.image.fileList[0].originFileObj)
         dataForm.append("task", taskModal.id )               
         dataForm.append("description", description)
@@ -274,20 +273,20 @@ const ManagerDisplayTask = (props) => {
     }
 
    
-        async function getFileList(value){
-            let files = value.data.tasksfile
-            let tempFiles = []
-            for (let i = 0; i < files.length; i++) {
-                tempFiles.push({
-                    key : files[i]._id,
-                    file: files[i].file,
-                    description: files[i].description,
-                    dateUploaded: moment(files[i].uploadDate    ).format('MM-DD-YYYY'),
-                    uploadedBy: files[i].uploadedByName
-                }) 
-            }
-            setfileData(tempFiles)
+    async function getFileList(value){
+        let files = value.data.tasksfile
+        let tempFiles = []
+        for (let i = 0; i < files.length; i++) {
+            tempFiles.push({
+                key : files[i]._id,
+                file: files[i].file,
+                description: files[i].description,
+                dateUploaded: moment(files[i].uploadDate    ).format('MM-DD-YYYY'),
+                uploadedBy: files[i].uploadedByName
+            }) 
         }
+        setfileData(tempFiles)
+    }
   
 
 

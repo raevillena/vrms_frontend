@@ -47,7 +47,7 @@ const Methodology = () => {
       document.body.removeChild(fileDownload);
       notif('success', 'Download sucessful!')
     } catch (error) {
-        notif('error', 'Download Failed!')
+      notif('error', 'Download Failed!')
     }
   }
 
@@ -73,10 +73,10 @@ const Methodology = () => {
 
   async function updateDB(){
     try {
-        let result = await onUpdateResultsAndDiscussion({studyID: studyObj.STUDY.studyID, resultsAndDiscussion: dataToSaveBackend, user: userObj.USER.name})
-        notif('success', result.data.message)
+      let result = await onUpdateResultsAndDiscussion({studyID: studyObj.STUDY.studyID, resultsAndDiscussion: dataToSaveBackend, user: userObj.USER.name})
+      notif('success', result.data.message)
     } catch (error) {
-        notif('error', "Error in saving document!")
+      notif('error', "Error in saving document!")
     }
   }
 

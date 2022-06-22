@@ -67,12 +67,12 @@ const Project = () => {
         setIsModalVisible(true);
       };
     
-      const handleCancel = () => {
+    const handleCancel = () => {
         setIsModalVisible(false);
         form.resetFields()
         form1.resetFields()
         setProject({...project, projectName: '', assignee: [userObj.USER._id]})
-      };
+    };
 
     useEffect(() => {
         async function getUsers(){
@@ -140,116 +140,116 @@ const Project = () => {
     return (
         <div>  
             <Layout1>      
-            <ManagerDash data={forProps}/>
-            <Tooltip placement="top" title="Add Study">
-                <Button className="add-button" onClick={showModal}>+</Button>
-            </Tooltip>
-            <Modal title="Add Project" visible={isModalVisible} footer={null} onCancel={handleCancel}>
-            <Tabs centered>
-                <TabPane tab="Program" key="1">
-                    <Row justify="center">
-                        <Form onFinish={onSubmitProgram} form={form} initialValues={initialValues}>
-                            <Form.Item name='programName' label="Program Name"
-                            rules={[
-                                {
-                                required: true,
-                                message: 'Please input program name!',
-                                },
-                            ]}>
-                                <Input placeholder="Enter Program Name" onChange={e => setProject({...project, programName: e.target.value})} value={project.programName} ></Input>
-                            </Form.Item>
-                            <Form.Item name='fundingCategory' label="Funding Category">
-                            <Select style={{ width: '100%' }} onChange={handleChangeInFundingCat} value={project.fundingCategory} placeholder="Select funding category">
-                                <Option key={1} value={'GIA'}>{'GIA'}</Option>
-                                <Option key={2} value={'GAA'}>{'GAA'}</Option>
-                            </Select>
-                            </Form.Item>
-                            <Form.Item name='fundingAgency' label="Funding Agency"
-                            rules={[
-                                {
-                                message: 'Please input funding agency!',
-                                },
-                            ]}>
-                                <Input placeholder="Enter Funding Agency" onChange={e => setProject({...project, fundingAgency: e.target.value})} value={project.fundingAgency} ></Input>
-                            </Form.Item>
-                            <Form.Item name='assigneeName'  label="Assignee">
-                                <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} value={project.assignee} placeholder="Assign Project">
-                                {userData.map(user => (
-                                    <Option key={user.key} value={user.value}>{user.name}</Option>
-                                ))}
-                                </Select>
-                            </Form.Item>
+                <ManagerDash data={forProps}/>
+                <Tooltip placement="top" title="Add Study">
+                    <Button className="add-button" onClick={showModal}>+</Button>
+                </Tooltip>
+                <Modal title="Add Project" visible={isModalVisible} footer={null} onCancel={handleCancel}>
+                    <Tabs centered>
+                        <TabPane tab="Program" key="1">
                             <Row justify="center">
-                            <Button htmlType="submit" block  style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE PROGRAM</Button>
+                                <Form onFinish={onSubmitProgram} form={form} initialValues={initialValues}>
+                                    <Form.Item name='programName' label="Program Name"
+                                    rules={[
+                                        {
+                                        required: true,
+                                        message: 'Please input program name!',
+                                        },
+                                    ]}>
+                                        <Input placeholder="Enter Program Name" onChange={e => setProject({...project, programName: e.target.value})} value={project.programName} ></Input>
+                                    </Form.Item>
+                                    <Form.Item name='fundingCategory' label="Funding Category">
+                                    <Select style={{ width: '100%' }} onChange={handleChangeInFundingCat} value={project.fundingCategory} placeholder="Select funding category">
+                                        <Option key={1} value={'GIA'}>{'GIA'}</Option>
+                                        <Option key={2} value={'GAA'}>{'GAA'}</Option>
+                                    </Select>
+                                    </Form.Item>
+                                    <Form.Item name='fundingAgency' label="Funding Agency"
+                                    rules={[
+                                        {
+                                        message: 'Please input funding agency!',
+                                        },
+                                    ]}>
+                                        <Input placeholder="Enter Funding Agency" onChange={e => setProject({...project, fundingAgency: e.target.value})} value={project.fundingAgency} ></Input>
+                                    </Form.Item>
+                                    <Form.Item name='assigneeName'  label="Assignee">
+                                        <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} value={project.assignee} placeholder="Assign Project">
+                                        {userData.map(user => (
+                                            <Option key={user.key} value={user.value}>{user.name}</Option>
+                                        ))}
+                                        </Select>
+                                    </Form.Item>
+                                    <Row justify="center">
+                                        <Button htmlType="submit" block  style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE PROGRAM</Button>
+                                    </Row>
+                                </Form>
                             </Row>
-                        </Form>
-                    </Row>
-                </TabPane>
-                <TabPane tab="Project" key="2">
-                    <Row justify="center">
-                    <Form onFinish={onSubmit} form={form1} initialValues={initialValues}>
-                        <Form.Item name='projectName' label="Project Name"
-                        rules={[
-                            {
-                            required: true,
-                            message: 'Please input project name!',
-                            },
-                        ]}>
-                            <Input placeholder="Enter Project Name" onChange={e => setProject({...project, projectName: e.target.value})} value={project.projectName}></Input>
-                        </Form.Item>
-                        <Form.Item name='program'  label="Program" rules={[
-                            {
-                            required: true,
-                            message: 'Please select a program!',
-                            },
-                        ]}>
-                            <Select  style={{ width: '100%' }} onChange={handleProgramChange} value={project.program}  placeholder="Select Program">
-                            {programData.map(program => (
-                                <Option key={program.value} value={program.value}>{program.name}</Option>
-                            ))}
-                                <Option key={'others'} value={'others'}>Others</Option>
-                            </Select>
-                        </Form.Item>
-                        <Form.Item name='fundingCategory' label="Funding Category">
-                            <Select style={{ width: '100%' }} onChange={handleChangeInFundingCat} value={project.fundingCategory} placeholder="Select funding category">
-                                <Option key={1} value={'GIA'}>{'GIA'}</Option>
-                                <Option key={2} value={'GAA'}>{'GAA'}</Option>
-                            </Select>
-                        </Form.Item>
-                        <Form.Item name='fundingAgency' label="Funding Agency"
-                            rules={[
-                                {
-                                message: 'Please input funding agency!',
-                                },
-                            ]}>
-                                <Input placeholder="Enter Funding Agency" onChange={e => setProject({...project, fundingAgency: e.target.value})} value={project.fundingAgency} ></Input>
-                        </Form.Item>
-                        <Form.Item  label="Deadline"
-                                rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input deadline of study!',
-                                },
-                                ]}>
-                            <Space direction="vertical">
-                            <DatePicker value={project.deadline} onChange={onChange}/>
-                            </Space>
-                        </Form.Item>
-                        <Form.Item name='assigneeName'  label="Assignee">
-                            <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} value={project.assignee} placeholder="Assign Project">
-                            {userData.map(user => (
-                                <Option key={user.key} value={user.value}>{user.name}</Option>
-                            ))}
-                            </Select>
-                        </Form.Item>
-                        <Row justify="center">
-                        <Button htmlType="submit" block  style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE PROJECT</Button>
-                        </Row>
-                </Form>
-            </Row>
-                </TabPane>
-            </Tabs>
-            </Modal>
+                        </TabPane>
+                        <TabPane tab="Project" key="2">
+                            <Row justify="center">
+                                <Form onFinish={onSubmit} form={form1} initialValues={initialValues}>
+                                    <Form.Item name='projectName' label="Project Name"
+                                    rules={[
+                                        {
+                                        required: true,
+                                        message: 'Please input project name!',
+                                        },
+                                    ]}>
+                                        <Input placeholder="Enter Project Name" onChange={e => setProject({...project, projectName: e.target.value})} value={project.projectName}></Input>
+                                    </Form.Item>
+                                    <Form.Item name='program'  label="Program" rules={[
+                                        {
+                                        required: true,
+                                        message: 'Please select a program!',
+                                        },
+                                    ]}>
+                                        <Select  style={{ width: '100%' }} onChange={handleProgramChange} value={project.program}  placeholder="Select Program">
+                                        {programData.map(program => (
+                                            <Option key={program.value} value={program.value}>{program.name}</Option>
+                                        ))}
+                                            <Option key={'others'} value={'others'}>Others</Option>
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item name='fundingCategory' label="Funding Category">
+                                        <Select style={{ width: '100%' }} onChange={handleChangeInFundingCat} value={project.fundingCategory} placeholder="Select funding category">
+                                            <Option key={1} value={'GIA'}>{'GIA'}</Option>
+                                            <Option key={2} value={'GAA'}>{'GAA'}</Option>
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item name='fundingAgency' label="Funding Agency"
+                                        rules={[
+                                            {
+                                            message: 'Please input funding agency!',
+                                            },
+                                        ]}>
+                                            <Input placeholder="Enter Funding Agency" onChange={e => setProject({...project, fundingAgency: e.target.value})} value={project.fundingAgency} ></Input>
+                                    </Form.Item>
+                                    <Form.Item  label="Deadline"
+                                            rules={[
+                                            {
+                                                required: true,
+                                                message: 'Please input deadline of study!',
+                                            },
+                                            ]}>
+                                        <Space direction="vertical">
+                                        <DatePicker value={project.deadline} onChange={onChange}/>
+                                        </Space>
+                                    </Form.Item>
+                                    <Form.Item name='assigneeName'  label="Assignee">
+                                        <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} value={project.assignee} placeholder="Assign Project">
+                                        {userData.map(user => (
+                                            <Option key={user.key} value={user.value}>{user.name}</Option>
+                                        ))}
+                                        </Select>
+                                    </Form.Item>
+                                    <Row justify="center">
+                                        <Button htmlType="submit" block  style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE PROJECT</Button>
+                                    </Row>
+                                </Form>
+                            </Row>
+                        </TabPane>
+                    </Tabs>
+                </Modal>
             </Layout1>
         </div>
     )

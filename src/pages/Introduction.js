@@ -30,25 +30,25 @@ const Introduction = () => {
   };
 
   async function download(){
-      try {
-        var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
-            "xmlns:w='urn:schemas-microsoft-com:office:word' "+
-            "xmlns='http://www.w3.org/TR/REC-html40'>"+
-            "<head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
-        var footer = "</body></html>";
-        var sourceHTML = header+markup+footer;
-        
-        var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
-        var fileDownload = document.createElement("a");
-        document.body.appendChild(fileDownload);
-        fileDownload.href = source;
-        fileDownload.download = `${studyObj.STUDY.title}Introduction.doc`;
-        fileDownload.click();
-        document.body.removeChild(fileDownload);
-        notif('success', "Download Successful!")
-      } catch (error) {
-        notif('error', "Download Failed!")
-      }
+    try {
+      var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
+        "xmlns:w='urn:schemas-microsoft-com:office:word' "+
+        "xmlns='http://www.w3.org/TR/REC-html40'>"+
+        "<head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
+      var footer = "</body></html>";
+      var sourceHTML = header+markup+footer;
+      
+      var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+      var fileDownload = document.createElement("a");
+      document.body.appendChild(fileDownload);
+      fileDownload.href = source;
+      fileDownload.download = `${studyObj.STUDY.title}Introduction.doc`;
+      fileDownload.click();
+      document.body.removeChild(fileDownload);
+      notif('success', "Download Successful!")
+    } catch (error) {
+      notif('error', "Download Failed!")
+    }
   }
 
   function uploadImageCallBack(file) { 
@@ -73,10 +73,10 @@ const Introduction = () => {
 
   async function updateDB(){
     try {
-        await onUpdateIntroduction({studyID: studyObj.STUDY.studyID, introduction: dataToSaveBackend, user: userObj.USER.name})
-        notif('success', "Document Updated!")
+      await onUpdateIntroduction({studyID: studyObj.STUDY.studyID, introduction: dataToSaveBackend, user: userObj.USER.name})
+      notif('success', "Document Updated!")
     } catch (error) {
-        notif('error', 'Error in saving document!')
+      notif('error', 'Error in saving document!')
     }
   }
 
@@ -119,17 +119,17 @@ const Introduction = () => {
       <div style={{justifyContent:'space-between', flexDirection:'column', display:'flex'}}>
           <div style={{lineHeight: '20px', pointerEvents: userObj.USER.category === 'director' ? 'none' : 'initial'}}>
               <Editor editorState={editorState}
-                    toolbarClassName="toolbarClassName"
-                    wrapperClassName="wrapperClassName"
-                    editorClassName="editorClassName"
-                    toolbar={{
-                      inline: { inDropdown: true },
-                      list: { inDropdown: true },
-                      textAlign: { inDropdown: true },
-                      link: { inDropdown: true },
-                      history: { inDropdown: true },
-                      image: { uploadCallback: uploadImageCallBack, alt: { present: true, mandatory: true }, previewImage: true }
-                    }}
+                  toolbarClassName="toolbarClassName"
+                  wrapperClassName="wrapperClassName"
+                  editorClassName="editorClassName"
+                  toolbar={{
+                    inline: { inDropdown: true },
+                    list: { inDropdown: true },
+                    textAlign: { inDropdown: true },
+                    link: { inDropdown: true },
+                    history: { inDropdown: true },
+                    image: { uploadCallback: uploadImageCallBack, alt: { present: true, mandatory: true }, previewImage: true }
+                  }}
                   onEditorStateChange={onEditorStateChange}
               />
           </div>

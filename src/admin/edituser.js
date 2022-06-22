@@ -63,7 +63,7 @@ const EditUser = (props) => {
         }
     }
 
-    function handleChange(value) {
+    function handleChange(value) { //for category changing
         setUser({...user, category: value})
       }
 

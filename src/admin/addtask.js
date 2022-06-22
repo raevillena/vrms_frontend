@@ -30,7 +30,7 @@ const Addtask = () => {
         });
       };
 
-    function deadline(date) {
+    function deadline(date) { //setting deadline
         setTask({...task, deadline: date})
     }
 
@@ -102,7 +102,7 @@ const Addtask = () => {
        onGetUser()
     }, [])
 
-    async function onSubmit(){
+    async function onSubmit(){ //creating task
         try {
         let newTask = await onTaskCreate(task)
         notif('info', newTask.data.message)

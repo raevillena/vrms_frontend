@@ -22,21 +22,21 @@ const ChangePassword = () => {
       });
     };
 
-       //for change password
-       async function onSubmit(){
-        try {
-           const data = {
-             id : userObj.USER._id,
-             newPass: password.newPassword,
-             oldPass: password.oldPassword
-           }
-            if(password.newPassword !== password.confrimPassword){
-             notif('error', 'Password does not match!')
-            }else{
-               let result = await onChangePassword(data)
-               form.resetFields()
-               setPassword({oldPassword: "", newPassword: "", confrimPassword: ""})
-               notif('success', result.data.message)
+    //for change password
+    async function onSubmit(){
+      try {
+          const data = {
+            id : userObj.USER._id,
+            newPass: password.newPassword,
+            oldPass: password.oldPassword
+          }
+          if(password.newPassword !== password.confrimPassword){
+            notif('error', 'Password does not match!')
+          }else{
+              let result = await onChangePassword(data)
+              form.resetFields()
+              setPassword({oldPassword: "", newPassword: "", confrimPassword: ""})
+              notif('success', result.data.message)
            }
         } catch (error) {
            notif('error', 'Invalid Password!')

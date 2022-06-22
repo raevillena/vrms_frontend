@@ -46,7 +46,7 @@ const EditProgram = (props) => {
         setProgram({...program, assignee: assign, assigneeName: tempArray})
     }
 
-    function handleChangeActive(value) {   
+    function handleChangeActive(value) {   //deleting or retrieving
         setProgram({...program, active: value})
     }
 
@@ -54,7 +54,7 @@ const EditProgram = (props) => {
         setProgram({...program, status: value})
     }
 
-    function handleChangeInFundingCat(value) {   //for assigning user
+    function handleChangeInFundingCat(value) {   //for changing funding category
         setProgram({...program, fundingCategory: value})
     }
 

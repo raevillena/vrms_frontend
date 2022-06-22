@@ -13,6 +13,7 @@ import { onUploadTaskFile, onDownloadFileTask } from '../services/uploadAPI';
 
 
 const { Panel } = Collapse;
+
 const DisplayTasks = () => {
     const studyObj = useSelector(state => state.study)
     const userObj = useSelector(state => state.user)
@@ -30,36 +31,36 @@ const DisplayTasks = () => {
     const [form] = Form.useForm();
     
     async function callback(key) {
-            setData(task.id)
-            const forBackend = {
-                studyName: studyObj.STUDY.studyID,
-                assignee: userObj.USER._id,
-                objective: key
-            }        
-            let resultTask = await onGetAllTask(forBackend)
-            let loopTask = resultTask.data.tasks
-            console.log(loopTask)
-            let tempTaskData = []
-             for(let i = 0; i < loopTask.length; i++){ 
-               tempTaskData.push({
-                 key: loopTask[i]._id,
-                 id: loopTask[i]._id,
-                 createdBy: loopTask[i].createdBy,
-                 createdByName: loopTask[i].createdByName,
-                 dateCreated: moment(loopTask[i].dateCreated).format('MM-DD-YYYY'),
-                 lastUpdated: moment(loopTask[i].lastUpdated).format('MM-DD-YYYY'),
-                 deadline: moment(loopTask[i].deadline).format('MM-DD-YYYY'),
-                 taskTitle: loopTask[i].tasksTitle,
-                 taskDescription: loopTask[i].tasksDescription,
-                 assignee: loopTask[i].assigneeName.join(),
-                 objectives: loopTask[i].objectives,
-                 status: [loopTask[i].status]
-               });
-             }
-             setTask(tempTaskData)
-      }
+    setData(task.id)
+    const forBackend = {
+        studyName: studyObj.STUDY.studyID,
+        assignee: userObj.USER._id,
+        objective: key
+    }        
+    let resultTask = await onGetAllTask(forBackend)
+    let loopTask = resultTask.data.tasks
+    console.log(loopTask)
+    let tempTaskData = []
+        for(let i = 0; i < loopTask.length; i++){ 
+        tempTaskData.push({
+            key: loopTask[i]._id,
+            id: loopTask[i]._id,
+            createdBy: loopTask[i].createdBy,
+            createdByName: loopTask[i].createdByName,
+            dateCreated: moment(loopTask[i].dateCreated).format('MM-DD-YYYY'),
+            lastUpdated: moment(loopTask[i].lastUpdated).format('MM-DD-YYYY'),
+            deadline: moment(loopTask[i].deadline).format('MM-DD-YYYY'),
+            taskTitle: loopTask[i].tasksTitle,
+            taskDescription: loopTask[i].tasksDescription,
+            assignee: loopTask[i].assigneeName.join(),
+            objectives: loopTask[i].objectives,
+            status: [loopTask[i].status]
+        });
+        }
+        setTask(tempTaskData)
+    }
 
-      async function markComplete(key){
+    async function markComplete(key){
         try {
           let result =  await onUpdateTaskUser({taskId: taskModal.id, status: "SUBMITTED"})
             setTaskModal({...taskModal, status: ['SUBMITTED']})
@@ -72,7 +73,7 @@ const DisplayTasks = () => {
 
     const handleCancel = () => {
         setIsModalVisible(false);
-      };
+    };
 
 
     const columns = [
@@ -183,7 +184,7 @@ const DisplayTasks = () => {
 
     const saveFile = async (value) => {
         await onDownloadFileTask(value)
-      };
+    };
 
     async function getFileList(value){
         let files = value.data.tasksfile

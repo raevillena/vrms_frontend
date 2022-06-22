@@ -31,7 +31,7 @@ const EditFileTask = (props) => {
             uploadedByID: props.data.uploadedByID })
     }, [props.data])
 
-    function handleChangeActive(value) {   
+    function handleChangeActive(value) {   //deleting or retrieving
         setstate({...state, active: value})
     }
 

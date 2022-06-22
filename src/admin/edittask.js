@@ -91,15 +91,15 @@ const Edittask = (props) => {
             objective: props.data.objectives})
     }, [props.data])
 
-    function handleChangeActive(value) {   
+    function handleChangeActive(value) {   //for deleting and retrieving
         setTask({...task, active: value})
     }
 
-    function handleChangeStatus(value) {   
+    function handleChangeStatus(value) {  //for changes in status 
         setTask({...task, status: value})
         }
 
-    function onChange(date) {
+    function onChange(date) { //for changes in deadline
         setTask({...task, deadline:moment( date)})
     }
 

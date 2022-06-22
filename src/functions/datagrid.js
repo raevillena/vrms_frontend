@@ -37,7 +37,6 @@ export async function downloadCSV(data, ID, title, user){
 
 
 export async function downloadCSVonCreate(data, title){
-  
     try {
       let csv = ''
     let keys = Object.keys(data[0])

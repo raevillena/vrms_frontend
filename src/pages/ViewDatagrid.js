@@ -133,7 +133,7 @@ const CameraComponent = React.memo(
 
   useEffect(() => {
     socket.on('receive-datagrid', msg => {
-        setDatagridData(msg)
+      setDatagridData(msg)
     })
   }, [])
 

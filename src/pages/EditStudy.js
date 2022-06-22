@@ -19,12 +19,13 @@ const formItemLayout = {
       sm: { span: 20 },
     },
   };
-  const formItemLayoutWithOutLabel = {
+  
+const formItemLayoutWithOutLabel = {
     wrapperCol: {
       xs: { span: 24, offset: 0 },
       sm: { span: 20, offset: 4 },
     },
-  };
+};
 
 const EditStudy = (props) => {
     const userObj = useSelector(state => state.user)
