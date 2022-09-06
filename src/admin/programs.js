@@ -5,7 +5,7 @@ import { onGetAllPrograms } from '../services/projectAPI';
 import {Table, Button, List, Space, Input, Modal} from 'antd'
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
-import {SearchOutlined} from '@ant-design/icons';
+import {SearchOutlined, CheckSquareOutlined} from '@ant-design/icons';
 import EditProgram from './editprogram';
 
 const Programs = () => {
@@ -176,7 +176,7 @@ const Programs = () => {
             key: 'action',
             fixed: 'right',
             render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row', gap:'5px'}}>
-              <Button type='link' onClick={()=>{
+              <Button className='editButton' type='link' onClick={()=>{
                  // let prop = {record, index, programs}
                   setprops(record)
                   setIsModalVisible(true)

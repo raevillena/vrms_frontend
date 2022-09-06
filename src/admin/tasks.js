@@ -1,7 +1,9 @@
 import LayoutComponent from './layout';
 import  { useState, useEffect } from 'react';
 import {Table, Input, Button, Tag, Space, Modal} from 'antd'
-import {SearchOutlined} from '@ant-design/icons'
+// import {SearchOutlined, SyncOutlined} from '@ant-design/icons'
+
+import { SearchOutlined, CheckCircleOutlined, SyncOutlined } from '@ant-design/icons'
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
 import { onGetAllTaskAdmin } from '../services/taskAPI';
@@ -199,9 +201,10 @@ const Tasks = () => {
               render: status => (
                 <span>
                   {status.map(stat => {
-                    let color = stat === 'ONGOING' ? 'geekblue' : 'green';
+                    let color = stat === 'ONGOING' ? 'geekblue' : 'green';                    
+                    let iconState = color === 'green' ? true : false;
                     return (
-                      <Tag color={color} key={stat}>
+                      <Tag icon={iconState ? <CheckCircleOutlined/> :<SyncOutlined/>} color={color} key={stat}>
                         {stat}
                       </Tag>
                     );

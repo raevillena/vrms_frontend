@@ -195,7 +195,7 @@ const Projects = () => {
             key: 'action',
             fixed: 'right',
             render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row'}}>
-              <Button type='link' onClick={()=>{
+              <Button className='editButton' type='link' onClick={()=>{
                   setProps(record)
                   setIsModalVisible(true)
               }} >Edit</Button>

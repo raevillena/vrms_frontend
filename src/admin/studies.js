@@ -2,11 +2,10 @@ import LayoutComponent from './layout';
 import  { useState, useEffect } from 'react';
 import { onGetAllStudy } from '../services/studyAPI';
 import {Table, Input, Button, Tag, Space, Progress, Modal} from 'antd'
-import {SearchOutlined} from '@ant-design/icons'
+import { SearchOutlined, CheckCircleOutlined, SyncOutlined } from '@ant-design/icons'
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
 import EditStudy from './editstudy';
-
 
 const Studies = () => {
     const [state, setstate] = useState()
@@ -196,27 +195,28 @@ const Studies = () => {
           onFilter: (value, record) => record.fundingCategory.indexOf(value) === 0, 
           },
         {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-            filters: [
-                { text: 'Completed', value: 'COMPLETED' },
-                { text: 'Ongoing', value: 'ONGOING' },
-              ],
-              onFilter: (value, record) => record.status.indexOf(value) === 0,
-              width: '15%',
-              render: status => (
-                <span>
-                  {status.map(stat => {
-                    let color = stat === 'Ongoing' ? 'geekblue' : 'green';
-                    return (
-                      <Tag color={color} key={stat}>
-                        {stat.toUpperCase()}
-                      </Tag>
-                    );
-                  })}
-                </span>
-              ),
+          title: 'Status',
+          dataIndex: 'status',
+          key: 'status',
+          filters: [
+              { text: 'Completed', value: 'COMPLETED' },
+              { text: 'Ongoing', value: 'ONGOING' },
+            ],
+            onFilter: (value, record) => record.status.indexOf(value) === 0,
+            width: '15%',
+            render: status => (
+              <span>
+                {status.map(stat => {
+                  let color = stat === 'ONGOING' ? 'geekblue' : 'green';
+                  let iconState = color === 'green' ? true : false;
+                  return (
+                    <Tag icon={iconState ? <CheckCircleOutlined/> :<SyncOutlined/>} color={color} key={stat}>
+                      {stat.toUpperCase()}
+                    </Tag>
+                  );
+                })}
+              </span>
+            ),
         },
         {
             title: 'Active',
@@ -234,7 +234,7 @@ const Studies = () => {
             key: 'action',
             fixed: 'right',
             width: '15%',
-            render: (text, record, index) => <Button type='link' onClick={()=>{
+            render: (text, record, index) => <Button className='editButton' type='link' onClick={()=>{
                 setprops(record)
                 setIsModalVisible(true)
             }}>Edit</Button>
