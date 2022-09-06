@@ -199,7 +199,7 @@ const Tasks = () => {
               render: status => (
                 <span>
                   {status.map(stat => {
-                    let color = stat === 'Ongoing' ? 'geekblue' : 'green';
+                    let color = stat === 'ONGOING' ? 'geekblue' : 'green';
                     return (
                       <Tag color={color} key={stat}>
                         {stat}
@@ -225,7 +225,7 @@ const Tasks = () => {
             key: 'action',
             fixed: 'right',
             width: '15%',
-            render: (text, record, index) => <Button type='link'
+            render: (text, record, index) => <Button className='editButton' type='link'
                 onClick={()=>{
                     setProps(record)
                     setIsModalVisible(true)
@@ -256,7 +256,7 @@ const Tasks = () => {
     return (
         <div>
             <LayoutComponent>
-                <Table size="small"  dataSource={state} columns={columns}></Table>
+                <Table className='hatdog' size="small"  dataSource={state} columns={columns}></Table>
             </LayoutComponent>
             <Modal title="Edit Task" visible={isModalVisible} footer={null} onCancel={handleCancel}>
                 <Edittask data={props} func={edit_data}/>
