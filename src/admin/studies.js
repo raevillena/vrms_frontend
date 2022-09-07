@@ -2,11 +2,10 @@ import LayoutComponent from './layout';
 import  { useState, useEffect } from 'react';
 import { onGetAllStudy } from '../services/studyAPI';
 import {Table, Input, Button, Tag, Space, Progress, Modal} from 'antd'
-import {SearchOutlined} from '@ant-design/icons'
+import { SearchOutlined, CheckCircleOutlined, SyncOutlined ,ExclamationOutlined } from '@ant-design/icons'
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
 import EditStudy from './editstudy';
-
 
 const Studies = () => {
     const [state, setstate] = useState()
@@ -31,7 +30,7 @@ const Studies = () => {
                     updatedBy: data[i].updatedBy,
                     deadline: moment(data[i].deadline).format('MM-DD-YYYY'),
                     objectives: data[i].objectives,
-                    active: data[i].active.toString(),
+                    active: [data[i].active.toString()],
                     budget: data[i].budget,
                     assignee: data[i].assignee,
                     assigneeName: data[i].assigneeName, 
@@ -196,27 +195,28 @@ const Studies = () => {
           onFilter: (value, record) => record.fundingCategory.indexOf(value) === 0, 
           },
         {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-            filters: [
-                { text: 'Completed', value: 'COMPLETED' },
-                { text: 'Ongoing', value: 'ONGOING' },
-              ],
-              onFilter: (value, record) => record.status.indexOf(value) === 0,
-              width: '15%',
-              render: status => (
-                <span>
-                  {status.map(stat => {
-                    let color = stat === 'Ongoing' ? 'geekblue' : 'green';
-                    return (
-                      <Tag color={color} key={stat}>
-                        {stat.toUpperCase()}
-                      </Tag>
-                    );
-                  })}
-                </span>
-              ),
+          title: 'Status',
+          dataIndex: 'status',
+          key: 'status',
+          filters: [
+              { text: 'Completed', value: 'COMPLETED' },
+              { text: 'Ongoing', value: 'ONGOING' },
+            ],
+            onFilter: (value, record) => record.status.indexOf(value) === 0,
+            width: '15%',
+            render: status => (
+              <span>
+                {status.map(stat => {
+                  let color = stat === 'ONGOING' ? 'geekblue' : 'green';
+                  let iconState = color === 'green' ? true : false;
+                  return (
+                    <Tag icon={iconState ? <CheckCircleOutlined/> :<SyncOutlined spin/>} color={color} key={stat}>
+                      {stat.toUpperCase()}
+                    </Tag>
+                  );
+                })}
+              </span>
+            ),
         },
         {
             title: 'Active',
@@ -227,14 +227,27 @@ const Studies = () => {
                 { text: 'False', value: 'false' },
             ],
             onFilter: (value, record) => record.active.indexOf(value) === 0,
+            render: active => (
+              <span>
+                {active.map(activeStat => {
+                  let isActive = activeStat === 'true' ? true : false;
+                  let color = isActive === true ? 'green' : 'error';
+                  return (
+                    <Tag icon={isActive ? <CheckCircleOutlined/> : <ExclamationOutlined/>} color={color} key={isActive}>
+                      {activeStat.toUpperCase()}
+                    </Tag>
+                  );
+                })}
+              </span>
+          ),
         },
         {
             title: 'Action',
             dataIndex: 'action',
             key: 'action',
             fixed: 'right',
-            width: '15%',
-            render: (text, record, index) => <Button type='link' onClick={()=>{
+            width: '70px',
+            render: (text, record, index) => <Button className='editButton' type='link' onClick={()=>{
                 setprops(record)
                 setIsModalVisible(true)
             }}>Edit</Button>

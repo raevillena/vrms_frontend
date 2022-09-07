@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Button, Table,Progress, Spin, Popconfirm, notification, List, Tag, Input, Modal, Space } from 'antd'
 import '../styles/CSS/Userdash.css'
+import '../styles/CSS/Layout.css'
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
@@ -252,7 +253,7 @@ const programColumns = [
     key: 'action',
     fixed: 'right',
     render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row', gap:'5px'}}>
-      <Button type='link' onClick={() =>{
+      <Button className='editButton' type='link' onClick={() =>{
          let prop = {record, index}
         setProgramProps(prop)
         showModal()
@@ -273,8 +274,7 @@ const expandedRowRender = programs => {
       width: '15%',
       render: (leader) => <List size="small"
       dataSource={leader}
-      renderItem={item => <List.Item>{item}</List.Item>}
-      >
+      renderItem={item => <List.Item>{item}</List.Item>}>
       </List>
     },
     {
@@ -347,7 +347,7 @@ const expandedRowRender = programs => {
       fixed: 'right',
       width: '15%',
       render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row'}}>
-        <Button type='link' onClick = {
+        <Button className='editButton' type='link' onClick = {
         (e) => {
           dispatch({
             type: "SET_PROJECT",
@@ -357,7 +357,7 @@ const expandedRowRender = programs => {
         }
       } >MANAGE</Button>
 
-        <Button type='link' onClick={() =>{
+        <Button className='editButton' type='link' onClick={() =>{
           let prop = {record, index, programs}
           setProjectProps(prop)
           showModalProject()}} >EDIT</Button>
@@ -370,7 +370,7 @@ const expandedRowRender = programs => {
                 notif("error", result.data.message)
             }
           }>
-      <Button type='link' danger>DELETE</Button>
+      <Button className='editButton' type='link' danger>DELETE</Button>
       </Popconfirm>
       </div>
     },
@@ -444,7 +444,9 @@ const edit_data = (data) => {
          <div>  
             <Table size="small" className="components-table-demo-nested"  expandable={{ expandedRowRender }} onExpand={(isExpanded, record) =>{
               setExpandedRow([record.key])
-              setId(isExpanded ? record.programID : undefined)}}scroll={{ x: 1200, y: 1000 }}  dataSource={programData} expandedRowKeys={expandedRow} columns={programColumns} style={{margin: '15px'}} 
+              setId(isExpanded ? record.programID : undefined)}}
+              dataSource={programData} expandedRowKeys={expandedRow} 
+              columns={programColumns} style={{margin: '15px'}} 
             />
           </div>
            }

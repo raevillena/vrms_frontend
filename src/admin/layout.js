@@ -2,7 +2,7 @@ import { Layout, Menu } from 'antd';
 import {useHistory} from 'react-router-dom'
 import { useDispatch } from 'react-redux';
 import { onUserLogout } from '../services/authAPI';
-
+import '../styles/CSS/Layout.css'
 
 const { Header, Content } = Layout;
 
@@ -39,7 +39,7 @@ const LayoutComponent = ({children}) => {
         <Layout>
             <Header className="header">
             <div className="logo" />
-            <Menu  mode="horizontal" defaultSelectedKeys={['1']}>
+            <Menu className='header-menu' mode="horizontal" defaultSelectedKeys={['1']}>
                 <Menu.Item key="/" onClick={click}>Create</Menu.Item>
                 <Menu.Item key="/admin/users" onClick={click}>Users</Menu.Item>
                 <Menu.Item key="/admin/programs" onClick={click}>Programs</Menu.Item>

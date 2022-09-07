@@ -2,15 +2,15 @@
 import LayoutComponent from './layout';
 import React, {useEffect, useState} from 'react';
 import { onGetAllPrograms } from '../services/projectAPI';
-import {Table, Button, List, Space, Input, Modal} from 'antd'
+import {Table, Tag, Button, List, Space, Input, Modal} from 'antd'
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
-import {SearchOutlined} from '@ant-design/icons';
+import {SearchOutlined, CheckSquareOutlined, ExclamationOutlined, CheckCircleOutlined} from '@ant-design/icons';
 import EditProgram from './editprogram';
 
 const Programs = () => {
     const [search, setSearch] = useState({searchText: '', searchedColumn:''})
-    const [programData, setProgramData]= useState(["spinme"])
+    const [programData, setProgramData]= useState([])
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [props, setprops] = useState()
 
@@ -27,10 +27,10 @@ const Programs = () => {
                     programLeader:  programResult[j].assigneeName,
                     programLeaderID:  programResult[j].assignee,
                     dateCreated: moment( programResult[j].dateCreated).format('MM-DD-YYYY'),
-                    active: programResult[j].active.toString(),
+                    active: [programResult[j].active.toString()],
                     createdBy: programResult[j].createdBy,
                     editedBy: programResult[j].editedBy,
-                    status: programResult[j].status,
+                    status: [programResult[j].status],
                     fundingCategory: programResult[j].fundingCategory,
                     fundingAgency: programResult[j].fundingAgency
                 });
@@ -164,19 +164,34 @@ const Programs = () => {
             title: 'Active',
             dataIndex: 'active',
             key: 'active',
+            width:'8%',
             filters: [
                 { text: 'True', value: 'true' },
                 { text: 'False', value: 'false' },
             ],
             onFilter: (value, record) => record.active.indexOf(value) === 0,
+            render: active => (
+                <span>
+                  {active.map(activeStat => {
+                    let isActive = activeStat === 'true' ? true : false;
+                    let color = isActive === true ? 'green' : 'error';
+                    return (
+                      <Tag icon={isActive ? <CheckCircleOutlined/> : <ExclamationOutlined/>} color={color} key={isActive}>
+                        {activeStat.toUpperCase()}
+                      </Tag>
+                    );
+                  })}
+                </span>
+            ),
         },
           {
             title: 'Action',
             dataIndex: 'action',
             key: 'action',
             fixed: 'right',
+            width:'70px',
             render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row', gap:'5px'}}>
-              <Button type='link' onClick={()=>{
+              <Button className='editButton' type='link' onClick={()=>{
                  // let prop = {record, index, programs}
                   setprops(record)
                   setIsModalVisible(true)
@@ -197,7 +212,7 @@ const Programs = () => {
       programData[objIndex].assigneeName = data.assigneeName
       programData[objIndex].lastUpdated = moment(Date.now).format('MM-DD-YYYY')
       programData[objIndex].programName = data.programName
-      programData[objIndex].active = data.active
+      programData[objIndex].active = [data.active]
       programData[objIndex].fundingAgency = data.fundingAgency
       programData[objIndex].fundingCategory = data.fundingCategory
       programData[objIndex].deadline = moment(data.deadline).format('MM-DD-YYYY')

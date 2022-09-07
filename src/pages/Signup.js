@@ -1,5 +1,5 @@
 
-import { Input, Button, Form, Checkbox, notification } from 'antd';
+import { Input, Button, Form, Checkbox, notification, Alert } from 'antd';
 import React, {useState} from 'react';
 import { onUserCreate } from '../services/userAPI';
 
@@ -22,9 +22,9 @@ const Signup = () => {
 
     async function onSubmit(){
         try {
-           let res = await onUserCreate(user) 
-           form.resetFields()
-           setUser({name: " ", email:" ", title:" ",password:" ", category: ' '})
+            let res = await onUserCreate(user) 
+            form.resetFields()
+            setUser({name: " ", email:" ", title:" ",password:" ", category: ' '})
             notif('success', res.data.message)
         } catch (error) {
             notif('error',error.response.data)
@@ -47,8 +47,8 @@ const Signup = () => {
                         rules={[
                             {
                                 type:'email',
-                            required: true,
-                            message: 'Please input your email!',
+                                required: true,
+                                message: 'Please input your email!',
                             },
                         ]}>
                     <Input placeholder="Enter Email" onChange={e => setUser({...user, email: e.target.value})} value={user.email}></Input>
@@ -62,6 +62,7 @@ const Signup = () => {
                         ]}>
                     <Input placeholder="Enter Job Title" onChange={e => setUser({...user, title: e.target.value})} value={user.title}></Input>
                 </Form.Item>
+
                 <Form.Item name="Category" label="Category"
                         rules={[
                         {
@@ -69,8 +70,13 @@ const Signup = () => {
                             message: 'Please select category!',
                         },
                         ]}>   
-                    <Checkbox onChange={e => setUser({...user, category: e.target.checked? "user": ""})} value="user">User</Checkbox>
+                    
+                    <div>
+                        <Checkbox onChange={e => setUser({...user, category: e.target.checked? "user": ""})} value="user">User</Checkbox>
+                    </div>
+                    <div>
                     <Checkbox onChange={e => setUser({...user, category: e.target.checked? "manager": ""})} value="manager">Manager</Checkbox>
+                    </div>
                     <Checkbox onChange={e => setUser({...user, category: e.target.checked? "director": ""})} value="director">Director</Checkbox>
                 </Form.Item>
                 <Button onClick={onSubmit} block style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE USER</Button>

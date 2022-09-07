@@ -14,22 +14,26 @@ const Dashboard = () => {
             <div className="site-card-wrapper">
                 <Row gutter={16}>
                     <Col className="gutter-row" span={6}>
-                        <Card style={{borderRadius: '10px', height: '100vh', fontStyle: 'Montserrat', marginTop: 16}} title='Create User'>
+                        <Card style={{borderRadius: '10px', height: '100vh', 
+                            fontStyle: 'Montserrat', marginTop: 16}} title='Create User'>
                             <Signup/>
                         </Card>
                     </Col>
                     <Col className="gutter-row" span={6}>
-                        <Card style={{borderRadius: '10px', height: '100vh', fontStyle: 'Montserrat', marginTop: 16}} title='Create Program/Project'>
+                        <Card style={{borderRadius: '10px', height: '100vh', 
+                            fontStyle: 'Montserrat', marginTop: 16}} title='Create Program/Project'>
                             <AddProgram/>
                         </Card>
                     </Col>
                     <Col className="gutter-row" span={6}>
-                        <Card style={{borderRadius: '10px', height: '100vh', fontStyle: 'Montserrat', marginTop: 16}} title='Create Study'>
+                        <Card style={{borderRadius: '10px', height: '100vh', 
+                        fontStyle: 'Montserrat', marginTop: 16}} title='Create Study'>
                             <AddStudy/>
                         </Card>
                     </Col>
                     <Col className="gutter-row" span={6}>
-                        <Card style={{borderRadius: '10px', height: '100vh', fontStyle: 'Montserrat', marginTop: 16}} title='Create Task'>
+                        <Card style={{borderRadius: '10px', height: '100vh', 
+                        fontStyle: 'Montserrat', marginTop: 16}} title='Create Task'>
                             <Addtask/>
                         </Card>
                     </Col>

@@ -256,7 +256,7 @@ router.post('/resetpasswordadmin', async(req, res) => {
       }
     })
   } catch (error) {
-   logger.log('error', `Error: resetpasswordadmin - ${err}`)
+   logger.log('error', `Error: resetpasswordadmin - ${error}`)
      res.status(500).json({message: error.message})
   }
 })

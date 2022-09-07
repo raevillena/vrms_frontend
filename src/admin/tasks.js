@@ -1,7 +1,9 @@
 import LayoutComponent from './layout';
 import  { useState, useEffect } from 'react';
 import {Table, Input, Button, Tag, Space, Modal} from 'antd'
-import {SearchOutlined} from '@ant-design/icons'
+// import {SearchOutlined, SyncOutlined} from '@ant-design/icons'
+
+import { SearchOutlined, CheckCircleOutlined, SyncOutlined, ExclamationOutlined } from '@ant-design/icons'
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
 import { onGetAllTaskAdmin } from '../services/taskAPI';
@@ -37,7 +39,7 @@ const Tasks = () => {
                     deadline: moment(data[i].deadline).format('MM-DD-YYYY'),
                     objectives: data[i].objective,
                     verification: data[i].verification,
-                    active: data[i].active.toString(),
+                    active: [data[i].active.toString()],
                     progress: data[i].progress,
                 })
             }
@@ -190,18 +192,19 @@ const Tasks = () => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
+            width:'110px',
             filters: [
                 { text: 'Completed', value: 'COMPLETED' },
                 { text: 'Ongoing', value: 'ONGOING' },
               ],
               onFilter: (value, record) => record.status.indexOf(value) === 0,
-              width: '15%',
               render: status => (
                 <span>
                   {status.map(stat => {
-                    let color = stat === 'Ongoing' ? 'geekblue' : 'green';
+                    let color = stat === 'ONGOING' ? 'geekblue' : 'green';                    
+                    let iconState = color === 'green' ? true : false;
                     return (
-                      <Tag color={color} key={stat}>
+                      <Tag icon={iconState ? <CheckCircleOutlined/> :<SyncOutlined spin/>} color={color} key={stat}>
                         {stat}
                       </Tag>
                     );
@@ -213,19 +216,33 @@ const Tasks = () => {
             title: 'Active',
             dataIndex: 'active',
             key: 'active',
+            width:'90px',
             filters: [
                 { text: 'True', value: 'true' },
                 { text: 'False', value: 'false' },
             ],
             onFilter: (value, record) => record.active.indexOf(value) === 0,
+            render: active => (
+              <span>
+                {active.map(activeStat => {
+                  let isActive = activeStat === 'true' ? true : false;
+                  let color = isActive === true ? 'green' : 'error';
+                  return (
+                    <Tag icon={isActive ? <CheckCircleOutlined/> : <ExclamationOutlined/>} color={color} key={isActive}>
+                      {activeStat.toUpperCase()}
+                    </Tag>
+                  );
+                })}
+              </span>
+            ),
         },
         {
             title: 'Action',
             dataIndex: 'action',
             key: 'action',
             fixed: 'right',
-            width: '15%',
-            render: (text, record, index) => <Button type='link'
+            width: '70px',
+            render: (text, record, index) => <Button className='editButton' type='link'
                 onClick={()=>{
                     setProps(record)
                     setIsModalVisible(true)
@@ -245,7 +262,7 @@ const Tasks = () => {
           state[objIndex].lastUpdated = moment(Date.now).format('MM-DD-YYYY')
           state[objIndex].title = data.title
           state[objIndex].description = data.description
-          state[objIndex].status = [data.status]
+          state[objIndex].status = data.status
           state[objIndex].active = data.active
           state[objIndex].objectives = data.objective
           state[objIndex].deadline = moment(data.deadline).format('MM-DD-YYYY')
@@ -256,7 +273,7 @@ const Tasks = () => {
     return (
         <div>
             <LayoutComponent>
-                <Table size="small"  dataSource={state} columns={columns}></Table>
+                <Table className='hatdog' size="small"  dataSource={state} columns={columns}></Table>
             </LayoutComponent>
             <Modal title="Edit Task" visible={isModalVisible} footer={null} onCancel={handleCancel}>
                 <Edittask data={props} func={edit_data}/>
