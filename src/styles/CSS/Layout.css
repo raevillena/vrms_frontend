@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
+.header{
+    font-family: 'roboto';
+    background-color: aqua;
+}
+.header-menu{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.site-layout-background{
+    /* background-color: rgb(29, 27, 27); */
+}
+
+.editButton{
+    background-color: #1eabd6;
+    color: black;
+    border-radius: 20;
+    height: 40px;
+    margin-right: 20px;
+}
+
+.ant-table-content {
+    background-color: rgb(192, 213, 214);
+}
+
+.userCategory{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-style: bold;
+}

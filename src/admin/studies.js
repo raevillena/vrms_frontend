@@ -30,7 +30,7 @@ const Studies = () => {
                     updatedBy: data[i].updatedBy,
                     deadline: moment(data[i].deadline).format('MM-DD-YYYY'),
                     objectives: data[i].objectives,
-                    active: data[i].active.toString(),
+                    active: [data[i].active.toString()],
                     budget: data[i].budget,
                     assignee: data[i].assignee,
                     assigneeName: data[i].assigneeName, 
@@ -210,7 +210,7 @@ const Studies = () => {
                   let color = stat === 'ONGOING' ? 'geekblue' : 'green';
                   let iconState = color === 'green' ? true : false;
                   return (
-                    <Tag icon={iconState ? <CheckCircleOutlined/> :<SyncOutlined/>} color={color} key={stat}>
+                    <Tag icon={iconState ? <CheckCircleOutlined/> :<SyncOutlined spin/>} color={color} key={stat}>
                       {stat.toUpperCase()}
                     </Tag>
                   );
@@ -233,7 +233,7 @@ const Studies = () => {
             dataIndex: 'action',
             key: 'action',
             fixed: 'right',
-            width: '15%',
+            width: '70px',
             render: (text, record, index) => <Button className='editButton' type='link' onClick={()=>{
                 setprops(record)
                 setIsModalVisible(true)

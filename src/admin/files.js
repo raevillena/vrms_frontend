@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import LayoutComponent from './layout'
-import {Table, Card, Button, Image, Space, Input, Modal} from 'antd'
+import {Table, Card, Button, Image, Space, Input, Modal, Tag} from 'antd'
 import { onGetAllFileTaskAdmin } from '../services/taskAPI'
 import moment from 'moment'
 import { onGetGalleryAdmin } from '../services/studyAPI'
 import Highlighter from 'react-highlight-words';
-import {SearchOutlined} from '@ant-design/icons';
+import {SearchOutlined, CheckCircleOutlined, ExclamationOutlined} from '@ant-design/icons';
 import EditGallery from './editgallery'
 import EditFileTask from './editfiletask'
 
@@ -35,7 +35,7 @@ const Files = () => {
                 uploadedBy: taskfile[i].uploadedByName,
                 uploadedByID: taskfile[i].uploadedByID,
                 uploadDate : moment(taskfile[i].uploadDate).format('MM-DD-YYYY'),
-                active: taskfile[i].active.toString()
+                active: [taskfile[i].active.toString()]
             })
         }
         setfileTaskData(temptaskFile)
@@ -44,7 +44,7 @@ const Files = () => {
                 key: galleryFile[i]._id,
                 studyID: galleryFile[i].studyID,
                 caption: galleryFile[i].caption,
-                active: galleryFile[i].active.toString(),
+                active: [galleryFile[i].active.toString()],
                 image: galleryFile[i].images
             })
         }
@@ -158,19 +158,34 @@ const Files = () => {
             title: 'Active',
             dataIndex: 'active',
             key: 'active',
+            width:'8%',
             filters: [
                 { text: 'True', value: 'true' },
                 { text: 'False', value: 'false' },
             ],
             onFilter: (value, record) => record.active.indexOf(value) === 0,
+            render: active => (
+              <span>
+                {active.map(activeStat => {
+                  let isActive = activeStat === 'true' ? true : false;
+                  let color = isActive === true ? 'green' : 'error';
+                  return (
+                    <Tag icon={isActive ? <CheckCircleOutlined/> : <ExclamationOutlined/>} color={color} key={isActive}>
+                      {activeStat.toUpperCase()}
+                    </Tag>
+                  );
+                })}
+              </span>
+            ),
           },
         {
             title: 'Action',
             dataIndex: 'action',
             key: 'action',
+            width:'10%',
             render: (text, record, index) => 
                 <div>
-                    <Button type='link' onClick={()=>{
+                    <Button className='editButton' type='link' onClick={()=>{
                         setFileTaskProps(record)
                         setIsModalVisible2(true)
                     }}>Edit</Button>
@@ -206,19 +221,34 @@ const Files = () => {
           title: 'Active',
           dataIndex: 'active',
           key: 'active',
+          width:"8%",
           filters: [
             { text: 'True', value: 'true' },
             { text: 'False', value: 'false' },
         ],
         onFilter: (value, record) => record.active.indexOf(value) === 0,
+        render: active => (
+          <span>
+            {active.map(activeStat => {
+              let isActive = activeStat === 'true' ? true : false;
+              let color = isActive === true ? 'green' : 'error';
+              return (
+                <Tag icon={isActive ? <CheckCircleOutlined/> : <ExclamationOutlined/>} color={color} key={isActive}>
+                  {activeStat.toUpperCase()}
+                </Tag>
+              );
+            })}
+          </span>
+        ),
         },
         {
             title: 'Action',
             dataIndex: 'action',
             key: 'action',
+            width:"10%",
             render: (text, record, index) => 
                 <div>
-                    <Button type='link' onClick={()=>{
+                    <Button className='editButton' type='link' onClick={()=>{
                         console.log(record)
                         setgalleryProps(record)
                         setIsModalVisible(true)

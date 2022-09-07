@@ -2,10 +2,10 @@
 import LayoutComponent from './layout';
 import React, {useEffect, useState} from 'react';
 import {onGetAllProject } from '../services/projectAPI';
-import {Table, Button, List, Space, Input, Progress, Modal} from 'antd'
+import {Table, Tag, Button, List, Space, Input, Progress, Modal} from 'antd'
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
-import {SearchOutlined} from '@ant-design/icons';
+import {SyncOutlined, SearchOutlined, CheckCircleOutlined, ExclamationOutlined} from '@ant-design/icons';
 import EditProject from './editproject';
 
 const Projects = () => {
@@ -30,8 +30,8 @@ const Projects = () => {
                         dateCreated: moment( projectResult[i].dateCreated).format('MM-DD-YYYY'),
                         dateUpdated: moment( projectResult[i].dateUpdated).format('MM-DD-YYYY'),
                         progress:  projectResult[i].progress,
-                        status: projectResult[i].status,
-                        active: projectResult[i].active.toString(),
+                        status: [projectResult[i].status],
+                        active: [projectResult[i].active.toString()],
                         fundingCategory: projectResult[i].fundingCategory,
                         fundingAgency: projectResult[i].fundingAgency,
                         programID: projectResult[i].program,
@@ -178,6 +178,19 @@ const Projects = () => {
                 { text: 'Ongoing', value: 'ONGOING' },
               ],
               onFilter: (value, record) => record.status.indexOf(value) === 0,
+              render: status => (
+                <span>
+                  {status.map(stat => {
+                    let color = stat === 'ONGOING' ? 'geekblue' : 'green';                    
+                    let iconState = color === 'green' ? true : false;
+                    return (
+                      <Tag icon={iconState ? <CheckCircleOutlined/> :<SyncOutlined spin/>} color={color} key={stat}>
+                        {stat}
+                      </Tag>
+                    );
+                  })}
+                </span>
+              )
           },
           {
             title: 'Active',
@@ -188,6 +201,19 @@ const Projects = () => {
                 { text: 'False', value: 'false' },
             ],
             onFilter: (value, record) => record.active.indexOf(value) === 0,
+            render: active => (
+              <span>
+                {active.map(activeStat => {
+                  let isActive = activeStat === 'true' ? true : false;
+                  let color = isActive === true ? 'green' : 'error';
+                  return (
+                    <Tag icon={isActive ? <CheckCircleOutlined/> : <ExclamationOutlined/>} color={color} key={isActive}>
+                      {activeStat.toUpperCase()}
+                    </Tag>
+                  );
+                })}
+              </span>
+            ),
         },
           {
             title: 'Action',

@@ -120,6 +120,7 @@ const Users = () => {
           title: 'Category',
           dataIndex: 'category',
           key: 'category',
+          width:'8%',
           filters: [
             { text: 'User', value: 'user' },
             { text: 'Manager', value: 'manager' },
@@ -131,8 +132,8 @@ const Users = () => {
               {category.map(cat => {
                 let color = cat === 'user' ? 'geekblue' : 'green';
                 return (
-                  <Tag color={color} key={cat}>
-                    {cat}
+                  <Tag className='userCategory' color={color} key={cat}>
+                    {cat.toUpperCase()}
                   </Tag>
                 );
               })}
@@ -144,9 +145,9 @@ const Users = () => {
             dataIndex: 'action',
             key: 'action',
             fixed: 'right',
-            width: '15%',
+            width: '5%',
             render: (text, record, index) => 
-            <Button type='link' onClick={()=>{
+            <Button className='editButton' type='link' onClick={()=>{
                 setprops(record)
                 setIsModalVisible(true)
             }}>
