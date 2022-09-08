@@ -12,15 +12,38 @@
 }
 
 .editButton{
-    background-color: #1eabd6;
+    background-color: #22df11;
     color: black;
     border-radius: 20;
     height: 40px;
     margin-right: 20px;
+    margin-left: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.deleteButton{
+    background-color: #d61e1e;
+    color: black;
+    border-radius: 20;
+    height: 40px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.manageButton{
+    background-color: #2393df;
+    color: black;
+    border-radius: 20;
+    height: 40px;
+    margin: 0;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .ant-table-content {
-    background-color: rgb(192, 213, 214);
+    /* background-color: rgb(192, 213, 214); */
+    padding-right: 20px;
 }
 
 .userCategory{
@@ -28,4 +51,8 @@
     justify-content: center;
     align-items: center;
     font-style: bold;
+}
+
+.tuma:hover{
+    background-color: red;
 }

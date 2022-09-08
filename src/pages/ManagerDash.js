@@ -271,7 +271,6 @@ const expandedRowRender = programs => {
       dataIndex: 'projectLeader',
       key: 'projectLeader',
       ...getColumnSearchProps('projectLeader'),
-      width: '15%',
       render: (leader) => <List size="small"
       dataSource={leader}
       renderItem={item => <List.Item>{item}</List.Item>}>
@@ -282,14 +281,12 @@ const expandedRowRender = programs => {
       dataIndex: 'projectName',
       key: 'projectName',
       ...getColumnSearchProps('projectName'),
-      width: '25%',
-      ellipsis: true,
+      ellipsis: false,
     },
     {
       title: 'Date Created',
       dataIndex: 'dateCreated',
       key: 'dateCreated',
-      width: '10%',
       
     },
     {
@@ -313,7 +310,6 @@ const expandedRowRender = programs => {
       title: 'Progress',
       dataIndex: 'progress',
       key: 'progress',
-      width: '10%',
       render: progress =>
        <Progress percent={progress} size="small" />,
     },
@@ -326,7 +322,6 @@ const expandedRowRender = programs => {
         { text: 'Ongoing', value: 'ONGOING' },
       ],
       onFilter: (value, record) => record.status.indexOf(value) === 0,
-      width: '10%',
       render: status => (
         <span>
           {status.map(stat => {
@@ -345,9 +340,8 @@ const expandedRowRender = programs => {
       dataIndex: 'action',
       key: 'action',
       fixed: 'right',
-      width: '15%',
       render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row'}}>
-        <Button className='editButton' type='link' onClick = {
+        <Button className='manageButton' type='link' onClick = {
         (e) => {
           dispatch({
             type: "SET_PROJECT",
@@ -362,24 +356,24 @@ const expandedRowRender = programs => {
           setProjectProps(prop)
           showModalProject()}} >EDIT</Button>
 
-      <Popconfirm title="Sure to delete?" onConfirm = {
-           async (key) => {
-                let id ={_id: record.key, user: userObj.USER._id}
-                let result = await onDeleteProject(id)
-                await handleRemove(record.key)
-                notif("error", result.data.message)
-            }
-          }>
-      <Button className='editButton' type='link' danger>DELETE</Button>
-      </Popconfirm>
-      </div>
+        <Popconfirm title="Sure to delete?" onConfirm = {
+          async (key) => {
+            let id ={_id: record.key, user: userObj.USER._id}
+            let result = await onDeleteProject(id)
+            await handleRemove(record.key)
+            notif("error", result.data.message)
+          }
+        }>
+        <Button className='deleteButton' type='error' danger>DELETE</Button>
+        </Popconfirm>
+        </div>
     },
   ];
   
   if(programData === ''){
     return <Spin className="spinner" />
   }else{
-    return <Table columns={columns} dataSource={projectData} pagination={false} scroll={{ x: 1200, y: 1000 }} />
+    return <Table columns={columns} dataSource={projectData} pagination={false}  /> //expanded table view
   }
 };
 

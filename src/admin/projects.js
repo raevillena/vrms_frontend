@@ -131,7 +131,6 @@ const Projects = () => {
             dataIndex: 'projectName',
             ...getColumnSearchProps('projectName'),
             key: 'projectName',
-            ellipsis: true,
           },
           {
             title: 'Project ID',
@@ -220,6 +219,7 @@ const Projects = () => {
             dataIndex: 'action',
             key: 'action',
             fixed: 'right',
+            width:'70px',
             render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row'}}>
               <Button className='editButton' type='link' onClick={()=>{
                   setProps(record)

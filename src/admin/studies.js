@@ -122,14 +122,14 @@ const Studies = () => {
             title: 'Study ID',
             dataIndex: 'studyID',
             key: 'studyID',
-            ellipsis: true,
+            ellipsis: false,
             ...getColumnSearchProps('studyID')
         },
         {
             title: 'Study Title',
             dataIndex: 'title',
             key: 'title',
-            ellipsis: true,
+            ellipsis: false,
             ...getColumnSearchProps('title')
         },
         {

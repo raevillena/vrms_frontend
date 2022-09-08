@@ -1,9 +1,9 @@
 import LayoutComponent from './layout';
 import  { useState, useEffect } from 'react';
-import {Table, Input, Button, Tag, Space, Modal} from 'antd'
+import {Table, Menu, Input, Button, Tag, Space, Modal} from 'antd'
 // import {SearchOutlined, SyncOutlined} from '@ant-design/icons'
 
-import { SearchOutlined, CheckCircleOutlined, SyncOutlined, ExclamationOutlined } from '@ant-design/icons'
+import { SearchOutlined, CheckCircleOutlined, SyncOutlined, ExclamationOutlined , MailOutlined, AppstoreOutlined, SettingOutlined} from '@ant-design/icons'
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
 import { onGetAllTaskAdmin } from '../services/taskAPI';
@@ -126,21 +126,21 @@ const Tasks = () => {
             title: 'Task Title',
             dataIndex: 'title',
             key: 'title',
-            ellipsis: true,
+            ellipsis: false,
             ...getColumnSearchProps('title')
         },
         {
             title: 'Task Description',
             dataIndex: 'description',
             key: 'description',
-            ellipsis: true,
+            ellipsis: false,
             ...getColumnSearchProps('description')
         },
         {
             title: 'Objectives',
             dataIndex: 'objectives',
             key: 'objectives',
-            ellipsis: true,
+            ellipsis: false,
             ...getColumnSearchProps('objectives')
         },
         {
@@ -269,7 +269,6 @@ const Tasks = () => {
           state[objIndex].verification = data.verification
           state[objIndex].progress = data.progress
       }
-
     return (
         <div>
             <LayoutComponent>
