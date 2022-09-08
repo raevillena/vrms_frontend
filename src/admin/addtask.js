@@ -6,7 +6,7 @@ import { onGetAllUser } from '../services/userAPI';
 import { onGetAllProject } from '../services/projectAPI';
 import { onGetAllStudyforProject } from '../services/studyAPI';
 import _ from 'lodash'
-
+const { TextArea }= Input
 const Addtask = () => {
 
     const userObj = useSelector(state => state.user)
@@ -122,7 +122,7 @@ const Addtask = () => {
                     message: 'Task Title is required.',
                     },
                 ]}>
-                    <Input placeholder="Enter Task Title" onChange={e => setTask({...task, title: e.target.value})} value={task.title}></Input>
+                    <TextArea autoSize={{ minRows: 2, maxRows: 6,}} placeholder="Enter Task Title" onChange={e => setTask({...task, title: e.target.value})} value={task.title}/>
             </Form.Item>
             <Form.Item name='description'   label="Task Description"
                 rules={[
@@ -131,7 +131,7 @@ const Addtask = () => {
                     message: 'Task description is required.',
                     },
                 ]}>
-                    <Input placeholder="Enter Task Description" onChange={e => setTask({...task, description: e.target.value})} value={task.description}></Input>
+                    <TextArea autoSize={{ minRows: 2, maxRows: 6,}} placeholder="Enter Task Description" onChange={e => setTask({...task, description: e.target.value})} value={task.description}/>
             </Form.Item>
             <Form.Item name='verification'   label="Means of Verification"
                 rules={[

@@ -148,3 +148,57 @@
 2022-09-07T14:03:11.937Z [error]: Cannot read properties of undefined (reading 'length')
 2022-09-07T14:03:51.816Z [error]: Cannot read properties of undefined (reading 'length')
 2022-09-08T10:19:10.312Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T11:44:19.955Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T11:45:05.290Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T11:57:15.457Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T12:05:42.344Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T12:06:51.823Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T12:07:10.772Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T13:05:42.885Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T13:55:58.738Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T13:56:18.451Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T13:56:36.586Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T13:56:58.515Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T13:57:10.371Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T14:00:36.088Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T14:04:37.717Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T14:21:13.202Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T14:27:31.021Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T14:28:35.238Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T14:30:14.400Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T14:30:50.545Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T14:31:01.186Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T14:31:23.861Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T14:40:17.103Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T14:41:30.955Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T14:44:53.960Z [error]: updateprojectadmn
+2022-09-08T14:45:00.573Z [error]: updateprojectadmn
+2022-09-08T14:45:07.946Z [error]: updateprojectadmn
+2022-09-08T14:45:27.051Z [error]: updateprojectadmn
+2022-09-08T14:45:38.158Z [error]: updateprojectadmn
+2022-09-08T14:45:59.379Z [error]: Error: /updateStudyAdmin - CastError: Cast to Boolean failed for value "[ 'false' ]" (type Array) at path "active"
+2022-09-08T14:46:24.812Z [error]: Error: /updateStudyAdmin - CastError: Cast to Boolean failed for value "[ 'false' ]" (type Array) at path "active"
+2022-09-08T14:46:44.968Z [error]: Error: /updateStudyAdmin - CastError: Cast to Boolean failed for value "[ 'false' ]" (type Array) at path "active"
+2022-09-08T14:48:05.347Z [error]: Error: /updateStudyAdmin - CastError: Cast to Boolean failed for value "[ 'false' ]" (type Array) at path "active"
+2022-09-08T14:49:24.013Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T14:50:11.972Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T14:51:20.291Z [error]: Cast to Number failed for value "NaN" (type number) at path "progress"
+2022-09-08T14:52:47.331Z [error]: Error: /updatetaskadmin
+2022-09-08T14:52:54.425Z [error]: Error: /updatetaskadmin
+2022-09-08T14:53:31.637Z [error]: Error: /updatetaskadmin
+2022-09-08T14:53:36.573Z [error]: Error: /updatetaskadmin
+2022-09-08T14:53:39.559Z [error]: Error: /updatetaskadmin
+2022-09-08T14:53:39.830Z [error]: Error: /updatetaskadmin
+2022-09-08T14:54:27.395Z [error]: Error: /updatetaskadmin
+2022-09-08T14:54:28.452Z [error]: Error: /updatetaskadmin
+2022-09-08T14:54:51.085Z [error]: Error: /updatetaskadmin
+2022-09-08T14:55:05.254Z [error]: Error: /updatetaskadmin
+2022-09-08T14:55:16.153Z [error]: Error: /updatetaskadmin
+2022-09-08T14:59:04.974Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T15:02:42.981Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T15:03:02.485Z [error]: Cannot read properties of undefined (reading 'length')
+2022-09-08T15:04:34.933Z [error]: updateprojectadmn
+2022-09-08T15:04:41.884Z [error]: updateprojectadmn
+2022-09-08T15:04:48.002Z [error]: updateprojectadmn
+2022-09-08T15:04:59.733Z [error]: updateprojectadmn
+2022-09-08T15:05:12.219Z [error]: updateprojectadmn
