@@ -43,6 +43,7 @@ const Signup = () => {
                 ]}>
                     <Input placeholder="Enter Name" onChange={e => setUser({...user, name: e.target.value})} value={user.name}></Input>
                 </Form.Item>
+                
                 <Form.Item name="Email" label="Email"
                         rules={[
                             {
@@ -65,10 +66,10 @@ const Signup = () => {
 
                 <Form.Item name="Category" label="Category"
                         rules={[
-                        {
-                            required: true,
-                            message: 'Please select category!',
-                        },
+                            {
+                                required: true,
+                                message: 'Please select category!',
+                            },
                         ]}>   
                     
                     <div>
@@ -79,6 +80,7 @@ const Signup = () => {
                     </div>
                     <Checkbox onChange={e => setUser({...user, category: e.target.checked? "director": ""})} value="director">Director</Checkbox>
                 </Form.Item>
+                
                 <Button onClick={onSubmit} block style={{background: "#A0BF85", borderRadius: "5px"}}>CREATE USER</Button>
             </Form>
         </div>

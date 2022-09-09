@@ -142,19 +142,19 @@ const Users = () => {
           ),
         },
         {
-            title: 'Action',
-            dataIndex: 'action',
-            key: 'action',
-            fixed: 'right',
-            width: '5%',
-            render: (text, record, index) => 
-            <Button className='editButton' type='link' onClick={()=>{
-                setprops(record)
-                setIsModalVisible(true)
-            }}>
-                Edit
-            </Button>
-          },
+          title: 'Action',
+          dataIndex: 'action',
+          key: 'action',
+          fixed: 'right',
+          width: '5%',
+          render: (text, record, index) => 
+          <Button className='editButton' type='link' onClick={()=>{
+              setprops(record)
+              setIsModalVisible(true)
+          }}>
+              Edit
+          </Button>
+        },
       ];
 
       const handleCancel = () => {
