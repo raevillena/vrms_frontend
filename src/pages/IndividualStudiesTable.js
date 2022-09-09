@@ -3,7 +3,7 @@ import {Table, Progress, Tag, Button} from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
 import moment from 'moment'
 import {useHistory} from 'react-router-dom'
-
+import {CheckCircleOutlined, SyncOutlined } from '@ant-design/icons'
 const IndividualStudiesTable = (props) => {
   let monitorObj = useSelector(state => state.monitor)
   let userObj = useSelector(state => state.user)
@@ -71,10 +71,11 @@ const IndividualStudiesTable = (props) => {
         render: status => (
           <span>
             {status.map(stat => {
-              let color = stat === 'Ongoing' ? 'geekblue' : 'green';
+              let color = stat === 'ONGOING' ? 'geekblue' : 'green';                    
+              let iconState = color === 'green' ? true : false;
               return (
-                <Tag color={color} key={stat}>
-                  {stat.toUpperCase()}
+                <Tag icon={iconState ? <CheckCircleOutlined/> :<SyncOutlined spin/>} color={color} key={stat}>
+                  {stat}
                 </Tag>
               );
             })}
@@ -104,7 +105,8 @@ const IndividualStudiesTable = (props) => {
         title: 'Study Title',
         dataIndex: 'title',
         key: 'title',
-        ellipsis: true
+        width:'60%',
+        ellipsis: false,
       },
       {
         title: 'Date Created',
@@ -136,13 +138,14 @@ const IndividualStudiesTable = (props) => {
           render: status => (
             <span>
               {status.map(stat => {
-                let color = stat === 'Ongoing' ? 'geekblue' : 'green';
-                return (
-                  <Tag color={color} key={stat}>
-                    {stat.toUpperCase()}
-                  </Tag>
-                );
-              })}
+              let color = stat === 'ONGOING' ? 'geekblue' : 'green';                    
+              let iconState = color === 'green' ? true : false;
+              return (
+                <Tag icon={iconState ? <CheckCircleOutlined/> :<SyncOutlined spin/>} color={color} key={stat}>
+                  {stat}
+                </Tag>
+              );
+            })}
             </span>
           ),
       },

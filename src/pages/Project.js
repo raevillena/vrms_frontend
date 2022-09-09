@@ -140,10 +140,11 @@ const Project = () => {
     return (
         <div>  
             <Layout1>      
-                <ManagerDash data={forProps}/>
-                <Tooltip placement="top" title="Add Study">
+            <Tooltip placement="top" title="Add Study">
                     <Button className="add-button" onClick={showModal}>+</Button>
                 </Tooltip>
+                <ManagerDash data={forProps}/>
+                
                 <Modal title="Add Project" visible={isModalVisible} footer={null} onCancel={handleCancel}>
                     <Tabs centered>
                         <TabPane tab="Program" key="1">

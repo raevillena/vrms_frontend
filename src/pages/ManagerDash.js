@@ -16,8 +16,8 @@ const ManagerDash = (props) => {
   const dispatch = useDispatch()
   let history= useHistory();
   const userObj = useSelector(state => state.user)
-  const [projectData, setProjectData]= useState(["spinme"])
-  const [programData, setProgramData]= useState(["spinme"])
+  const [projectData, setProjectData]= useState([])
+  const [programData, setProgramData]= useState([])
   const [id, setId] = useState()
   const [programProps, setProgramProps] = useState()
   const [projectProps, setProjectProps] = useState()
@@ -373,7 +373,11 @@ const expandedRowRender = programs => {
   if(programData === ''){
     return <Spin className="spinner" />
   }else{
+<<<<<<< HEAD
     return <Table columns={columns} dataSource={projectData} pagination={false}  /> //expanded table view
+=======
+    return <Table columns={columns} dataSource={projectData} pagination={false}/>
+>>>>>>> f98c94d2c6cf2afd77a9d10eeb725b5d3916750b
   }
 };
 
@@ -435,12 +439,13 @@ const edit_data = (data) => {
     return (
       <div > 
         {programData[0]==="spinme"?  <Spin className="spinner" /> :
-         <div>  
-            <Table size="small" className="components-table-demo-nested"  expandable={{ expandedRowRender }} onExpand={(isExpanded, record) =>{
-              setExpandedRow([record.key])
-              setId(isExpanded ? record.programID : undefined)}}
+         <div>
+            <Table size="small" className="components-table-demo-nested"  expandable={{ expandedRowRender }} 
+              onExpand={(isExpanded, record) =>{
+                setExpandedRow([record.key])
+                setId(isExpanded ? record.programID : undefined)}}
               dataSource={programData} expandedRowKeys={expandedRow} 
-              columns={programColumns} style={{margin: '15px'}} 
+              columns={programColumns}
             />
           </div>
            }

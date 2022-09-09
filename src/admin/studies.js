@@ -129,6 +129,7 @@ const Studies = () => {
             title: 'Study Title',
             dataIndex: 'title',
             key: 'title',
+            width:'35%',
             ellipsis: false,
             ...getColumnSearchProps('title')
         },
@@ -136,6 +137,7 @@ const Studies = () => {
             title: 'Date Created',
             dataIndex: 'dateCreated',
             key: 'dateCreated',
+            width:'8%',
             filters: [{text: 'January', value: '01'},
               {text: 'February', value: '02'},
               {text: 'March', value: '03'},
@@ -174,6 +176,7 @@ const Studies = () => {
             title: 'Progress',
             dataIndex: 'progress',
             key: 'progress',
+            width:'10%',
             render: progress=>
                 <Progress percent={progress} size="small" />,
         },
@@ -182,7 +185,7 @@ const Studies = () => {
           dataIndex: 'fundingAgency',
           key: 'fundingAgency',
           ...getColumnSearchProps('fundingAgency'),
-          ellipsis: true, 
+          ellipsis: false, 
         },
         {
           title: 'Funding Category',
@@ -203,7 +206,6 @@ const Studies = () => {
               { text: 'Ongoing', value: 'ONGOING' },
             ],
             onFilter: (value, record) => record.status.indexOf(value) === 0,
-            width: '15%',
             render: status => (
               <span>
                 {status.map(stat => {
@@ -245,7 +247,6 @@ const Studies = () => {
             title: 'Action',
             dataIndex: 'action',
             key: 'action',
-            fixed: 'right',
             width: '70px',
             render: (text, record, index) => <Button className='editButton' type='link' onClick={()=>{
                 setprops(record)

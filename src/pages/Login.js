@@ -1,12 +1,11 @@
 
 import { Input, Button, Form, Row, Col, Typography, Spin, notification} from 'antd';
-import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined} from '@ant-design/icons';
+import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined, KeyOutlined} from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
 import { onUserLogin } from '@services/authAPI';
 import { useDispatch } from 'react-redux';
 import '../styles/CSS/Userdash.css'
-
 
 
 function Login() {
@@ -100,7 +99,7 @@ function Login() {
           <Row justify="center">
             <Col  >
               <Form style={{marginTop: "40%"}} name="basic" initialValues={{remember: true,}} onFinish={onSubmit}>
-              <Title style={{fontFamily: "Bangla MN", fontWeight: "bolder", fontSize: '15px'}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</Title>
+              <Title style={{fontFamily: "Roboto", fontWeight: "bolder", fontSize: '15px'}}>VIRTUAL REASEARCH MANAGEMENT SYSTEM</Title>
                 <Form.Item name="email"  
                     rules={[
                     {
@@ -120,7 +119,7 @@ function Login() {
                     },
                   ]}
                   >
-                    <Input.Password placeholder="Enter password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={e => setUser({...user, password: e.target.value})} value={user.password}/>
+                    <Input.Password prefix={<KeyOutlined />} placeholder="Enter password" iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={e => setUser({...user, password: e.target.value})} value={user.password}/>
                 </Form.Item>
                 <Form.Item><Button type= "link" style={{fontFamily: "Montserrat",color: "#000000", float: 'right'}} onClick={forgotPassword}> Forgot your password?</Button></Form.Item>
                 <Form.Item><Button block style={{background: "#A0BF85", borderRadius: "5px"}} htmlType="submit" >LOGIN</Button></Form.Item>

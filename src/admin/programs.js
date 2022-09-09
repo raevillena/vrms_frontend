@@ -129,7 +129,7 @@ const Programs = () => {
             dataIndex: 'programName',
             key: 'programName',
             ...getColumnSearchProps('programName'),
-            ellipsis: true,
+            ellipsis: false,
           },
           {
             title: 'Program ID',
@@ -188,7 +188,6 @@ const Programs = () => {
             title: 'Action',
             dataIndex: 'action',
             key: 'action',
-            fixed: 'right',
             width:'70px',
             render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row', gap:'5px'}}>
               <Button className='editButton' type='link' onClick={()=>{
