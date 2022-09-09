@@ -24,6 +24,7 @@ import Backup from './admin/backup'
 import Offline from '@pages/Offline';
 import OfflineData from '@pages/OfflineData';
 import Privacy from '@pages/Policy';
+import NestedTable from './NestedTable';
 
 
 function App() {
@@ -107,5 +108,10 @@ function App() {
     </BrowserRouter> 
   );
 }
-
+function AppTest(){
+  return(
+  <>
+    <NestedTable/>
+  </>);
+}
 export default App;

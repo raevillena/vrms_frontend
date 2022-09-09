@@ -126,34 +126,38 @@ const Tasks = () => {
             title: 'Task Title',
             dataIndex: 'title',
             key: 'title',
-            ellipsis: true,
+            ellipsis: false,
+            // width:'10%',
             ...getColumnSearchProps('title')
         },
         {
             title: 'Task Description',
             dataIndex: 'description',
             key: 'description',
-            ellipsis: true,
+            ellipsis: false,
+            // width:'20%',
             ...getColumnSearchProps('description')
         },
         {
             title: 'Objectives',
             dataIndex: 'objectives',
             key: 'objectives',
-            ellipsis: true,
+            // width:'20%',
+            ellipsis: false,
             ...getColumnSearchProps('objectives')
         },
         {
             title: 'Verification',
             dataIndex: 'verification',
             key: 'verification',
-            ellipsis: true,
+            ellipsis: false,
             ...getColumnSearchProps('verification')
         },
         {
             title: 'Date Created',
             dataIndex: 'dateCreated',
             key: 'dateCreated',
+            // width:'90px',
             filters: [{text: 'January', value: '01'},
               {text: 'February', value: '02'},
               {text: 'March', value: '03'},
@@ -173,6 +177,7 @@ const Tasks = () => {
             title: 'Deadline',
             dataIndex: 'deadline',
             key: 'deadline',
+            // width:'110px',
             filters: [{text: 'January', value: '01'},
               {text: 'February', value: '02'},
               {text: 'March', value: '03'},
@@ -192,7 +197,7 @@ const Tasks = () => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            width:'110px',
+            // width:'110px',
             filters: [
                 { text: 'Completed', value: 'COMPLETED' },
                 { text: 'Ongoing', value: 'ONGOING' },
@@ -213,42 +218,41 @@ const Tasks = () => {
               ),
         },
         {
-            title: 'Active',
-            dataIndex: 'active',
-            key: 'active',
-            width:'90px',
-            filters: [
-                { text: 'True', value: 'true' },
-                { text: 'False', value: 'false' },
-            ],
-            onFilter: (value, record) => record.active.indexOf(value) === 0,
-            render: active => (
-              <span>
-                {active.map(activeStat => {
-                  let isActive = activeStat === 'true' ? true : false;
-                  let color = isActive === true ? 'green' : 'error';
-                  return (
-                    <Tag icon={isActive ? <CheckCircleOutlined/> : <ExclamationOutlined/>} color={color} key={isActive}>
-                      {activeStat.toUpperCase()}
-                    </Tag>
-                  );
-                })}
-              </span>
-            ),
+          title: 'Active',
+          dataIndex: 'active',
+          key: 'active',
+          // width:'90px',
+          filters: [
+              { text: 'True', value: 'true' },
+              { text: 'False', value: 'false' },
+          ],
+          onFilter: (value, record) => record.active.indexOf(value) === 0,
+          render: active => (
+            <span>
+              {active.map(activeStat => {
+                let isActive = activeStat === 'true' ? true : false;
+                let color = isActive === true ? 'green' : 'error';
+                return (
+                  <Tag icon={isActive ? <CheckCircleOutlined/> : <ExclamationOutlined/>} color={color} key={isActive}>
+                    {activeStat.toUpperCase()}
+                  </Tag>
+                );
+              })}
+            </span>
+          ),
         },
         {
-            title: 'Action',
-            dataIndex: 'action',
-            key: 'action',
-            fixed: 'right',
-            width: '70px',
-            render: (text, record, index) => <Button className='editButton' type='link'
-                onClick={()=>{
-                    setProps(record)
-                    setIsModalVisible(true)
-                }}
-            >Edit</Button>
-          }
+          title: 'Action',
+          dataIndex: 'action',
+          key: 'action',
+          // width: '70px',
+          render: (text, record, index) => <Button className='editButton' type='link'
+              onClick={()=>{
+                  setProps(record)
+                  setIsModalVisible(true)
+              }}
+          >Edit</Button>
+          },
       ];
 
       const handleCancel = () => {

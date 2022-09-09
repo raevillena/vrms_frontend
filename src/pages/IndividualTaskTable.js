@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {Table, Tag} from 'antd'
 import moment from 'moment'
-
-
+import { CheckCircleOutlined, SyncOutlined } from '@ant-design/icons'
 const IndividualTasksTable = (props) => {
   const [data, setdata] = useState([])
 
@@ -41,13 +40,13 @@ const IndividualTasksTable = (props) => {
       title: 'Task Description',
       dataIndex: 'description',
       key: 'description',
-      ellipsis: true
+      ellipsis: false,
     },
     {
       title: 'Objective',
       dataIndex: 'objective',
       key: 'objective',
-      ellipsis: true
+      ellipsis: false,
     },
     {
       title: 'Status',
@@ -63,10 +62,11 @@ const IndividualTasksTable = (props) => {
         render: status => (
           <span>
             {status.map(stat => {
-              let color = stat === 'Ongoing' ? 'geekblue' : 'green';
+              let color = stat === 'ONGOING' ? 'geekblue' : 'green';                    
+              let iconState = color === 'green' ? true : false;
               return (
-                <Tag color={color} key={stat}>
-                  {stat.toUpperCase()}
+                <Tag icon={iconState ? <CheckCircleOutlined/> :<SyncOutlined spin/>} color={color} key={stat}>
+                  {stat}
                 </Tag>
               );
             })}

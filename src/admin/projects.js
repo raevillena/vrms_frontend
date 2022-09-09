@@ -129,9 +129,10 @@ const Projects = () => {
           {
             title: 'Project Name',
             dataIndex: 'projectName',
+            width:'30%',
             ...getColumnSearchProps('projectName'),
             key: 'projectName',
-            ellipsis: true,
+            ellipsis: false,
           },
           {
             title: 'Project ID',
@@ -157,7 +158,7 @@ const Projects = () => {
             dataIndex: 'fundingAgency',
             key: 'fundingAgency',
             ...getColumnSearchProps('fundingAgency'),
-            ellipsis: true, 
+            ellipsis: false, 
           },
           {
             title: 'Funding Category',
@@ -219,7 +220,7 @@ const Projects = () => {
             title: 'Action',
             dataIndex: 'action',
             key: 'action',
-            fixed: 'right',
+            width:'80px',
             render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row'}}>
               <Button className='editButton' type='link' onClick={()=>{
                   setProps(record)
@@ -249,9 +250,10 @@ const Projects = () => {
 
     return (
         <div>
+
             <LayoutComponent>
-                <Table size="small"  dataSource={projectData} columns={columns}></Table>
-            </LayoutComponent>
+                <Table size="medium"  dataSource={projectData} columns={columns}></Table>
+            </LayoutComponent>            
             <Modal title='Edit Project' visible={isModalVisible} footer={null} onCancel={handleCancel}>
                 <EditProject data={props} func={edit_data}/>
             </Modal>

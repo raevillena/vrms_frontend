@@ -143,7 +143,7 @@ const programColumns = [
   {
     title: 'Program Leader',
     dataIndex: 'programLeader',
-    width: '25%',
+    // width: '25%',
     key: 'programLeader',
     ...getColumnSearchProps('programLeader'),
     render: (leader) => <List size="small"
@@ -156,9 +156,9 @@ const programColumns = [
     title: 'Program Name',
     dataIndex: 'programName',
     key: 'programName',
-    width: '40%',
+    // width: '40%',
     ...getColumnSearchProps('programName'),
-    ellipsis: true,
+    ellipsis: false,
   },
   {
     title: 'Date Created',
@@ -174,7 +174,7 @@ const expandedRowRender = programs => {
       title: 'Project Leader',
       dataIndex: 'projectLeader',
       key: 'projectLeader',
-      width: '15%',
+      // width: '15%',
       render: (leader) => <List size="small"
       dataSource={leader}
       renderItem={item => <List.Item>{item}</List.Item>}
@@ -186,8 +186,8 @@ const expandedRowRender = programs => {
       dataIndex: 'projectName',
       ...getColumnSearchProps('projectName'),
       key: 'projectName',
-      width: '25%',
-      ellipsis: true,
+      // width: '25%',
+      ellipsis: false,
     },
     {
       title: 'Date Created',
@@ -200,7 +200,7 @@ const expandedRowRender = programs => {
       title: 'Progress',
       dataIndex: 'progress',
       key: 'progress',
-      width: '10%',
+      // width: '10%',
       render: progress =>
        <Progress percent={progress} size="small" />,
     },
@@ -213,7 +213,7 @@ const expandedRowRender = programs => {
         { text: 'Ongoing', value: 'ONGOING' },
       ],
       onFilter: (value, record) => record.status.indexOf(value) === 0,
-      width: '10%',
+      // width: '10%',
       render: status => (
         <span>
           {status.map(stat => {
@@ -231,8 +231,8 @@ const expandedRowRender = programs => {
       title: 'Action',
       dataIndex: 'action',
       key: 'action',
-      fixed: 'right',
-      width: '15%',
+      // fixed: 'right',
+      // width: '15%',
       render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row'}}>
         <Button type='link' onClick = {
         (e) => {
@@ -250,7 +250,7 @@ const expandedRowRender = programs => {
   if(programData === ''){
     return <Spin className="spinner" />
   }else{
-    return <Table columns={columns} dataSource={projectData} pagination={false} scroll={{ x: 1200, y: 1000 }} />
+    return <Table columns={columns} dataSource={projectData} pagination={false} />
   }
 };
 
@@ -261,7 +261,7 @@ const expandedRowRender = programs => {
             <div>  
                 <Table size="small" className="components-table-demo-nested" onExpand={(isExpanded, record) =>{
                 setExpandedRow([record.key])
-                setId(isExpanded ? record.programID : undefined)}}  expandable={{ expandedRowRender }} scroll={{ x: 1200, y: 1000 }} dataSource={programData} expandedRowKeys={expandedRow} columns={programColumns} style={{margin: '15px'}}/>
+                setId(isExpanded ? record.programID : undefined)}}  expandable={{ expandedRowRender }} dataSource={programData} expandedRowKeys={expandedRow} columns={programColumns} style={{margin: '15px'}}/>
             </div>
             }
         </Layout1> 

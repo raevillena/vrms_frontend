@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
-.header{
+/* .header{
+    font-family: 'roboto';
+} */
+*{
     font-family: 'roboto';
 }
 .header-menu{
@@ -12,11 +15,33 @@
 }
 
 .editButton{
+    background-color: #1ed66b;
+    color: black;
+    border-radius: 20;
+    height: 40px;
+    margin-right: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.manageButton{
     background-color: #1eabd6;
     color: black;
     border-radius: 20;
     height: 40px;
-    margin-right: 20px;
+    margin-right: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.deleteButton{
+    background-color: #e60808;
+    color: black;
+    border-radius: 20;
+    height: 40px;
+    margin-right: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .ant-table-content {
@@ -28,4 +53,18 @@
     justify-content: center;
     align-items: center;
     font-style: bold;
+}
+/* .uploadPhoto{
+    display: inline-block;
+  line-height: 30px;
+  padding-left: 30px;
+  background: url(../../logo.svg) no-repeat scroll 0 0 transparent;
+} */
+
+.tuma{
+    table-layout: fixed;
+    width: 400px;
+}
+
+.components-table-demo-nested{
 }

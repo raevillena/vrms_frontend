@@ -16,8 +16,8 @@ const ManagerDash = (props) => {
   const dispatch = useDispatch()
   let history= useHistory();
   const userObj = useSelector(state => state.user)
-  const [projectData, setProjectData]= useState(["spinme"])
-  const [programData, setProgramData]= useState(["spinme"])
+  const [projectData, setProjectData]= useState([])
+  const [programData, setProgramData]= useState([])
   const [id, setId] = useState()
   const [programProps, setProgramProps] = useState()
   const [projectProps, setProjectProps] = useState()
@@ -347,7 +347,7 @@ const expandedRowRender = programs => {
       fixed: 'right',
       width: '15%',
       render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row'}}>
-        <Button className='editButton' type='link' onClick = {
+        <Button className='manageButton' type='link' onClick = {
         (e) => {
           dispatch({
             type: "SET_PROJECT",
@@ -379,7 +379,7 @@ const expandedRowRender = programs => {
   if(programData === ''){
     return <Spin className="spinner" />
   }else{
-    return <Table columns={columns} dataSource={projectData} pagination={false} scroll={{ x: 1200, y: 1000 }} />
+    return <Table columns={columns} dataSource={projectData} pagination={false}/>
   }
 };
 
@@ -441,12 +441,13 @@ const edit_data = (data) => {
     return (
       <div > 
         {programData[0]==="spinme"?  <Spin className="spinner" /> :
-         <div>  
-            <Table size="small" className="components-table-demo-nested"  expandable={{ expandedRowRender }} onExpand={(isExpanded, record) =>{
-              setExpandedRow([record.key])
-              setId(isExpanded ? record.programID : undefined)}}
+         <div>
+            <Table size="small" className="components-table-demo-nested"  expandable={{ expandedRowRender }} 
+              onExpand={(isExpanded, record) =>{
+                setExpandedRow([record.key])
+                setId(isExpanded ? record.programID : undefined)}}
               dataSource={programData} expandedRowKeys={expandedRow} 
-              columns={programColumns} style={{margin: '15px'}} 
+              columns={programColumns}
             />
           </div>
            }
