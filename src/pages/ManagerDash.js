@@ -373,11 +373,8 @@ const expandedRowRender = programs => {
   if(programData === ''){
     return <Spin className="spinner" />
   }else{
-<<<<<<< HEAD
     return <Table columns={columns} dataSource={projectData} pagination={false}  /> //expanded table view
-=======
     return <Table columns={columns} dataSource={projectData} pagination={false}/>
->>>>>>> f98c94d2c6cf2afd77a9d10eeb725b5d3916750b
   }
 };
 
