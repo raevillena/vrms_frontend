@@ -221,6 +221,7 @@ const Projects = () => {
             dataIndex: 'action',
             key: 'action',
             width:'80px',
+            fixed: 'right',
             render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row'}}>
               <Button className='editButton' type='link' onClick={()=>{
                   setProps(record)

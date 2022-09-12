@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { onGetAllManagers } from '../services/userAPI';
 import { onGetAllPrograms } from '../services/projectAPI';
 import { onProjectCreate, onProgramCreate } from '../services/projectAPI';
+const { TextArea } = Input;
 
 const { TabPane } = Tabs;
 const { TextArea } = Input
@@ -132,6 +133,10 @@ const AddProgram = () => {
                                 },
                             ]}>
                                 <TextArea autoSize={{ minRows: 2, maxRows: 6, }} placeholder="Enter Program Name" onChange={e => setProject({...project, programName: e.target.value})} value={project.programName}/>
+                                {/* modified input to custom textarea for more readability*/}
+                                <TextArea autoSize={{ minRows: 2, maxRows: 6,}}
+                                    placeholder="Enter Program Name" 
+                                    onChange={e => setProject({...project, programName: e.target.value})} value={project.programName} />
                             </Form.Item>
                             <Form.Item name='fundingCategory' label="Funding Category">
                                 <Select style={{ width: '100%' }} onChange={handleChangeInFundingCat} value={project.fundingCategory} placeholder="Select funding category">
@@ -171,6 +176,8 @@ const AddProgram = () => {
                             },
                         ]}>
                             <TextArea autoSize={{ minRows: 2, maxRows: 6, }} placeholder="Enter Project Name" onChange={e => setProject({...project, projectName: e.target.value})} value={project.projectName}/>
+                            <TextArea autoSize={{ minRows: 2, maxRows: 6,}} placeholder="Enter Project Name" onChange={e => setProject({...project, projectName: e.target.value})} value={project.projectName}/>
+
                         </Form.Item>
                         <Form.Item name='program'  label="Program" rules={[
                             {

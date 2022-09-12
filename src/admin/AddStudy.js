@@ -132,6 +132,8 @@ const AddStudy = () => {
                 },
             ]}>
                 <TextArea autoSize={{ minRows: 2, maxRows: 6, }} placeholder="Enter Title" onChange={e => setStudy({...study, title: e.target.value})} value={study.title}/>
+                <TextArea autoSize={{ minRows: 2, maxRows: 6,}} placeholder="Enter Title" onChange={e => setStudy({...study, title: e.target.value})} value={study.title}/>
+
             </Form.Item>
             <Form.Item  name='project' label="Project"
                     rules={[
