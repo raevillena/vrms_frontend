@@ -1,10 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
-<<<<<<< HEAD
 /* .header{
     font-family: 'roboto';
 } */
-=======
->>>>>>> 493c8f027a0573d0bf038375fe2979c633fcd1d2
 *{
     font-family: 'roboto';
 }
@@ -18,7 +15,6 @@
 }
 
 .editButton{
-<<<<<<< HEAD
     background-color: #1ed66b;
     color: black;
     border-radius: 20;
@@ -34,7 +30,6 @@
     border-radius: 20;
     height: 40px;
     margin-right: 10px;
-=======
     background-color: #22df11;
     color: black;
     border-radius: 20;
@@ -50,26 +45,23 @@
     color: black;
     border-radius: 20;
     height: 40px;
->>>>>>> 493c8f027a0573d0bf038375fe2979c633fcd1d2
     padding-left: 5px;
     padding-right: 5px;
 }
 
-<<<<<<< HEAD
 .deleteButton{
     background-color: #e60808;
     color: black;
     border-radius: 20;
     height: 40px;
     margin-right: 10px;
-=======
+}
 .manageButton{
     background-color: #2393df;
     color: black;
     border-radius: 20;
     height: 40px;
     margin: 0;
->>>>>>> 493c8f027a0573d0bf038375fe2979c633fcd1d2
     padding-left: 5px;
     padding-right: 5px;
 }
@@ -85,7 +77,6 @@
     align-items: center;
     font-style: bold;
 }
-<<<<<<< HEAD
 /* .uploadPhoto{
     display: inline-block;
   line-height: 30px;
@@ -99,9 +90,9 @@
 }
 
 .components-table-demo-nested{
-=======
+
+}
 
 .tuma:hover{
     background-color: red;
->>>>>>> 493c8f027a0573d0bf038375fe2979c633fcd1d2
 }

@@ -123,8 +123,7 @@ const Addtask = () => {
                     message: 'Task Title is required.',
                     },
                 ]}>
-                <TextArea autoSize={{ minRows: 2, maxRows: 6, }} placeholder="Enter Task Title" onChange={e => setTask({...task, title: e.target.value})} value={task.title}/>
-                    <TextArea autoSize={{ minRows: 2, maxRows: 6,}} placeholder="Enter Task Title" onChange={e => setTask({...task, title: e.target.value})} value={task.title}/>
+                <TextArea autoSize={{ minRows: 2, maxRows: 6,}} placeholder="Enter Task Title" onChange={e => setTask({...task, title: e.target.value})} value={task.title}/>
 
             </Form.Item>
             <Form.Item name='description'   label="Task Description"
@@ -134,7 +133,6 @@ const Addtask = () => {
                     message: 'Task description is required.',
                     },
                 ]}>
-                    <TextArea autoSize={{ minRows: 2, maxRows: 6, }} placeholder="Enter Task Description" onChange={e => setTask({...task, description: e.target.value})} value={task.description}/>
 
                     <TextArea autoSize={{ minRows: 2, maxRows: 6,}} placeholder="Enter Task Description" onChange={e => setTask({...task, description: e.target.value})} value={task.description}/>
 

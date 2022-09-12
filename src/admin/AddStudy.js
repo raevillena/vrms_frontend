@@ -131,7 +131,6 @@ const AddStudy = () => {
                 message: 'Please input your title!',
                 },
             ]}>
-                <TextArea autoSize={{ minRows: 2, maxRows: 6, }} placeholder="Enter Title" onChange={e => setStudy({...study, title: e.target.value})} value={study.title}/>
                 <TextArea autoSize={{ minRows: 2, maxRows: 6,}} placeholder="Enter Title" onChange={e => setStudy({...study, title: e.target.value})} value={study.title}/>
 
             </Form.Item>

@@ -7,7 +7,6 @@ import { onProjectCreate, onProgramCreate } from '../services/projectAPI';
 const { TextArea } = Input;
 
 const { TabPane } = Tabs;
-const { TextArea } = Input
 const AddProgram = () => {
 
     const { Option } = Select;
@@ -132,7 +131,6 @@ const AddProgram = () => {
                                 message: 'Please input program name!',
                                 },
                             ]}>
-                                <TextArea autoSize={{ minRows: 2, maxRows: 6, }} placeholder="Enter Program Name" onChange={e => setProject({...project, programName: e.target.value})} value={project.programName}/>
                                 {/* modified input to custom textarea for more readability*/}
                                 <TextArea autoSize={{ minRows: 2, maxRows: 6,}}
                                     placeholder="Enter Program Name" 
@@ -175,8 +173,7 @@ const AddProgram = () => {
                             message: 'Please input project name!',
                             },
                         ]}>
-                            <TextArea autoSize={{ minRows: 2, maxRows: 6, }} placeholder="Enter Project Name" onChange={e => setProject({...project, projectName: e.target.value})} value={project.projectName}/>
-                            <TextArea autoSize={{ minRows: 2, maxRows: 6,}} placeholder="Enter Project Name" onChange={e => setProject({...project, projectName: e.target.value})} value={project.projectName}/>
+                            <TextArea autoSize={{ minRows: 2, maxRows: 6}} placeholder="Enter Project Name" onChange={e => setProject({...project, projectName: e.target.value})} value={project.projectName}/>
 
                         </Form.Item>
                         <Form.Item name='program'  label="Program" rules={[

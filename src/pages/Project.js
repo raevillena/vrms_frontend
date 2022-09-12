@@ -140,9 +140,10 @@ const Project = () => {
     return (
         <div>  
             <Layout1>      
+                {/* ADD STUDY BUTTON FROM MANAGER ACCOUNT */}
             <Tooltip placement="top" title="Add Study">
                     <Button className="add-button" onClick={showModal}>+</Button>
-                </Tooltip>
+            </Tooltip>
                 <ManagerDash data={forProps}/>
                 
                 <Modal title="Add Project" visible={isModalVisible} footer={null} onCancel={handleCancel}>
