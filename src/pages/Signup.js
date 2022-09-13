@@ -14,7 +14,7 @@ const Signup = () => {
 
     const notif = (type, message) => {
         notification[type]({
-          message: 'Notification',
+          message: type !=='success' ? 'FAILED CREATING USER' : 'CREATED SUCCESSFULLY',
           description:
             message,
         });

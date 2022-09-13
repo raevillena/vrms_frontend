@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import LayoutComponent from './layout'
-import {Table, Space, Button, Input, Popconfirm} from 'antd'
+import {Table, Space, Button, Input, Popconfirm, Tag} from 'antd'
 import Highlighter from 'react-highlight-words';
-import {SearchOutlined} from '@ant-design/icons';
+import {SearchOutlined, CloudDownloadOutlined, CloudServerOutlined} from '@ant-design/icons';
 import moment from 'moment';
 import { onGetAllBackup, onRecoverDatagridData } from '../services/studyAPI';
 import { notif } from '../functions/datagrid';
@@ -23,7 +23,7 @@ const Backup = () => {
                     columns:  backupResult[j].columns,
                     backupBy:  backupResult[j].backupBy,
                     backupDate: moment( backupResult[j].backupDate).format('MM-DD-YYYY HH:MM:SS'),
-                    status: backupResult[j].status,
+                    status: [backupResult[j].status],
                     description: backupResult[j].description,
                     studyID: backupResult[j].studyID,
                     tableID: backupResult[j].tableID
@@ -164,18 +164,30 @@ const Backup = () => {
                 { text: 'Recovered', value: 'RECOVERED' },
               ],
               onFilter: (value, record) => record.status.indexOf(value) === 0,
+              render: status => (
+                <span>
+                  {status.map(stat => {
+                    let color = stat === 'BACKUP' ? 'geekblue' : 'green';                    
+                    let iconState = color === 'green' ? true : false;
+                    return (
+                      <Tag icon={iconState ? <CloudDownloadOutlined /> : <CloudServerOutlined />} color={color} key={stat}>
+                        {stat}
+                      </Tag>
+                    );
+                  })}
+                </span>
+              ),
           },
           {
             title: 'Action',
             dataIndex: 'action',
             key: 'action',
-            fixed: 'right',
             render: (text, record, index) => <div style={{display: 'flex', flexDirection:'row'}}>
               <Popconfirm placement="topLeft" title='Are you sure to retrieve the data?' onConfirm={async() => {
                   let res = await onRecoverDatagridData(record)
                   notif('success', res.data.message)
               }} okText="Yes" cancelText="No">
-              <Button type='link'>Recover</Button>
+              <Button type='primary'>Recover</Button>
               </Popconfirm>
             </div>
           },

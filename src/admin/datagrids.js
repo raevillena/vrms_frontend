@@ -1,7 +1,7 @@
 import LayoutComponent from './layout';
 import  { useState, useEffect } from 'react';
-import {Table, Input, Button, Space, Modal} from 'antd'
-import {SearchOutlined} from '@ant-design/icons'
+import {Table, Input, Button, Space, Modal, Tag} from 'antd'
+import {SearchOutlined, CheckCircleOutlined, ExclamationOutlined} from '@ant-design/icons'
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
 import { onGetAllDatagridAdmin } from '../services/studyAPI';
@@ -29,7 +29,7 @@ const Datagrids = () => {
                     title: data[i].title,
                     description: data[i].description,
                     studyID: data[i].studyID,
-                    active: data[i].active.toString(),
+                    active: [data[i].active.toString()],
                     tableID: data[i].tableID
                 })
             }
@@ -185,14 +185,25 @@ const Datagrids = () => {
                 { text: 'False', value: 'false' },
             ],
             onFilter: (value, record) => record.active.indexOf(value) === 0,
+            render: active => (
+              <span>
+                {active.map(activeStat => {
+                  let isActive = activeStat === 'true' ? true : false;
+                  let color = isActive === true ? 'green' : 'error';
+                  return (
+                    <Tag icon={isActive ? <CheckCircleOutlined/> : <ExclamationOutlined/>} color={color} key={isActive}>
+                      {activeStat.toUpperCase()}
+                    </Tag>
+                  );
+                })}
+              </span>
+          ),
         },
         {
             title: 'Action',
             dataIndex: 'action',
             key: 'action',
-            fixed: 'right',
-            width: '15%',
-            render: (text, record, index) => <Button type='link' 
+            render: (text, record, index) => <Button className='editButton' 
             onClick={()=>{
                 setProps(record)
                 setIsModalVisible(true)
