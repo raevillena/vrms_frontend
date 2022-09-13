@@ -49,7 +49,7 @@ const LayoutComponent = ({children}) => {
                 <Menu.Item key="/admin/datagrids" onClick={click}>Datagrids</Menu.Item>
                 <Menu.Item key="/admin/backup" onClick={click}>Backup</Menu.Item>
                 <Menu.Item key="/admin/files" onClick={click}>Files</Menu.Item>
-                <Menu.Item className='tuma' key="/login" onClick={handleLogout}>Logout</Menu.Item>
+                <Menu.Item key="/login" onClick={handleLogout}>Logout</Menu.Item>
             </Menu>
             </Header>
             <Layout>
