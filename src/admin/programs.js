@@ -5,7 +5,7 @@ import { onGetAllPrograms } from '../services/projectAPI';
 import {Table, Tag, Button, List, Space, Input, Modal} from 'antd'
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
-import {SearchOutlined, CheckSquareOutlined, ExclamationOutlined, CheckCircleOutlined} from '@ant-design/icons';
+import {SearchOutlined, ExclamationOutlined, CheckCircleOutlined} from '@ant-design/icons';
 import EditProgram from './editprogram';
 
 const Programs = () => {

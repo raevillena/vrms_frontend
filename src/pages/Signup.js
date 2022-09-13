@@ -1,5 +1,5 @@
 
-import { Input, Button, Form, Checkbox, notification, Alert } from 'antd';
+import { Input, Button, Form, Checkbox, notification } from 'antd';
 import React, {useState} from 'react';
 import { onUserCreate } from '../services/userAPI';
 

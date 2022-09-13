@@ -72,7 +72,8 @@ const Account = () => {
                       <Title level={3}>{userObj.USER.name}</Title>
                       <p>{userObj.USER.title}</p>
                       <p>{userObj.USER.project}</p>
-                      <Text autoSize={true}>{userObj.USER.email}</Text>
+                      {/* remove  autoSize={true} */}
+                      <Text>{userObj.USER.email}</Text>
                     </div>
                   </Col>
             </Row>     

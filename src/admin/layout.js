@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { onUserLogout } from '../services/authAPI';
 import '../styles/CSS/Layout.css'
 
-import { MailOutlined, AppstoreOutlined, SettingOutlined, ExclamationOutlined } from '@ant-design/icons'
+// import { MailOutlined, AppstoreOutlined, SettingOutlined, ExclamationOutlined } from '@ant-design/icons'
 const { Header, Content } = Layout;
 const LayoutComponent = ({children}) => {
     let history= useHistory();

@@ -67,7 +67,7 @@ const ManagerHeaderMobile = () => {
                         <Menu.Item icon={<ClockCircleOutlined/>} key="4" onClick={off}>
                             Offline Data
                         </Menu.Item>
-                        <Menu.Item key="3" onClick={handleLogout}>
+                        <Menu.Item key="5" onClick={handleLogout}>
                             Logout
                         </Menu.Item>
                     </SubMenu>

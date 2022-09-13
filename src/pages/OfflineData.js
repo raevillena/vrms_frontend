@@ -186,17 +186,17 @@ const OfflineData = () => {
 const columns = [
   {
     title: 'Table ID',
-    width: '10%',
+    width: '5%',
     dataIndex: 'id',
     key: 'id',
     sorter: (a, b) => a.id - b.id,
   },
   {
     title: 'Title',
-    width: '30%',
+    width: '20%',
     dataIndex: 'title',
     key: 'title',
-    ellipsis: true,
+    ellipsis: false,
     ...getColumnSearchProps('title')
   },
   {
@@ -204,11 +204,11 @@ const columns = [
     width: '25%',
     dataIndex: 'description',
     key: 'description',
-    ellipsis: true
+    ellipsis: false
   },
   {
     title: 'Date Created',
-    width: '10%',
+    width: '8%',
     dataIndex: 'dateCreated',
     key: 'dateCreated',
     filters: [{text: 'January', value: '01'},
@@ -228,7 +228,7 @@ const columns = [
   },
   {
     title: 'Date Uploaded',
-    width: '10%',
+    width: '8%',
     dataIndex: 'dateUploaded',
     key: 'dateUploaded',
     filters: [{text: 'January', value: '01'},
@@ -249,13 +249,13 @@ const columns = [
   {
     title: 'Action',
     key: 'operation',
-    fixed: 'right',
-    width: '15%',
+    // fixed: 'right',
+    width: '10%',
     render: (text, record, index) => 
     <div>
       <Button onClick = {()=>{
           showModal(record)
-      }} type='link'>Manage</Button> 
+      }} type='link' className='manageButton'>Manage</Button> 
       <Popconfirm title="Sure to delete?" onConfirm = {
         async (key) => {
               let res = await onDeleteOfflineData({tableID: record.tableID})
@@ -266,7 +266,8 @@ const columns = [
               notif("error", res.data.message)
           }
         }>
-        <Button danger type='link'>Delete</Button>
+        <span style={{marginRight:'10px'}}></span>
+        <Button className='deleteButton' >Delete</Button>
       </Popconfirm>   
     </div>  
     },
@@ -287,7 +288,7 @@ const columns = [
       dataIndex: 'caption',
       key: 'caption',
       ...getColumnSearchProps('caption'),
-      ellipsis: true,
+      ellipsis: false,
     },
     {
       title: 'Action',
@@ -295,7 +296,7 @@ const columns = [
       key: 'action',
       render: (text, record, index) => 
         <div>
-          <Button type='link' onClick = {()=>{
+          <Button className='manageButton'  onClick = {()=>{
               showModalGallery(record)
           }}>Manage
           </Button> 
@@ -309,7 +310,8 @@ const columns = [
                 notif('info', res.data.message)
               }
           }>
-              <Button danger type='link'>Delete</Button>
+          <span style={{marginRight:'10px'}}></span>
+          <Button className='deleteButton' >Delete</Button>
           </Popconfirm>
         </div>
     },
@@ -319,7 +321,8 @@ const columns = [
       <div>
         {isOnline !== true ? <Offline/> : 
           <Layout1>
-            <Table columns={columns} dataSource={finaldata} style={{margin: '15px'}} scroll={{ x: 1500, y: 500 }}/>
+            {/*  scroll={{ x: 1500, y: 500 }} */}
+            <Table columns={columns} dataSource={finaldata} style={{margin: '15px'}}/>
             <Table dataSource={images} style={{margin: '15px'}} size='small' columns={galleryCollumn} /> 
           </Layout1>}
           <Modal title={manageData.title} footer={null} visible={isModalVisible} onCancel={handleCancel} width={1500}>

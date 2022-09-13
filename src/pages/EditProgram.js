@@ -83,7 +83,12 @@ const EditProgram = (props) => {
                 ]}>
                     <Input placeholder="Enter Funding Agency" onChange={e => setProgram({...program, fundingAgency: e.target.value})} value={program.fundingAgency} ></Input>
                 </Form.Item>
-                <Form.Item name='assignee' label="Assignee">
+                {/* to always require an assignee */}
+                <Form.Item name='assignee' label="Assignee" rules={[
+                    {
+                    required:true,
+                    },
+                ]}>
                     <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} value={program.assignee} placeholder="Assign Project">
                     {userData.map(user => (
                         <Option key={user.key} value={user.value}>{user.name}</Option>

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { Row, Col, Card, Table, Button, Tag, Input, Space, Modal } from 'antd'
 import '../styles/CSS/Userdash.css'
-import { FileTextFilled, ProjectFilled, FileFilled, UserOutlined, SearchOutlined} from '@ant-design/icons';
+import { FileTextFilled, ProjectFilled, FileFilled, UserOutlined, SearchOutlined, FolderViewOutlined} from '@ant-design/icons';
 import { onGetProgramforManager, onGetAllProjectMonitor } from '../services/projectAPI';
 import {onGetAllStudyMonitor} from '../services/studyAPI'
 import { onGetAllUser } from '../services/userAPI';
@@ -175,7 +175,7 @@ const ManagerMonitor = () => {
             fixed: 'right',
             width: '15%',
             render: (text, record, index) => 
-            <Button type='link' onClick={ () => {
+            <Button type='primary' icon={<FolderViewOutlined />} onClick={ () => {
                   dispatch({
                     type: "SET_MONITOR",
                     value: record
