@@ -31,8 +31,8 @@ const ManagerDash = (props) => {
   const dispatch = useDispatch();
   let history = useHistory();
   const userObj = useSelector((state) => state.user);
-  const [projectData, setProjectData] = useState([]);
-  const [programData, setProgramData] = useState([]);
+  const [projectData, setProjectData] = useState(['spinme']);
+  const [programData, setProgramData] = useState(['spinme']);
   const [id, setId] = useState();
   const [programProps, setProgramProps] = useState();
   const [projectProps, setProjectProps] = useState();
@@ -533,13 +533,11 @@ const ManagerDash = (props) => {
             className="components-table-demo-nested"
             expandable={{ expandedRowRender }}
             onExpand={(isExpanded, record) => {
-              console.log(record.key);
               setExpandedRow([record.key]);
               setId(isExpanded ? record.programID : undefined);
-              console.log([record.key]);
             }}
-            dataSource={programData}
             expandedRowKeys={expandedRow}
+            dataSource={programData}
             columns={programColumns}
           />
         </div>

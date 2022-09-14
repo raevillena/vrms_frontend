@@ -284,7 +284,7 @@ return (
         <Layout1>  
           {loading ?  <Spin className="spinner" /> : 
            <div > 
-            <Table size="small" scroll={{ x: 1500, y: 500 }} dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table>
+            <Table size="small" dataSource={studyData} columns={columns} style={{margin: '15px'}}></Table>
             
           </div>
           }
