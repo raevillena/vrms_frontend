@@ -68,11 +68,11 @@ const Datagrids = () => {
                 onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
                 icon={<SearchOutlined />}
                 size="small"
-                style={{ width: 90 }}
+                // style={{ width: 90 }}
               >
                 Search
               </Button>
-              <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+              <Button onClick={() => handleReset(clearFilters)} size="small"/* style={{ width: 90 }}*/ >
                 Reset
               </Button>
               <Button
@@ -116,14 +116,14 @@ const Datagrids = () => {
             title: 'Table Title',
             dataIndex: 'title',
             key: 'title',
-            ellipsis: true,
+            ellipsis: false,
             ...getColumnSearchProps('title')
         },
         {
             title: 'Table Description',
             dataIndex: 'description',
             key: 'description',
-            ellipsis: true,
+            ellipsis: false,
             ...getColumnSearchProps('description')
         },
         {

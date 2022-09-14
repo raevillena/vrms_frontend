@@ -120,14 +120,14 @@ const Backup = () => {
             dataIndex: 'title',
             ...getColumnSearchProps('title'),
             key: 'title',
-            ellipsis: true,
+            ellipsis: false,
           },
           {
             title: 'Description',
             dataIndex: 'description',
             key: 'description',
             ...getColumnSearchProps('description'),
-            ellipsis: true,
+            ellipsis: false,
             
           },
           {
@@ -187,7 +187,7 @@ const Backup = () => {
                   let res = await onRecoverDatagridData(record)
                   notif('success', res.data.message)
               }} okText="Yes" cancelText="No">
-              <Button type='primary'>Recover</Button>
+              <Button className='manageButton' /*type='primary'*/>Recover</Button>
               </Popconfirm>
             </div>
           },

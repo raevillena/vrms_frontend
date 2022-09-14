@@ -87,6 +87,7 @@ const EditProgram = (props) => {
                 <Form.Item name='assignee' label="Assignee" rules={[
                     {
                     required:true,
+                    message: 'Please Select atleast 1 User'
                     },
                 ]}>
                     <Select mode="tags" style={{ width: '100%' }} onChange={handleChange} tokenSeparators={[',']} value={program.assignee} placeholder="Assign Project">
