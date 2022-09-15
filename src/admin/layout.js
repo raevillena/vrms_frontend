@@ -1,4 +1,4 @@
-import { Button, Layout, Menu } from "antd";
+import { Button, Drawer, Layout, Menu } from "antd";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { onUserLogout } from "../services/authAPI";
@@ -38,10 +38,22 @@ const LayoutComponent = ({ children }) => {
   const toggleCollapsed = () => {
     setIsCollapsed(!isCollapsed);
   };
+
+  const [open, setOpen] = useState(false);
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
   return (
     <div>
       <Layout>
-        <div className="hamburger">
+        
+
+        {/* <div className="hamburger">
           <Button type="primary" onClick={toggleCollapsed}>
             {isCollapsed ? (
               <>
@@ -87,6 +99,21 @@ const LayoutComponent = ({ children }) => {
               <MenuFoldOutlined />
             )}
           </Button>
+        </div> */}
+        <div className="hamburger">
+          <Button type="primary" onClick={showDrawer}>
+            Open
+          </Button>
+          <Drawer
+            title="Basic Drawer"
+            placement="right"
+            onClose={onClose}
+            open={open}
+          >
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+          </Drawer>
         </div>
         <Header className="header">
           <div className="logo" />

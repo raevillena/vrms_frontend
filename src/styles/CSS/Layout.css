@@ -84,15 +84,5 @@
   background: url(../../logo.svg) no-repeat scroll 0 0 transparent;
 } */
 
-.tuma{
-    table-layout: fixed;
-    width: 400px;
-}
 
-.components-table-demo-nested{
 
-}
-
-.tuma:hover{
-    background-color: red;
-}

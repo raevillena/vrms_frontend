@@ -42,7 +42,7 @@ const Account = () => {
       <Layout1>
       {isOnline !== true ? <Offline/> :
         <Row justify="start" style={{marginLeft: '21px', marginRight: '21px'}} >
-          <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}}  hoverable >
+          <Card style={{cursor:'auto',  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}}  hoverable >
             <Row justify="space-around" gutter={16}>
               <Col className="gutter-row" span={12} >
                 <Avatar src={imgData||`/avatar/${avatar}`}  size={150} icon={<UserOutlined />} />
@@ -79,7 +79,7 @@ const Account = () => {
             </Row>     
           </Card>
           <div style={{padding: '0 8px'}} >
-            <Card style={{  borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}}  hoverable>
+            <Card style={{cursor: 'auto', borderRadius: '10px', fontStyle: 'Montserrat', marginTop: 16}}  hoverable>
               <ChangePassword/>
             </Card>
           </div>  

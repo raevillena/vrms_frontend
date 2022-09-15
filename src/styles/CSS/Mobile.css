@@ -49,3 +49,30 @@
     right: 5px;
     font-size: 20px;
   }
+
+@media screen and (max-width: 768px) {
+  .createMobile{
+    display: block;
+  }
+  .createMobileCard{
+    width: 80vw;
+    height: auto;
+    border-radius: 10px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .site-card-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .createMobile{
+    display: block;
+  }
+  .createMobileCard{
+    width: 80vw;    
+    height: auto;
+    border-radius: 10px;
+  }
+} 

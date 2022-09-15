@@ -122,7 +122,8 @@ const Programs = () => {
             dataSource={leader}
             renderItem={item => <List.Item>{item}</List.Item>}
             >
-            </List>
+            </List>,
+            // responsive: ["xs"]
           },
           {
             title: 'Program Name',
@@ -136,7 +137,7 @@ const Programs = () => {
             dataIndex: 'programID',
             key: 'programID',
             ...getColumnSearchProps('programID'),
-            ellipsis: true,
+            ellipsis: false,
           },
           {
             title: 'Date Created',
@@ -148,7 +149,7 @@ const Programs = () => {
             dataIndex: 'fundingAgency',
             key: 'fundingAgency', 
             ...getColumnSearchProps('fundingAgency'),
-            ellipsis: true,
+            ellipsis: false,
           },
           {
             title: 'Funding Category',

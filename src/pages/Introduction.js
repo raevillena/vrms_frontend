@@ -112,7 +112,7 @@ const Introduction = () => {
   const onEditorStateChange = (editorState) =>{
     setEditorState(editorState)
   }
-
+console.log(editorState)
   return (
     <div>
       {loading? <Spin indicator={antIcon} className="spinner" /> :

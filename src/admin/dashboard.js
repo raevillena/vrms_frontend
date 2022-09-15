@@ -4,18 +4,18 @@ import AddProgram from "./AddProgram";
 import Addtask from "./addtask";
 import { Row, Col, Card } from "antd";
 import AddStudy from "./AddStudy";
-
+import '../styles/CSS/Mobile.css'
+import { UserAddOutlined } from '@ant-design/icons'
 const Dashboard = () => {
   return (
     <div>
       <LayoutComponent>
         <div className="site-card-wrapper">
-          <Row gutter={16}>
+          <Row gutter={16} className='createMobile'>
             <Col className="gutter-row" span={6}>
-              <Card
+              <Card className="createMobileCard"
                 style={{
                   borderRadius: "10px",
-                  height: "100vh",
                   fontStyle: "Montserrat",
                   marginTop: 16,
                 }}
@@ -25,10 +25,9 @@ const Dashboard = () => {
               </Card>
             </Col>
             <Col className="gutter-row" span={6}>
-              <Card
+              <Card className="createMobileCard"
                 style={{
                   borderRadius: "10px",
-                  height: "100vh",
                   fontStyle: "Montserrat",
                   marginTop: 16,
                 }}
@@ -38,10 +37,9 @@ const Dashboard = () => {
               </Card>
             </Col>
             <Col className="gutter-row" span={6}>
-              <Card
+              <Card className="createMobileCard"
                 style={{
                   borderRadius: "10px",
-                  height: "100vh",
                   fontStyle: "Montserrat",
                   marginTop: 16,
                 }}
@@ -51,10 +49,9 @@ const Dashboard = () => {
               </Card>
             </Col>
             <Col className="gutter-row" span={6}>
-              <Card
+              <Card className="createMobileCard"
                 style={{
                   borderRadius: "10px",
-                  height: "100vh",
                   fontStyle: "Montserrat",
                   marginTop: 16,
                 }}

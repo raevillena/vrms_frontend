@@ -136,9 +136,9 @@ h3 {
 .div-gap {
   margin-top: 10px;
 }
-.hamburger{
+/* .hamburger{
   display: none;
-}
+} */
 @media screen and (min-width: 767px) {
   .progress-label {
     align-content: flex-end;
