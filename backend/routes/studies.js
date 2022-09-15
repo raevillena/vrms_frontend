@@ -100,7 +100,7 @@ router.get('/getStudyForUser/:assignee', auth , async(req, res) => {
     try {
     await Studies.find({"assignee": req.params.assignee, 'active': true}, function(err, studies) {
             if(err){
-                logger.log('error', error)
+                logger.log('error', err)
             } else{
                 res.send(studies)
             }

@@ -16,7 +16,7 @@ import { onPostOffline } from '../services/offline';
 import { onUploadOfflineGallery } from '../services/uploadAPI';
 import { notif } from '../functions/datagrid';
 import Offline from './Offline';
-
+import { CheckCircleOutlined,SyncOutlined } from '@ant-design/icons'
 
 const Userdash = () => {
   const cookies = new Cookies();
@@ -86,8 +86,12 @@ const Userdash = () => {
   useEffect(() => {
     async function postData(){
       let x = { cookies: cookies.get('add'), user: userObj.USER._id}
-      let res = await onPostOffline(x)
-      notif('info', res.data.message)
+      try {
+        let res = await onPostOffline(x)
+        notif('info', res.data.message)
+      } catch (error) {
+        
+      }
     
   }
   async function postGallery(){
@@ -223,7 +227,7 @@ const getColumnSearchProps = dataIndex => ({
       dataIndex: 'title',
       key: 'title',
       width: '25%',
-      ellipsis: true,
+      ellipsis: false,
       ...getColumnSearchProps('title')
     },
     {
@@ -247,12 +251,13 @@ const getColumnSearchProps = dataIndex => ({
       render: status => (
         <span>
           {status.map(stat => {
-            let color = stat === 'Ongoing' ? 'geekblue' : 'green';
-            return (
-              <Tag color={color} key={stat}>
-                {stat.toUpperCase()}
-              </Tag>
-            );
+            let color = stat === 'ONGOING' ? 'geekblue' : 'green';
+            let iconState = color === 'green' ? true : false;
+                    return (
+                      <Tag icon={iconState ? <CheckCircleOutlined/> :<SyncOutlined spin/>} color={color} key={stat}>
+                        {stat}
+                      </Tag>
+                    );
           })}
         </span>
       ),
@@ -271,7 +276,7 @@ const getColumnSearchProps = dataIndex => ({
          })
          history.push('/editstudy')
         }
-      } type='link'>MANAGE</Button>
+      } type='primary'>MANAGE</Button>
     },
   ];
   

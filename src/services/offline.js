@@ -3,7 +3,7 @@ import { tokenConfig } from './projectAPI'
 
 export async function onPostOffline(body) {
     try {
-        return axios.post("/v1/studies/postOffline", body, tokenConfig())
+        return await axios.post("/v1/studies/postOffline", body, tokenConfig())
     } catch (error) {
         return {
             error: error
