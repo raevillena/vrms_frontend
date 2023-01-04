@@ -51,8 +51,6 @@ const LayoutComponent = ({ children }) => {
   return (
     <div>
       <Layout>
-        
-
         {/* <div className="hamburger">
           <Button type="primary" onClick={toggleCollapsed}>
             {isCollapsed ? (
@@ -100,7 +98,7 @@ const LayoutComponent = ({ children }) => {
             )}
           </Button>
         </div> */}
-        <div className="hamburger">
+        {/* <div className="hamburger">
           <Button type="primary" onClick={showDrawer}>
             Open
           </Button>
@@ -114,7 +112,7 @@ const LayoutComponent = ({ children }) => {
             <p>Some contents...</p>
             <p>Some contents...</p>
           </Drawer>
-        </div>
+        </div> */}
         <Header className="header">
           <div className="logo" />
 
