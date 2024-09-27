@@ -1,0 +1,78 @@
+#tab-bar.demo {
+    display: flex;
+    flex-direction: column;
+  }
+  #tab-bar .demoName {
+    height: 40px;
+  }
+  #tab-bar .demo-preview-item .am-tab-bar {
+    background-color: white;
+  }
+
+  .full-screen{
+    overflow: auto;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #FFFF;
+    z-index: 50;
+    overflow-y: auto;
+  }
+
+  .full-screen-edit{
+    overflow: auto;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #FFFF;
+    z-index: 50;
+    overflow-y: auto;
+  }
+
+  .flex-container-center{
+    display: grid;
+  }
+
+  .hidden{
+    display: none;
+  }
+
+  .close{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 20px;
+  }
+
+@media screen and (max-width: 768px) {
+  .createMobile{
+    display: block;
+  }
+  .createMobileCard{
+    width: 80vw;
+    height: auto;
+    border-radius: 10px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .site-card-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .createMobile{
+    display: block;
+  }
+  .createMobileCard{
+    width: 80vw;    
+    height: auto;
+    border-radius: 10px;
+  }
+} 
